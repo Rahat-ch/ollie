@@ -34,8 +34,8 @@ export type Problem = {
   readonly equation: Equation;
   /** The single correct answer, decided by the engine. */
   readonly answer: number;
-  /** What Ollie says. Hand-written template text, never model-written. */
-  readonly prompt: string;
+  /** The line Ollie speaks. Hand-written template text, never model-written. */
+  readonly spoken: string;
 };
 
 export type AssistanceState =

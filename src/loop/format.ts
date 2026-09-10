@@ -15,17 +15,13 @@ export function formatEquation(equation: Equation): string {
   return `${slot("left", equation.left)} ${equation.op} ${slot("right", equation.right)} = ${slot("result", equation.result)}`;
 }
 
-function padEnd(text: string, width: number): string {
-  return text.length >= width ? text : text + " ".repeat(width - text.length);
-}
-
 function table(rows: string[][]): string[] {
   const widths = rows[0].map((_, col) => Math.max(...rows.map((r) => r[col].length)));
-  return rows.map((row) => row.map((cell, col) => padEnd(cell, widths[col])).join("  ").trimEnd());
+  return rows.map((row) => row.map((cell, col) => cell.padEnd(widths[col])).join("  ").trimEnd());
 }
 
 /** The Session Log, then the Knowledge Estimates and Mastery decisions, as plain text. */
-export function formatSessionReport(result: SessionResult): string {
+export function formatSessionLog(result: SessionResult): string {
   const { log, profile } = result;
   const lines: string[] = [];
   lines.push(`Session ${log.sessionNumber} (seed ${log.seed})`, "");

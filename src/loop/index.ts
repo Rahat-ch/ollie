@@ -4,7 +4,7 @@ export { alwaysFirstTry, alwaysHintAssisted, alwaysRevealed, scripted } from "./
 export type { Rng } from "./random";
 export { createRng } from "./random";
 export type { Skill, BktParams } from "./skills";
-export { SKILLS, SKILL_IDS, getSkill } from "./skills";
+export { SKILLS, getSkill } from "./skills";
 export { DIAGNOSTIC_PLAN } from "./diagnostic";
 export { bktUpdate } from "./bkt";
 export { meetsMastery, MASTERY_ESTIMATE, MASTERY_REQUIRED_CORRECT, MASTERY_WINDOW } from "./mastery";

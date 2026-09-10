@@ -13,7 +13,7 @@ export type ProblemDraft = {
   readonly structure: string;
   readonly equation: Equation;
   readonly answer: number;
-  readonly prompt: string;
+  readonly spoken: string;
 };
 
 export type GenerateOptions = {
@@ -58,14 +58,14 @@ const partnersTo10: Skill = {
         structure,
         equation: { left: 10, op: "-", right: a, result: partner, unknown: "result" },
         answer: partner,
-        prompt: `There are 10 in the frame. Take away ${a}. How many are left?`,
+        spoken: `There are 10 in the frame. Take away ${a}. How many are left?`,
       };
     }
     return {
       structure: "missing-partner",
       equation: { left: a, op: "+", right: partner, result: 10, unknown: "right" },
       answer: partner,
-      prompt: `${a} and how many more make 10?`,
+      spoken: `${a} and how many more make 10?`,
     };
   },
 };
@@ -90,22 +90,20 @@ const teenNumbers: Skill = {
         structure,
         equation: { left: 10, op: "+", right: ones, result: teen, unknown: "right" },
         answer: ones,
-        prompt: `${teen} is 10 and how many more?`,
+        spoken: `${teen} is 10 and how many more?`,
       };
     }
     return {
       structure: "compose",
       equation: { left: 10, op: "+", right: ones, result: teen, unknown: "result" },
       answer: teen,
-      prompt: `What is 10 and ${ones} more?`,
+      spoken: `What is 10 and ${ones} more?`,
     };
   },
 };
 
 /** Every Skill, in progression order. Prerequisites are earlier in the list. */
 export const SKILLS: readonly Skill[] = [partnersTo10, teenNumbers];
-
-export const SKILL_IDS: readonly SkillId[] = SKILLS.map((s) => s.id);
 
 export function getSkill(id: SkillId): Skill {
   const skill = SKILLS.find((s) => s.id === id);

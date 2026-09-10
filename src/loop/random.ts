@@ -6,8 +6,6 @@ export type Rng = {
   int(min: number, max: number): number;
   pick<T>(items: readonly T[]): T;
   shuffle<T>(items: readonly T[]): T[];
-  /** A child generator whose stream is independent of this one's future draws. */
-  fork(label: string): Rng;
 };
 
 function hash(text: string): number {
@@ -28,7 +26,7 @@ export function createRng(seed: string | number): Rng {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
-  const rng: Rng = {
+  return {
     next,
     int: (min, max) => min + Math.floor(next() * (max - min + 1)),
     pick: (items) => items[Math.floor(next() * items.length)],
@@ -40,7 +38,5 @@ export function createRng(seed: string | number): Rng {
       }
       return out;
     },
-    fork: (label) => createRng(`${label}:${next()}`),
   };
-  return rng;
 }

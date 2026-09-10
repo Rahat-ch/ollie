@@ -1,5 +1,5 @@
 import { bktUpdate } from "./bkt";
-import { meetsMastery } from "./mastery";
+import { MASTERY_WINDOW, meetsMastery } from "./mastery";
 import type { AnswerPolicy } from "./policies";
 import { createRng, type Rng } from "./random";
 import { getSkill, SKILLS } from "./skills";
@@ -18,6 +18,8 @@ import type {
 /** A Session in progress. Plain data; every step returns a new one. */
 export type SessionState = {
   readonly plan: SessionPlan;
+  /** The Profile as it stood when the Session started. */
+  readonly profile: ProfileState;
   readonly seed: string;
   readonly sessionNumber: number;
   readonly problems: readonly Problem[];
@@ -105,6 +107,7 @@ export function startSession(
   const problems = buildProblems(plan, rng, profile.nextProblemNumber);
   return {
     plan,
+    profile,
     seed,
     sessionNumber: profile.sessionsCompleted + 1,
     problems,
@@ -128,7 +131,7 @@ function recordFirstAttempt(
 ): SessionState["skills"] {
   const before = skills[skillId];
   const estimate = bktUpdate(before.estimate, correct, getSkill(skillId).bkt);
-  const recentFirstAttempts = [...before.recentFirstAttempts, correct].slice(-10);
+  const recentFirstAttempts = [...before.recentFirstAttempts, correct].slice(-MASTERY_WINDOW);
   const after: SkillState = { estimate, recentFirstAttempts, mastered: before.mastered };
   return { ...skills, [skillId]: { ...after, mastered: after.mastered || meetsMastery(after) } };
 }
@@ -179,10 +182,11 @@ export function abandonSession(state: SessionState): SessionState {
   return { ...closed, status: "abandoned" };
 }
 
-export function finishSession(state: SessionState, profile: ProfileState): SessionResult {
+export function finishSession(state: SessionState): SessionResult {
   if (state.status === "in-progress") {
     throw new Error("The Session is still in progress");
   }
+  const { profile } = state;
   const newlyMastered = (Object.keys(state.skills) as SkillId[]).filter(
     (id) => state.skills[id].mastered && !profile.skills[id].mastered,
   );
@@ -223,5 +227,5 @@ export function runSession(
     });
     state = answerProblem(state, answer, responseMs);
   }
-  return finishSession(state, profile);
+  return finishSession(state);
 }

@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { alwaysFirstTry, alwaysHintAssisted, alwaysRevealed } from "@/loop/policies";
-import { DIAGNOSTIC_PLAN } from "@/loop/diagnostic";
 import {
+  DIAGNOSTIC_PLAN,
   abandonSession,
+  alwaysFirstTry,
+  alwaysHintAssisted,
+  alwaysRevealed,
   answerProblem,
   currentProblem,
   finishSession,
@@ -34,8 +36,8 @@ describe("the Loop is pure and deterministic", () => {
   it("produces different Problems for a different seed", () => {
     const a = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-7", alwaysFirstTry);
     const b = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-8", alwaysFirstTry);
-    expect(a.log.entries.map((e) => e.problem.prompt)).not.toEqual(
-      b.log.entries.map((e) => e.problem.prompt),
+    expect(a.log.entries.map((e) => e.problem.spoken)).not.toEqual(
+      b.log.entries.map((e) => e.problem.spoken),
     );
   });
 });
@@ -147,16 +149,19 @@ describe("an abandoned Session", () => {
     let state = startSession(DIAGNOSTIC_PLAN, newProfile(), "seed-a");
     state = answerProblem(state, currentProblem(state)!.answer, 2500);
     state = answerProblem(state, -1, 4000);
-    const result = finishSession(abandonSession(state), newProfile());
+    const result = finishSession(abandonSession(state));
 
     expect(result.log.entries.map((e) => e.assistance)).toEqual(["first-try-correct", "unresolved"]);
     expect(result.log.entries[1].attempts).toHaveLength(1);
     expect(result.profile.sessionsCompleted).toBe(0);
   });
 
-  it("still keeps every allocated Problem ID out of circulation", () => {
-    const result = finishSession(abandonSession(startSession(DIAGNOSTIC_PLAN, newProfile(), "seed-a")), newProfile());
-    expect(result.profile.nextProblemNumber).toBe(9);
+  it("never lets a later Session reuse the IDs of Problems it left unpresented", () => {
+    const abandoned = finishSession(abandonSession(startSession(DIAGNOSTIC_PLAN, newProfile(), "seed-a")));
+    const next = runSession(DIAGNOSTIC_PLAN, abandoned.profile, "seed-a", alwaysFirstTry);
+    expect(abandoned.log.entries).toHaveLength(1);
+    expect(next.log.entries.map((e) => e.problem.id)).not.toContain("p1");
+    expect(next.log.entries.map((e) => e.problem.id)).not.toContain("p8");
   });
 });
 

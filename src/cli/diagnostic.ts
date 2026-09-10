@@ -11,7 +11,7 @@
  */
 import { parseArgs } from "node:util";
 import { DIAGNOSTIC_PLAN, newProfile, runSession, scripted } from "@/loop";
-import { formatSessionReport } from "@/loop/report";
+import { formatSessionLog } from "@/loop/format";
 
 const { values } = parseArgs({
   options: {
@@ -30,7 +30,7 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 let profile = newProfile();
 for (let i = 0; i < sessions; i++) {
   const result = runSession(DIAGNOSTIC_PLAN, profile, values.seed, scripted(values.script));
-  console.log(formatSessionReport(result));
+  console.log(formatSessionLog(result));
   console.log("");
   profile = result.profile;
 }
