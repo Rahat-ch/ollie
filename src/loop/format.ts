@@ -70,7 +70,7 @@ export function formatEstimates(profile: ProfileState, newlyMastered: readonly S
  * One line per Session: the mix, the Review count, the first-try count, and
  * what changed. For watching many Sessions go by.
  */
-export function formatSessionSummary(result: SessionResult): string {
+export function formatSessionLine(result: SessionResult): string {
   const { log } = result;
   const planned = new Map<SkillId, number>(log.plan.skills.map((s) => [s.skill, 0]));
   let review = 0;

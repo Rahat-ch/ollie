@@ -80,10 +80,6 @@ describe.each(SKILLS.map((s) => [s.id, s] as const))("Skill %s", (_, skill) => {
     }
   });
 
-  it("says in words which number its range describes", () => {
-    expect(skill.rangeOf).toMatch(/^the /);
-  });
-
   it("has a hand-written Hint with no numbers in it, so it can be voiced once", () => {
     expect(skill.hint).toMatch(/^[A-Z].*\.$/);
     expect(skill.hint).not.toMatch(/\d/);

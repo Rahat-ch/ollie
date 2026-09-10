@@ -17,3 +17,6 @@ export const DIAGNOSTIC_PLAN: SessionPlan = {
   reviewShare: 0,
   hypothesisUnderTest: null,
 };
+
+/** The one Plan the engine runs without checking it against the Plan Space. */
+export const isDiagnosticPlan = (plan: SessionPlan): boolean => plan === DIAGNOSTIC_PLAN;

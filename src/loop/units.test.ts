@@ -1,16 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isUnitUnlocked, newProfile, runSession, alwaysFirstTry, UNITS } from "@/loop";
-import type { ProfileState, SkillId } from "@/loop";
-
-/** A Profile with the given Skills Mastered, everything else fresh. */
-function mastered(...skills: SkillId[]): ProfileState {
-  const profile = newProfile();
-  const states = { ...profile.skills };
-  for (const id of skills) {
-    states[id] = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
-  }
-  return { ...profile, skills: states };
-}
+import { profileWithMastered as mastered } from "@/loop/testing";
 
 describe("Unit unlocking", () => {
   it("has Unit 1 open from the start and Unit 2 closed", () => {

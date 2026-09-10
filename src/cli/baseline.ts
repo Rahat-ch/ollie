@@ -13,8 +13,8 @@
  * correct, h Hint-assisted correct, r Revealed; the last letter repeats.
  */
 import { parseArgs } from "node:util";
-import { baselinePlan, newProfile, runSession, scripted, validatePlan, DIAGNOSTIC_PLAN } from "@/loop";
-import { formatEstimates, formatSessionLog, formatSessionSummary } from "@/loop/format";
+import { baselinePlan, newProfile, runSession, scripted } from "@/loop";
+import { formatEstimates, formatSessionLog, formatSessionLine } from "@/loop/format";
 
 const { values } = parseArgs({
   options: {
@@ -33,13 +33,8 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 
 let profile = newProfile();
 for (let i = 0; i < sessions; i++) {
-  const plan = baselinePlan(profile);
-  if (plan !== DIAGNOSTIC_PLAN) {
-    const verdict = validatePlan(plan, profile);
-    if (!verdict.ok) throw new Error(`Baseline Plan rejected: ${verdict.reasons.join("; ")}`);
-  }
-  const result = runSession(plan, profile, values.seed, scripted(values.script));
-  console.log(formatSessionSummary(result));
+  const result = runSession(baselinePlan(profile), profile, values.seed, scripted(values.script));
+  console.log(formatSessionLine(result));
   if (values.verbose) console.log("", formatSessionLog(result), "", "");
   profile = result.profile;
 }

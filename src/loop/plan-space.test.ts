@@ -1,15 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { newProfile, planSpace, validatePlan } from "@/loop";
 import type { ProfileState, SessionPlan, SkillId } from "@/loop";
-
-function mastered(...skills: SkillId[]): ProfileState {
-  const profile = newProfile();
-  const states = { ...profile.skills };
-  for (const id of skills) {
-    states[id] = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
-  }
-  return { ...profile, skills: states };
-}
+import { profileWithMastered as mastered } from "@/loop/testing";
 
 const unit1Done = mastered("partners-to-10", "teen-numbers");
 
@@ -77,6 +69,13 @@ describe("validatePlan", () => {
       reasons({ ...valid, skills: [{ skill: "counting-on", weight: 1 }, { skill: "counting-on", weight: 1 }] }),
     ).toMatch(/counting-on.*more than once/);
     expect(reasons({ ...valid, skills: [{ skill: "counting-on", weight: 0 }] })).toMatch(/weight/);
+  });
+
+  it("rejects a field that is not a lever of the Plan Space", () => {
+    const plan = { ...valid, timerSeconds: 30 } as SessionPlan;
+    expect(reasons(plan)).toMatch(/the Plan has no field "timerSeconds"/);
+    const planSkill = { ...valid.skills[1], hint: "count on" } as SessionPlan["skills"][number];
+    expect(reasons({ ...valid, skills: [planSkill] })).toMatch(/make-a-ten has no field "hint"/);
   });
 
   it("lists every reason at once", () => {

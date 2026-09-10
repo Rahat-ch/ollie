@@ -1,4 +1,4 @@
-import { getSkill, SKILLS } from "./skills";
+import { SKILLS } from "./skills";
 import type { NumberRange, PlanSkill, ProfileState, SessionPlan, SkillId, Unit } from "./types";
 import { isUnitUnlocked } from "./units";
 
@@ -44,14 +44,23 @@ export function planSpace(profile: ProfileState): PlanSpace {
 
 const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
 
+const PLAN_KEYS = ["length", "skills", "reviewShare", "hypothesisUnderTest"];
+const PLAN_SKILL_KEYS = ["skill", "weight", "numberRange", "structures"];
+
+/** A Plan carries only the Plan Space's levers; anything else is rejected. */
+function unknownKeys(value: object, allowed: readonly string[], where: string): string[] {
+  return Object.keys(value)
+    .filter((key) => !allowed.includes(key))
+    .map((key) => `${where} has no field "${key}"; the fields are ${allowed.join(", ")}`);
+}
+
 const isIntegerRange = (range: NumberRange): boolean =>
   Number.isInteger(range.min) && Number.isInteger(range.max) && range.min <= range.max;
 
 function skillReasons(planSkill: PlanSkill, profile: ProfileState): string[] {
-  const known = SKILLS.find((s) => s.id === planSkill.skill);
-  if (!known) return [`unknown Skill "${planSkill.skill}"`];
-  const skill = getSkill(planSkill.skill);
-  const reasons: string[] = [];
+  const skill = SKILLS.find((s) => s.id === planSkill.skill);
+  if (!skill) return [`unknown Skill "${planSkill.skill}"`];
+  const reasons = unknownKeys(planSkill, PLAN_SKILL_KEYS, skill.id);
   if (!isUnitUnlocked(skill.unit, profile)) {
     reasons.push(`${skill.id} is in Unit ${skill.unit}, which is not unlocked yet`);
   }
@@ -87,7 +96,7 @@ function skillReasons(planSkill: PlanSkill, profile: ProfileState): string[] {
  * is reported so a planner can fix the whole Plan in one retry.
  */
 export function validatePlan(plan: SessionPlan, profile: ProfileState): PlanValidation {
-  const reasons: string[] = [];
+  const reasons = unknownKeys(plan, PLAN_KEYS, "the Plan");
   if (!Number.isInteger(plan.length) || plan.length < SESSION_LENGTH.min || plan.length > SESSION_LENGTH.max) {
     reasons.push(`length ${plan.length} is outside ${describeRange(SESSION_LENGTH)}`);
   }

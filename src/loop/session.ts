@@ -1,4 +1,6 @@
 import { bktUpdate } from "./bkt";
+import { isDiagnosticPlan } from "./diagnostic";
+import { validatePlan } from "./plan-space";
 import { MASTERY_WINDOW, meetsMastery } from "./mastery";
 import type { AnswerPolicy } from "./policies";
 import { createRng, type Rng } from "./random";
@@ -72,12 +74,14 @@ type Slot = { readonly skill: SkillId; readonly review: boolean };
 function allocateSlots(plan: SessionPlan, profile: ProfileState, rng: Rng): Slot[] {
   const inMix = new Set(plan.skills.map((s) => s.skill));
   const reviewable = SKILLS.map((s) => s.id).filter((id) => profile.skills[id].mastered && !inMix.has(id));
-  const reviewCount = reviewable.length === 0 ? 0 : Math.round(plan.length * plan.reviewShare);
-  const start = reviewable.length === 0 ? 0 : rng.int(0, reviewable.length - 1);
-  const review = Array.from({ length: reviewCount }, (_, i) => ({
-    skill: reviewable[(start + i) % reviewable.length],
-    review: true,
-  }));
+  const review: Slot[] = [];
+  if (reviewable.length > 0) {
+    const start = rng.int(0, reviewable.length - 1);
+    for (let i = 0; i < Math.round(plan.length * plan.reviewShare); i++) {
+      review.push({ skill: reviewable[(start + i) % reviewable.length], review: true });
+    }
+  }
+  const reviewCount = review.length;
   const mix = allocateMix(plan, plan.length - reviewCount).map((skill) => ({ skill, review: false }));
   return [...mix, ...review];
 }
@@ -120,11 +124,19 @@ function buildProblems(
   return problems;
 }
 
+/**
+ * Build the Session. Every Plan is checked against the Plan Space first and
+ * rejected with its reasons; only the bundled Diagnostic Plan is exempt.
+ */
 export function startSession(
   plan: SessionPlan,
   profile: ProfileState,
   seed: string,
 ): SessionState {
+  if (!isDiagnosticPlan(plan)) {
+    const verdict = validatePlan(plan, profile);
+    if (!verdict.ok) throw new Error(`Session Plan rejected: ${verdict.reasons.join("; ")}`);
+  }
   const rng = createRng(`${seed}:session-${profile.sessionsCompleted + 1}`);
   const problems = buildProblems(plan, profile, rng, profile.nextProblemNumber);
   return {

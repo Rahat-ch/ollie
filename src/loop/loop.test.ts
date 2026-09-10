@@ -14,6 +14,7 @@ import {
   startSession,
   type AnswerPolicy,
 } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 
 describe("runSession through the Diagnostic Session", () => {
   it("logs one entry per planned Problem, all first-try correct under a perfect policy", () => {
@@ -184,13 +185,21 @@ describe("a completed Session", () => {
   });
 });
 
+describe("the engine rejects a Plan outside the Plan Space", () => {
+  it("throws with the reasons before any Problem is built", () => {
+    const plan = { ...DIAGNOSTIC_PLAN, length: 11 };
+    expect(() => runSession(plan, newProfile(), "seed-x", alwaysFirstTry)).toThrow(
+      /Session Plan rejected: length 11 is outside 6 to 10; counting-on is in Unit 2/,
+    );
+  });
+
+  it("runs the bundled Diagnostic Plan even though it samples Unit 2 early", () => {
+    expect(runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-x", alwaysFirstTry).log.entries).toHaveLength(9);
+  });
+});
+
 describe("a valid Plan yields a Session of exactly the requested length and mix", () => {
-  const withMastered = (...ids: ("partners-to-10" | "teen-numbers")[]) => {
-    const profile = newProfile();
-    const skills = { ...profile.skills };
-    for (const id of ids) skills[id] = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
-    return { ...profile, skills };
-  };
+  const withMastered = profileWithMastered;
   const count = (result: ReturnType<typeof runSession>, skill: string, review: boolean) =>
     result.log.entries.filter((e) => e.problem.skill === skill && e.problem.review === review).length;
 

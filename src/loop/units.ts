@@ -2,7 +2,7 @@ import { SKILLS } from "./skills";
 import type { ProfileState, Unit } from "./types";
 
 const UNIT_NAMES: Record<Unit, string> = {
-  1: "Partners and teens",
+  1: "Partners to 10",
   2: "Counting on and make-a-ten",
   3: "Word problems",
 };
