@@ -1,5 +1,5 @@
 import { getSkill, SKILLS } from "./skills";
-import type { Equation, SessionResult } from "./types";
+import type { Equation, ProfileState, SessionResult, SkillId } from "./types";
 
 const ASSISTANCE_LABEL = {
   "first-try-correct": "first-try correct",
@@ -27,11 +27,12 @@ export function formatSessionLog(result: SessionResult): string {
   lines.push(`Session ${log.sessionNumber} (seed ${log.seed})`, "");
   lines.push(
     ...table([
-      ["#", "ID", "Skill", "Structure", "Problem", "Answer", "Assistance", "First try (ms)"],
+      ["#", "ID", "Skill", "Role", "Structure", "Problem", "Answer", "Assistance", "First try (ms)"],
       ...log.entries.map((entry) => [
         String(entry.position),
         entry.problem.id,
         entry.problem.skill,
+        entry.problem.review ? "review" : "planned",
         entry.problem.structure,
         formatEquation(entry.problem.equation),
         String(entry.problem.answer),
@@ -40,13 +41,20 @@ export function formatSessionLog(result: SessionResult): string {
       ]),
     ]),
   );
-  lines.push("", "Knowledge Estimates", "");
-  lines.push(
+  lines.push("", formatEstimates(profile, result.newlyMastered));
+  return lines.join("\n");
+}
+
+/** The Knowledge Estimates and Mastery decisions per Skill, as a table. */
+export function formatEstimates(profile: ProfileState, newlyMastered: readonly SkillId[] = []): string {
+  return [
+    "Knowledge Estimates",
+    "",
     ...table([
       ["Skill", "Estimate", "Last 10 first attempts", "Mastered"],
       ...SKILLS.map(({ id }) => {
         const state = profile.skills[id];
-        const newly = result.newlyMastered.includes(id) ? " (this Session)" : "";
+        const newly = newlyMastered.includes(id) ? " (this Session)" : "";
         return [
           getSkill(id).name,
           state.estimate.toFixed(3),
@@ -55,6 +63,31 @@ export function formatSessionLog(result: SessionResult): string {
         ];
       }),
     ]),
-  );
-  return lines.join("\n");
+  ].join("\n");
+}
+
+/**
+ * One line per Session: the mix, the Review count, the first-try count, and
+ * what changed. For watching many Sessions go by.
+ */
+export function formatSessionSummary(result: SessionResult): string {
+  const { log } = result;
+  const planned = new Map<SkillId, number>(log.plan.skills.map((s) => [s.skill, 0]));
+  let review = 0;
+  for (const { problem } of log.entries) {
+    if (problem.review) review += 1;
+    else planned.set(problem.skill, (planned.get(problem.skill) ?? 0) + 1);
+  }
+  const mix = [...planned].filter(([, n]) => n > 0).map(([skill, n]) => `${skill} x${n}`);
+  if (review > 0) mix.push(`review x${review}`);
+  const firstTry = log.entries.filter((e) => e.assistance === "first-try-correct").length;
+  const changes = [
+    ...result.newlyMastered.map((id) => `Mastered ${id}`),
+    ...result.newlyUnlockedUnits.map((unit) => `Unit ${unit} unlocked`),
+  ];
+  return [
+    `Session ${log.sessionNumber}: ${mix.join(", ")}`,
+    `first-try ${firstTry}/${log.entries.length}`,
+    changes.length > 0 ? changes.join("; ") : "no change",
+  ].join("; ");
 }

@@ -3,6 +3,7 @@ import { MASTERY_WINDOW, meetsMastery } from "./mastery";
 import type { AnswerPolicy } from "./policies";
 import { createRng, type Rng } from "./random";
 import { getSkill, SKILLS } from "./skills";
+import { unlockedUnits } from "./units";
 import type {
   AssistanceState,
   Attempt,
@@ -46,11 +47,11 @@ export function newProfile(): ProfileState {
 }
 
 /** Largest-remainder allocation of `length` Problems across the Plan's Skill weights. */
-function allocateSkills(plan: SessionPlan): SkillId[] {
+function allocateMix(plan: SessionPlan, length: number): SkillId[] {
   const total = plan.skills.reduce((sum, s) => sum + s.weight, 0);
-  const exact = plan.skills.map((s) => (plan.length * s.weight) / total);
+  const exact = plan.skills.map((s) => (length * s.weight) / total);
   const counts = exact.map(Math.floor);
-  let remaining = plan.length - counts.reduce((a, b) => a + b, 0);
+  let remaining = length - counts.reduce((a, b) => a + b, 0);
   const byRemainder = exact
     .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
     .sort((a, b) => b.remainder - a.remainder || a.index - b.index);
@@ -62,6 +63,25 @@ function allocateSkills(plan: SessionPlan): SkillId[] {
   return plan.skills.flatMap((s, i) => Array<SkillId>(counts[i]).fill(s.skill));
 }
 
+type Slot = { readonly skill: SkillId; readonly review: boolean };
+
+/**
+ * The review share of the length goes to Mastered Skills outside the mix,
+ * spread round-robin from a random start; the rest is the mix by weight.
+ */
+function allocateSlots(plan: SessionPlan, profile: ProfileState, rng: Rng): Slot[] {
+  const inMix = new Set(plan.skills.map((s) => s.skill));
+  const reviewable = SKILLS.map((s) => s.id).filter((id) => profile.skills[id].mastered && !inMix.has(id));
+  const reviewCount = reviewable.length === 0 ? 0 : Math.round(plan.length * plan.reviewShare);
+  const start = reviewable.length === 0 ? 0 : rng.int(0, reviewable.length - 1);
+  const review = Array.from({ length: reviewCount }, (_, i) => ({
+    skill: reviewable[(start + i) % reviewable.length],
+    review: true,
+  }));
+  const mix = allocateMix(plan, plan.length - reviewCount).map((skill) => ({ skill, review: false }));
+  return [...mix, ...review];
+}
+
 const sameNumbers = (a: Problem, b: Problem): boolean =>
   a.skill === b.skill &&
   a.structure === b.structure &&
@@ -70,24 +90,26 @@ const sameNumbers = (a: Problem, b: Problem): boolean =>
 
 function buildProblems(
   plan: SessionPlan,
+  profile: ProfileState,
   rng: Rng,
   firstProblemNumber: number,
 ): Problem[] {
-  const order = rng.shuffle(allocateSkills(plan));
+  const order = rng.shuffle(allocateSlots(plan, profile, rng));
   const problems: Problem[] = [];
-  order.forEach((skillId, index) => {
-    const skill = getSkill(skillId);
-    const planSkill = plan.skills.find((s) => s.skill === skillId)!;
+  order.forEach((slot, index) => {
+    const skill = getSkill(slot.skill);
+    const planSkill = slot.review ? undefined : plan.skills.find((s) => s.skill === slot.skill);
     const options = {
-      range: planSkill.numberRange ?? skill.defaultRange,
-      structures: planSkill.structures ?? skill.structures,
+      range: planSkill?.numberRange ?? skill.defaultRange,
+      structures: planSkill?.structures ?? skill.structures,
     };
     let problem: Problem | undefined;
     for (let attempt = 0; attempt < 20; attempt++) {
       const draft = skill.generate(rng, options);
       const candidate: Problem = {
         id: `p${firstProblemNumber + index}`,
-        skill: skillId,
+        skill: slot.skill,
+        review: slot.review,
         ...draft,
       };
       problem = candidate;
@@ -104,7 +126,7 @@ export function startSession(
   seed: string,
 ): SessionState {
   const rng = createRng(`${seed}:session-${profile.sessionsCompleted + 1}`);
-  const problems = buildProblems(plan, rng, profile.nextProblemNumber);
+  const problems = buildProblems(plan, profile, rng, profile.nextProblemNumber);
   return {
     plan,
     profile,
@@ -190,6 +212,13 @@ export function finishSession(state: SessionState): SessionResult {
   const newlyMastered = (Object.keys(state.skills) as SkillId[]).filter(
     (id) => state.skills[id].mastered && !profile.skills[id].mastered,
   );
+  const next: ProfileState = {
+    nextProblemNumber: state.nextProblemNumber,
+    sessionsCompleted: state.status === "complete" ? profile.sessionsCompleted + 1 : profile.sessionsCompleted,
+    skills: state.skills,
+  };
+  const before = unlockedUnits(profile);
+  const newlyUnlockedUnits = unlockedUnits(next).filter((unit) => !before.includes(unit));
   return {
     log: {
       sessionNumber: state.sessionNumber,
@@ -197,12 +226,9 @@ export function finishSession(state: SessionState): SessionResult {
       plan: state.plan,
       entries: state.entries,
     },
-    profile: {
-      nextProblemNumber: state.nextProblemNumber,
-      sessionsCompleted: state.status === "complete" ? profile.sessionsCompleted + 1 : profile.sessionsCompleted,
-      skills: state.skills,
-    },
+    profile: next,
     newlyMastered,
+    newlyUnlockedUnits,
   };
 }
 

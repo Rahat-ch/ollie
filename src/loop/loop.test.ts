@@ -47,7 +47,7 @@ describe("every Problem in the Log", () => {
 
   it("has a Skill from the Plan, a structure, its numbers, and one Assistance State", () => {
     for (const entry of result.log.entries) {
-      expect(["partners-to-10", "teen-numbers"]).toContain(entry.problem.skill);
+      expect(["partners-to-10", "teen-numbers", "counting-on"]).toContain(entry.problem.skill);
       expect(entry.problem.structure).toBeTruthy();
       expect(entry.problem.equation).toMatchObject({ op: expect.any(String) });
       expect(["first-try-correct", "hint-assisted-correct", "revealed", "unresolved"]).toContain(
@@ -63,7 +63,7 @@ describe("every Problem in the Log", () => {
   });
 
   it("is numbered by its 1-based position in the Session", () => {
-    expect(result.log.entries.map((e) => e.position)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(result.log.entries.map((e) => e.position)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 });
 
@@ -181,5 +181,94 @@ describe("a completed Session", () => {
     }
     expect(performance.now() - started).toBeLessThan(1000);
     expect(profile.sessionsCompleted).toBe(300);
+  });
+});
+
+describe("a valid Plan yields a Session of exactly the requested length and mix", () => {
+  const withMastered = (...ids: ("partners-to-10" | "teen-numbers")[]) => {
+    const profile = newProfile();
+    const skills = { ...profile.skills };
+    for (const id of ids) skills[id] = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
+    return { ...profile, skills };
+  };
+  const count = (result: ReturnType<typeof runSession>, skill: string, review: boolean) =>
+    result.log.entries.filter((e) => e.problem.skill === skill && e.problem.review === review).length;
+
+  it("splits the length across the mix by weight, largest remainder first", () => {
+    const plan = {
+      length: 9,
+      skills: [{ skill: "partners-to-10" as const, weight: 2 }, { skill: "teen-numbers" as const, weight: 1 }],
+      reviewShare: 0,
+      hypothesisUnderTest: null,
+    };
+    const result = runSession(plan, newProfile(), "seed-mix", alwaysFirstTry);
+    expect(result.log.entries).toHaveLength(9);
+    expect(count(result, "partners-to-10", false)).toBe(6);
+    expect(count(result, "teen-numbers", false)).toBe(3);
+  });
+
+  it("fills the review share with Review Problems from Mastered Skills outside the mix", () => {
+    const plan = {
+      length: 8,
+      skills: [{ skill: "teen-numbers" as const, weight: 1 }],
+      reviewShare: 0.25,
+      hypothesisUnderTest: null,
+    };
+    const result = runSession(plan, withMastered("partners-to-10"), "seed-rev", alwaysFirstTry);
+    expect(result.log.entries).toHaveLength(8);
+    expect(count(result, "teen-numbers", false)).toBe(6);
+    expect(count(result, "partners-to-10", true)).toBe(2);
+  });
+
+  it("draws no Review Problem when the review share is 0", () => {
+    const plan = {
+      length: 8,
+      skills: [{ skill: "teen-numbers" as const, weight: 1 }],
+      reviewShare: 0,
+      hypothesisUnderTest: null,
+    };
+    const result = runSession(plan, withMastered("partners-to-10"), "seed-rev", alwaysFirstTry);
+    expect(result.log.entries.every((e) => e.problem.skill === "teen-numbers" && !e.problem.review)).toBe(true);
+  });
+
+  it("draws no Review Problem when nothing is Mastered, and keeps the length", () => {
+    const plan = {
+      length: 8,
+      skills: [{ skill: "teen-numbers" as const, weight: 1 }],
+      reviewShare: 0.5,
+      hypothesisUnderTest: null,
+    };
+    const result = runSession(plan, newProfile(), "seed-rev", alwaysFirstTry);
+    expect(result.log.entries).toHaveLength(8);
+    expect(result.log.entries.every((e) => e.problem.skill === "teen-numbers" && !e.problem.review)).toBe(true);
+  });
+
+  it("never reviews a Skill that is in the mix, even if it is Mastered", () => {
+    const plan = {
+      length: 8,
+      skills: [{ skill: "partners-to-10" as const, weight: 1 }],
+      reviewShare: 0.5,
+      hypothesisUnderTest: null,
+    };
+    const result = runSession(plan, withMastered("partners-to-10"), "seed-rev", alwaysFirstTry);
+    expect(result.log.entries).toHaveLength(8);
+    expect(result.log.entries.every((e) => !e.problem.review)).toBe(true);
+  });
+
+  it("spreads Review Problems over every Mastered Skill outside the mix", () => {
+    const plan = {
+      length: 10,
+      skills: [{ skill: "counting-on" as const, weight: 1 }],
+      reviewShare: 0.4,
+      hypothesisUnderTest: null,
+    };
+    let profile = withMastered("partners-to-10", "teen-numbers");
+    const reviewed = new Set<string>();
+    for (let i = 0; i < 10; i++) {
+      const result = runSession(plan, profile, `seed-spread-${i}`, alwaysFirstTry);
+      for (const e of result.log.entries) if (e.problem.review) reviewed.add(e.problem.skill);
+      profile = result.profile;
+    }
+    expect(reviewed).toEqual(new Set(["partners-to-10", "teen-numbers"]));
   });
 });

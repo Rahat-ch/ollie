@@ -3,7 +3,12 @@
  * the Loop is a pure function over these shapes and does no I/O.
  */
 
-export type SkillId = "partners-to-10" | "teen-numbers";
+export type SkillId =
+  | "partners-to-10"
+  | "teen-numbers"
+  | "counting-on"
+  | "make-a-ten"
+  | "unknown-addend";
 
 export type Unit = 1 | 2 | 3;
 
@@ -36,6 +41,8 @@ export type Problem = {
   readonly answer: number;
   /** The line Ollie speaks. Hand-written template text, never model-written. */
   readonly spoken: string;
+  /** A Review Problem: drawn from a Mastered Skill to keep it warm, not from the Plan's mix. */
+  readonly review: boolean;
 };
 
 export type AssistanceState =
@@ -70,8 +77,13 @@ export type PlanSkill = {
 };
 
 export type SessionPlan = {
+  /** 6 to 10 Problems. */
   readonly length: number;
   readonly skills: readonly PlanSkill[];
+  /**
+   * Share of the length, 0 to 1, given to Review Problems from Mastered
+   * Skills outside the mix. Slots with no such Skill go back to the mix.
+   */
   readonly reviewShare: number;
   readonly hypothesisUnderTest: string | null;
 };
@@ -105,4 +117,6 @@ export type SessionResult = {
   readonly profile: ProfileState;
   /** Skills that became Mastered during this Session. */
   readonly newlyMastered: readonly SkillId[];
+  /** Units whose Skills all became Mastered during this Session, opening the next. */
+  readonly newlyUnlockedUnits: readonly Unit[];
 };
