@@ -12,18 +12,21 @@ This file is pasted into the Nerdy AI Hackathon submission form. It lists every 
 
 ## Fonts
 
-- None yet. The app uses the `system-ui` font stack (the fonts already installed on the visitor's device); no font files are shipped.
+Both fonts are under the **SIL Open Font License 1.1** and are self-hosted with `next/font/local` (no request goes to Google at runtime). Only the latin subset is shipped, as woff2, in `src/app/fonts/`, with each font's OFL text saved next to it.
+
+- **Fredoka** (variable weight; used at 500 and 600) — display face for headings, buttons, the number pad, and Ollie's speech. Copyright 2016 The Fredoka Project Authors (https://github.com/hafontia/Fredoka-One). Files obtained from Google Fonts (`fonts.gstatic.com`, Fredoka v17); licence at `src/app/fonts/OFL-Fredoka.txt`, copied from https://github.com/google/fonts/tree/main/ofl/fredoka.
+- **Andika** (400 and 700) — text face for body, captions, and the Parent Area. Copyright 2004-2022 SIL International (https://www.sil.org/), Reserved Font Names "Andika" and "SIL". Files obtained from Google Fonts (`fonts.gstatic.com`, Andika v27); licence at `src/app/fonts/OFL-Andika.txt`, copied from https://github.com/google/fonts/tree/main/ofl/andika.
 
 ## Images and audio
 
-- None yet.
-- **Planned:** hand-tuned SVG illustrations in one consistent style, drawn for this project by the entrant (original work).
+- **Ollie illustrations** (`public/ollie/*.svg`): hand-tuned flat SVG in one consistent style, original to this project. Authored as SVG source with Claude Code under the entrant's direction and review (see "Generative-AI assistance"); no third-party assets and no image-model output.
+- **Icon set and social image** (`src/app/icon.svg`, `src/app/favicon.ico`, `src/app/apple-icon.png`, `src/app/opengraph-image.png`): rendered from those SVGs and the fonts above by `scripts/brand-images.mjs` (Playwright's bundled Chromium; no image library). Derivative of the entrant's own work.
 - **Planned:** small icons only from Kenney (kenney.nl), CC0 1.0 Universal (public domain dedication).
 - **Planned:** Ollie's spoken lines, generated with ElevenLabs as listed above.
 
 ## Generative-AI assistance
 
-- This codebase is developed with **Claude Code**, Anthropic's agentic coding tool, acting as the implementer under the entrant's direction. Specs, design decisions, and review are the entrant's; code, tests, and documentation are written with Claude Code.
+- This codebase is developed with **Claude Code**, Anthropic's agentic coding tool, acting as the implementer under the entrant's direction. Specs, design decisions, and review are the entrant's; code, tests, documentation, the design canvas, and the Ollie SVG illustrations (and the icon and Open Graph renders made from them) are written with Claude Code.
 - Image models may be used for reference and ideation only (mood boards, poses, palette ideas). No AI-generated pixels ship in the app at present; if any generated image or audio asset ever ships, it will be listed in "Images and audio" above with the model and prompt source.
 
 ## Open-source dependencies

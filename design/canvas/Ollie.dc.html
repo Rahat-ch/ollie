@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Andika:wght@400;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFF7EC; color: #3B2E2A; font-family: Andika, Verdana, sans-serif; }
+    * { box-sizing: border-box; }
+    a { color: #3F8FB4; } a:hover { color: #2E5E6B; }
+    .display { font-family: Fredoka, "Trebuchet MS", sans-serif; font-weight: 600; }
+    .cap { font-size: 15px; line-height: 1.4; color: #7A6660; }
+  </style>
+</helmet>
+<div style="width:1024px;height:640px;background:#FFF7EC;overflow:hidden;position:relative;display:flex;flex-direction:column;gap:12px;padding:16px 48px;">
+
+  <div class="cap" style="white-space:nowrap;"><span style="font-weight:700;color:#3B2E2A;">Ollie's colours:</span> body rust, belly cream, wings rust-deep, beak and feet sun, eye ring paper, iris teal-deep, pupil ink.</div>
+
+  <div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:24px;">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-idle.svg" style="width:200px;height:200px;">
+      <div class="display" style="font-size:24px;line-height:1.2;">Idle</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-talking.svg" style="width:200px;height:200px;">
+      <div class="display" style="font-size:24px;line-height:1.2;">Talking</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-celebrate.svg" style="width:200px;height:200px;">
+      <div class="display" style="font-size:24px;line-height:1.2;">Celebrate</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-encourage.svg" style="width:200px;height:200px;">
+      <div class="display" style="font-size:24px;line-height:1.2;">Encourage</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:24px;">
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-count-on-flight.svg" style="width:200px;height:200px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div class="display" style="font-size:24px;line-height:1.2;color:#6B4E9C;">Count-On Flight</div>
+        <div class="cap">Skill: counting on</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-make-ten-magic.svg" style="width:200px;height:200px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div class="display" style="font-size:24px;line-height:1.2;color:#6B4E9C;">Make-Ten Magic</div>
+        <div class="cap">Skill: make-a-ten within 20</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-missing-number-detective.svg" style="width:200px;height:200px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div class="display" style="font-size:24px;line-height:1.2;color:#6B4E9C;">Missing Number Detective</div>
+        <div class="cap">Skill: subtraction as unknown addend</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+      <img src="ollie-story-solver.svg" style="width:200px;height:200px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div class="display" style="font-size:24px;line-height:1.2;color:#6B4E9C;">Story Solver</div>
+        <div class="cap">Unit 3: word problems</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

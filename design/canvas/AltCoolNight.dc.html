@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Fredoka:wght@500;600&display=swap">
+  <style>
+    body { margin: 0; background: #262C3B; color: #E9E4D8; font-family: "Patrick Hand", "Comic Sans MS", "Trebuchet MS", sans-serif; }
+    * { box-sizing: border-box; }
+    a { color: #6FB7D6; } a:hover { color: #3F8FB4; }
+    .sk { border: 2px dashed rgba(233, 228, 216, 0.55); border-radius: 20px; }
+    .lbl { font-size: 22px; line-height: 1.2; color: #E9E4D8; }
+  </style>
+</helmet>
+<div style="width:1024px;height:768px;background:#262C3B;overflow:hidden;position:relative;">
+
+  <!-- caption -->
+  <div style="position:absolute;left:32px;top:16px;width:960px;font-size:18px;line-height:1.4;color:#E9E4D8;opacity:0.9;">Alternate A, cool night. Axis: temperature. A navy sky and teal accents instead of warm paper. Trade-off: calmer and more bedtime, but Ollie's rust and the sun Play button lose their warmth on a dark ground, and small type needs more contrast work.</div>
+
+  <!-- stars -->
+  <svg viewBox="0 0 1024 768" width="1024" height="768" style="position:absolute;left:0;top:0;" fill="#E9E4D8">
+    <circle cx="140" cy="120" r="2"></circle><circle cx="300" cy="90" r="1.5"></circle><circle cx="420" cy="150" r="2"></circle><circle cx="560" cy="80" r="1.5"></circle><circle cx="700" cy="140" r="2"></circle><circle cx="880" cy="100" r="1.5"></circle><circle cx="960" cy="230" r="2"></circle><circle cx="80" cy="330" r="1.5"></circle><circle cx="500" cy="230" r="1.5"></circle><circle cx="820" cy="300" r="2"></circle><circle cx="240" cy="260" r="1.5"></circle>
+  </svg>
+
+  <!-- moon behind Ollie -->
+  <div style="position:absolute;left:12px;bottom:60px;width:260px;height:260px;border-radius:999px;background:#E9E4D8;opacity:0.22;"></div>
+  <img src="ollie-idle.svg" style="position:absolute;left:32px;bottom:24px;width:220px;height:220px;filter:saturate(0.6) brightness(1.05);">
+
+  <!-- greeting bubble, sketched -->
+  <div class="sk" style="position:absolute;left:48px;top:96px;padding:16px 24px;font-size:30px;line-height:1.2;">Hi Mia! Ready to play?</div>
+
+  <!-- top bar -->
+  <div style="position:absolute;right:32px;top:88px;display:flex;align-items:center;gap:12px;">
+    <div class="sk" style="height:48px;padding:0 16px;border-radius:999px;display:flex;align-items:center;font-size:22px;">coins 40</div>
+    <div class="sk" style="height:48px;padding:0 16px;border-radius:999px;display:flex;align-items:center;font-size:22px;">streak 3</div>
+    <div class="sk" style="width:64px;height:64px;border-radius:999px;"></div>
+  </div>
+  <div class="sk" style="position:absolute;right:32px;bottom:160px;width:56px;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:16px;">gate</div>
+
+  <!-- path -->
+  <svg viewBox="0 0 692 260" width="692" height="260" style="position:absolute;left:300px;top:250px;" fill="none">
+    <path d="M96 150 C 200 40, 260 40, 346 118 S 520 220, 596 120" stroke="#6FB7D6" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 16"></path>
+    <circle cx="96" cy="150" r="52" stroke="#E9E4D8" stroke-width="3" stroke-dasharray="6 6"></circle>
+    <circle cx="346" cy="118" r="60" fill="#2E5E6B" stroke="#6FB7D6" stroke-width="4"></circle>
+    <circle cx="596" cy="120" r="52" stroke="#E9E4D8" stroke-width="3" stroke-dasharray="6 6" opacity="0.5"></circle>
+    <path d="M78 150l12 12 24-26" stroke="#E9E4D8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+    <rect x="582" y="114" width="28" height="22" rx="4" stroke="#E9E4D8" stroke-width="3" opacity="0.6"></rect>
+  </svg>
+  <div class="lbl" style="position:absolute;left:300px;top:466px;width:192px;text-align:center;">Unit 1<br>Partners to 10</div>
+  <div class="lbl" style="position:absolute;left:526px;top:440px;width:240px;text-align:center;">Unit 2 (now)<br>Counting on, make-a-ten</div>
+  <div class="lbl" style="position:absolute;left:800px;top:440px;width:192px;text-align:center;opacity:0.55;">Unit 3<br>Word problems</div>
+  <div style="position:absolute;left:690px;top:278px;height:32px;padding:0 12px;border-radius:999px;background:#6FB7D6;color:#262C3B;font-size:18px;line-height:32px;">Count-On Flight</div>
+
+  <!-- play, shop -->
+  <div style="position:absolute;left:372px;bottom:48px;width:280px;height:96px;border-radius:28px;background:#6FB7D6;color:#262C3B;font-family:Fredoka,'Trebuchet MS',sans-serif;font-weight:600;font-size:44px;line-height:96px;text-align:center;box-shadow:0 4px 0 #3F8FB4;">Play</div>
+  <div class="sk" style="position:absolute;right:32px;bottom:64px;height:64px;padding:0 24px;border-radius:28px;display:flex;align-items:center;font-size:24px;">Shop</div>
+
+</div>
+</x-dc>
+</body>
+</html>

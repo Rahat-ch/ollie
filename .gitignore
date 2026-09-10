@@ -46,3 +46,7 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /blob-report/
+
+# Seeded design canvas pages (regenerated from the .dc.html sources; see design/canvas/README.md)
+design/canvas/*.html
+!design/canvas/*.dc.html

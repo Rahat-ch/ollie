@@ -1,0 +1,22 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Direction" },
+    { "id": "page-2", "name": "Alternates" }
+  ],
+  "artboards": [
+    { "file": "Tokens.dc.html", "x": 0, "y": 0, "w": 1024, "h": 1400, "page": "page-1" },
+    { "file": "Ollie.dc.html", "x": 1144, "y": 0, "w": 1024, "h": 640, "page": "page-1" },
+    { "file": "Main.dc.html", "title": "Home", "x": 0, "y": 1560, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "Session.dc.html", "x": 1144, "y": 1560, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "Celebration.dc.html", "x": 2288, "y": 1560, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "Onboarding.dc.html", "x": 0, "y": 2488, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "ParentArea.dc.html", "x": 1144, "y": 2488, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "Notebook.dc.html", "x": 2288, "y": 2488, "w": 1024, "h": 768, "page": "page-1" },
+    { "file": "AltCoolNight.dc.html", "x": 0, "y": 0, "w": 1024, "h": 768, "page": "page-2" },
+    { "file": "AltBoldPoster.dc.html", "x": 1144, "y": 0, "w": 1024, "h": 768, "page": "page-2" }
+  ],
+  "annotations": [
+    { "id": "review-note", "x": 2288, "y": 800, "w": 320, "page": "page-1", "text": "Review: mark approved in .scratch/k5-math/issues/02-design-direction.md, or leave notes here." }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

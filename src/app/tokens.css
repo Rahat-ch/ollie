@@ -1,0 +1,157 @@
+/*
+ * Design tokens. This file is the CSS source of truth; docs/design/direction.md
+ * explains each token and src/design/tokens.ts mirrors the colour hexes for
+ * SVG generation (src/design/tokens.test.ts keeps the two in step).
+ *
+ * The fonts (--font-display, --font-text) are declared by next/font/local in
+ * src/app/layout.tsx, not here; the @theme block below only maps them into
+ * Tailwind so `font-display` and `font-text` work.
+ */
+
+:root {
+  /* Palette: warm-toned; whites and blacks are tinted toward amber. */
+  --paper: #FFF7EC;
+  --paper-2: #F8E8CF;
+  --paper-3: #EED7B5;
+  --ink: #3B2E2A;
+  --ink-soft: #7A6660;
+  --rust: #C9713F;
+  --rust-deep: #A8532C;
+  --cream: #F8DFB8;
+  --sun: #F2B134;
+  --sun-deep: #D0901E;
+  --leaf: #4CAF7A;
+  --leaf-deep: #2F8A5B;
+  --sky: #6FB7D6;
+  --sky-deep: #3F8FB4;
+  --berry: #D95F76;
+  --berry-deep: #B23F56;
+  --plum: #6B4E9C;
+  --plum-deep: #4E3676;
+  --teal: #2E5E6B;
+  --teal-deep: #1F434D;
+  --counter-red: #E0553F;
+  --counter-yellow: #F5C542;
+
+  /* Type scale on tablet (size / line-height). */
+  --text-display-xl: 64px;
+  --leading-display-xl: 1.05;
+  --text-display-l: 44px;
+  --leading-display-l: 1.1;
+  --text-display-m: 32px;
+  --leading-display-m: 1.15;
+  --text-display-s: 24px;
+  --leading-display-s: 1.2;
+  --text-body-l: 20px;
+  --leading-body-l: 1.5;
+  --text-body: 18px;
+  --leading-body: 1.5;
+  --text-caption: 15px;
+  --leading-caption: 1.4;
+  --text-numeral: 40px;
+  --leading-numeral: 1;
+
+  /* Spacing scale (px): 4, 8, 12, 16, 24, 32, 48, 64, 96. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+
+  /* Radii: chips and inputs, cards and keys, big buttons, pills. */
+  --radius-chip: 12px;
+  --radius-card: 20px;
+  --radius-button: 28px;
+  --radius-pill: 999px;
+
+  /*
+   * Elevation is a flat paper shadow, never blur. A button's shadow is the
+   * deep tone of its own hue: set --button-shadow-color on the button
+   * (defaults to the primary action's --sun-deep). Pressed buttons drop to
+   * the pressed shadow and translate down by --press-offset.
+   */
+  --shadow-button: 0 4px 0 var(--button-shadow-color, var(--sun-deep));
+  --shadow-button-pressed: 0 1px 0 var(--button-shadow-color, var(--sun-deep));
+  --shadow-card: 0 3px 0 var(--paper-3);
+  --press-offset: 3px;
+
+  /* Motion: state changes, the celebrate overshoot, Ollie's idle breathing. */
+  --duration-state: 180ms;
+  --duration-celebrate: 420ms;
+  --duration-breathe: 3000ms;
+  --ease-state: ease-out;
+  --ease-celebrate: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Touch targets and layout. */
+  --touch-learner: 64px;
+  --touch-parent: 44px;
+  --gutter: 32px;
+  --content-max: 960px;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-rust: var(--rust);
+  --color-rust-deep: var(--rust-deep);
+  --color-cream: var(--cream);
+  --color-sun: var(--sun);
+  --color-sun-deep: var(--sun-deep);
+  --color-leaf: var(--leaf);
+  --color-leaf-deep: var(--leaf-deep);
+  --color-sky: var(--sky);
+  --color-sky-deep: var(--sky-deep);
+  --color-berry: var(--berry);
+  --color-berry-deep: var(--berry-deep);
+  --color-plum: var(--plum);
+  --color-plum-deep: var(--plum-deep);
+  --color-teal: var(--teal);
+  --color-teal-deep: var(--teal-deep);
+  --color-counter-red: var(--counter-red);
+  --color-counter-yellow: var(--counter-yellow);
+
+  --font-display: var(--font-display), ui-rounded, system-ui, sans-serif;
+  --font-text: var(--font-text), system-ui, sans-serif;
+
+  --text-display-xl: var(--text-display-xl);
+  --text-display-xl--line-height: var(--leading-display-xl);
+  --text-display-l: var(--text-display-l);
+  --text-display-l--line-height: var(--leading-display-l);
+  --text-display-m: var(--text-display-m);
+  --text-display-m--line-height: var(--leading-display-m);
+  --text-display-s: var(--text-display-s);
+  --text-display-s--line-height: var(--leading-display-s);
+  --text-body-l: var(--text-body-l);
+  --text-body-l--line-height: var(--leading-body-l);
+  --text-body: var(--text-body);
+  --text-body--line-height: var(--leading-body);
+  --text-caption: var(--text-caption);
+  --text-caption--line-height: var(--leading-caption);
+  --text-numeral: var(--text-numeral);
+  --text-numeral--line-height: var(--leading-numeral);
+
+  --radius-chip: var(--radius-chip);
+  --radius-card: var(--radius-card);
+  --radius-button: var(--radius-button);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-button: var(--shadow-button);
+  --shadow-button-pressed: var(--shadow-button-pressed);
+  --shadow-card: var(--shadow-card);
+
+  --ease-state: var(--ease-state);
+  --ease-celebrate: var(--ease-celebrate);
+
+  --spacing-touch-learner: var(--touch-learner);
+  --spacing-touch-parent: var(--touch-parent);
+  --spacing-gutter: var(--gutter);
+  --container-content: var(--content-max);
+}

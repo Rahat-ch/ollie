@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Andika:wght@400;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFF7EC; color: #3B2E2A; font-family: Andika, Verdana, sans-serif; }
+    * { box-sizing: border-box; }
+    a { color: #3F8FB4; } a:hover { color: #2E5E6B; }
+    .display { font-family: Fredoka, "Trebuchet MS", sans-serif; font-weight: 600; }
+    .cap { font-size: 15px; line-height: 1.4; color: #7A6660; }
+    .key { font-family: Fredoka, "Trebuchet MS", sans-serif; font-weight: 600; font-size: 40px; line-height: 1; color: #3B2E2A; width: 64px; height: 64px; border-radius: 20px; background: #F8DFB8; box-shadow: 0 4px 0 #EED7B5; display: flex; align-items: center; justify-content: center; }
+    .cell { width: 60px; height: 60px; border: 3px solid rgba(59, 46, 42, 0.6); display: flex; align-items: center; justify-content: center; }
+  </style>
+</helmet>
+<div style="width:1024px;height:768px;background:#FFF7EC;overflow:hidden;position:relative;">
+
+  <!-- Session progress: 8 Problems, 3 done -->
+  <div style="position:absolute;left:0;top:28px;width:1024px;display:flex;justify-content:center;gap:12px;">
+    <div style="width:16px;height:16px;border-radius:999px;background:#4CAF7A;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#4CAF7A;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#4CAF7A;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#EED7B5;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#EED7B5;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#EED7B5;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#EED7B5;"></div>
+    <div style="width:16px;height:16px;border-radius:999px;background:#EED7B5;"></div>
+  </div>
+
+  <!-- Ollie reads the Problem -->
+  <div style="position:absolute;left:48px;top:68px;display:flex;flex-direction:column;align-items:flex-start;">
+    <div class="display" style="padding:16px 24px;border-radius:28px;background:#F8E8CF;box-shadow:0 3px 0 #EED7B5;font-size:24px;line-height:1.2;max-width:440px;">Eight plus five. Can you make a ten?</div>
+    <svg viewBox="0 0 40 28" width="40" height="28" style="margin-left:36px;"><path d="M0 0h40L10 28z" fill="#F8E8CF"></path></svg>
+  </div>
+
+  <!-- Repeat -->
+  <div style="position:absolute;left:530px;top:72px;width:64px;height:64px;border-radius:999px;background:#F8E8CF;box-shadow:0 4px 0 #EED7B5;display:flex;align-items:center;justify-content:center;">
+    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#3B2E2A" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"></path><path d="M4 3.5V8h4.5"></path></svg>
+  </div>
+
+  <!-- The Problem -->
+  <div class="display" style="position:absolute;left:48px;top:180px;width:546px;text-align:center;font-size:64px;line-height:1.05;">8 + 5 = ?</div>
+
+  <!-- Ten-frame board on paper-2 with the five waiting -->
+  <div style="position:absolute;left:48px;top:280px;display:flex;align-items:center;gap:20px;">
+    <div style="padding:20px;border-radius:20px;background:#F8E8CF;box-shadow:0 3px 0 #EED7B5;display:flex;flex-direction:column;gap:0;">
+      <div style="display:flex;">
+        <div class="cell"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+      </div>
+      <div style="display:flex;">
+        <div class="cell" style="border-top:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-top:none;border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-top:none;border-left:none;"><div style="width:44px;height:44px;border-radius:999px;background:#E0553F;"></div></div>
+        <div class="cell" style="border-top:none;border-left:none;"></div>
+        <div class="cell" style="border-top:none;border-left:none;"></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="width:44px;height:44px;border-radius:999px;background:#F5C542;"></div>
+      <div style="width:44px;height:44px;border-radius:999px;background:#F5C542;"></div>
+      <div style="width:44px;height:44px;border-radius:999px;background:#F5C542;"></div>
+      <div style="width:44px;height:44px;border-radius:999px;background:#F5C542;"></div>
+      <div style="width:44px;height:44px;border-radius:999px;background:#F5C542;"></div>
+    </div>
+  </div>
+
+  <!-- Ollie talking -->
+  <img src="ollie-talking.svg" style="position:absolute;left:32px;bottom:24px;width:200px;height:200px;">
+
+  <!-- Number pad 0-20 -->
+  <div style="position:absolute;right:32px;top:112px;width:352px;display:flex;flex-direction:column;gap:12px;">
+    <div style="display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:8px;">
+      <div class="key">0</div><div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div>
+      <div class="key">5</div><div class="key">6</div><div class="key">7</div><div class="key">8</div><div class="key">9</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5, minmax(0, 1fr));gap:8px;">
+      <div class="key">10</div><div class="key">11</div><div class="key">12</div><div class="key" style="background:#EED7B5;box-shadow:0 1px 0 #EED7B5;transform:translateY(3px);">13</div><div class="key">14</div>
+      <div class="key">15</div><div class="key">16</div><div class="key">17</div><div class="key">18</div><div class="key">19</div>
+    </div>
+    <div style="display:flex;justify-content:center;">
+      <div class="key">20</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

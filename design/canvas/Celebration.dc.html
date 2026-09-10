@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Andika:wght@400;700&display=swap">
+  <style>
+    body { margin: 0; background: #FFF7EC; color: #3B2E2A; font-family: Andika, Verdana, sans-serif; }
+    * { box-sizing: border-box; }
+    a { color: #3F8FB4; } a:hover { color: #2E5E6B; }
+    .display { font-family: Fredoka, "Trebuchet MS", sans-serif; font-weight: 600; }
+    .cap { font-size: 15px; line-height: 1.4; color: #7A6660; }
+    .fcell { width: 22px; height: 22px; border: 2px solid rgba(255, 247, 236, 0.6); display: flex; align-items: center; justify-content: center; }
+  </style>
+</helmet>
+<div style="width:1024px;height:768px;background:#FFF7EC;overflow:hidden;position:relative;">
+
+  <!-- Paper confetti: flat shapes in the six hues -->
+  <svg viewBox="0 0 1024 768" width="1024" height="768" style="position:absolute;left:0;top:0;">
+    <rect x="70" y="60" width="26" height="14" rx="3" fill="#F2B134" transform="rotate(-24 83 67)"></rect>
+    <rect x="180" y="150" width="14" height="26" rx="3" fill="#D95F76" transform="rotate(18 187 163)"></rect>
+    <circle cx="130" cy="260" r="9" fill="#4CAF7A"></circle>
+    <rect x="240" y="40" width="26" height="14" rx="3" fill="#6FB7D6" transform="rotate(30 253 47)"></rect>
+    <rect x="330" y="120" width="14" height="26" rx="3" fill="#6B4E9C" transform="rotate(-40 337 133)"></rect>
+    <circle cx="420" cy="60" r="8" fill="#C9713F"></circle>
+    <rect x="600" y="50" width="26" height="14" rx="3" fill="#4CAF7A" transform="rotate(12 613 57)"></rect>
+    <rect x="700" y="130" width="14" height="26" rx="3" fill="#F2B134" transform="rotate(-30 707 143)"></rect>
+    <circle cx="800" cy="70" r="9" fill="#D95F76"></circle>
+    <rect x="880" y="140" width="26" height="14" rx="3" fill="#6B4E9C" transform="rotate(40 893 147)"></rect>
+    <rect x="950" y="60" width="14" height="26" rx="3" fill="#6FB7D6" transform="rotate(-15 957 73)"></rect>
+    <circle cx="930" cy="280" r="8" fill="#C9713F"></circle>
+    <rect x="60" y="420" width="26" height="14" rx="3" fill="#6B4E9C" transform="rotate(20 73 427)"></rect>
+    <circle cx="110" cy="560" r="9" fill="#F2B134"></circle>
+    <rect x="200" y="640" width="14" height="26" rx="3" fill="#4CAF7A" transform="rotate(-25 207 653)"></rect>
+    <rect x="850" y="470" width="14" height="26" rx="3" fill="#D95F76" transform="rotate(35 857 483)"></rect>
+    <circle cx="960" cy="600" r="9" fill="#6FB7D6"></circle>
+    <rect x="780" y="680" width="26" height="14" rx="3" fill="#C9713F" transform="rotate(-20 793 687)"></rect>
+    <rect x="500" y="700" width="14" height="26" rx="3" fill="#6B4E9C" transform="rotate(45 507 713)"></rect>
+    <circle cx="640" cy="720" r="8" fill="#4CAF7A"></circle>
+  </svg>
+
+  <div style="position:absolute;left:32px;top:40px;width:960px;display:flex;flex-direction:column;align-items:center;gap:24px;">
+    <div class="display" style="font-size:64px;line-height:1.05;text-align:center;max-width:820px;text-wrap:balance;">You taught Ollie Make-Ten Magic!</div>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:48px;">
+      <img src="ollie-celebrate.svg" style="width:300px;height:300px;">
+      <div style="display:flex;flex-direction:column;gap:20px;width:360px;">
+        <!-- Power card -->
+        <div style="display:flex;align-items:center;gap:20px;padding:20px 24px;border-radius:20px;background:#6B4E9C;box-shadow:0 4px 0 #4E3676;color:#FFF7EC;">
+          <div style="display:flex;flex-direction:column;flex:none;">
+            <div style="display:flex;">
+              <div class="fcell"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+            </div>
+            <div style="display:flex;">
+              <div class="fcell" style="border-top:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-top:none;border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-top:none;border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#E0553F;"></div></div>
+              <div class="fcell" style="border-top:none;border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#F5C542;"></div></div>
+              <div class="fcell" style="border-top:none;border-left:none;"><div style="width:14px;height:14px;border-radius:999px;background:#F5C542;"></div></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div class="cap" style="color:#FFF7EC;opacity:0.8;">New Power</div>
+            <div class="display" style="font-size:32px;line-height:1.15;">Make-Ten Magic</div>
+          </div>
+        </div>
+        <!-- Coins and Streak -->
+        <div style="display:flex;gap:16px;">
+          <div class="display" style="display:flex;align-items:center;gap:10px;height:64px;padding:0 24px 0 18px;border-radius:999px;background:#F8E8CF;box-shadow:0 3px 0 #EED7B5;font-size:32px;line-height:1;">
+            <svg viewBox="0 0 24 24" width="36" height="36" stroke="#3B2E2A" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="9" fill="#F2B134"></circle><circle cx="12" cy="12" r="4" fill="none"></circle></svg>
+            <span>+10</span>
+          </div>
+          <div class="display" style="display:flex;align-items:center;gap:10px;height:64px;padding:0 24px 0 18px;border-radius:999px;background:#F8E8CF;box-shadow:0 3px 0 #EED7B5;font-size:32px;line-height:1;">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="#4CAF7A" stroke="#3B2E2A" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.5 3.2 5.5 5.6 5.5 10a5.5 5.5 0 0 1-11 0c0-2.3 1.2-3.7 2.4-4.9.2 1.7.9 2.7 2 3C10.3 8.4 10 6 12 3z"></path></svg>
+            <span>Day 3!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="display" style="width:280px;height:96px;border-radius:28px;background:#F2B134;box-shadow:0 4px 0 #D0901E;display:flex;align-items:center;justify-content:center;font-size:44px;line-height:1.1;color:#3B2E2A;">Done</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

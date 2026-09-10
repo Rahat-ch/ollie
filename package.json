@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "brand:images": "node scripts/brand-images.mjs",
     "licenses:check": "node scripts/third-party.mjs --check"
   },
   "dependencies": {
