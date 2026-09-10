@@ -1,0 +1,108 @@
+/**
+ * Vocabulary is the glossary in CONTEXT.md. Everything here is plain data:
+ * the Loop is a pure function over these shapes and does no I/O.
+ */
+
+export type SkillId = "partners-to-10" | "teen-numbers";
+
+export type Unit = 1 | 2 | 3;
+
+export type Visual = "ten-frame" | "number-line" | "theme-picture";
+
+/** Inclusive bounds on the number a Skill's template family draws. */
+export type NumberRange = { readonly min: number; readonly max: number };
+
+/**
+ * The arithmetic behind a Problem, with every number filled in. The Learner
+ * is asked for the value at `unknown`; the engine already knows it.
+ */
+export type Equation = {
+  readonly left: number;
+  readonly op: "+" | "-";
+  readonly right: number;
+  readonly result: number;
+  readonly unknown: "left" | "right" | "result";
+};
+
+export type ProblemId = string;
+
+export type Problem = {
+  /** Unique across the Profile's whole history, e.g. `p17`. */
+  readonly id: ProblemId;
+  readonly skill: SkillId;
+  readonly structure: string;
+  readonly equation: Equation;
+  /** The single correct answer, decided by the engine. */
+  readonly answer: number;
+  /** What Ollie says. Hand-written template text, never model-written. */
+  readonly prompt: string;
+};
+
+export type AssistanceState =
+  | "first-try-correct"
+  | "hint-assisted-correct"
+  | "revealed"
+  | "unresolved";
+
+export type Attempt = {
+  readonly answer: number;
+  readonly correct: boolean;
+  /** Context for the Coach only. Never read by the Knowledge Estimate. */
+  readonly responseMs: number;
+};
+
+export type LogEntry = {
+  readonly problem: Problem;
+  /** 1-based position in the Session. */
+  readonly position: number;
+  readonly attempts: readonly Attempt[];
+  readonly assistance: AssistanceState;
+};
+
+export type PlanSkill = {
+  readonly skill: SkillId;
+  /** Relative share of the Session's Problems. */
+  readonly weight: number;
+  /** Narrows the Skill's standard range; defaults to the Skill's own default. */
+  readonly numberRange?: NumberRange;
+  /** Restricts the Skill's structures; defaults to all of them. */
+  readonly structures?: readonly string[];
+};
+
+export type SessionPlan = {
+  readonly length: number;
+  readonly skills: readonly PlanSkill[];
+  readonly reviewShare: number;
+  readonly hypothesisUnderTest: string | null;
+};
+
+export type SessionLog = {
+  /** 1-based count of Sessions including this one. */
+  readonly sessionNumber: number;
+  readonly seed: string;
+  readonly plan: SessionPlan;
+  readonly entries: readonly LogEntry[];
+};
+
+export type SkillState = {
+  /** Bayesian Knowledge Tracing probability that the Skill is known. */
+  readonly estimate: number;
+  /** Outcome of the last ten first attempts, oldest first. */
+  readonly recentFirstAttempts: readonly boolean[];
+  /** Latched: once Mastered, a Skill stays Mastered. */
+  readonly mastered: boolean;
+};
+
+export type ProfileState = {
+  /** The next Problem number to allocate; keeps IDs unique across history. */
+  readonly nextProblemNumber: number;
+  readonly sessionsCompleted: number;
+  readonly skills: Readonly<Record<SkillId, SkillState>>;
+};
+
+export type SessionResult = {
+  readonly log: SessionLog;
+  readonly profile: ProfileState;
+  /** Skills that became Mastered during this Session. */
+  readonly newlyMastered: readonly SkillId[];
+};

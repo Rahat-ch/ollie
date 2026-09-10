@@ -34,7 +34,10 @@ pnpm lint         # eslint
 pnpm test         # unit tests (vitest)
 pnpm test:e2e     # browser tests (playwright; builds and starts the app on :3100)
 pnpm licenses:check  # fail on any copyleft or unrecognised licence
+pnpm diagnostic   # run the Diagnostic Session through the Loop and print the Log and Estimates
 ```
+
+`pnpm diagnostic --seed puppies --script fhrfffhf` scripts the answers (one letter per Problem: `f` first-try, `h` Hint-assisted, `r` Revealed) and `--sessions 3` runs several Sessions on one Profile.
 
 Copy `.env.example` to `.env.local` for local vendor keys. Secrets are read from environment variables only and are never committed. Generated audio is written to `AUDIO_DIR` (default `./data/audio`, gitignored).
 
@@ -45,6 +48,7 @@ A Docker container built by Coolify on a Hetzner host, behind Cloudflare, with a
 ## Where things are
 
 - `CONTEXT.md`: the glossary. Its vocabulary is canonical in code, tests, and docs.
+- `src/loop/`: the Loop. A pure function from a Session Plan, a Profile, a seed, and an answer policy to a Session Log and the next Profile; the Skill template families, Bayesian Knowledge Tracing, and Mastery live behind it. No I/O.
 - `docs/adr/`: the three architectural decisions (engine owns the math; no accounts; the Coach plans inside a bounded space).
 - `docs/research/k5-math-game/`: the research the design rests on.
 - `.scratch/k5-math/`: the spec and implementation tickets.
