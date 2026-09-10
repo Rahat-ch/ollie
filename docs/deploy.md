@@ -33,18 +33,18 @@ Set these in the resource's environment variables tab. Secrets live only here: t
 
 | Variable | Required | Value |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | yes | from <https://console.anthropic.com/settings/keys> |
-| `ELEVENLABS_API_KEY` | yes | from the ElevenLabs dashboard, profile / API keys |
+| `ANTHROPIC_API_KEY` | for Stories, Coach, Summary (optional at boot) | from <https://console.anthropic.com/settings/keys> |
+| `ELEVENLABS_API_KEY` | for Ollie's voice (optional at boot) | from the ElevenLabs dashboard, profile / API keys |
 | `AUDIO_DIR` | no | defaults to `/data/audio` inside the image; set it only if you change the volume mount path |
 
 Mark the two API keys as runtime (not build-time) variables if Coolify asks; the build does not need them. Locally the app defaults `AUDIO_DIR` to `./data/audio` (git-ignored).
 
 ## Cloudflare DNS and TLS
 
-1. **DNS record.** In the `rahatcodes.com` zone, add an `A` record with name `ollie` pointing at the Hetzner host's public IPv4 (or a `CNAME` to an existing proxied hostname for that host). Proxy status: **Proxied** (orange cloud).
-2. **SSL/TLS mode.** In the zone's SSL/TLS settings choose **Full (strict)**. Coolify's Traefik serves a valid Let's Encrypt certificate at the origin, so strict verification works, and it avoids the redirect loop that **Flexible** causes when Traefik redirects HTTP to HTTPS.
-3. **Certificate issuance gotcha.** Traefik obtains the certificate with an HTTP-01 challenge on port 80. With the Cloudflare proxy on, that challenge normally passes through, but it can fail if the zone forces HTTPS at the edge ("Always Use HTTPS", or an HTTPS redirect rule) before the certificate exists. If Coolify reports a certificate error or the site serves Traefik's self-signed default cert:
-   - temporarily switch the `ollie` record to **DNS only** (grey cloud), redeploy or wait for Traefik to retry, confirm <https://ollie.rahatcodes.com> shows a Let's Encrypt cert, then switch back to **Proxied**; or
+1. **DNS record.** In the `rahatcodes.com` zone, add an `A` record with name `ollie` pointing at the Hetzner host's public IPv4. Proxy status: **DNS only** (grey cloud) for the first deploy, so Traefik's HTTP-01 challenge on port 80 reaches the origin unmodified and Let's Encrypt issues the certificate.
+2. **Proxy and SSL/TLS mode, after the first successful deploy.** Once <https://ollie.rahatcodes.com> serves a valid Let's Encrypt certificate, switch the record to **Proxied** (orange cloud) and set the zone's SSL/TLS mode to **Full (strict)**. Strict verification works because the origin certificate is valid, and it avoids the redirect loop that **Flexible** causes when Traefik redirects HTTP to HTTPS.
+3. **Certificate issuance gotcha.** If the proxy was turned on before the certificate existed, the challenge can fail when the zone forces HTTPS at the edge ("Always Use HTTPS", or an HTTPS redirect rule). If Coolify reports a certificate error or the site serves Traefik's self-signed default cert:
+   - switch the `ollie` record back to **DNS only**, redeploy or wait for Traefik to retry, confirm the Let's Encrypt cert, then switch back to **Proxied**; or
    - keep the proxy on and use SSL/TLS mode **Full** (not strict) until the origin certificate is in place, then move to **Full (strict)**.
 
 ## Running the image locally
@@ -77,4 +77,4 @@ docker exec <new-container> ls -la /data/audio   # .redeploy-probe is still ther
 
 Remove the probe file afterwards. If it is missing, the mount was not a named volume, or the destination path is not exactly `/data/audio`.
 
-**By health check.** After the redeploy, <https://ollie.rahatcodes.com/api/health> must still report `"audioDirWritable": true`. A `false` here means the volume mounted but is not writable by uid 1001, which happens when a host-path bind mount was used instead of the named volume.
+**What the health check does and does not prove.** <https://ollie.rahatcodes.com/api/health> returns 503 with `"audioDirWritable": false` when the mount is not writable by uid 1001, which happens when a host-path bind mount was used instead of the named volume. A `true` only proves the directory is writable: an anonymous volume, or no volume at all, is writable too. Only the probe file above proves the data survives a redeploy.

@@ -18,5 +18,10 @@ async function ensureWritable(dir: string): Promise<boolean> {
 export async function GET() {
   const { audioDir } = readEnv();
   const audioDirWritable = await ensureWritable(audioDir);
-  return NextResponse.json({ ok: true, audioDir, audioDirWritable });
+  // The Docker HEALTHCHECK and Coolify only look at the status code, so an
+  // unwritable audio directory must surface as a non-2xx response.
+  return NextResponse.json(
+    { ok: audioDirWritable, audioDir, audioDirWritable },
+    { status: audioDirWritable ? 200 : 503 },
+  );
 }

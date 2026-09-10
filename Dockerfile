@@ -19,8 +19,9 @@ ARG NODE_IMAGE=node:24-alpine
 FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
 
-# libc6-compat is the standard Alpine shim for the few Node native modules
-# that link against glibc symbols (documented in the Next.js Docker example).
+# libc6-compat is the standard Alpine shim for Node native modules that link
+# against glibc symbols (documented in the Next.js Docker example). Nothing in
+# the tree needs it today; it is cheap insurance for a future native dependency.
 RUN apk add --no-cache libc6-compat
 
 # pnpm comes from Corepack, which reads the exact version pinned in the
@@ -29,8 +30,8 @@ RUN apk add --no-cache libc6-compat
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable pnpm
 
-# pnpm-workspace.yaml carries `ignoredBuiltDependencies`, which pnpm needs at
-# install time to know not to run sharp/unrs-resolver postinstall scripts.
+# pnpm-workspace.yaml carries `ignoredBuiltDependencies` (skip unrs-resolver's
+# postinstall) and the override that removes `sharp`; pnpm needs both at install time.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 

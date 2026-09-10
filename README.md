@@ -14,8 +14,8 @@ A focused Grade 1 arithmetic progression aligned to key CCSS 1.OA and 1.NBT conc
 
 | Unit | Skill | Standard |
 | --- | --- | --- |
-| 1. Partners and teens | Partners to 10 on a ten-frame | K.OA.4 (prerequisite), 1.OA.6 |
-| 1. Partners and teens | Teen numbers as 10 + n | 1.NBT.2b |
+| 1. Partners to 10 | Partners to 10 on a ten-frame | K.OA.4 (prerequisite), 1.OA.6 |
+| 1. Partners to 10 | Teen numbers as 10 + n | 1.NBT.2b |
 | 2. Counting on and make-a-ten | Counting on from the larger number | 1.OA.5 |
 | 2. Counting on and make-a-ten | Make-a-ten within 20 | 1.OA.6 |
 | 2. Counting on and make-a-ten | Subtraction as unknown addend | 1.OA.4 |
