@@ -1,6 +1,6 @@
 # Design direction
 
-Status: draft for review on the design canvas (ticket 02). Once the user marks the canvas approved, this file is the written source of truth and every screen is built to it. Tokens live in `src/app/tokens.css`; this document explains them.
+Status: approved by the user on 2026-09-10 (ticket 02). This file is the written source of truth and every screen is built to it. Tokens live in `src/app/tokens.css`; this document explains them.
 
 ## Feel
 
