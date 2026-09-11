@@ -60,7 +60,7 @@ function strengths(evidence: readonly CoachEvidence[]): string[] {
  * Plan the first unmastered Skill in the Plan Space (the last one once all
  * are Mastered), eight Problems, with a quarter given to Review Problems
  * whenever some other Skill is Mastered. The Hypothesis under test is the
- * chosen Skill's if it has one, else the first in the Notes, else none.
+ * chosen Skill's if it has one, else none: a Plan only tests what it asks.
  */
 function planFor(space: PlanSpace, hypotheses: readonly Hypothesis[]): SessionPlan {
   const chosen = space.skills.find((s) => !s.mastered) ?? space.skills[space.skills.length - 1];
@@ -70,7 +70,7 @@ function planFor(space: PlanSpace, hypotheses: readonly Hypothesis[]): SessionPl
     length: 8,
     skills: [{ skill: chosen.skill, weight: 1 }],
     reviewShare: reviewable ? 0.25 : 0,
-    hypothesisUnderTest: (ownHypothesis ?? hypotheses[0])?.id ?? null,
+    hypothesisUnderTest: ownHypothesis?.id ?? null,
   };
 }
 

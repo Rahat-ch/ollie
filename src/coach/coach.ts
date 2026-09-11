@@ -56,7 +56,7 @@ export function checkCoachOutput(value: unknown, result: SessionResult, notes: L
   return reasons.length === 0 ? { ok: true, output } : { ok: false, reasons };
 }
 
-type Attempt =
+type CoachCall =
   | { readonly ok: true; readonly output: CoachOutput }
   | { readonly ok: false; readonly output?: CoachOutput; readonly reasons: readonly string[] };
 
@@ -67,12 +67,12 @@ const errorMessage = (error: unknown): string => (error instanceof Error ? error
  * gate in the adapter) is a rejection like any other, with the message as
  * its reason and no output to show the retry.
  */
-async function attempt(
+async function callCoach(
   generation: Generation,
   input: CoachInput,
   result: SessionResult,
   notes: LearnerNotes,
-): Promise<Attempt> {
+): Promise<CoachCall> {
   // Typed by the seam; checked as unknown below, and shown back as it came.
   let output: CoachOutput;
   try {
@@ -98,10 +98,10 @@ export async function coachSession(
   notes: LearnerNotes,
 ): Promise<CoachStep> {
   const input = coachInput(result, notes);
-  const first = await attempt(generation, input, result, notes);
+  const first = await callCoach(generation, input, result, notes);
   if (first.ok) return { ...first.output, source: "coach", rejections: [] };
   const rejection: CoachRejection = { attempt: 1, reasons: first.reasons };
-  const retry = await attempt(
+  const retry = await callCoach(
     generation,
     { ...input, rejected: { output: first.output, reasons: first.reasons } },
     result,

@@ -4,7 +4,7 @@
  * carries no Problem, no number to ask, and no answer (see CoachEvidence);
  * the prompt renders what it is given and nothing else.
  */
-import type { NumberRange } from "@/loop";
+import { describeRange } from "@/loop";
 import type { CoachEvidence, CoachInput } from "./types";
 
 export const COACH_SYSTEM_PROMPT = `You are the Coach in a Grade 1 math game. You run once, after a Session, and you never speak to the Learner.
@@ -35,8 +35,6 @@ Session Plan
 - A Plan outside the Plan Space is rejected with reasons. If your previous output was rejected, the message says so and lists every reason; fix all of them.
 
 You never write a Problem, choose a number to ask, or give an answer. The engine does that.`;
-
-const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
 
 function evidenceLine(entry: CoachEvidence): string {
   const kind = entry.review ? "review" : "planned";

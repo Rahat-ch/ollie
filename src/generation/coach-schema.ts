@@ -3,13 +3,6 @@ import { SKILLS } from "@/loop";
 import type { SkillId } from "@/loop";
 import type { CoachOutput } from "./types";
 
-/**
- * The shape the Coach must return, as one zod schema: it is sent to the model
- * as the structured-output format and run over whatever comes back, so a
- * malformed output is rejected before the engine sees it. Whether the output
- * is *allowed* (evidence IDs exist, the Plan is inside the Plan Space) is the
- * engine's check, not this one.
- */
 const skillIds = SKILLS.map((s) => s.id) as [SkillId, ...SkillId[]];
 
 export const HypothesisSchema = z.strictObject({
@@ -40,6 +33,13 @@ export const SessionPlanSchema = z.strictObject({
   hypothesisUnderTest: z.string().nullable().describe("The id of one Hypothesis in the Notes, or null"),
 });
 
+/**
+ * The shape the Coach must return, as one zod schema: it is sent to the model
+ * as the structured-output format and run over whatever comes back, so a
+ * malformed output is rejected before the engine sees it. Whether the output
+ * is *allowed* (evidence IDs exist, the Plan is inside the Plan Space) is the
+ * engine's check, not this one.
+ */
 export const CoachOutputSchema = z.strictObject({
   notes: LearnerNotesSchema,
   plan: SessionPlanSchema,

@@ -1,11 +1,11 @@
 /**
- * Run a Simulated Learner for N Coach Sessions through the pure Loop and
- * print the Learner Notes and the next Session Plan after each, so the Notes
- * can be read evolving. The first Session is the Diagnostic Session; from
- * Session 2 the Plan is the Coach's, or the Baseline Plan when the Coach's
+ * Run a Simulated Learner through the Diagnostic Session and then N
+ * Coach-planned Sessions in the pure Loop, and print the Learner Notes and
+ * the next Session Plan after every Session, so the Notes can be read
+ * evolving. Each Plan is the Coach's, or the Baseline Plan when the Coach's
  * output was rejected twice.
  *
- *   pnpm coach                              # crossing-ten-weakness, 5 Sessions, the fake Generation
+ *   pnpm coach                              # crossing-ten-weakness, 5 Coach-planned Sessions, the fake Generation
  *   pnpm coach --learner weak --sessions 3
  *   pnpm coach --real                       # the Anthropic adapter on Opus 5; needs ANTHROPIC_API_KEY
  *   pnpm coach --verbose                    # also the full Session Log for every Session
@@ -66,11 +66,11 @@ async function chooseGeneration(real: boolean): Promise<Generation> {
 
 async function main(learner: SimulatedLearner): Promise<void> {
   const generation = await chooseGeneration(values.real);
-  console.log(`Learner: ${learner.name} (${learner.id}, seed ${learner.seed}), ${sessions} Sessions\n`);
+  console.log(`Learner: ${learner.name} (${learner.id}, seed ${learner.seed}), the Diagnostic Session then ${sessions} Coach-planned Sessions\n`);
   let profile = newProfile();
   let notes = emptyNotes();
   let plan = DIAGNOSTIC_PLAN;
-  for (let i = 1; i <= sessions; i++) {
+  for (let i = 1; i <= sessions + 1; i++) {
     const result = runSession(plan, profile, learner.seed, simulatedLearner(learner));
     console.log(formatSessionLine(result));
     if (values.verbose) console.log(`\n${formatSessionLog(result)}`);

@@ -101,7 +101,7 @@ The structured document of what the Coach currently believes about the Learner: 
 _Avoid_: profile, model, memory, learner model
 
 **Hypothesis**:
-One belief in the Learner Notes: a claim, a status (proposed, supported, refuted), a confidence, evidence given only as Problem IDs from the Session Log, and a next test. The engine rejects any Hypothesis citing a Problem that does not exist.
+One belief in the Learner Notes: a claim, a status (proposed, supported, refuted), a confidence, evidence given only as Problem IDs from the Session Log (this Session's, or already cited in the Notes), and a next test. The engine rejects any Hypothesis citing a Problem it was not shown.
 _Avoid_: insight, finding, observation
 
 **Session Plan**:

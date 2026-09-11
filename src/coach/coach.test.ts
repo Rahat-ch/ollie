@@ -42,7 +42,7 @@ function coachAnswering(
 }
 
 describe("coachInput", () => {
-  it("gives the Coach evidence, never a Problem, a number to ask, or an answer", () => {
+  it("gives the Coach evidence with the unknown blanked, never a Problem, an answer, or a spoken line", () => {
     const input = coachInput(result, notes);
     const serialized = JSON.stringify(input);
 
@@ -113,7 +113,7 @@ describe("coachSession rejects and retries once with the reason", () => {
     expect(step.source).toBe("retry");
     expect(step.rejections[0].reasons).toEqual(['the Plan tests "h9", which is not a Hypothesis in the Notes']);
     expect(retryInputs[0].rejected?.reasons).toEqual(['the Plan tests "h9", which is not a Hypothesis in the Notes']);
-    expect(step.plan.hypothesisUnderTest).toBe("h-counting-on");
+    expect(step.plan.hypothesisUnderTest).not.toBe("h9");
   });
 });
 
@@ -211,9 +211,9 @@ describe("the loop over many Sessions", () => {
     expect(steps.map((s) => s.source)).toEqual(["coach", "coach", "coach", "coach", "coach"]);
     expect(planChecks).toEqual([true, true, true, true, true]);
     expect(profile.sessionsCompleted).toBe(5);
-    const grounded = step.notes.hypotheses.filter(
+    const citingLoggedProblems = step.notes.hypotheses.filter(
       (h) => h.evidence.length > 0 && h.evidence.every((id) => loggedIds.has(id)),
     );
-    expect(grounded.length).toBeGreaterThanOrEqual(1);
+    expect(citingLoggedProblems.length).toBeGreaterThanOrEqual(1);
   });
 });

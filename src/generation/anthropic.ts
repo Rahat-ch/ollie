@@ -13,10 +13,7 @@ import type { CoachInput, CoachOutput, Generation } from "./types";
 
 export const COACH_MODEL = "claude-opus-5";
 
-export type AnthropicGenerationOptions = {
-  readonly apiKey: string;
-  readonly model?: string;
-};
+export type AnthropicGenerationOptions = { readonly apiKey: string };
 
 const notBuilt = (op: string, ticket: string) => async (): Promise<never> => {
   throw new Error(`${op} is not built yet (ticket ${ticket})`);
@@ -24,12 +21,11 @@ const notBuilt = (op: string, ticket: string) => async (): Promise<never> => {
 
 export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
   const client = new Anthropic({ apiKey: options.apiKey });
-  const model = options.model ?? COACH_MODEL;
 
   async function runCoach(input: CoachInput): Promise<CoachOutput> {
     const messages: Anthropic.MessageParam[] = [{ role: "user", content: coachUserMessage(input) }];
     const response = await client.messages.parse({
-      model,
+      model: COACH_MODEL,
       max_tokens: 16000,
       system: COACH_SYSTEM_PROMPT,
       messages,

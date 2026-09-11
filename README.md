@@ -36,7 +36,7 @@ pnpm test:e2e     # browser tests (playwright; builds and starts the app on :310
 pnpm licenses:check  # fail on any copyleft or unrecognised licence
 pnpm diagnostic   # run the Diagnostic Session through the Loop and print the Log and Estimates
 pnpm baseline     # run ten Baseline Sessions on one Profile and print Mastery and Unit transitions
-pnpm coach        # run a Simulated Learner for five Coach Sessions and print the Learner Notes and Session Plan after each
+pnpm coach        # run a Simulated Learner through the Diagnostic Session and five Coach-planned Sessions; print the Learner Notes and Session Plan after each
 pnpm eval         # run the six Simulated Learners for 20 Sessions under the Baseline; write a dated report and the chart
 pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report file
 ```
@@ -45,7 +45,7 @@ pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report
 
 `pnpm eval` is the eval command: it runs the six Simulated Learners (`src/evals/learners.ts`, seeded, two held out of prompt tuning) for 20 Sessions under the Baseline and writes a dated JSON report to `docs/evals/`, then regenerates `docs/evals/convergence.svg` from that file. Run it before any prompt or Plan Space change. `pnpm eval:chart --report docs/evals/<date>.json` redraws the chart from any earlier report.
 
-`pnpm coach` runs one Simulated Learner through Coach-planned Sessions and prints the Learner Notes and the next Session Plan after each, with the source of every Plan (the Coach, the Coach after one retry, or the Baseline Plan with the rejection reasons). `--learner weak --sessions 3` picks the Learner and the length; `--verbose` adds the full Session Log; the first Session is always the Diagnostic Session. By default the Coach is the Generation fake, deterministic and with no network; `--real` runs the Anthropic adapter on Opus 5 and reads `ANTHROPIC_API_KEY` from the environment or `.env.local`.
+`pnpm coach` runs one Simulated Learner through Coach-planned Sessions and prints the Learner Notes and the next Session Plan after each, with the source of every Plan (the Coach, the Coach after one retry, or the Baseline Plan with the rejection reasons). `--learner weak --sessions 3` picks the Learner and the number of Coach-planned Sessions, which always follow the Diagnostic Session; `--verbose` adds the full Session Log. By default the Coach is the Generation fake, deterministic and with no network; `--real` runs the Anthropic adapter on Opus 5 and reads `ANTHROPIC_API_KEY` from the environment or `.env.local`.
 
 Copy `.env.example` to `.env.local` for local vendor keys. Secrets are read from environment variables only and are never committed. Generated audio is written to `AUDIO_DIR` (default `./data/audio`, gitignored).
 

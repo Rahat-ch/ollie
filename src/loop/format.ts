@@ -1,5 +1,6 @@
+import { describeRange } from "./plan-space";
 import { getSkill, SKILLS } from "./skills";
-import type { Equation, LearnerNotes, NumberRange, ProfileState, SessionPlan, SessionResult, SkillId } from "./types";
+import type { Equation, LearnerNotes, ProfileState, SessionPlan, SessionResult, SkillId } from "./types";
 
 const ASSISTANCE_LABEL = {
   "first-try-correct": "first-try correct",
@@ -117,7 +118,6 @@ export function formatNotes(notes: LearnerNotes): string {
   return lines.join("\n");
 }
 
-const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
 
 /** A Session Plan as plain text: its levers, then the Skill mix as a table. */
 export function formatPlan(plan: SessionPlan): string {

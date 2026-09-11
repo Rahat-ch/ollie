@@ -19,5 +19,5 @@ We chose this because adaptivity is the entry's novelty and it has to be both sa
 
 - Every new lever must be added to the Plan Space with its bounds before the Coach can use it.
 - The loop is evaluated with Simulated Learners, never real child data, and the first Session is a fixed, fully bundled Diagnostic Session because no Log exists yet. No later Session is ever pre-planned; a Content Pool of Story variants serves Coach-planned Sessions without deciding their contents.
-- The model cannot invent an observation: evidence integrity is checked deterministically and is itself an eval.
+- The model cannot invent an observation: evidence integrity is checked deterministically and is itself an eval. The Log the Coach may cite is this Session's plus every Problem already cited in the Notes (each was in an earlier Log), so a Hypothesis can carry its evidence across Sessions; nothing else is citable.
 - The Coach runs once per Session on Opus 5; stories stay on Sonnet 5.

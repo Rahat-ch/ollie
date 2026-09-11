@@ -22,7 +22,7 @@ export type NotesValidation = { readonly ok: true } | { readonly ok: false; read
 const STATUSES: readonly HypothesisStatus[] = ["proposed", "supported", "refuted"];
 const CONFIDENCE = { min: 0, max: 1 };
 
-const isBlank = (text: string): boolean => typeof text !== "string" || text.trim() === "";
+const isBlank = (text: string): boolean => text.trim() === "";
 
 function hypothesisReasons(hypothesis: Hypothesis, position: number, known: ReadonlySet<ProblemId>): string[] {
   const reasons: string[] = [];
