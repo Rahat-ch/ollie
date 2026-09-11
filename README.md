@@ -36,9 +36,13 @@ pnpm test:e2e     # browser tests (playwright; builds and starts the app on :310
 pnpm licenses:check  # fail on any copyleft or unrecognised licence
 pnpm diagnostic   # run the Diagnostic Session through the Loop and print the Log and Estimates
 pnpm baseline     # run ten Baseline Sessions on one Profile and print Mastery and Unit transitions
+pnpm eval         # run the six Simulated Learners for 20 Sessions under the Baseline; write a dated report and the chart
+pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report file
 ```
 
 `pnpm diagnostic --seed puppies --script fhrfffhf` scripts the answers (one letter per Problem: `f` first-try, `h` Hint-assisted, `r` Revealed) and `--sessions 3` runs several Sessions on one Profile. `pnpm baseline` takes the same flags plus `--verbose` for the full Session Log of every Session; its first Session is the Diagnostic Session and every later one is the Baseline rule (6 Problems from the current Skill plus 2 Review Problems).
+
+`pnpm eval` is the eval command: it runs every Simulated Learner (six hand-designed profiles in `src/evals/learners.ts`, seeded, two held out of prompt tuning) for 20 Sessions under the Baseline and writes a dated JSON report to `docs/evals/`, then regenerates `docs/evals/convergence.svg` from that file. Run it before any prompt or Plan Space change. `pnpm eval:chart --report docs/evals/<date>.json` redraws the chart from any earlier report.
 
 Copy `.env.example` to `.env.local` for local vendor keys. Secrets are read from environment variables only and are never committed. Generated audio is written to `AUDIO_DIR` (default `./data/audio`, gitignored).
 
@@ -50,6 +54,7 @@ A Docker container built by Coolify on a Hetzner host, behind Cloudflare, with a
 
 - `CONTEXT.md`: the glossary. Its vocabulary is canonical in code, tests, and docs.
 - `src/loop/`: the Loop. A pure function from a Session Plan, a Profile, a seed, and an answer policy to a Session Log and the next Profile; the Skill template families, Bayesian Knowledge Tracing, Mastery, Unit unlocking, the Plan Space and its validation, and the Baseline planner live behind it. No I/O.
+- `src/evals/`: the Simulated Learners (answer policies fed into the Loop), the convergence runner, the dated report, and the chart renderer. `docs/evals/` holds every Eval Run's report and the chart regenerated from the latest one.
 - `docs/adr/`: the three architectural decisions (engine owns the math; no accounts; the Coach plans inside a bounded space).
 - `docs/research/k5-math-game/`: the research the design rests on.
 - `.scratch/k5-math/`: the spec and implementation tickets.

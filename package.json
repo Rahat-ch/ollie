@@ -14,7 +14,9 @@
     "brand:images": "node scripts/brand-images.mjs",
     "licenses:check": "node scripts/third-party.mjs --check",
     "diagnostic": "tsx src/cli/diagnostic.ts",
-    "baseline": "tsx src/cli/baseline.ts"
+    "baseline": "tsx src/cli/baseline.ts",
+    "eval": "tsx src/cli/eval.ts",
+    "eval:chart": "tsx src/cli/eval-chart.ts"
   },
   "dependencies": {
     "next": "16.3.4",
