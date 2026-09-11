@@ -12,7 +12,11 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "brand:images": "node scripts/brand-images.mjs",
-    "licenses:check": "node scripts/third-party.mjs --check"
+    "licenses:check": "node scripts/third-party.mjs --check",
+    "diagnostic": "tsx src/cli/diagnostic.ts",
+    "baseline": "tsx src/cli/baseline.ts",
+    "eval": "tsx src/cli/eval.ts",
+    "eval:chart": "tsx src/cli/eval-chart.ts"
   },
   "dependencies": {
     "next": "16.3.4",
@@ -28,6 +32,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5",
     "vitest": "^5.0.0"
   },
