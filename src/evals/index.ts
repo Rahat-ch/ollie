@@ -7,8 +7,14 @@ export {
   simulatedLearner,
   WEAKNESS_PENALTY,
 } from "./learners";
-export type { ConvergenceOptions, ConvergenceReport, LearnerConvergence, SessionPoint, SplitSummary } from "./convergence";
-export { runConvergence, TARGET_ACCURACY_BAND } from "./convergence";
+export type { LearnerRun, Planner, PlannerId, SessionTrace } from "./run";
+export { baselinePlanner, coachPlanner, runLearner } from "./run";
+export type { ConvergenceReport, LearnerConvergence, SessionPoint, SplitSummary } from "./convergence";
+export { convergenceReport, scoreConvergence, TARGET_ACCURACY_BAND } from "./convergence";
+export type { CitationCheck, CitationVerdict, ClaimPolarity, EvidenceIntegrity, LearnerHypotheses, PlanSources } from "./hypotheses";
+export { checkEvidence, claimPolarity, namesWeakness, scoreHypotheses } from "./hypotheses";
+export type { EvalOptions, EvalResults, HypothesisReport, HypothesisSplit } from "./evals";
+export { hypothesisReport, runEvals } from "./evals";
 export type { EvalReport } from "./report";
-export { evalReport, EVALS_DIR, isReportFileName, reportFileName } from "./report";
+export { describeGeneration, evalReport, EVALS_DIR, isReportFileName, reportFileName } from "./report";
 export { renderConvergenceChart } from "./chart";

@@ -1,22 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { renderConvergenceChart } from "@/evals/chart";
-import { runConvergence } from "@/evals/convergence";
-import { evalReport } from "@/evals/report";
+import { fakeGeneration } from "@/generation";
+import { renderConvergenceChart } from "./chart";
+import { runEvals } from "./evals";
+import { evalReport } from "./report";
 
 describe("renderConvergenceChart", () => {
-  const report = evalReport(runConvergence({ sessions: 20 }), new Date("2026-09-10T19:06:01Z"));
-  const svg = renderConvergenceChart(report, "2026-09-10T19-06-01Z.json");
+  const results = runEvals({ sessions: 20, generation: fakeGeneration(), generationName: "fake" });
+  const svg = async () => renderConvergenceChart(evalReport(await results, new Date("2026-09-10T19:06:01Z")), "2026-09-10T19-06-01Z.json");
 
-  it("draws one facet per Simulated Learner with a line of Skills Mastered by Session", () => {
-    expect(svg.startsWith("<svg")).toBe(true);
-    for (const learner of report.convergence.learners) {
-      expect(svg).toContain(learner.name);
+  it("draws one facet per Simulated Learner with a Coach line and a Baseline line, and a legend naming both", async () => {
+    const chart = await svg();
+    expect(chart.startsWith("<svg")).toBe(true);
+    for (const learner of (await results).convergence.coach.learners) {
+      expect(chart).toContain(learner.name);
     }
-    expect(svg.match(/<polyline/g)).toHaveLength(6);
+    expect(chart.match(/<polyline/g)).toHaveLength(12);
+    expect(chart).toContain(">Coach<");
+    expect(chart).toContain(">Baseline<");
   });
 
-  it("marks the held-out Learners and names the report it came from", () => {
-    expect(svg.match(/held out/g)).toHaveLength(2);
-    expect(svg).toContain("2026-09-10T19-06-01Z.json");
+  it("marks the held-out Learners, says which Generation ran the Coach, and names the report it came from", async () => {
+    const chart = await svg();
+    expect(chart.match(/held out/g)).toHaveLength(2);
+    expect(chart).toContain("the Generation fake");
+    expect(chart).toContain("2026-09-10T19-06-01Z.json");
+  });
+
+  it("says in a tagged Learner's facet whether the Coach named the planted weakness", async () => {
+    expect(await svg()).toContain("crossing ten: not named");
   });
 });
