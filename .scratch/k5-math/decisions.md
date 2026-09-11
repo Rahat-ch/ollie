@@ -69,7 +69,7 @@ Units and Skills, in progression order (7 Skills):
 ## Evals
 
 - Six hand-designed Simulated Learners, seeded, 20 Sessions each: strong, average, weak, crossing-ten weakness, change-unknown weakness, fast-fatigue. Probabilistic answers from true per-Skill ability, weakness tags, fatigue curve. No LLM plays the child.
-- **Recommended, not yet decided:** hold two of the six profiles out of prompt tuning and score them only at the end.
+- **Decided 2026-09-11 (ticket 05):** two Simulated Learners are held out of prompt tuning and scored separately: change-unknown weakness and fast fatigue. Tuning keeps the ability spread (strong, average, weak) and the crossing-ten weakness the video is built on.
 - Targets: (1) Coach Hypotheses vs planted weaknesses: hit rate, sessions to detection, false positives. (2) Loop convergence vs Baseline (fixed 8-of-10 gate, fixed 6+2 composition): sessions to Mastery, share of Problems in target accuracy band. (3) Story validity: deterministic checks plus Judge rubric for Grade 1 readability and theme fit on a sample. (4) Parent Summary faithfulness: Judge checks every claim against the Session Log; fails on unsupported claims or claims about the child's thinking.
 - Judge: Opus 5 with a written rubric. Calibration Set: 20 Stories and 10 Summaries hand-labelled; Judge must agree above a threshold before its scores count.
 - Cadence: one command, run before any prompt or Plan Space change. Dated JSON reports under `docs/evals/`. Chart regenerates from them.
@@ -82,7 +82,6 @@ Units and Skills, in progression order (7 Skills):
 ## Open
 
 - GitHub repo: https://github.com/Rahat-ch/ollie (remote added 2026-09-10; visibility as set by the user).
-- Held-out eval split (recommended above).
 - Which ElevenLabs tier for 192 kbps MP3 if wanted (Creator+); Starter is fine for the demo.
 
 ---
@@ -105,3 +104,13 @@ The user shared a review of the spec from another model and accepted the followi
 12. **One-story video plan** built around a crossing-ten weakness: problem, play, Notebook money shot, one architecture graphic, convergence chart, tagline. Detail in spec.md Further Notes.
 13. **No Vercel, ever.** Deploy as a Docker container via Coolify on Hetzner at ollie.rahatcodes.com behind Cloudflare. Audio on a persistent volume. Replaces every earlier mention of Vercel and Vercel Blob.
 14. **Design direction before UI.** A ticket settles palette, type, Ollie's character sheet, illustration style, and core screens before the Session screen is built. The look must be pleasant and not read as AI-generated: SVG-first, hand-tuned, one consistent style; image models for reference only; anything generated that ships is disclosed.
+
+---
+
+# Amendments — 2026-09-11, after ticket 05
+
+Confirmed by the user on 2026-09-11.
+
+15. **Target accuracy band is 0.7 to 0.9.** A Problem is at the right difficulty when the Simulated Learner's true chance of a first-try correct answer is between 0.7 and 0.9. The convergence eval reports the share of Problems in the band per Learner and per split (`TARGET_ACCURACY_BAND` in `src/evals/convergence.ts`).
+16. **Held-out split** as recorded under Evals above: change-unknown weakness and fast fatigue.
+17. **Simulated Learner ability is static.** A Simulated Learner does not improve with practice, so Sessions to Mastery measures how fast a planner confirms a fixed ability and the band share measures how well it picks difficulty. The band share is coarse under this model (true probability depends on Skill, tag, and position, not the Problem's numbers), so it is not a headline number in the video. A practice effect may be added to the profile later without changing the seams.
