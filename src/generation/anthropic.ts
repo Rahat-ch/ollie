@@ -1,0 +1,57 @@
+/**
+ * The Anthropic adapter behind the Generation seam. Only the Coach is built
+ * here (ticket 06): it runs once per Session on Opus 5 with structured
+ * output, and its output is schema-checked before the engine sees it. The
+ * Coach never receives or produces a Problem, a number to ask, or an
+ * answer (ADR 0001, ADR 0003).
+ */
+import Anthropic from "@anthropic-ai/sdk";
+import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
+import { COACH_SYSTEM_PROMPT, coachUserMessage } from "./coach-prompt";
+import { CoachOutputSchema, parseCoachOutput } from "./coach-schema";
+import type { CoachInput, CoachOutput, Generation } from "./types";
+
+export const COACH_MODEL = "claude-opus-5";
+
+export type AnthropicGenerationOptions = {
+  readonly apiKey: string;
+  readonly model?: string;
+};
+
+const notBuilt = (op: string, ticket: string) => async (): Promise<never> => {
+  throw new Error(`${op} is not built yet (ticket ${ticket})`);
+};
+
+export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
+  const client = new Anthropic({ apiKey: options.apiKey });
+  const model = options.model ?? COACH_MODEL;
+
+  async function runCoach(input: CoachInput): Promise<CoachOutput> {
+    const messages: Anthropic.MessageParam[] = [{ role: "user", content: coachUserMessage(input) }];
+    const response = await client.messages.parse({
+      model,
+      max_tokens: 16000,
+      system: COACH_SYSTEM_PROMPT,
+      messages,
+      output_config: { effort: "high", format: zodOutputFormat(CoachOutputSchema) },
+    });
+    if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
+      throw new Error(`Coach output rejected: the model stopped with ${response.stop_reason}`);
+    }
+    if (response.parsed_output === null) {
+      throw new Error("Coach output rejected: the response could not be parsed as a Coach output");
+    }
+    const parsed = parseCoachOutput(response.parsed_output);
+    if (!parsed.ok) {
+      throw new Error(`Coach output rejected: ${parsed.reasons.join("; ")}`);
+    }
+    return parsed.output;
+  }
+
+  return {
+    writeStory: notBuilt("writeStory", "10"),
+    runCoach,
+    writeSummary: notBuilt("writeSummary", "12"),
+    renderSpeech: notBuilt("renderSpeech", "11"),
+  };
+}

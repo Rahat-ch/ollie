@@ -1,5 +1,5 @@
 import { getSkill, SKILLS } from "./skills";
-import type { Equation, ProfileState, SessionResult, SkillId } from "./types";
+import type { Equation, LearnerNotes, NumberRange, ProfileState, SessionPlan, SessionResult, SkillId } from "./types";
 
 const ASSISTANCE_LABEL = {
   "first-try-correct": "first-try correct",
@@ -91,4 +91,48 @@ export function formatSessionLine(result: SessionResult): string {
     `first-try ${firstTry}/${log.entries.length}`,
     changes.length > 0 ? changes.join("; ") : "no change",
   ].join("; ");
+}
+
+/** The Learner Notes as the developer reads them: one row per Hypothesis, then the strengths. */
+export function formatNotes(notes: LearnerNotes): string {
+  const lines: string[] = ["Learner Notes", ""];
+  if (notes.hypotheses.length === 0) {
+    lines.push("no Hypotheses yet");
+  } else {
+    lines.push(
+      ...table([
+        ["ID", "Status", "Confidence", "Evidence", "Claim", "Next test"],
+        ...notes.hypotheses.map((h) => [
+          h.id,
+          h.status,
+          h.confidence.toFixed(2),
+          h.evidence.length > 0 ? h.evidence.join(", ") : "-",
+          h.claim,
+          h.nextTest,
+        ]),
+      ]),
+    );
+  }
+  lines.push("", "Strengths", ...(notes.strengths.length > 0 ? notes.strengths.map((s) => `- ${s}`) : ["- none noted"]));
+  return lines.join("\n");
+}
+
+const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
+
+/** A Session Plan as plain text: its levers, then the Skill mix as a table. */
+export function formatPlan(plan: SessionPlan): string {
+  return [
+    `Session Plan: ${plan.length} Problems, review share ${Math.round(plan.reviewShare * 100)}%`,
+    `Hypothesis under test: ${plan.hypothesisUnderTest ?? "none"}`,
+    "",
+    ...table([
+      ["Skill", "Weight", "Range", "Structures"],
+      ...plan.skills.map((s) => [
+        s.skill,
+        String(s.weight),
+        s.numberRange ? describeRange(s.numberRange) : "default",
+        s.structures ? s.structures.join(", ") : "all",
+      ]),
+    ]),
+  ].join("\n");
 }

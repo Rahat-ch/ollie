@@ -120,3 +120,28 @@ export type SessionResult = {
   /** Units whose Skills all became Mastered during this Session, opening the next. */
   readonly newlyUnlockedUnits: readonly Unit[];
 };
+
+export type HypothesisStatus = "proposed" | "supported" | "refuted";
+
+/**
+ * One belief in the Learner Notes. Evidence is Problem IDs only; the engine
+ * rejects any ID it cannot find (ADR 0003). IDs like `h1` are the Coach's
+ * own and stay stable from one Session to the next.
+ */
+export type Hypothesis = {
+  readonly id: string;
+  readonly claim: string;
+  readonly status: HypothesisStatus;
+  /** 0 to 1. */
+  readonly confidence: number;
+  readonly evidence: readonly ProblemId[];
+  /** What the next Session should show to move the status. */
+  readonly nextTest: string;
+};
+
+/** What the Coach currently believes about the Learner. Shown to the Parent as Ollie's Notebook. */
+export type LearnerNotes = {
+  readonly hypotheses: readonly Hypothesis[];
+  /** Plain-English strengths, no evidence needed: they are not claims under test. */
+  readonly strengths: readonly string[];
+};

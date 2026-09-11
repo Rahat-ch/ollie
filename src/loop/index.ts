@@ -22,3 +22,5 @@ export {
   runSession,
   startSession,
 } from "./session";
+export type { NotesValidation } from "./notes";
+export { emptyNotes, knownProblemIds, validateNotes } from "./notes";
