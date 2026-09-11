@@ -6,8 +6,16 @@ import { createRng } from "@/loop";
  * ability per Skill, weakness tags, and a fatigue curve. Answers are sampled
  * from these numbers; no model plays the child. Never a real child's data.
  */
+export type SimulatedLearnerId =
+  | "strong"
+  | "average"
+  | "weak"
+  | "crossing-ten-weakness"
+  | "change-unknown-weakness"
+  | "fast-fatigue";
+
 export type SimulatedLearner = {
-  readonly id: string;
+  readonly id: SimulatedLearnerId;
   readonly name: string;
   /** Seeds every run of this Learner; the same seed reproduces the run byte for byte. */
   readonly seed: string;
@@ -28,28 +36,26 @@ export const WEAKNESS_PENALTY = 0.35;
 
 const isPart = (n: number) => n < 10;
 
-/**
- * What each weakness tag matches, so a planted weakness lowers accuracy only
- * on the Problems it is about. `crossing-ten`: the whole is above ten and
- * both parts below it (8 + 5, 13 - 8), so the sum or difference has to bridge
- * ten; 10 + 3 and 7 + 3 do not. `change-unknown`: an addition whose missing
- * number is the change rather than the result (7 + ? = 10), the arithmetic
- * form of a change-unknown word problem, which Unit 3 will match as well.
- */
-export const WEAKNESS_TAGS: Readonly<Record<WeaknessTag, { readonly description: string; readonly matches: (problem: Problem) => boolean }>> = {
-  "crossing-ten": {
-    description: "sums and differences that cross ten",
-    matches: ({ equation: { left, op, right, result } }) =>
-      op === "+" ? result > 10 && isPart(left) && isPart(right) : left > 10 && isPart(right) && isPart(result),
-  },
-  "change-unknown": {
-    description: "additions whose missing number is the change, not the result",
-    matches: ({ equation: { op, unknown } }) => op === "+" && unknown === "right",
-  },
+/** The structures where the missing number is the change: unknown addend now, Unit 3's change unknown once it exists. */
+const CHANGE_UNKNOWN_STRUCTURES: readonly string[] = ["missing-addend", "change-unknown"];
+
+const WEAKNESS_MATCHERS: Readonly<Record<WeaknessTag, (problem: Problem) => boolean>> = {
+  "crossing-ten": ({ equation: { left, op, right, result } }) =>
+    op === "+" ? result > 10 && isPart(left) && isPart(right) : left > 10 && isPart(right) && isPart(result),
+  "change-unknown": ({ structure }) => CHANGE_UNKNOWN_STRUCTURES.includes(structure),
 };
 
+/**
+ * Whether a Problem is what a weakness tag is about, so a planted weakness
+ * lowers accuracy only there. `crossing-ten`: the whole is above ten and both
+ * parts below it (8 + 5, 13 - 8), so the sum or difference has to bridge ten;
+ * 10 + 3 and 7 + 3 do not. `change-unknown`: the Problem's structure asks for
+ * the change (9 + ? = 13 as unknown addend, and Unit 3's change-unknown
+ * Stories when ticket 10 adds them); partners to 10 and teen numbers are not
+ * matched even though they also blank an addend.
+ */
 export const matchesWeakness = (tag: WeaknessTag, problem: Problem): boolean =>
-  WEAKNESS_TAGS[tag].matches(problem);
+  WEAKNESS_MATCHERS[tag](problem);
 
 /**
  * Accuracy falls by `perProblem` for every Problem past `onset` in a Session,
@@ -57,20 +63,6 @@ export const matchesWeakness = (tag: WeaknessTag, problem: Problem): boolean =>
  * the first. Position is 1-based.
  */
 export type FatigueCurve = { readonly onset: number; readonly perProblem: number };
-
-const ability = (
-  a: number,
-  b: number,
-  c: number,
-  d: number,
-  e: number,
-): Readonly<Record<SkillId, number>> => ({
-  "partners-to-10": a,
-  "teen-numbers": b,
-  "counting-on": c,
-  "make-a-ten": d,
-  "unknown-addend": e,
-});
 
 const MILD_FATIGUE: FatigueCurve = { onset: 8, perProblem: 0.03 };
 
@@ -81,7 +73,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Strong",
     seed: "sim-strong",
     heldOut: false,
-    ability: ability(0.97, 0.95, 0.93, 0.9, 0.9),
+    ability: { "partners-to-10": 0.97, "teen-numbers": 0.95, "counting-on": 0.93, "make-a-ten": 0.9, "unknown-addend": 0.9 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.85,
@@ -91,7 +83,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Average",
     seed: "sim-average",
     heldOut: false,
-    ability: ability(0.88, 0.85, 0.8, 0.75, 0.75),
+    ability: { "partners-to-10": 0.88, "teen-numbers": 0.85, "counting-on": 0.8, "make-a-ten": 0.75, "unknown-addend": 0.75 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -101,7 +93,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Weak",
     seed: "sim-weak",
     heldOut: false,
-    ability: ability(0.75, 0.7, 0.62, 0.55, 0.55),
+    ability: { "partners-to-10": 0.75, "teen-numbers": 0.7, "counting-on": 0.62, "make-a-ten": 0.55, "unknown-addend": 0.55 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.55,
@@ -111,7 +103,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Crossing-ten weakness",
     seed: "sim-crossing-ten",
     heldOut: false,
-    ability: ability(0.9, 0.88, 0.85, 0.85, 0.82),
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.85, "unknown-addend": 0.82 },
     weaknesses: ["crossing-ten"],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -121,7 +113,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Change-unknown weakness",
     seed: "sim-change-unknown",
     heldOut: true,
-    ability: ability(0.9, 0.88, 0.85, 0.82, 0.85),
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.82, "unknown-addend": 0.85 },
     weaknesses: ["change-unknown"],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -131,17 +123,15 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Fast fatigue",
     seed: "sim-fast-fatigue",
     heldOut: true,
-    ability: ability(0.9, 0.88, 0.85, 0.8, 0.8),
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.8, "unknown-addend": 0.8 },
     weaknesses: [],
     fatigue: { onset: 4, perProblem: 0.12 },
     hintRecovery: 0.6,
   },
 ];
 
-export function getSimulatedLearner(id: string): SimulatedLearner {
-  const learner = SIMULATED_LEARNERS.find((l) => l.id === id);
-  if (!learner) throw new Error(`Unknown Simulated Learner: ${id}`);
-  return learner;
+export function getSimulatedLearner(id: SimulatedLearnerId): SimulatedLearner {
+  return SIMULATED_LEARNERS.find((l) => l.id === id)!;
 }
 
 /**

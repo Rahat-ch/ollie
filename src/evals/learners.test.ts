@@ -21,9 +21,9 @@ describe("the six Simulated Learners", () => {
     ]);
   });
 
-  it("reproduce the same run byte for byte from the same seed", () => {
-    const run = () => {
-      const learner = SIMULATED_LEARNERS[1];
+  it("reproduce the same run byte for byte from the same seed, and a different run from another", () => {
+    const run = (seed: string) => {
+      const learner = { ...getSimulatedLearner("average"), seed };
       let profile = newProfile();
       const logs = [];
       for (let i = 0; i < 5; i++) {
@@ -33,15 +33,23 @@ describe("the six Simulated Learners", () => {
       }
       return JSON.stringify({ logs, profile });
     };
-    expect(run()).toBe(run());
+    expect(run("sim-average")).toBe(run("sim-average"));
+    expect(run("sim-average")).not.toBe(run("sim-average-2"));
   });
 });
 
 describe("weakness tags", () => {
-  const problem = (left: number, op: "+" | "-", right: number, result: number, unknown: "left" | "right" | "result" = "result"): Problem => ({
+  const problem = (
+    left: number,
+    op: "+" | "-",
+    right: number,
+    result: number,
+    unknown: "left" | "right" | "result" = "result",
+    structure = "larger-first",
+  ): Problem => ({
     id: "p1",
     skill: "counting-on",
-    structure: "larger-first",
+    structure,
     equation: { left, op, right, result, unknown },
     answer: unknown === "result" ? result : unknown === "right" ? right : left,
     spoken: "",
@@ -57,10 +65,11 @@ describe("weakness tags", () => {
     expect(matchesWeakness("crossing-ten", problem(4, "+", 2, 6))).toBe(false);
   });
 
-  it("change-unknown matches additions whose missing number is the change, not the result", () => {
-    expect(matchesWeakness("change-unknown", problem(7, "+", 3, 10, "right"))).toBe(true);
-    expect(matchesWeakness("change-unknown", problem(7, "+", 3, 10))).toBe(false);
-    expect(matchesWeakness("change-unknown", problem(10, "-", 3, 7))).toBe(false);
+  it("change-unknown matches the structures that ask for the change, not partners or teens", () => {
+    expect(matchesWeakness("change-unknown", problem(9, "+", 4, 13, "right", "missing-addend"))).toBe(true);
+    expect(matchesWeakness("change-unknown", problem(13, "-", 9, 4, "result", "subtract"))).toBe(false);
+    expect(matchesWeakness("change-unknown", problem(7, "+", 3, 10, "right", "missing-partner"))).toBe(false);
+    expect(matchesWeakness("change-unknown", problem(10, "+", 3, 13, "right", "decompose"))).toBe(false);
   });
 
   it("lower first-try accuracy only on matching Problems", () => {

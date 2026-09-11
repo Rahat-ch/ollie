@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T00:10:30.498Z",
+  "generatedAt": "2026-09-11T00:16:16.379Z",
   "convergence": {
     "planner": "baseline",
     "sessions": 20,
@@ -570,135 +570,135 @@
           "change-unknown"
         ],
         "sessionsToMastery": {
-          "partners-to-10": 4,
-          "teen-numbers": 6,
-          "counting-on": 7,
-          "make-a-ten": 9,
-          "unknown-addend": 13
+          "partners-to-10": 2,
+          "teen-numbers": 3,
+          "counting-on": 5,
+          "make-a-ten": 7,
+          "unknown-addend": 18
         },
-        "problems": 155,
-        "firstTryRate": 0.6451612903225806,
-        "inBandShare": 0.5548387096774193,
+        "problems": 159,
+        "firstTryRate": 0.7044025157232704,
+        "inBandShare": 0.7295597484276729,
         "perSession": [
           {
             "session": 1,
             "mastered": 0,
-            "firstTryRate": 0.6666666666666666,
-            "inBandShare": 0.7777777777777778
+            "firstTryRate": 0.7777777777777778,
+            "inBandShare": 1
           },
           {
             "session": 2,
-            "mastered": 0,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.16666666666666666
+            "mastered": 1,
+            "firstTryRate": 1,
+            "inBandShare": 1
           },
           {
             "session": 3,
-            "mastered": 0,
-            "firstTryRate": 0.8333333333333334,
-            "inBandShare": 0.5
+            "mastered": 2,
+            "firstTryRate": 1,
+            "inBandShare": 1
           },
           {
             "session": 4,
-            "mastered": 1,
-            "firstTryRate": 0.8333333333333334,
-            "inBandShare": 0.5
+            "mastered": 2,
+            "firstTryRate": 0.875,
+            "inBandShare": 1
           },
           {
             "session": 5,
-            "mastered": 1,
-            "firstTryRate": 0.625,
-            "inBandShare": 0.375
+            "mastered": 3,
+            "firstTryRate": 0.75,
+            "inBandShare": 1
           },
           {
             "session": 6,
-            "mastered": 2,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.375
+            "mastered": 3,
+            "firstTryRate": 0.625,
+            "inBandShare": 1
           },
           {
             "session": 7,
-            "mastered": 3,
+            "mastered": 4,
             "firstTryRate": 0.75,
-            "inBandShare": 0.75
+            "inBandShare": 1
           },
           {
             "session": 8,
-            "mastered": 3,
-            "firstTryRate": 0.75,
-            "inBandShare": 0.875
+            "mastered": 4,
+            "firstTryRate": 0.875,
+            "inBandShare": 0.625
           },
           {
             "session": 9,
             "mastered": 4,
-            "firstTryRate": 0.75,
-            "inBandShare": 0.875
+            "firstTryRate": 0.625,
+            "inBandShare": 0.5
           },
           {
             "session": 10,
             "mastered": 4,
-            "firstTryRate": 0.75,
-            "inBandShare": 0.375
+            "firstTryRate": 0.625,
+            "inBandShare": 0.5
           },
           {
             "session": 11,
             "mastered": 4,
             "firstTryRate": 0.5,
-            "inBandShare": 0.625
+            "inBandShare": 0.75
           },
           {
             "session": 12,
             "mastered": 4,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.75
+            "firstTryRate": 0.625,
+            "inBandShare": 0.875
           },
           {
             "session": 13,
-            "mastered": 5,
-            "firstTryRate": 0.75,
+            "mastered": 4,
+            "firstTryRate": 0.5,
             "inBandShare": 0.375
           },
           {
             "session": 14,
-            "mastered": 5,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.625
+            "mastered": 4,
+            "firstTryRate": 0.75,
+            "inBandShare": 0.75
           },
           {
             "session": 15,
-            "mastered": 5,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.25
+            "mastered": 4,
+            "firstTryRate": 0.75,
+            "inBandShare": 0.375
           },
           {
             "session": 16,
-            "mastered": 5,
+            "mastered": 4,
             "firstTryRate": 0.625,
             "inBandShare": 0.75
           },
           {
             "session": 17,
-            "mastered": 5,
-            "firstTryRate": 0.625,
+            "mastered": 4,
+            "firstTryRate": 0.75,
             "inBandShare": 0.375
           },
           {
             "session": 18,
             "mastered": 5,
-            "firstTryRate": 0.875,
+            "firstTryRate": 0.625,
             "inBandShare": 0.75
           },
           {
             "session": 19,
             "mastered": 5,
-            "firstTryRate": 0.625,
+            "firstTryRate": 0.75,
             "inBandShare": 0.5
           },
           {
             "session": 20,
             "mastered": 5,
-            "firstTryRate": 0.5,
-            "inBandShare": 0.375
+            "firstTryRate": 0.375,
+            "inBandShare": 0.5
           }
         ]
       },
@@ -840,6 +840,30 @@
           }
         ]
       }
-    ]
+    ],
+    "splits": {
+      "tuning": {
+        "split": "tuning",
+        "learners": [
+          "strong",
+          "average",
+          "weak",
+          "crossing-ten-weakness"
+        ],
+        "meanSkillsMastered": 4.75,
+        "meanFirstTryRate": 0.7699431933455062,
+        "meanInBandShare": 0.6611990261716372
+      },
+      "heldOut": {
+        "split": "held-out",
+        "learners": [
+          "change-unknown-weakness",
+          "fast-fatigue"
+        ],
+        "meanSkillsMastered": 5,
+        "meanFirstTryRate": 0.7044025157232704,
+        "meanInBandShare": 0.6477987421383647
+      }
+    }
   }
 }

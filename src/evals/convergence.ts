@@ -5,6 +5,7 @@ import {
   SIMULATED_LEARNERS,
   simulatedLearner,
   type SimulatedLearner,
+  type SimulatedLearnerId,
   type WeaknessTag,
 } from "./learners";
 
@@ -24,7 +25,7 @@ export type SessionPoint = {
 };
 
 export type LearnerConvergence = {
-  readonly id: string;
+  readonly id: SimulatedLearnerId;
   readonly name: string;
   readonly heldOut: boolean;
   readonly weaknesses: readonly WeaknessTag[];
@@ -36,16 +37,26 @@ export type LearnerConvergence = {
   readonly perSession: readonly SessionPoint[];
 };
 
+/** The tuning and held-out Learners scored separately, so held-out numbers are never mixed into tuning ones. */
+export type SplitSummary = {
+  readonly split: "tuning" | "held-out";
+  readonly learners: readonly SimulatedLearnerId[];
+  /** Skills Mastered by the last Session, averaged over the split's Learners. */
+  readonly meanSkillsMastered: number;
+  readonly meanFirstTryRate: number;
+  readonly meanInBandShare: number;
+};
+
 export type ConvergenceReport = {
   readonly planner: "baseline";
   readonly sessions: number;
   readonly targetAccuracyBand: typeof TARGET_ACCURACY_BAND;
   readonly learners: readonly LearnerConvergence[];
+  readonly splits: { readonly tuning: SplitSummary; readonly heldOut: SplitSummary };
 };
 
 export type ConvergenceOptions = {
   readonly sessions: number;
-  readonly learners?: readonly SimulatedLearner[];
 };
 
 const inBand = (p: number): boolean => p >= TARGET_ACCURACY_BAND.min && p <= TARGET_ACCURACY_BAND.max;
@@ -91,18 +102,35 @@ function converge(learner: SimulatedLearner, sessions: number): LearnerConvergen
   };
 }
 
+const mean = (values: readonly number[]): number =>
+  values.length === 0 ? 0 : values.reduce((a, b) => a + b, 0) / values.length;
+
+function summarise(split: SplitSummary["split"], learners: readonly LearnerConvergence[]): SplitSummary {
+  return {
+    split,
+    learners: learners.map((l) => l.id),
+    meanSkillsMastered: mean(learners.map((l) => l.perSession[l.perSession.length - 1]?.mastered ?? 0)),
+    meanFirstTryRate: mean(learners.map((l) => l.firstTryRate)),
+    meanInBandShare: mean(learners.map((l) => l.inBandShare)),
+  };
+}
+
 /**
  * Run every Simulated Learner from a fresh Profile through `sessions`
  * Sessions under the Baseline and score convergence: Sessions to Mastery per
- * Skill and the share of Problems in the target accuracy band. Pure: the same
- * options give the same report byte for byte.
+ * Skill and the share of Problems in the target accuracy band, per Learner
+ * and per split. Pure: the same options give the same report byte for byte.
  */
 export function runConvergence(options: ConvergenceOptions): ConvergenceReport {
-  const learners = options.learners ?? SIMULATED_LEARNERS;
+  const learners = SIMULATED_LEARNERS.map((learner) => converge(learner, options.sessions));
   return {
     planner: "baseline",
     sessions: options.sessions,
     targetAccuracyBand: TARGET_ACCURACY_BAND,
-    learners: learners.map((learner) => converge(learner, options.sessions)),
+    learners,
+    splits: {
+      tuning: summarise("tuning", learners.filter((l) => !l.heldOut)),
+      heldOut: summarise("held-out", learners.filter((l) => l.heldOut)),
+    },
   };
 }

@@ -1,5 +1,7 @@
+import { colors } from "@/design/tokens";
 import { SKILLS } from "@/loop";
 import type { LearnerConvergence } from "./convergence";
+import { pct } from "./format";
 import type { EvalReport } from "./report";
 
 /**
@@ -9,10 +11,11 @@ import type { EvalReport } from "./report";
  * for the surface and text; the series colour is a validated categorical
  * slot (see the dataviz palette) with direct end labels as relief.
  */
-const SURFACE = "#FFF7EC";
-const INK = "#3B2E2A";
-const INK_SOFT = "#7A6660";
-const GRID = "#EED7B5";
+const SURFACE = colors.paper;
+const INK = colors.ink;
+const INK_SOFT = colors.inkSoft;
+const GRID = colors.paper3;
+/** Categorical slot 1 of the dataviz reference palette, validated on the paper surface. */
 const SERIES = "#2a78d6";
 
 const COLUMNS = 3;
@@ -23,7 +26,6 @@ const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-
 
 const escape = (text: string): string =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const pct = (share: number): string => `${Math.round(share * 100)}%`;
 
 function facet(learner: LearnerConvergence, index: number, sessions: number): string {
   const x0 = MARGIN.sides + (index % COLUMNS) * FACET.width;
@@ -31,7 +33,7 @@ function facet(learner: LearnerConvergence, index: number, sessions: number): st
   const plotWidth = FACET.width - PLOT.left - PLOT.right;
   const plotHeight = FACET.height - PLOT.top - PLOT.bottom;
   const maxSkills = SKILLS.length;
-  const px = (session: number) => x0 + PLOT.left + ((session - 1) / (sessions - 1)) * plotWidth;
+  const px = (session: number) => x0 + PLOT.left + ((session - 1) / Math.max(1, sessions - 1)) * plotWidth;
   const py = (mastered: number) => y0 + PLOT.top + plotHeight - (mastered / maxSkills) * plotHeight;
 
   const points = learner.perSession.map((p) => `${px(p.session).toFixed(1)},${py(p.mastered).toFixed(1)}`);

@@ -15,7 +15,8 @@ export function formatEquation(equation: Equation): string {
   return `${slot("left", equation.left)} ${equation.op} ${slot("right", equation.right)} = ${slot("result", equation.result)}`;
 }
 
-function table(rows: string[][]): string[] {
+/** Pad each column to its widest cell, two spaces between columns. */
+export function table(rows: string[][]): string[] {
   const widths = rows[0].map((_, col) => Math.max(...rows.map((r) => r[col].length)));
   return rows.map((row) => row.map((cell, col) => cell.padEnd(widths[col])).join("  ").trimEnd());
 }

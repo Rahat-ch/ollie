@@ -42,7 +42,7 @@ pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report
 
 `pnpm diagnostic --seed puppies --script fhrfffhf` scripts the answers (one letter per Problem: `f` first-try, `h` Hint-assisted, `r` Revealed) and `--sessions 3` runs several Sessions on one Profile. `pnpm baseline` takes the same flags plus `--verbose` for the full Session Log of every Session; its first Session is the Diagnostic Session and every later one is the Baseline rule (6 Problems from the current Skill plus 2 Review Problems).
 
-`pnpm eval` is the eval command: it runs every Simulated Learner (six hand-designed profiles in `src/evals/learners.ts`, seeded, two held out of prompt tuning) for 20 Sessions under the Baseline and writes a dated JSON report to `docs/evals/`, then regenerates `docs/evals/convergence.svg` from that file. Run it before any prompt or Plan Space change. `pnpm eval:chart --report docs/evals/<date>.json` redraws the chart from any earlier report.
+`pnpm eval` is the eval command: it runs the six Simulated Learners (`src/evals/learners.ts`, seeded, two held out of prompt tuning) for 20 Sessions under the Baseline and writes a dated JSON report to `docs/evals/`, then regenerates `docs/evals/convergence.svg` from that file. Run it before any prompt or Plan Space change. `pnpm eval:chart --report docs/evals/<date>.json` redraws the chart from any earlier report.
 
 Copy `.env.example` to `.env.local` for local vendor keys. Secrets are read from environment variables only and are never committed. Generated audio is written to `AUDIO_DIR` (default `./data/audio`, gitignored).
 

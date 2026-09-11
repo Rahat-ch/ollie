@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { runConvergence, TARGET_ACCURACY_BAND } from "@/evals/convergence";
+import { runConvergence } from "@/evals/convergence";
+import type { SimulatedLearnerId } from "@/evals/learners";
 
 describe("runConvergence under the Baseline", () => {
   const report = runConvergence({ sessions: 20 });
-  const learner = (id: string) => report.learners.find((l) => l.id === id)!;
+  const learner = (id: SimulatedLearnerId) => report.learners.find((l) => l.id === id)!;
 
   it("runs every Simulated Learner for 20 Sessions in well under a second", () => {
     const started = performance.now();
@@ -20,11 +21,14 @@ describe("runConvergence under the Baseline", () => {
     expect(report.learners.every((l) => l.perSession.length === 20)).toBe(true);
   });
 
-  it("flags the held-out Learners", () => {
+  it("flags the held-out Learners and scores the two splits separately", () => {
     expect(report.learners.filter((l) => l.heldOut).map((l) => l.id)).toEqual([
       "change-unknown-weakness",
       "fast-fatigue",
     ]);
+    expect(report.splits.heldOut.learners).toEqual(["change-unknown-weakness", "fast-fatigue"]);
+    expect(report.splits.tuning.learners).toEqual(["strong", "average", "weak", "crossing-ten-weakness"]);
+    expect(report.splits.heldOut.meanSkillsMastered).toBe(5);
   });
 
   it("reports Sessions to Mastery per Skill, in progression order for a strong Learner", () => {
@@ -35,14 +39,10 @@ describe("runConvergence under the Baseline", () => {
     expect(learner("weak").sessionsToMastery["unknown-addend"]).toBeNull();
   });
 
-  it("reports the share of Problems in the target accuracy band from the true probabilities", () => {
-    expect(TARGET_ACCURACY_BAND).toEqual({ min: 0.7, max: 0.9 });
-    for (const l of report.learners) {
-      expect(l.inBandShare).toBeGreaterThanOrEqual(0);
-      expect(l.inBandShare).toBeLessThanOrEqual(1);
-      expect(l.problems).toBeGreaterThanOrEqual(6 * 20);
-    }
+  it("scores the share of Problems in the target accuracy band from the true probabilities", () => {
+    expect(learner("average").inBandShare).toBe(1);
     expect(learner("strong").inBandShare).toBeLessThan(learner("average").inBandShare);
+    expect(learner("weak").inBandShare).toBeLessThan(learner("average").inBandShare);
   });
 
   it("is reproducible byte for byte", () => {
