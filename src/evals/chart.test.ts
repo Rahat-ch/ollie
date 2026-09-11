@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation";
-import { renderConvergenceChart } from "./chart";
-import { runEvals } from "./evals";
-import { evalReport } from "./report";
+import { renderConvergenceChart } from "@/evals/chart";
+import { runEvals } from "@/evals/evals";
+import { evalReport } from "@/evals/report";
 
 describe("renderConvergenceChart", () => {
-  const results = runEvals({ sessions: 20, generation: fakeGeneration(), generationName: "fake" });
+  const results = runEvals({ sessions: 20, coach: { generation: fakeGeneration(), name: "fake" } });
   const svg = async () => renderConvergenceChart(evalReport(await results, new Date("2026-09-10T19:06:01Z")), "2026-09-10T19-06-01Z.json");
 
   it("draws one facet per Simulated Learner with a Coach line and a Baseline line, and a legend naming both", async () => {

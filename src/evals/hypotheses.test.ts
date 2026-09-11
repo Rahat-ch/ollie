@@ -3,9 +3,9 @@ import { DIAGNOSTIC_PLAN, newProfile, runSession, scripted } from "@/loop";
 import type { Hypothesis, LogEntry, ProblemId } from "@/loop";
 import type { CoachInput } from "@/generation";
 import { fakeGeneration } from "@/generation";
-import { getSimulatedLearner } from "./learners";
-import { checkEvidence, namesWeakness, scoreHypotheses } from "./hypotheses";
-import { coachPlanner, runLearner } from "./run";
+import { getSimulatedLearner } from "@/evals/learners";
+import { checkEvidence, claimPolarity, namesWeakness, scoreHypotheses } from "@/evals/hypotheses";
+import { coachPlanner, runLearner } from "@/evals/run";
 
 describe("namesWeakness", () => {
   it("is true when the claim says the pattern in its own words, not when it only names the Skill", () => {
@@ -13,10 +13,21 @@ describe("namesWeakness", () => {
     expect(namesWeakness("crossing-ten", "Misses sums that bridge 10 (8 + 5, 9 + 7)")).toBe(true);
     expect(namesWeakness("crossing-ten", "May need more practice with Make-a-ten within 20")).toBe(false);
     expect(namesWeakness("crossing-ten", "Partners to 10 are solid")).toBe(false);
+    expect(namesWeakness("crossing-ten", "Teen numbers above 10 are shaky")).toBe(false);
+    expect(namesWeakness("crossing-ten", "Sums that go over ten are missed on the first try")).toBe(true);
 
     expect(namesWeakness("change-unknown", "Misses missing-addend Problems but not plain subtraction")).toBe(true);
     expect(namesWeakness("change-unknown", "Finds the change unknown hard: 9 + ? = 13")).toBe(true);
     expect(namesWeakness("change-unknown", "May need more practice with Subtraction as unknown addend")).toBe(false);
+  });
+});
+
+describe("claimPolarity", () => {
+  it("reads a negated difficulty word as a strength, and a difficulty beside one as a difficulty", () => {
+    expect(claimPolarity("Solves teen numbers with no hints")).toBe("strength");
+    expect(claimPolarity("Never needs a Hint on partners to 10")).toBe("strength");
+    expect(claimPolarity("Misses make-a-ten but no hints needed on partners")).toBe("difficulty");
+    expect(claimPolarity("Not yet secure on counting on")).toBe("difficulty");
   });
 });
 
@@ -129,5 +140,23 @@ describe("scoreHypotheses", () => {
     expect(score.evidence).toMatchObject({ unknownIds: 0, inconsistent: 0, integrity: 1 });
     expect(score.sources).toEqual({ coach: 5, retry: 0, baseline: 0 });
     expect(score.finalNotes.hypotheses.length).toBeGreaterThan(0);
+  });
+
+  it("counts an invented Problem ID in a rejected Coach output, even though the engine refused it", async () => {
+    let calls = 0;
+    const inventingOnce = fakeGeneration({
+      async runCoach(input) {
+        const output = await fakeGeneration().runCoach(input);
+        if (calls++ > 0) return output;
+        const [first, ...rest] = output.notes.hypotheses;
+        return { ...output, notes: { ...output.notes, hypotheses: [{ ...first, evidence: ["p99"] }, ...rest] } };
+      },
+    });
+
+    const score = scoreHypotheses(await runLearner(learner, coachPlanner(inventingOnce), 1));
+
+    expect(score.sources).toEqual({ coach: 0, retry: 1, baseline: 0 });
+    expect(score.evidence.unknownIds).toBe(1);
+    expect(score.evidence.integrity).toBeLessThan(1);
   });
 });

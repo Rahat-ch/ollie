@@ -31,6 +31,14 @@ export type SimulatedLearner = {
 
 export type WeaknessTag = "crossing-ten" | "change-unknown";
 
+/** The weakness in plain words, for reports and the chart. */
+export const describeWeakness = (tag: WeaknessTag): string => WEAKNESS_LABEL[tag];
+
+const WEAKNESS_LABEL: Readonly<Record<WeaknessTag, string>> = {
+  "crossing-ten": "crossing ten",
+  "change-unknown": "change unknown",
+};
+
 /** How much a weakness tag lowers first-try accuracy on a matching Problem. */
 export const WEAKNESS_PENALTY = 0.35;
 

@@ -6,13 +6,14 @@
  * Pure over its inputs: on the fake the same options give the same results.
  */
 import type { Generation } from "@/generation";
-import { convergenceReport, mean, TARGET_ACCURACY_BAND, type ConvergenceReport } from "./convergence";
+import { convergenceReport, TARGET_ACCURACY_BAND, type ConvergenceReport } from "./convergence";
 import { scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
 import { SIMULATED_LEARNERS, type SimulatedLearnerId } from "./learners";
 import { baselinePlanner, coachPlanner, runLearner, type LearnerRun, type SessionTrace } from "./run";
+import { integrityRate, mean, share, summariseSplits, type Split } from "./stats";
 
 export type HypothesisSplit = {
-  readonly split: "tuning" | "held-out";
+  readonly split: Split;
   readonly learners: readonly SimulatedLearnerId[];
   /** Planted weaknesses across the split's Learners, and how many a supported Hypothesis named. */
   readonly planted: number;
@@ -28,32 +29,39 @@ export type HypothesisSplit = {
   readonly sources: PlanSources;
 };
 
+/** The Coach run scored for its Hypotheses: per Learner, then per split. */
 export type HypothesisReport = {
   readonly learners: readonly LearnerHypotheses[];
   readonly splits: { readonly tuning: HypothesisSplit; readonly heldOut: HypothesisSplit };
 };
 
+/** What one Eval Run scored: both planners' convergence and the Coach's Hypotheses. */
 export type EvalResults = {
   readonly sessions: number;
   readonly targetAccuracyBand: typeof TARGET_ACCURACY_BAND;
-  /** Which Generation ran the Coach: the fake, or a model id. */
+  /** Which Generation ran the Coach: `fake`, or a model id. */
   readonly coach: { readonly generation: string };
   readonly convergence: { readonly baseline: ConvergenceReport; readonly coach: ConvergenceReport };
   readonly hypotheses: HypothesisReport;
 };
 
+/** The Generation the Coach runs on and the name the report records for it. */
+export type CoachGeneration = {
+  readonly generation: Generation;
+  /** `fake`, or the model id. */
+  readonly name: string;
+};
+
 export type EvalOptions = {
   readonly sessions: number;
-  readonly generation: Generation;
-  readonly generationName: string;
+  readonly coach: CoachGeneration;
   /** Called after every Session of every Coach run, so a long run can show progress. */
-  readonly onSession?: (run: { learner: SimulatedLearnerId; planner: "coach" }, trace: SessionTrace) => void;
+  readonly onSession?: (learner: SimulatedLearnerId, trace: SessionTrace) => void;
 };
 
 const sum = (values: readonly number[]): number => values.reduce((a, b) => a + b, 0);
-const share = (hits: number, total: number): number => (total === 0 ? 0 : hits / total);
 
-function summariseHypotheses(split: HypothesisSplit["split"], learners: readonly LearnerHypotheses[]): HypothesisSplit {
+function summariseHypotheses(split: Split, learners: readonly LearnerHypotheses[]): HypothesisSplit {
   const planted = sum(learners.map((l) => l.planted.length));
   const detected = sum(learners.map((l) => l.detected));
   const detections = learners.flatMap((l) =>
@@ -74,7 +82,7 @@ function summariseHypotheses(split: HypothesisSplit["split"], learners: readonly
     falsePositives,
     falsePositiveRate: share(falsePositives, supported),
     citations,
-    evidenceIntegrity: citations === 0 ? 1 : 1 - bad / citations,
+    evidenceIntegrity: integrityRate(citations, bad),
     sources: {
       coach: sum(learners.map((l) => l.sources.coach)),
       retry: sum(learners.map((l) => l.sources.retry)),
@@ -83,15 +91,10 @@ function summariseHypotheses(split: HypothesisSplit["split"], learners: readonly
   };
 }
 
+/** The Hypothesis scores of every Coach run, with the two splits scored separately. */
 export function hypothesisReport(runs: readonly LearnerRun[]): HypothesisReport {
   const learners = runs.map(scoreHypotheses);
-  return {
-    learners,
-    splits: {
-      tuning: summariseHypotheses("tuning", learners.filter((l) => !l.heldOut)),
-      heldOut: summariseHypotheses("held-out", learners.filter((l) => l.heldOut)),
-    },
-  };
+  return { learners, splits: summariseSplits(learners, summariseHypotheses) };
 }
 
 /**
@@ -101,23 +104,21 @@ export function hypothesisReport(runs: readonly LearnerRun[]): HypothesisReport 
  * so a real adapter finishes in the time of one Learner.
  */
 export async function runEvals(options: EvalOptions): Promise<EvalResults> {
-  const { sessions, generation, onSession } = options;
+  const { sessions, coach, onSession } = options;
   const baseline = await Promise.all(SIMULATED_LEARNERS.map((learner) => runLearner(learner, baselinePlanner, sessions)));
-  const coach = await Promise.all(
+  const coached = await Promise.all(
     SIMULATED_LEARNERS.map((learner) =>
-      runLearner(learner, coachPlanner(generation), sessions, (trace) =>
-        onSession?.({ learner: learner.id, planner: "coach" }, trace),
-      ),
+      runLearner(learner, coachPlanner(coach.generation), sessions, (trace) => onSession?.(learner.id, trace)),
     ),
   );
   return {
     sessions,
     targetAccuracyBand: TARGET_ACCURACY_BAND,
-    coach: { generation: options.generationName },
+    coach: { generation: coach.name },
     convergence: {
       baseline: convergenceReport("baseline", baseline),
-      coach: convergenceReport("coach", coach),
+      coach: convergenceReport("coach", coached),
     },
-    hypotheses: hypothesisReport(coach),
+    hypotheses: hypothesisReport(coached),
   };
 }

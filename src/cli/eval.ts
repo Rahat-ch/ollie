@@ -17,7 +17,7 @@ import { parseArgs } from "node:util";
 import { runEvals } from "@/evals/evals";
 import { writeChart, writeReport } from "@/evals/files";
 import { formatEvalResults } from "@/evals/format";
-import { evalReport } from "@/evals/report";
+import { describeGeneration, evalReport } from "@/evals/report";
 import { formatSessionLine } from "@/loop/format";
 import { chooseGeneration } from "./generation";
 
@@ -35,8 +35,8 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 }
 
 async function main(): Promise<void> {
-  const { generation, name, description } = await chooseGeneration(!values.fake);
-  console.log(`Coach: ${description}`);
+  const coach = await chooseGeneration(values.fake ? "fake" : "real");
+  console.log(`Coach: ${describeGeneration(coach.name)}${values.fake ? " (no network)" : ""}`);
   if (values.fake) {
     console.log("The fake plans like a slightly smarter Baseline and never names a pattern: its columns show the seams, not the Coach's judgement.");
   }
@@ -44,11 +44,10 @@ async function main(): Promise<void> {
   const started = performance.now();
   const results = await runEvals({
     sessions,
-    generation,
-    generationName: name,
+    coach,
     onSession: values.fake
       ? undefined
-      : ({ learner }, { result, step }) => console.log(`${learner}: ${formatSessionLine(result)}; Plan from ${step.source}`),
+      : (learner, { result, step }) => console.log(`${learner}: ${formatSessionLine(result)}; Plan from ${step.source}`),
   });
   const elapsed = Math.round(performance.now() - started);
   const report = evalReport(results, new Date());
@@ -58,7 +57,7 @@ async function main(): Promise<void> {
   if (!values.fake) console.log("");
   console.log(formatEvalResults(results));
   console.log("");
-  console.log(`Ran 6 Simulated Learners for ${sessions} Sessions under both planners in ${elapsed} ms.`);
+  console.log(`Ran ${results.convergence.coach.learners.length} Simulated Learners for ${sessions} Sessions under both planners in ${elapsed} ms.`);
   console.log(`Report: ${reportFile}`);
   console.log(`Chart:  ${chartFile}`);
 }

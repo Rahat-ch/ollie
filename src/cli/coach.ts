@@ -19,6 +19,7 @@ import { coachSession, type CoachStep } from "@/coach";
 import { SIMULATED_LEARNERS, simulatedLearner, type SimulatedLearner } from "@/evals/learners";
 import { DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession } from "@/loop";
 import { formatEstimates, formatNotes, formatPlan, formatSessionLine, formatSessionLog } from "@/loop/format";
+import { describeGeneration } from "@/evals/report";
 import { chooseGeneration } from "./generation";
 
 const { values } = parseArgs({
@@ -50,8 +51,8 @@ const SOURCE_LABEL: Record<CoachStep["source"], string> = {
 };
 
 async function main(learner: SimulatedLearner): Promise<void> {
-  const { generation, description } = await chooseGeneration(values.real);
-  console.log(`Generation: ${description}`);
+  const { generation, name } = await chooseGeneration(values.real ? "real" : "fake");
+  console.log(`Generation: ${describeGeneration(name)}`);
   console.log(`Learner: ${learner.name} (${learner.id}, seed ${learner.seed}), the Diagnostic Session then ${sessions} Coach-planned Sessions\n`);
   let profile = newProfile();
   let notes = emptyNotes();

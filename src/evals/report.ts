@@ -18,6 +18,6 @@ export function reportFileName(generatedAt: Date): string {
 export const isReportFileName = (name: string): boolean =>
   /^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.json$/.test(name);
 
-/** How the report names the Generation that ran the Coach, in prose. */
+/** The Generation that ran the Coach, in prose, from the name the report records. */
 export const describeGeneration = (generation: string): string =>
   generation === "fake" ? "the Generation fake" : `the Anthropic adapter on ${generation}`;

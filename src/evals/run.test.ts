@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { DIAGNOSTIC_PLAN } from "@/loop";
 import { fakeGeneration } from "@/generation";
-import { getSimulatedLearner } from "./learners";
-import { baselinePlanner, coachPlanner, runLearner } from "./run";
+import { getSimulatedLearner } from "@/evals/learners";
+import { baselinePlanner, coachPlanner, runLearner } from "@/evals/run";
 
 describe("runLearner", () => {
   const learner = getSimulatedLearner("crossing-ten-weakness");

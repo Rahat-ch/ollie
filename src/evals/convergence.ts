@@ -2,6 +2,7 @@ import { SKILLS } from "@/loop";
 import type { SkillId } from "@/loop";
 import { firstTryProbability, type SimulatedLearnerId, type WeaknessTag } from "./learners";
 import type { LearnerRun, PlannerId } from "./run";
+import { mean, share, summariseSplits, type Split } from "./stats";
 
 /**
  * A Problem is at the right difficulty when the Learner's true chance of a
@@ -33,7 +34,7 @@ export type LearnerConvergence = {
 
 /** The tuning and held-out Learners scored separately, so held-out numbers are never mixed into tuning ones. */
 export type SplitSummary = {
-  readonly split: "tuning" | "held-out";
+  readonly split: Split;
   readonly learners: readonly SimulatedLearnerId[];
   /** Skills Mastered by the last Session, averaged over the split's Learners. */
   readonly meanSkillsMastered: number;
@@ -49,7 +50,6 @@ export type ConvergenceReport = {
 };
 
 const inBand = (p: number): boolean => p >= TARGET_ACCURACY_BAND.min && p <= TARGET_ACCURACY_BAND.max;
-const share = (hits: number, total: number): number => (total === 0 ? 0 : hits / total);
 
 /**
  * Score one run for convergence: Sessions to Mastery per Skill, the first-try
@@ -94,10 +94,7 @@ export function scoreConvergence(run: LearnerRun): LearnerConvergence {
   };
 }
 
-export const mean = (values: readonly number[]): number =>
-  values.length === 0 ? 0 : values.reduce((a, b) => a + b, 0) / values.length;
-
-function summarise(split: SplitSummary["split"], learners: readonly LearnerConvergence[]): SplitSummary {
+function summarise(split: Split, learners: readonly LearnerConvergence[]): SplitSummary {
   return {
     split,
     learners: learners.map((l) => l.id),
@@ -110,12 +107,5 @@ function summarise(split: SplitSummary["split"], learners: readonly LearnerConve
 /** The convergence of every run under one planner, with the two splits scored separately. */
 export function convergenceReport(planner: PlannerId, runs: readonly LearnerRun[]): ConvergenceReport {
   const learners = runs.map(scoreConvergence);
-  return {
-    planner,
-    learners,
-    splits: {
-      tuning: summarise("tuning", learners.filter((l) => !l.heldOut)),
-      heldOut: summarise("held-out", learners.filter((l) => l.heldOut)),
-    },
-  };
+  return { planner, learners, splits: summariseSplits(learners, summarise) };
 }

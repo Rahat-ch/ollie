@@ -7,20 +7,23 @@ import type { CoachStep } from "@/coach";
 import type { Hypothesis, LearnerNotes, LogEntry, ProblemId } from "@/loop";
 import type { SimulatedLearnerId, WeaknessTag } from "./learners";
 import type { LearnerRun } from "./run";
+import { integrityRate, share } from "./stats";
 
 /**
  * How each planted weakness is said in plain English. A Hypothesis names a
  * weakness when its claim says the pattern, not when it only names the
  * Skill: "make-a-ten" is a Skill, "crosses ten" is the pattern; "unknown
  * addend" is a Skill, "missing addend" is the structure the change-unknown
- * weakness is planted on.
+ * weakness is planted on. "Numbers above 10" is teen-number talk, so a sum
+ * has to be the thing over ten.
  */
 const WEAKNESS_PHRASES: Readonly<Record<WeaknessTag, readonly RegExp[]>> = {
   "crossing-ten": [
-    /cross(?:es|ing|ed)?\s+(?:over\s+)?(?:ten|10)\b/,
-    /bridg(?:e|es|ing|ed)\s+(?:through\s+|over\s+|across\s+)?(?:ten|10)\b/,
-    /(?:over|past|through|above|beyond|more than|greater than)\s+(?:ten|10)\b/,
-    /regroup/,
+    /\bcross\w*\s+(?:over\s+|the\s+)?(?:ten|10)\b/,
+    /\bbridg\w*\s+(?:through\s+|over\s+|across\s+|to\s+)?(?:ten|10)\b/,
+    /\b(?:past|through|across)\s+(?:ten|10)\b/,
+    /\b(?:sums?|totals?|adds?|adding|addition)\b[^.;]{0,40}?\b(?:over|above|beyond|more than|greater than|bigger than)\s+(?:ten|10)\b/,
+    /\bregroup/,
   ],
   "change-unknown": [
     /missing[\s-]addend/,
@@ -42,21 +45,27 @@ export function namesWeakness(tag: WeaknessTag, claim: string): boolean {
 
 export type ClaimPolarity = "difficulty" | "strength" | "neutral";
 
+/** "no hints", "never needs a Hint", "without a miss": a difficulty word negated is a strength. */
+const NEGATED_DIFFICULTY =
+  /\b(?:no|never|without|not)\s+(?:a\s+|an\s+|any\s+|needing\s+(?:a\s+)?)?(?:hints?|reveals?|misses|missed|mistakes?|errors?|struggl\w*|trouble|needs?\s+(?:a\s+)?hints?)\b/g;
 const DIFFICULTY_WORDS =
   /\b(?:struggl\w*|miss(?:es|ed|ing)?|wrong|incorrect|error\w*|hint\w*|reveal\w*|unresolved|difficult\w*|hard|harder|trouble|confus\w*|not yet|needs?|weak\w*|mistak\w*|fail\w*)\b/;
 const STRENGTH_WORDS =
-  /\b(?:strong|solid|secure|fluent|confident|reliabl\w*|consistent\w*|mastered|knows|correct on the first try|first[\s-]try correct|every first try|no hints?)\b/;
+  /\b(?:strong|solid|secure|fluent|confident|reliabl\w*|consistent\w*|mastered|knows|correct on the first try|first[\s-]try correct|every first try)\b/;
 
 /**
  * What a claim is about, read from its words: a difficulty (the Learner
- * misses, needs a Hint, struggles), a strength (solid, reliable), or neither
- * (a response-time pattern, say). A claim with both is a difficulty: the
- * Hypothesis is the thing under test, and strengths have their own list.
+ * misses, needs a Hint, struggles), a strength (solid, reliable, no Hints),
+ * or neither (a response-time pattern, say). A claim with both is a
+ * difficulty: the Hypothesis is the thing under test, and strengths have
+ * their own list.
  */
 export function claimPolarity(claim: string): ClaimPolarity {
   const text = claim.toLowerCase();
-  if (DIFFICULTY_WORDS.test(text)) return "difficulty";
-  if (STRENGTH_WORDS.test(text)) return "strength";
+  const negated = text.match(NEGATED_DIFFICULTY) !== null;
+  const rest = text.replace(NEGATED_DIFFICULTY, " ");
+  if (DIFFICULTY_WORDS.test(rest)) return "difficulty";
+  if (negated || STRENGTH_WORDS.test(text)) return "strength";
   return "neutral";
 }
 
@@ -104,7 +113,7 @@ export function checkEvidence(
 }
 
 export type EvidenceIntegrity = {
-  /** Problem citations checked, over every Session's Notes. */
+  /** Problem citations checked, over every Notes the Coach wrote, accepted or rejected. */
   readonly citations: number;
   readonly unknownIds: number;
   readonly inconsistent: number;
@@ -112,6 +121,7 @@ export type EvidenceIntegrity = {
   readonly integrity: number;
 };
 
+/** How many Sessions were planned by the Coach, by the Coach after a retry, or by the Baseline fallback. */
 export type PlanSources = Readonly<Record<CoachStep["source"], number>>;
 
 export type LearnerHypotheses = {
@@ -128,18 +138,27 @@ export type LearnerHypotheses = {
   readonly falsePositives: number;
   readonly falsePositiveRate: number;
   readonly evidence: EvidenceIntegrity;
-  /** How many Sessions were planned by the Coach, by the Coach after a retry, or by the Baseline fallback. */
   readonly sources: PlanSources;
   readonly finalNotes: LearnerNotes;
 };
 
-const share = (hits: number, total: number): number => (total === 0 ? 0 : hits / total);
+/**
+ * Every Notes the Coach wrote for a Session: each rejected attempt's, then
+ * the accepted one's. After a double rejection the kept Notes are the prior
+ * ones, which the Coach did not write this Session.
+ */
+function writtenNotes(step: CoachStep): LearnerNotes[] {
+  const rejected = step.rejections.flatMap((r) => (r.output ? [r.output.notes] : []));
+  return step.source === "baseline" ? rejected : [...rejected, step.notes];
+}
 
 /**
- * Score one Coach run: which planted weaknesses a supported Hypothesis
- * named and when, which supported Hypotheses named a weakness that was not
- * planted, Evidence Integrity over every citation in every Session's Notes
- * against the Log so far, and where each Plan came from.
+ * Score one Coach run. Detection and false positives read the Notes the
+ * engine kept: a planted weakness is detected in the Session a supported
+ * Hypothesis first names it, and a supported Hypothesis naming a weakness
+ * that was not planted is a false positive. Evidence Integrity reads every
+ * Notes the Coach wrote, rejected attempts included, against the Log so
+ * far, so an invented Problem ID counts even though the engine refused it.
  */
 export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
   const { learner } = run;
@@ -163,10 +182,12 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
         else falsePositives.add(hypothesis.id);
       }
     }
-    for (const { verdict } of checkEvidence(step.notes.hypotheses, entries)) {
-      evidence.citations += 1;
-      if (verdict === "unknown-id") evidence.unknownIds += 1;
-      if (verdict === "inconsistent") evidence.inconsistent += 1;
+    for (const notes of writtenNotes(step)) {
+      for (const { verdict } of checkEvidence(notes.hypotheses, entries)) {
+        evidence.citations += 1;
+        if (verdict === "unknown-id") evidence.unknownIds += 1;
+        if (verdict === "inconsistent") evidence.inconsistent += 1;
+      }
     }
   }
 
@@ -181,10 +202,7 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
     supportedHypotheses: supported.size,
     falsePositives: falsePositives.size,
     falsePositiveRate: share(falsePositives.size, supported.size),
-    evidence: {
-      ...evidence,
-      integrity: evidence.citations === 0 ? 1 : 1 - (evidence.unknownIds + evidence.inconsistent) / evidence.citations,
-    },
+    evidence: { ...evidence, integrity: integrityRate(evidence.citations, evidence.unknownIds + evidence.inconsistent) },
     sources,
     finalNotes: last?.step.notes ?? { hypotheses: [], strengths: [] },
   };

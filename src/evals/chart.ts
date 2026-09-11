@@ -1,9 +1,8 @@
 import { colors } from "@/design/tokens";
 import { SKILLS } from "@/loop";
 import type { LearnerConvergence } from "./convergence";
-import { pct } from "./format";
+import { baselineOf, describeDetection, pct } from "./format";
 import type { LearnerHypotheses } from "./hypotheses";
-import type { WeaknessTag } from "./learners";
 import { describeGeneration, type EvalReport } from "./report";
 
 /**
@@ -30,23 +29,12 @@ const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-
 const escape = (text: string): string =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const WEAKNESS_LABEL: Readonly<Record<WeaknessTag, string>> = {
-  "crossing-ten": "crossing ten",
-  "change-unknown": "change unknown",
-};
-
 /** What the facet says under its title: the planted weakness and when the Coach named it, or the first-try rates. */
 function subtitle(coach: LearnerConvergence, baseline: LearnerConvergence, hypotheses: LearnerHypotheses | undefined): string {
-  const planted = hypotheses?.planted ?? [];
-  if (planted.length > 0 && hypotheses) {
-    return planted
-      .map((tag) => {
-        const session = hypotheses.sessionsToDetection[tag];
-        return `${WEAKNESS_LABEL[tag]}: ${session ? `named after Session ${session}` : "not named"}`;
-      })
-      .join(" · ");
-  }
-  return `first-try Coach ${pct(coach.firstTryRate)} · Baseline ${pct(baseline.firstTryRate)}`;
+  return (
+    (hypotheses && describeDetection(hypotheses)) ??
+    `first-try Coach ${pct(coach.firstTryRate)} · Baseline ${pct(baseline.firstTryRate)}`
+  );
 }
 
 function facet(
@@ -120,7 +108,7 @@ export function renderConvergenceChart(report: EvalReport, reportName: string): 
     .map((coach, i) =>
       facet(
         coach,
-        convergence.baseline.learners.find((l) => l.id === coach.id) ?? coach,
+        baselineOf(coach, convergence.baseline.learners),
         hypotheses.learners.find((l) => l.id === coach.id),
         i,
         sessions,

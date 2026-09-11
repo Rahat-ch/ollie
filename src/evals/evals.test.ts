@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation";
-import { runEvals } from "./evals";
-import type { SimulatedLearnerId } from "./learners";
+import { runEvals } from "@/evals/evals";
+import type { SimulatedLearnerId } from "@/evals/learners";
 
 describe("runEvals", () => {
-  const options = { sessions: 20, generation: fakeGeneration(), generationName: "fake" };
+  const options = { sessions: 20, coach: { generation: fakeGeneration(), name: "fake" } };
   const promise = runEvals(options);
   const baseline = async (id: SimulatedLearnerId) => (await promise).convergence.baseline.learners.find((l) => l.id === id)!;
   const coach = async (id: SimulatedLearnerId) => (await promise).convergence.coach.learners.find((l) => l.id === id)!;
