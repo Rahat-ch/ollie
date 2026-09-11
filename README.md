@@ -36,6 +36,7 @@ pnpm test:e2e     # browser tests (playwright; builds and starts the app on :310
 pnpm licenses:check  # fail on any copyleft or unrecognised licence
 pnpm diagnostic   # run the Diagnostic Session through the Loop and print the Log and Estimates
 pnpm baseline     # run ten Baseline Sessions on one Profile and print Mastery and Unit transitions
+pnpm coach        # run a Simulated Learner through the Diagnostic Session and five Coach-planned Sessions; print the Learner Notes and Session Plan after each
 pnpm eval         # run the six Simulated Learners for 20 Sessions under the Baseline; write a dated report and the chart
 pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report file
 ```
@@ -43,6 +44,8 @@ pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report
 `pnpm diagnostic --seed puppies --script fhrfffhf` scripts the answers (one letter per Problem: `f` first-try, `h` Hint-assisted, `r` Revealed) and `--sessions 3` runs several Sessions on one Profile. `pnpm baseline` takes the same flags plus `--verbose` for the full Session Log of every Session; its first Session is the Diagnostic Session and every later one is the Baseline rule (6 Problems from the current Skill plus 2 Review Problems).
 
 `pnpm eval` is the eval command: it runs the six Simulated Learners (`src/evals/learners.ts`, seeded, two held out of prompt tuning) for 20 Sessions under the Baseline and writes a dated JSON report to `docs/evals/`, then regenerates `docs/evals/convergence.svg` from that file. Run it before any prompt or Plan Space change. `pnpm eval:chart --report docs/evals/<date>.json` redraws the chart from any earlier report.
+
+`pnpm coach` runs one Simulated Learner through Coach-planned Sessions and prints the Learner Notes and the next Session Plan after each, with the source of every Plan (the Coach, the Coach after one retry, or the Baseline Plan with the rejection reasons). `--learner weak --sessions 3` picks the Learner and the number of Coach-planned Sessions, which always follow the Diagnostic Session; `--verbose` adds the full Session Log. By default the Coach is the Generation fake, deterministic and with no network; `--real` runs the Anthropic adapter on Opus 5 and reads `ANTHROPIC_API_KEY` from the environment or `.env.local`.
 
 Copy `.env.example` to `.env.local` for local vendor keys. Secrets are read from environment variables only and are never committed. Generated audio is written to `AUDIO_DIR` (default `./data/audio`, gitignored).
 
@@ -54,6 +57,8 @@ A Docker container built by Coolify on a Hetzner host, behind Cloudflare, with a
 
 - `CONTEXT.md`: the glossary. Its vocabulary is canonical in code, tests, and docs.
 - `src/loop/`: the Loop. A pure function from a Session Plan, a Profile, a seed, and an answer policy to a Session Log and the next Profile; the Skill template families, Bayesian Knowledge Tracing, Mastery, Unit unlocking, the Plan Space and its validation, and the Baseline planner live behind it. No I/O.
+- `src/generation/`: the Generation seam. One interface with four operations (write Story, run Coach, write Parent Summary, render speech), the fake every test and `pnpm coach` run on, and the Opus 5 Coach adapter with its prompt and output schema. The real adapters are imported by their own paths, so nothing that runs on the fake loads a network client.
+- `src/coach/`: the engine's Coach step. It hands the Coach the Session's evidence (never a Problem or an answer), validates the returned Learner Notes against the Log and the Session Plan against the Plan Space, retries once with every reason, and falls back to the Baseline Plan so play never stops.
 - `src/evals/`: the Simulated Learners (answer policies fed into the Loop), the convergence runner, the dated report, and the chart renderer. `docs/evals/` holds every Eval Run's report and the chart regenerated from the latest one.
 - `docs/adr/`: the three architectural decisions (engine owns the math; no accounts; the Coach plans inside a bounded space).
 - `docs/research/k5-math-game/`: the research the design rests on.

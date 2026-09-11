@@ -42,7 +42,8 @@ export function planSpace(profile: ProfileState): PlanSpace {
   };
 }
 
-const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
+/** `6 to 10`: a range in words, for reasons and prompts. */
+export const describeRange = ({ min, max }: NumberRange): string => `${min} to ${max}`;
 
 const PLAN_KEYS = ["length", "skills", "reviewShare", "hypothesisUnderTest"];
 const PLAN_SKILL_KEYS = ["skill", "weight", "numberRange", "structures"];
