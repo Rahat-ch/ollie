@@ -1,0 +1,2440 @@
+{
+  "generatedAt": "2026-09-11T23:15:19.525Z",
+  "sessions": 20,
+  "targetAccuracyBand": {
+    "min": 0.7,
+    "max": 0.9
+  },
+  "coach": {
+    "generation": "fake"
+  },
+  "convergence": {
+    "baseline": {
+      "planner": "baseline",
+      "learners": [
+        {
+          "id": "strong",
+          "name": "Strong",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 4,
+            "make-a-ten": 6,
+            "unknown-addend": 8
+          },
+          "problems": 159,
+          "firstTryRate": 0.9056603773584906,
+          "inBandShare": 0.660377358490566,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.8888888888888888,
+              "inBandShare": 0
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 1,
+              "inBandShare": 0
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 0
+            },
+            {
+              "session": 4,
+              "mastered": 3,
+              "firstTryRate": 1,
+              "inBandShare": 0
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 6,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 7,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 8,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 9,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 10,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 11,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 12,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 13,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 14,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 15,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 16,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            }
+          ]
+        },
+        {
+          "id": "average",
+          "name": "Average",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 5,
+            "counting-on": 7,
+            "make-a-ten": 10,
+            "unknown-addend": 12
+          },
+          "problems": 159,
+          "firstTryRate": 0.7735849056603774,
+          "inBandShare": 1,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.6666666666666666,
+              "inBandShare": 1
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.8333333333333334,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 2,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 2,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 3,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 8,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 1
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 10,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 11,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 12,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 13,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 14,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 15,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 16,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            }
+          ]
+        },
+        {
+          "id": "weak",
+          "name": "Weak",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 4,
+            "teen-numbers": 6,
+            "counting-on": 10,
+            "make-a-ten": 20,
+            "unknown-addend": null
+          },
+          "problems": 155,
+          "firstTryRate": 0.6709677419354839,
+          "inBandShare": 0.38064516129032255,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 0.5555555555555556
+            },
+            {
+              "session": 2,
+              "mastered": 0,
+              "firstTryRate": 0.6666666666666666,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 0,
+              "firstTryRate": 0.8333333333333334,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 1,
+              "firstTryRate": 0.8333333333333334,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 1,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 2,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 8,
+              "mastered": 2,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 9,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 11,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 12,
+              "mastered": 3,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 13,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 14,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 15,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 16,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 17,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 18,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 19,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 20,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.125
+            }
+          ]
+        },
+        {
+          "id": "crossing-ten-weakness",
+          "name": "Crossing-ten weakness",
+          "heldOut": false,
+          "weaknesses": [
+            "crossing-ten"
+          ],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 5,
+            "make-a-ten": 12,
+            "unknown-addend": 17
+          },
+          "problems": 159,
+          "firstTryRate": 0.7295597484276729,
+          "inBandShare": 0.6037735849056604,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.8888888888888888,
+              "inBandShare": 0.8888888888888888
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.8333333333333334,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 6,
+              "mastered": 3,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 7,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 8,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 11,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 12,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 13,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            }
+          ]
+        },
+        {
+          "id": "change-unknown-weakness",
+          "name": "Change-unknown weakness",
+          "heldOut": true,
+          "weaknesses": [
+            "change-unknown"
+          ],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 5,
+            "make-a-ten": 7,
+            "unknown-addend": 18
+          },
+          "problems": 159,
+          "firstTryRate": 0.7044025157232704,
+          "inBandShare": 0.7295597484276729,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 1
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 8,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 9,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 10,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 11,
+              "mastered": 4,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 12,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 13,
+              "mastered": 4,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 17,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.5
+            }
+          ]
+        },
+        {
+          "id": "fast-fatigue",
+          "name": "Fast fatigue",
+          "heldOut": true,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 4,
+            "counting-on": 9,
+            "make-a-ten": 14,
+            "unknown-addend": 17
+          },
+          "problems": 159,
+          "firstTryRate": 0.7044025157232704,
+          "inBandShare": 0.5660377358490566,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 0.5555555555555556
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.8333333333333334,
+              "inBandShare": 0.8333333333333334
+            },
+            {
+              "session": 3,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 5,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 6,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 7,
+              "mastered": 2,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 8,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 11,
+              "mastered": 3,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 12,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 13,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            }
+          ]
+        }
+      ],
+      "splits": {
+        "tuning": {
+          "split": "tuning",
+          "learners": [
+            "strong",
+            "average",
+            "weak",
+            "crossing-ten-weakness"
+          ],
+          "meanSkillsMastered": 4.75,
+          "meanFirstTryRate": 0.7699431933455062,
+          "meanInBandShare": 0.6611990261716372
+        },
+        "heldOut": {
+          "split": "held-out",
+          "learners": [
+            "change-unknown-weakness",
+            "fast-fatigue"
+          ],
+          "meanSkillsMastered": 5,
+          "meanFirstTryRate": 0.7044025157232704,
+          "meanInBandShare": 0.6477987421383647
+        }
+      }
+    },
+    "coach": {
+      "planner": "coach",
+      "learners": [
+        {
+          "id": "strong",
+          "name": "Strong",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 4,
+            "make-a-ten": 6,
+            "unknown-addend": 8
+          },
+          "problems": 161,
+          "firstTryRate": 0.9316770186335404,
+          "inBandShare": 0.6521739130434783,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.8888888888888888,
+              "inBandShare": 0
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 1,
+              "inBandShare": 0
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 0
+            },
+            {
+              "session": 4,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 6,
+              "mastered": 4,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 7,
+              "mastered": 4,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 8,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 9,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 10,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 11,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 12,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 13,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 14,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 15,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 16,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 0.75
+            }
+          ]
+        },
+        {
+          "id": "average",
+          "name": "Average",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 4,
+            "counting-on": 6,
+            "make-a-ten": 11,
+            "unknown-addend": 13
+          },
+          "problems": 161,
+          "firstTryRate": 0.7577639751552795,
+          "inBandShare": 1,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.6666666666666666,
+              "inBandShare": 1
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 8,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 1
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 1
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 11,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 12,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 13,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 14,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 15,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 16,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            }
+          ]
+        },
+        {
+          "id": "weak",
+          "name": "Weak",
+          "heldOut": false,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 3,
+            "teen-numbers": 6,
+            "counting-on": 10,
+            "make-a-ten": 14,
+            "unknown-addend": 19
+          },
+          "problems": 161,
+          "firstTryRate": 0.6521739130434783,
+          "inBandShare": 0.39751552795031053,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 0.5555555555555556
+            },
+            {
+              "session": 2,
+              "mastered": 0,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 1,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 1,
+              "firstTryRate": 0.5,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 8,
+              "mastered": 2,
+              "firstTryRate": 0.25,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 9,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 11,
+              "mastered": 3,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 12,
+              "mastered": 3,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 13,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.375,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 17,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.125
+            },
+            {
+              "session": 18,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0
+            }
+          ]
+        },
+        {
+          "id": "crossing-ten-weakness",
+          "name": "Crossing-ten weakness",
+          "heldOut": false,
+          "weaknesses": [
+            "crossing-ten"
+          ],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 5,
+            "make-a-ten": 11,
+            "unknown-addend": 13
+          },
+          "problems": 161,
+          "firstTryRate": 0.7701863354037267,
+          "inBandShare": 0.6459627329192547,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.8888888888888888,
+              "inBandShare": 0.8888888888888888
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 1,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 6,
+              "mastered": 3,
+              "firstTryRate": 0.25,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 7,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 8,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 11,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.25
+            },
+            {
+              "session": 12,
+              "mastered": 4,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 13,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 14,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 15,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 1
+            },
+            {
+              "session": 16,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 17,
+              "mastered": 5,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.875
+            }
+          ]
+        },
+        {
+          "id": "change-unknown-weakness",
+          "name": "Change-unknown weakness",
+          "heldOut": true,
+          "weaknesses": [
+            "change-unknown"
+          ],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 3,
+            "counting-on": 5,
+            "make-a-ten": 7,
+            "unknown-addend": 19
+          },
+          "problems": 161,
+          "firstTryRate": 0.7018633540372671,
+          "inBandShare": 0.7329192546583851,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 1
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 3,
+              "mastered": 2,
+              "firstTryRate": 1,
+              "inBandShare": 1
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 5,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 1
+            },
+            {
+              "session": 6,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 7,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 1
+            },
+            {
+              "session": 8,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 9,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 10,
+              "mastered": 4,
+              "firstTryRate": 0.25,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 11,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 12,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.875
+            },
+            {
+              "session": 13,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 17,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.375
+            },
+            {
+              "session": 18,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.75
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.5
+            }
+          ]
+        },
+        {
+          "id": "fast-fatigue",
+          "name": "Fast fatigue",
+          "heldOut": true,
+          "weaknesses": [],
+          "sessionsToMastery": {
+            "partners-to-10": 2,
+            "teen-numbers": 4,
+            "counting-on": 9,
+            "make-a-ten": 13,
+            "unknown-addend": 18
+          },
+          "problems": 161,
+          "firstTryRate": 0.7515527950310559,
+          "inBandShare": 0.5590062111801242,
+          "perSession": [
+            {
+              "session": 1,
+              "mastered": 0,
+              "firstTryRate": 0.7777777777777778,
+              "inBandShare": 0.5555555555555556
+            },
+            {
+              "session": 2,
+              "mastered": 1,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 3,
+              "mastered": 1,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 4,
+              "mastered": 2,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 5,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 6,
+              "mastered": 2,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 7,
+              "mastered": 2,
+              "firstTryRate": 0.5,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 8,
+              "mastered": 2,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 9,
+              "mastered": 3,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 10,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 11,
+              "mastered": 3,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.625
+            },
+            {
+              "session": 12,
+              "mastered": 3,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 13,
+              "mastered": 4,
+              "firstTryRate": 1,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 14,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 15,
+              "mastered": 4,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 16,
+              "mastered": 4,
+              "firstTryRate": 0.75,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 17,
+              "mastered": 4,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 18,
+              "mastered": 5,
+              "firstTryRate": 0.875,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 19,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            },
+            {
+              "session": 20,
+              "mastered": 5,
+              "firstTryRate": 0.625,
+              "inBandShare": 0.5
+            }
+          ]
+        }
+      ],
+      "splits": {
+        "tuning": {
+          "split": "tuning",
+          "learners": [
+            "strong",
+            "average",
+            "weak",
+            "crossing-ten-weakness"
+          ],
+          "meanSkillsMastered": 5,
+          "meanFirstTryRate": 0.7779503105590062,
+          "meanInBandShare": 0.6739130434782609
+        },
+        "heldOut": {
+          "split": "held-out",
+          "learners": [
+            "change-unknown-weakness",
+            "fast-fatigue"
+          ],
+          "meanSkillsMastered": 5,
+          "meanFirstTryRate": 0.7267080745341614,
+          "meanInBandShare": 0.6459627329192547
+        }
+      }
+    }
+  },
+  "hypotheses": {
+    "learners": [
+      {
+        "id": "strong",
+        "name": "Strong",
+        "heldOut": false,
+        "planted": [],
+        "sessionsToDetection": {},
+        "detected": 0,
+        "supportedHypotheses": 1,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 115,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-partners-to-10",
+              "claim": "May need more practice with Partners to 10 (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.7,
+              "evidence": [
+                "p9",
+                "p71"
+              ],
+              "nextTest": "Give 3 or more Partners to 10 Problems and watch the first try"
+            },
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.5,
+              "evidence": [
+                "p32"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.5,
+              "evidence": [
+                "p36"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p72",
+                "p105",
+                "p109",
+                "p113",
+                "p116",
+                "p118",
+                "p137"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": [
+            "Subtraction as unknown addend: every first try correct this Session"
+          ]
+        }
+      },
+      {
+        "id": "average",
+        "name": "Average",
+        "heldOut": false,
+        "planted": [],
+        "sessionsToDetection": {},
+        "detected": 0,
+        "supportedHypotheses": 5,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 422,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p3",
+                "p8",
+                "p44",
+                "p47",
+                "p87"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-teen-numbers",
+              "claim": "May need more practice with Teen numbers as 10 + n (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p5",
+                "p25",
+                "p31",
+                "p41"
+              ],
+              "nextTest": "Give 3 or more Teen numbers as 10 + n Problems and watch the first try"
+            },
+            {
+              "id": "h-partners-to-10",
+              "claim": "May need more practice with Partners to 10 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p15",
+                "p17",
+                "p21",
+                "p39",
+                "p104",
+                "p134"
+              ],
+              "nextTest": "Give 3 or more Partners to 10 Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p56",
+                "p60",
+                "p61",
+                "p64",
+                "p65",
+                "p66",
+                "p69",
+                "p72",
+                "p73",
+                "p113",
+                "p123",
+                "p142",
+                "p156"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p93",
+                "p99",
+                "p107",
+                "p109",
+                "p116",
+                "p121",
+                "p128",
+                "p137",
+                "p145",
+                "p157",
+                "p160"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": []
+        }
+      },
+      {
+        "id": "weak",
+        "name": "Weak",
+        "heldOut": false,
+        "planted": [],
+        "sessionsToDetection": {},
+        "detected": 0,
+        "supportedHypotheses": 5,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 556,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p2",
+                "p8",
+                "p54",
+                "p55",
+                "p58",
+                "p59",
+                "p60",
+                "p61",
+                "p63",
+                "p68",
+                "p75",
+                "p96",
+                "p103"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-partners-to-10",
+              "claim": "May need more practice with Partners to 10 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p13",
+                "p15",
+                "p16",
+                "p69",
+                "p101",
+                "p129",
+                "p131"
+              ],
+              "nextTest": "Give 3 or more Partners to 10 Problems and watch the first try"
+            },
+            {
+              "id": "h-teen-numbers",
+              "claim": "May need more practice with Teen numbers as 10 + n (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p26",
+                "p27",
+                "p29",
+                "p30",
+                "p35",
+                "p39",
+                "p44",
+                "p47",
+                "p64",
+                "p85",
+                "p140"
+              ],
+              "nextTest": "Give 3 or more Teen numbers as 10 + n Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p84",
+                "p86",
+                "p87",
+                "p91",
+                "p94",
+                "p95",
+                "p97",
+                "p102",
+                "p107"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p114",
+                "p116",
+                "p121",
+                "p122",
+                "p123",
+                "p124",
+                "p125",
+                "p130",
+                "p134",
+                "p138",
+                "p139",
+                "p148",
+                "p149",
+                "p152",
+                "p157",
+                "p159"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": []
+        }
+      },
+      {
+        "id": "crossing-ten-weakness",
+        "name": "Crossing-ten weakness",
+        "heldOut": false,
+        "planted": [
+          "crossing-ten"
+        ],
+        "sessionsToDetection": {
+          "crossing-ten": null
+        },
+        "detected": 0,
+        "supportedHypotheses": 3,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 373,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p3",
+                "p27",
+                "p57"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-partners-to-10",
+              "claim": "May need more practice with Partners to 10 (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.7,
+              "evidence": [
+                "p13",
+                "p111"
+              ],
+              "nextTest": "Give 3 or more Partners to 10 Problems and watch the first try"
+            },
+            {
+              "id": "h-teen-numbers",
+              "claim": "May need more practice with Teen numbers as 10 + n (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.7,
+              "evidence": [
+                "p29",
+                "p121"
+              ],
+              "nextTest": "Give 3 or more Teen numbers as 10 + n Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p42",
+                "p44",
+                "p46",
+                "p47",
+                "p48",
+                "p49",
+                "p52",
+                "p60",
+                "p63",
+                "p67",
+                "p68",
+                "p71",
+                "p74",
+                "p79",
+                "p86",
+                "p89",
+                "p109",
+                "p128",
+                "p141",
+                "p146"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p101",
+                "p102",
+                "p113",
+                "p115",
+                "p120",
+                "p134",
+                "p137",
+                "p148",
+                "p151",
+                "p154"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": []
+        }
+      },
+      {
+        "id": "change-unknown-weakness",
+        "name": "Change-unknown weakness",
+        "heldOut": true,
+        "planted": [
+          "change-unknown"
+        ],
+        "sessionsToDetection": {
+          "change-unknown": null
+        },
+        "detected": 0,
+        "supportedHypotheses": 2,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 415,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p7",
+                "p29",
+                "p32",
+                "p38",
+                "p43",
+                "p51",
+                "p77",
+                "p120"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-teen-numbers",
+              "claim": "May need more practice with Teen numbers as 10 + n (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.7,
+              "evidence": [
+                "p8",
+                "p74"
+              ],
+              "nextTest": "Give 3 or more Teen numbers as 10 + n Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "proposed",
+              "confidence": 0.7,
+              "evidence": [
+                "p45",
+                "p55"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p58",
+                "p64",
+                "p66",
+                "p71",
+                "p75",
+                "p78",
+                "p79",
+                "p81",
+                "p84",
+                "p86",
+                "p90",
+                "p91",
+                "p92",
+                "p100",
+                "p102",
+                "p103",
+                "p109",
+                "p113",
+                "p115",
+                "p116",
+                "p122",
+                "p123",
+                "p124",
+                "p129",
+                "p130",
+                "p132",
+                "p133",
+                "p143",
+                "p144",
+                "p148",
+                "p152",
+                "p153",
+                "p155",
+                "p156",
+                "p157",
+                "p161"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": []
+        }
+      },
+      {
+        "id": "fast-fatigue",
+        "name": "Fast fatigue",
+        "heldOut": true,
+        "planted": [],
+        "sessionsToDetection": {},
+        "detected": 0,
+        "supportedHypotheses": 5,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "evidence": {
+          "citations": 416,
+          "unknownIds": 0,
+          "inconsistent": 0,
+          "integrity": 1
+        },
+        "sources": {
+          "coach": 20,
+          "retry": 0,
+          "baseline": 0
+        },
+        "finalNotes": {
+          "hypotheses": [
+            {
+              "id": "h-teen-numbers",
+              "claim": "May need more practice with Teen numbers as 10 + n (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p7",
+                "p25",
+                "p51"
+              ],
+              "nextTest": "Give 3 or more Teen numbers as 10 + n Problems and watch the first try"
+            },
+            {
+              "id": "h-counting-on",
+              "claim": "May need more practice with Counting on from the larger number (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p9",
+                "p39",
+                "p40",
+                "p42",
+                "p46",
+                "p49",
+                "p52",
+                "p55",
+                "p56",
+                "p61",
+                "p62"
+              ],
+              "nextTest": "Give 3 or more Counting on from the larger number Problems and watch the first try"
+            },
+            {
+              "id": "h-partners-to-10",
+              "claim": "May need more practice with Partners to 10 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p13",
+                "p17",
+                "p32",
+                "p72"
+              ],
+              "nextTest": "Give 3 or more Partners to 10 Problems and watch the first try"
+            },
+            {
+              "id": "h-make-a-ten",
+              "claim": "May need more practice with Make-a-ten within 20 (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p74",
+                "p80",
+                "p81",
+                "p82",
+                "p87",
+                "p88",
+                "p92",
+                "p96",
+                "p152"
+              ],
+              "nextTest": "Give 3 or more Make-a-ten within 20 Problems and watch the first try"
+            },
+            {
+              "id": "h-unknown-addend",
+              "claim": "May need more practice with Subtraction as unknown addend (missed on the first try)",
+              "status": "supported",
+              "confidence": 0.9,
+              "evidence": [
+                "p113",
+                "p118",
+                "p119",
+                "p121",
+                "p126",
+                "p129",
+                "p134",
+                "p143",
+                "p151",
+                "p153",
+                "p157",
+                "p159",
+                "p161"
+              ],
+              "nextTest": "Give 3 or more Subtraction as unknown addend Problems and watch the first try"
+            }
+          ],
+          "strengths": []
+        }
+      }
+    ],
+    "splits": {
+      "tuning": {
+        "split": "tuning",
+        "learners": [
+          "strong",
+          "average",
+          "weak",
+          "crossing-ten-weakness"
+        ],
+        "planted": 1,
+        "detected": 0,
+        "detectionRate": 0,
+        "meanSessionsToDetection": null,
+        "supportedHypotheses": 14,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "citations": 1466,
+        "evidenceIntegrity": 1,
+        "sources": {
+          "coach": 80,
+          "retry": 0,
+          "baseline": 0
+        }
+      },
+      "heldOut": {
+        "split": "held-out",
+        "learners": [
+          "change-unknown-weakness",
+          "fast-fatigue"
+        ],
+        "planted": 1,
+        "detected": 0,
+        "detectionRate": 0,
+        "meanSessionsToDetection": null,
+        "supportedHypotheses": 7,
+        "falsePositives": 0,
+        "falsePositiveRate": 0,
+        "citations": 831,
+        "evidenceIntegrity": 1,
+        "sources": {
+          "coach": 40,
+          "retry": 0,
+          "baseline": 0
+        }
+      }
+    }
+  }
+}

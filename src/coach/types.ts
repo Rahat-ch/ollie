@@ -1,9 +1,12 @@
+import type { CoachOutput } from "@/generation/types";
 import type { LearnerNotes, SessionPlan } from "@/loop";
 
 export type CoachRejection = {
   /** 1 for the first Coach output, 2 for the retry. */
   readonly attempt: 1 | 2;
   readonly reasons: readonly string[];
+  /** What the Coach wrote, kept so an eval can score it; absent when the call threw. */
+  readonly output?: CoachOutput;
 };
 
 /**

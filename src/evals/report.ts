@@ -1,16 +1,13 @@
-import type { ConvergenceReport } from "./convergence";
+import type { EvalResults } from "./evals";
 
 /** Where every Eval Run writes its dated JSON report, relative to the repo root. */
 export const EVALS_DIR = "docs/evals";
 
-/** The JSON written by one Eval Run. Sections are added as evals are built. */
-export type EvalReport = {
-  readonly generatedAt: string;
-  readonly convergence: ConvergenceReport;
-};
+/** The JSON written by one Eval Run: when it ran, then everything it scored. Sections are added as evals are built. */
+export type EvalReport = EvalResults & { readonly generatedAt: string };
 
-export function evalReport(convergence: ConvergenceReport, generatedAt: Date): EvalReport {
-  return { generatedAt: generatedAt.toISOString(), convergence };
+export function evalReport(results: EvalResults, generatedAt: Date): EvalReport {
+  return { generatedAt: generatedAt.toISOString(), ...results };
 }
 
 /** `2026-09-10T19-06-01Z.json`: UTC to the second, colons replaced so it is a safe file name. */
@@ -20,3 +17,7 @@ export function reportFileName(generatedAt: Date): string {
 
 export const isReportFileName = (name: string): boolean =>
   /^\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.json$/.test(name);
+
+/** The Generation that ran the Coach, in prose, from the name the report records. */
+export const describeGeneration = (generation: string): string =>
+  generation === "fake" ? "the Generation fake" : `the Anthropic adapter on ${generation}`;

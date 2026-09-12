@@ -14,14 +14,13 @@
  * environment, or from .env.local at the repo root when that file exists.
  * There is no --seed: the Learner's own seed is the seed.
  */
-import { existsSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { coachSession, type CoachStep } from "@/coach";
 import { SIMULATED_LEARNERS, simulatedLearner, type SimulatedLearner } from "@/evals/learners";
-import { fakeGeneration, type Generation } from "@/generation";
-import { readEnv, requireEnv } from "@/lib/env";
 import { DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession } from "@/loop";
 import { formatEstimates, formatNotes, formatPlan, formatSessionLine, formatSessionLog } from "@/loop/format";
+import { describeGeneration } from "@/evals/report";
+import { chooseGeneration } from "./generation";
 
 const { values } = parseArgs({
   options: {
@@ -51,21 +50,9 @@ const SOURCE_LABEL: Record<CoachStep["source"], string> = {
   baseline: "Baseline Plan: the Coach's output was rejected twice",
 };
 
-/** The fake, or the real adapter; the adapter is imported only when asked for, so the fake run never loads the SDK. */
-async function chooseGeneration(real: boolean): Promise<Generation> {
-  if (!real) {
-    console.log("Generation: the fake (no network)");
-    return fakeGeneration();
-  }
-  if (existsSync(".env.local")) process.loadEnvFile(".env.local");
-  const apiKey = requireEnv(readEnv(), "anthropicApiKey");
-  const { anthropicGeneration, COACH_MODEL } = await import("@/generation/anthropic");
-  console.log(`Generation: the Anthropic adapter on ${COACH_MODEL}`);
-  return anthropicGeneration({ apiKey });
-}
-
 async function main(learner: SimulatedLearner): Promise<void> {
-  const generation = await chooseGeneration(values.real);
+  const { generation, name } = await chooseGeneration(values.real ? "real" : "fake");
+  console.log(`Generation: ${describeGeneration(name)}`);
   console.log(`Learner: ${learner.name} (${learner.id}, seed ${learner.seed}), the Diagnostic Session then ${sessions} Coach-planned Sessions\n`);
   let profile = newProfile();
   let notes = emptyNotes();

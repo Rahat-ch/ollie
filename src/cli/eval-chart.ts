@@ -17,4 +17,9 @@ if (!reportFile) {
   console.error(`No report found under ${EVALS_DIR}; run pnpm eval first`);
   process.exit(1);
 }
-console.log(`Chart: ${writeChart(reportFile)} (from ${reportFile})`);
+try {
+  console.log(`Chart: ${writeChart(reportFile)} (from ${reportFile})`);
+} catch (error: unknown) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}

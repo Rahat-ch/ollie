@@ -85,6 +85,11 @@ async function callCoach(
   return { ok: false, output, reasons: check.reasons };
 }
 
+/** A rejection carrying the rejected output when there was one. */
+function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: false }): CoachRejection {
+  return call.output ? { attempt, reasons: call.reasons, output: call.output } : { attempt, reasons: call.reasons };
+}
+
 /**
  * The Coach step: run the Coach on the Session's evidence and keep its
  * output if the engine allows it; otherwise retry once with the rejected
@@ -100,7 +105,7 @@ export async function coachSession(
   const input = coachInput(result, notes);
   const first = await callCoach(generation, input, result, notes);
   if (first.ok) return { ...first.output, source: "coach", rejections: [] };
-  const rejection: CoachRejection = { attempt: 1, reasons: first.reasons };
+  const rejection = rejected(1, first);
   const retry = await callCoach(
     generation,
     { ...input, rejected: { output: first.output, reasons: first.reasons } },
@@ -112,6 +117,6 @@ export async function coachSession(
     notes,
     plan: baselinePlan(result.profile),
     source: "baseline",
-    rejections: [rejection, { attempt: 2, reasons: retry.reasons }],
+    rejections: [rejection, rejected(2, retry)],
   };
 }

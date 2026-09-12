@@ -19,8 +19,13 @@ export function latestReportFile(dir = EVALS_DIR): string | undefined {
   return names.length > 0 ? path.join(dir, names[names.length - 1]) : undefined;
 }
 
+/** A report from disk. The first report (ticket 05) had the Baseline alone and cannot be charted against the Coach. */
 export function readReport(file: string): EvalReport {
-  return JSON.parse(readFileSync(file, "utf8")) as EvalReport;
+  const report = JSON.parse(readFileSync(file, "utf8")) as Partial<EvalReport>;
+  if (!report.convergence?.coach || !report.hypotheses) {
+    throw new Error(`${file} has no Coach section (it predates the Coach evals); the chart needs a report from pnpm eval`);
+  }
+  return report as EvalReport;
 }
 
 /** Regenerate the chart from a report file on disk, never from a live run. */
