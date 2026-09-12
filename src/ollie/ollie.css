@@ -1,0 +1,120 @@
+/*
+ * Ollie's rig in motion. Parts are addressed by data-part (public/ollie/
+ * README.md lists them and the hinge points). Only the idle breathing and
+ * blink loop; every other move plays once when the pose changes.
+ */
+.ollie {
+  display: block;
+  overflow: visible;
+}
+
+.ollie [data-part] {
+  transform-box: view-box;
+}
+
+/* Breathing: body, belly, and face scale about the feet. */
+.ollie [data-part="body"],
+.ollie [data-part="belly"],
+.ollie [data-part="face"] {
+  transform-origin: 120px 208px;
+  animation: ollie-breathe var(--duration-breathe) ease-in-out infinite;
+}
+
+/* Blink: each eye group squashes on its own centre. */
+.ollie [data-part="eye-left"] {
+  transform-origin: 90px 92px;
+  animation: ollie-blink 4600ms linear infinite;
+}
+.ollie [data-part="eye-right"] {
+  transform-origin: 150px 92px;
+  animation: ollie-blink 4600ms linear infinite;
+}
+
+/* A new pose settles in: a state change, 180ms ease-out. */
+.ollie-talking,
+.ollie-encourage {
+  animation: ollie-pop var(--duration-state) var(--ease-state);
+}
+
+/* Celebrate: two bounces with the celebrate overshoot. */
+.ollie-celebrate {
+  animation: ollie-bounce calc(var(--duration-celebrate) * 2) var(--ease-celebrate) 2;
+}
+
+/* Encourage: the raised right wing waves twice from its hinge. */
+.ollie-encourage [data-part="wing-right"] {
+  transform-origin: 184px 122px;
+  animation: ollie-wave calc(var(--duration-celebrate) * 2) ease-in-out 2;
+}
+
+/* Talking: the beak moves while Ollie speaks (the design's "mouth while audio plays"); ticket 11 ties it to the audio. */
+.ollie-talking [data-part="beak"] {
+  transform-origin: 120px 116px;
+  animation: ollie-chatter calc(var(--duration-state) * 2) ease-in-out infinite alternate;
+}
+
+@keyframes ollie-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.012, 1.03);
+  }
+}
+
+@keyframes ollie-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes ollie-pop {
+  0% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ollie-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-28px);
+  }
+}
+
+@keyframes ollie-wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+}
+
+@keyframes ollie-chatter {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.82);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ollie,
+  .ollie [data-part] {
+    animation: none !important;
+  }
+}

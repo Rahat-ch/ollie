@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "../ollie/ollie.css";
 
 body {
   background: var(--paper);
@@ -15,4 +16,180 @@ h3,
 h4 {
   font-family: var(--font-display), ui-rounded, system-ui, sans-serif;
   font-weight: 600;
+}
+
+/* A Learner screen: the whole viewport, paper, with Ollie and the primary action placed on it. */
+.learner-stage {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--paper);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Paper buttons and keys: a flat deep-tone shadow that drops when pressed. */
+.paper-button {
+  box-shadow: var(--shadow-button);
+  transition:
+    transform var(--duration-state) var(--ease-state),
+    box-shadow var(--duration-state) var(--ease-state),
+    opacity var(--duration-state) var(--ease-state);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.paper-button:active,
+.paper-button-pressed {
+  box-shadow: var(--shadow-button-pressed);
+  transform: translateY(var(--press-offset));
+}
+.paper-button:disabled {
+  cursor: default;
+}
+.paper-button:disabled:not(.paper-button-pressed) {
+  opacity: 0.55;
+}
+
+/* Ollie's bubble comes in with each new line: a state change, 180ms ease-out. */
+.speech-bubble {
+  animation: pop-in var(--duration-state) var(--ease-state);
+  transform-origin: bottom left;
+}
+
+/* The ten-frame: 3px ink at 60%, one line between cells. */
+.ten-frame {
+  --frame-line: 3px solid color-mix(in srgb, var(--ink) 60%, transparent);
+  border-left: var(--frame-line);
+  border-top: var(--frame-line);
+}
+.ten-frame-cell {
+  border-right: var(--frame-line);
+  border-bottom: var(--frame-line);
+}
+
+/*
+ * The Hint: counters pulse in sequence so the Learner counts along. Each
+ * beat is the celebrate overshoot; leaving is a state change.
+ */
+.counter-count {
+  animation: counter-pulse var(--duration-celebrate) var(--ease-celebrate) both;
+}
+.counter-count-empty {
+  display: block;
+  border: 3px dashed color-mix(in srgb, var(--ink) 60%, transparent);
+  animation: counter-pulse var(--duration-celebrate) var(--ease-celebrate) both;
+}
+.counter-arrive {
+  animation: counter-arrive var(--duration-celebrate) var(--ease-celebrate) both;
+}
+.counter-gone {
+  display: block;
+  animation: counter-gone var(--duration-state) var(--ease-state) forwards;
+}
+
+/* The number line: ink at 60% for lines, sky hops that draw in, a leaf landing. */
+.number-line-ink {
+  stroke: var(--ink);
+  stroke-opacity: 0.6;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.number-line-label {
+  font-family: var(--font-display), ui-rounded, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: var(--text-caption);
+  fill: var(--ink-soft);
+}
+.number-line-hop {
+  fill: none;
+  stroke: var(--sky-deep);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: hop-draw var(--duration-celebrate) var(--ease-state) forwards;
+}
+.number-line-landing {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pop-in var(--duration-celebrate) var(--ease-celebrate) both;
+}
+
+/* The celebration: the headline overshoots, the confetti drifts in over four beats. */
+.celebrate-in {
+  animation: pop-in var(--duration-celebrate) var(--ease-celebrate);
+}
+.confetti {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: confetti-drift calc(var(--duration-celebrate) * 4) ease-out both;
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes counter-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes counter-arrive {
+  from {
+    transform: translate(48px, -24px) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes counter-gone {
+  to {
+    transform: translateY(-16px) scale(0.6);
+    opacity: 0;
+  }
+}
+@keyframes hop-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes confetti-drift {
+  from {
+    transform: translateY(-40px) rotate(-20deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* One-shot animations jump to their end state; Ollie's loops are turned off in ollie.css. */
+@media (prefers-reduced-motion: reduce) {
+  .speech-bubble,
+  .counter-count,
+  .counter-count-empty,
+  .counter-arrive,
+  .counter-gone,
+  .number-line-hop,
+  .number-line-landing,
+  .celebrate-in,
+  .confetti {
+    animation-duration: 1ms;
+  }
 }

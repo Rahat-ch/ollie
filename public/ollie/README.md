@@ -8,6 +8,10 @@ Flat hand-tuned SVG per `docs/design/direction.md` (filled paths, no outlines, o
 - Power poses: `ollie-count-on-flight.svg`, `ollie-make-ten-magic.svg`, `ollie-missing-number-detective.svg`, `ollie-story-solver.svg`
 - `ollie-head.svg`: head only, `viewBox="0 0 120 120"`, for the favicon and OG image. Groups: `shadow`, `body`, `face` > `ear-tufts`, `eyes`, `brows`, `beak`.
 
+## In the app
+
+`src/ollie/Ollie.tsx` renders a pose inline (so CSS can move the parts) from `src/ollie/poses.generated.ts`, which `pnpm ollie:poses` writes from these files with each `id` turned into `data-part`. `src/ollie/ollie.css` holds the motion: idle breathing and blinks, the celebrate bounce, the encourage wave, the talking chatter. `src/ollie/poses.test.ts` fails when the module and the SVGs drift.
+
 ## Coordinate space
 
 All pose files use `viewBox="0 0 240 240"`. Body spans roughly x 43–198, y 36–208 (shadow to 214). Eyes are centred at (90, 92) and (150, 92), white r 26, iris r 15, pupil r 9, catchlight r 4.5 at (−5, −5) from the iris centre. Beak sits at (120, 116–141). Feet sit at y 199–214.
