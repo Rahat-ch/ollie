@@ -53,9 +53,9 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
   ),
 };
 
-export function ThemeIcon({ theme, size = 48 }: { readonly theme: ThemeId; readonly size?: number }) {
+export function ThemeIcon({ theme }: { readonly theme: ThemeId }) {
   return (
-    <svg viewBox="0 0 48 48" width={size} height={size} aria-hidden="true">
+    <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
       {PICTURES[theme]}
     </svg>
   );

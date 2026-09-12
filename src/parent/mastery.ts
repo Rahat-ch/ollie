@@ -5,36 +5,27 @@
  * template families; they show as not started with no Estimate.
  */
 import { SKILLS } from "@/loop";
-import type { ProfileState, SkillId, Unit } from "@/loop";
+import type { ProfileState, Unit } from "@/loop";
 
 export type MasteryState = "not-started" | "in-progress" | "mastered";
 
 export type MasteryRow = {
-  /** The Loop's id, or null for a Skill the Loop does not track yet. */
-  readonly skill: SkillId | null;
   readonly unit: Unit;
   readonly name: string;
-  readonly standard: string;
   /** The Knowledge Estimate, 0 to 1, or null when the Loop does not track the Skill yet. */
   readonly estimate: number | null;
-  readonly mastered: boolean;
   readonly state: MasteryState;
 };
 
-/** Unit 3's Skills, mapped to their standard in the README, until the Loop has them. */
-const UNIT_3_SKILLS: readonly { readonly name: string; readonly standard: string }[] = [
-  { name: "Result or total unknown", standard: "1.OA.1" },
-  { name: "Change unknown", standard: "1.OA.1" },
-];
+/** Unit 3's Skills by name until the Loop has them; ticket 10 deletes this list when it adds them to SKILLS. */
+const UNIT_3_SKILLS = ["Result or total unknown", "Change unknown"] as const;
 
 export function masteryRows(progress: ProfileState): MasteryRow[] {
   const tracked = SKILLS.map((skill): MasteryRow => {
     const { estimate, mastered, recentFirstAttempts } = progress.skills[skill.id];
     const state: MasteryState = mastered ? "mastered" : recentFirstAttempts.length > 0 ? "in-progress" : "not-started";
-    return { skill: skill.id, unit: skill.unit, name: skill.name, standard: skill.standard, estimate, mastered, state };
+    return { unit: skill.unit, name: skill.name, estimate, state };
   });
-  const unit3 = UNIT_3_SKILLS.map(
-    ({ name, standard }): MasteryRow => ({ skill: null, unit: 3, name, standard, estimate: null, mastered: false, state: "not-started" }),
-  );
+  const unit3 = UNIT_3_SKILLS.map((name): MasteryRow => ({ unit: 3, name, estimate: null, state: "not-started" }));
   return [...tracked, ...unit3];
 }

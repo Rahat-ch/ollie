@@ -211,8 +211,11 @@ test("reloading mid-Session resumes the same Problem with progress intact", asyn
   await expect(page.getByTestId("progress-dot").nth(1)).toHaveAttribute("data-state", "current");
 });
 
-test("Play before onboarding goes back to the Parent's set-up", async ({ page }) => {
+test("Play and the Parent route before onboarding go back to the Parent's set-up", async ({ page }) => {
   await page.goto("/play");
+  await expect(page.getByTestId("onboarding")).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
+  await page.goto("/parent");
   await expect(page.getByTestId("onboarding")).toBeVisible();
   await expect(page).toHaveURL(/\/$/);
 });

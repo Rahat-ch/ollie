@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useReducer } from "react";
 import { CLOSED, gateReducer, PARENT_GATE_HOLD_MS } from "@/parent/gate";
 import { LockIcon } from "@/ui/LockIcon";
+import { PillLink } from "@/ui/PillLink";
 
 const RING_RADIUS = 58;
 const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
@@ -74,9 +74,9 @@ export function ParentGate({ onOpen }: { readonly onOpen: () => void }) {
         </svg>
         <LockIcon size={56} />
       </button>
-      <Link href="/" className="paper-button flex h-touch-parent items-center rounded-pill bg-sky px-5 font-display text-body font-medium text-ink [--button-shadow-color:var(--sky-deep)]">
+      <PillLink href="/" tone="sky">
         Back to Ollie
-      </Link>
+      </PillLink>
     </main>
   );
 }

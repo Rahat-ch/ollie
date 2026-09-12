@@ -15,13 +15,26 @@ export type Identity = {
   readonly theme: ThemeId;
 };
 
-/** The four colour bases, each with the deep tone its paper shadow uses. */
-export const AVATAR_COLORS: readonly { readonly id: AvatarColor; readonly name: string }[] = [
-  { id: "cream", name: "Cream" },
-  { id: "sky", name: "Sky" },
-  { id: "leaf", name: "Leaf" },
-  { id: "berry", name: "Berry" },
+/**
+ * The four colour bases, each with the Tailwind fills for its base tone and
+ * for the deep tone of the same hue its paper shadow is cut from (paper-3
+ * for cream, which has no deep tone). Adding a colour is one entry here.
+ */
+export const AVATAR_COLORS: readonly {
+  readonly id: AvatarColor;
+  readonly name: string;
+  readonly fill: string;
+  readonly deepFill: string;
+}[] = [
+  { id: "cream", name: "Cream", fill: "fill-cream", deepFill: "fill-paper-3" },
+  { id: "sky", name: "Sky", fill: "fill-sky", deepFill: "fill-sky-deep" },
+  { id: "leaf", name: "Leaf", fill: "fill-leaf", deepFill: "fill-leaf-deep" },
+  { id: "berry", name: "Berry", fill: "fill-berry", deepFill: "fill-berry-deep" },
 ];
+
+export function avatarColor(id: AvatarColor) {
+  return AVATAR_COLORS.find((c) => c.id === id) ?? AVATAR_COLORS[0];
+}
 
 /** The six Themes, in the order onboarding shows them. Vocabulary joins with ticket 10. */
 export const THEMES: readonly { readonly id: ThemeId; readonly name: string }[] = [
@@ -32,6 +45,10 @@ export const THEMES: readonly { readonly id: ThemeId; readonly name: string }[] 
   { id: "fairies", name: "Fairies" },
   { id: "trucks", name: "Trucks" },
 ];
+
+/** Shown to the Parent verbatim before play; the app's one statement of what leaves the device (ADR 0002). */
+export const NICKNAME_DISCLOSURE =
+  "The Nickname is sent to generate Stories and audio. Nothing else leaves this device. No account, no recording.";
 
 /** Ollie says the Nickname aloud and a Story has under 25 words, so it stays short. */
 export const NICKNAME_MAX = 20;

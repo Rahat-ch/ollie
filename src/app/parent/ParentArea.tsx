@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { unitName } from "@/loop";
 import { masteryRows, type MasteryRow } from "@/parent/mastery";
+import type { Identity } from "@/profile/identity";
 import type { Profile } from "@/profile/profile";
+import { PillLink } from "@/ui/PillLink";
 
 const BAR_FILL: Readonly<Record<MasteryRow["state"], string>> = {
   mastered: "bg-leaf",
@@ -42,7 +43,7 @@ function Legend() {
   return (
     <ul className="flex gap-4" aria-label="Legend">
       {(["mastered", "in-progress", "not-started"] as const).map((state) => (
-        <li key={state} className="flex items-center gap-1.5">
+        <li key={state} className="flex items-center gap-2">
           <span className={`size-3 rounded-pill ${BAR_FILL[state]}`} aria-hidden="true" />
           <span className="font-text text-caption text-ink-soft">{STATE_WORD[state]}</span>
         </li>
@@ -65,18 +66,18 @@ function Placeholder({ title, children }: { readonly title: string; readonly chi
  * Loop; the Parent Summaries, Ollie's Notebook, and Powers have their
  * places here and arrive with tickets 12 and 13.
  */
-export function ParentArea({ profile }: { readonly profile: Profile }) {
+export function ParentArea({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const rows = masteryRows(profile.progress);
-  const nickname = profile.identity?.nickname ?? "your child";
+  const { nickname } = identity;
   const sessions = profile.progress.sessionsCompleted;
   const units = ([1, 2, 3] as const).map((unit) => ({ unit, rows: rows.filter((r) => r.unit === unit) }));
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-content flex-col gap-4 px-gutter py-8" data-testid="parent-area">
       <header className="flex items-center justify-between gap-6">
         <h1 className="font-display text-display-m font-semibold text-teal">Parent Area</h1>
-        <Link href="/" className="paper-button flex h-touch-parent items-center rounded-pill bg-sky px-5 font-display text-body font-medium text-ink [--button-shadow-color:var(--sky-deep)]">
+        <PillLink href="/" tone="sky">
           Back to Ollie
-        </Link>
+        </PillLink>
       </header>
 
       <div className="flex flex-col gap-6 md:flex-row md:items-start">
@@ -95,16 +96,16 @@ export function ParentArea({ profile }: { readonly profile: Profile }) {
           </Placeholder>
         </div>
 
-        <section className="flex w-full flex-col gap-3.5 rounded-card bg-paper-2 p-5 shadow-card md:w-88 md:shrink-0" aria-labelledby="mastery">
+        <section className="flex w-full flex-col gap-4 rounded-card bg-paper-2 p-5 shadow-card md:w-88 md:shrink-0" aria-labelledby="mastery">
           <h2 id="mastery" className="font-display text-display-s font-semibold text-teal">
             Mastery
           </h2>
           {units.map(({ unit, rows }) => (
-            <div key={unit} className="flex flex-col gap-2.5">
+            <div key={unit} className="flex flex-col gap-3">
               <h3 className="font-text text-caption font-bold text-ink-soft">
                 Unit {unit} · {unitName(unit)}
               </h3>
-              <ul className="flex flex-col gap-2.5">
+              <ul className="flex flex-col gap-3">
                 {rows.map((row) => (
                   <SkillRow key={row.name} row={row} />
                 ))}

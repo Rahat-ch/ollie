@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import { Ollie } from "@/ollie/Ollie";
-import { AVATAR_COLORS, cleanNickname, THEMES, type AvatarColor, type Identity, type ThemeId } from "@/profile/identity";
+import { AVATAR_COLORS, cleanNickname, NICKNAME_DISCLOSURE, THEMES, type AvatarColor, type Identity, type ThemeId } from "@/profile/identity";
 import { profileStore } from "@/profile/store";
 import { Avatar } from "@/ui/Avatar";
 import { BigButton } from "@/ui/BigButton";
 import { LockIcon } from "@/ui/LockIcon";
 import { ThemeIcon } from "@/ui/ThemeIcon";
-
-/** Shown to the Parent verbatim before play; the app's one statement of what leaves the device (ADR 0002). */
-export const NICKNAME_DISCLOSURE =
-  "The Nickname is sent to generate Stories and audio. Nothing else leaves this device. No account, no recording.";
 
 const STEPS = ["nickname", "avatar", "theme", "note"] as const;
 type Step = (typeof STEPS)[number];
@@ -29,8 +25,6 @@ const CAPTIONS: Readonly<Record<Step, string>> = {
   theme: "Every Story is set here. Change it any time in the Shop.",
   note: "Then hand over the tablet.",
 };
-
-const RING = { cream: "bg-cream", sky: "bg-sky", leaf: "bg-leaf", berry: "bg-berry" } as const;
 
 /** A choice made by tapping: the picked one carries the teal ring from the canvas. */
 const picked = (on: boolean) => (on ? "shadow-[0_0_0_4px_var(--paper),0_0_0_8px_var(--teal)]" : "");
@@ -105,8 +99,12 @@ export function Onboarding() {
                   onClick={() => setAvatarColor(color.id)}
                   aria-label={color.name}
                   aria-pressed={avatarColor === color.id}
-                  className={`size-touch-learner rounded-pill ${RING[color.id]} ${picked(avatarColor === color.id)}`}
-                />
+                  className={`size-touch-learner rounded-pill ${picked(avatarColor === color.id)}`}
+                >
+                  <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+                    <circle cx="32" cy="32" r="32" className={color.fill} />
+                  </svg>
+                </button>
               ))}
             </div>
             <div className="flex justify-center">
@@ -123,7 +121,7 @@ export function Onboarding() {
                 type="button"
                 onClick={() => setTheme(t.id)}
                 aria-pressed={theme === t.id}
-                className={`flex flex-col items-center gap-1.5 rounded-chip bg-paper px-1 pt-2.5 pb-2 font-display text-caption font-medium text-ink ${picked(theme === t.id)}`}
+                className={`flex flex-col items-center gap-2 rounded-chip bg-paper px-1 pt-3 pb-2 font-display text-caption font-medium text-ink ${picked(theme === t.id)}`}
               >
                 <ThemeIcon theme={t.id} />
                 {t.name}

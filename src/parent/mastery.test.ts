@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abandonSession, answerProblem, currentProblem, DIAGNOSTIC_PLAN, finishSession, newProfile, startSession } from "@/loop";
+import { abandonSession, answerProblem, currentProblem, DIAGNOSTIC_PLAN, finishSession, getSkill, newProfile, startSession } from "@/loop";
 import { profileWithMastered } from "@/loop/testing";
 import { masteryRows } from "./mastery";
 
@@ -15,7 +15,7 @@ describe("masteryRows", () => {
       [3, "Result or total unknown"],
       [3, "Change unknown"],
     ]);
-    expect(rows.every((r) => r.state === "not-started" && !r.mastered)).toBe(true);
+    expect(rows.every((r) => r.state === "not-started")).toBe(true);
   });
 
   it("shows the Knowledge Estimate for a Skill the Loop tracks and none for Unit 3 until it has Skills", () => {
@@ -30,7 +30,7 @@ describe("masteryRows", () => {
     const problem = currentProblem(session)!;
     session = answerProblem(session, problem.answer, 2000);
     const progress = finishSession(abandonSession(session)).profile;
-    const row = masteryRows(progress).find((r) => r.skill === problem.skill)!;
+    const row = masteryRows(progress).find((r) => r.name === getSkill(problem.skill).name)!;
     expect(row.state).toBe("in-progress");
     expect(row.estimate).toBe(progress.skills[problem.skill].estimate);
     expect(row.estimate).toBeGreaterThan(0.3);
@@ -38,7 +38,7 @@ describe("masteryRows", () => {
 
   it("marks a Mastered Skill", () => {
     const rows = masteryRows(profileWithMastered("partners-to-10"));
-    expect(rows[0]).toMatchObject({ state: "mastered", mastered: true, estimate: 0.99 });
+    expect(rows[0]).toMatchObject({ state: "mastered", estimate: 0.99 });
     expect(rows[1].state).toBe("not-started");
   });
 });

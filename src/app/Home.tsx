@@ -7,9 +7,11 @@ import { pathStops } from "@/play/path";
 import { useProfile } from "@/profile/store";
 import { Avatar } from "@/ui/Avatar";
 import { bigButtonClasses } from "@/ui/BigButton";
+import { BlankStage } from "@/ui/BlankStage";
 import { INK_STROKE } from "@/ui/icons";
 import { LockIcon } from "@/ui/LockIcon";
 import { Path } from "@/ui/Path";
+import { PillLink } from "@/ui/PillLink";
 import { SpeechBubble } from "@/ui/SpeechBubble";
 import { useTimedFlag } from "@/ui/use-timed-flag";
 import { Onboarding } from "./Onboarding";
@@ -30,19 +32,16 @@ export function Home() {
   // Ollie says the greeting once the screen is up; audio arrives with ticket 11.
   const speaking = useTimedFlag(line, speakingMs(line));
 
-  if (!profile) return <main className="learner-stage" aria-busy="true" />;
+  if (!profile) return <BlankStage />;
   if (!identity) return <Onboarding />;
 
   return (
     <main className="learner-stage">
       <h1 className="sr-only">Ollie</h1>
-      <Link
-        href="/parent"
-        className="paper-button absolute top-6 left-gutter flex h-touch-parent items-center gap-2 rounded-pill bg-paper-2 pr-4 pl-3 font-text text-caption text-ink-soft [--button-shadow-color:var(--paper-3)]"
-      >
+      <PillLink href="/parent" tone="paper" className="absolute top-6 left-gutter pl-3">
         <LockIcon size={22} />
         Grown-ups
-      </Link>
+      </PillLink>
       <div className="absolute top-6 right-gutter">
         <Avatar color={identity.avatarColor} />
       </div>
