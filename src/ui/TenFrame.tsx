@@ -55,7 +55,7 @@ function Loose({ counters }: { readonly counters: readonly LooseCounter[] }) {
   return (
     <div className="flex flex-col gap-2" role="img" aria-label={`${counters.length} counters waiting`}>
       {counters.map((counter, i) => (
-        <Counter key={i} color={counter.color} mark={counter.mark} order={i} />
+        <Counter key={i} color="yellow" mark={counter.mark} order={i} />
       ))}
     </div>
   );

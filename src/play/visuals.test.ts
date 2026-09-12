@@ -78,7 +78,6 @@ describe("ten-frame for make-a-ten", () => {
     expect(asking.frames).toHaveLength(1);
     expect(tally(asking.frames[0], red)).toBe(8);
     expect(asking.loose).toHaveLength(5);
-    expect(asking.loose.every((c) => c.color === "yellow")).toBe(true);
   });
 
   it("the Hint moves 2 in to make ten and counts the 3 left over", () => {

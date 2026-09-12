@@ -30,26 +30,27 @@
   animation: ollie-blink 4600ms linear infinite;
 }
 
-/* A new pose pops in with the celebrate overshoot. */
+/* A new pose settles in: a state change, 180ms ease-out. */
 .ollie-talking,
 .ollie-encourage {
-  animation: ollie-pop var(--duration-celebrate) var(--ease-celebrate);
+  animation: ollie-pop var(--duration-state) var(--ease-state);
 }
 
+/* Celebrate: two bounces with the celebrate overshoot. */
 .ollie-celebrate {
-  animation: ollie-bounce 720ms var(--ease-celebrate) 2;
+  animation: ollie-bounce calc(var(--duration-celebrate) * 2) var(--ease-celebrate) 2;
 }
 
-/* Encourage: the raised right wing waves from its hinge. */
+/* Encourage: the raised right wing waves twice from its hinge. */
 .ollie-encourage [data-part="wing-right"] {
   transform-origin: 184px 122px;
-  animation: ollie-wave 900ms ease-in-out 2;
+  animation: ollie-wave calc(var(--duration-celebrate) * 2) ease-in-out 2;
 }
 
-/* Talking: the beak chatters. Ticket 11 ties this to the audio. */
+/* Talking: the beak moves while Ollie speaks (the design's "mouth while audio plays"); ticket 11 ties it to the audio. */
 .ollie-talking [data-part="beak"] {
   transform-origin: 120px 116px;
-  animation: ollie-chatter 320ms ease-in-out infinite alternate;
+  animation: ollie-chatter calc(var(--duration-state) * 2) ease-in-out infinite alternate;
 }
 
 @keyframes ollie-breathe {

@@ -7,10 +7,10 @@ function solve(equation: string): number {
   const match = equation.replace(/\s+/g, " ").match(/^(\d+|\?) ([+−]) (\d+|\?) = (\d+|\?)$/);
   if (!match) throw new Error(`not an equation: "${equation}"`);
   const [, left, op, right, result] = match;
-  const n = Number;
-  if (result === "?") return op === "+" ? n(left) + n(right) : n(left) - n(right);
-  if (right === "?") return op === "+" ? n(result) - n(left) : n(left) - n(result);
-  return op === "+" ? n(result) - n(right) : n(result) + n(right);
+  const num = Number;
+  if (result === "?") return op === "+" ? num(left) + num(right) : num(left) - num(right);
+  if (right === "?") return op === "+" ? num(result) - num(left) : num(left) - num(result);
+  return op === "+" ? num(result) - num(right) : num(result) + num(right);
 }
 
 const wrongAnswer = (answer: number): number => (answer === 0 ? 1 : answer - 1);

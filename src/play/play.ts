@@ -22,7 +22,7 @@ export type Phase =
 export type PlayState = {
   readonly session: SessionState;
   readonly phase: Phase;
-  /** When the current question was put to the Learner (ms); the response time runs from it. */
+  /** When the Problem (or its retry after the Hint) was put to the Learner, in ms; the response time runs from it. */
   readonly askedAt: number;
 };
 

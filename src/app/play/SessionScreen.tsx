@@ -24,33 +24,26 @@ import { Celebration } from "./Celebration";
 /** How long Ollie celebrates a correct answer before the next Problem. */
 export const CORRECT_BEAT_MS = 1400;
 
-function lineFor(phase: Phase, problem: Problem, position: number): string {
-  switch (phase.kind) {
-    case "asking":
-      return problem.spoken;
-    case "hint":
-      return hintFor(problem);
-    case "correct":
-      return cheerFor(position, problem.answer);
-    case "reveal":
-      return revealLine(problem.answer);
-    case "celebration":
-      return "";
-  }
-}
+type ProblemPhase = Exclude<Phase, { kind: "celebration" }>;
 
-const STAGE: Readonly<Record<Exclude<Phase["kind"], "celebration">, Stage>> = {
-  asking: "asking",
-  hint: "hint",
-  correct: "reveal",
-  reveal: "reveal",
+/** What each phase puts on screen: the line Ollie says, the visual's stage, Ollie's pose, and whether the pad takes taps. */
+const VIEW: Readonly<
+  Record<
+    ProblemPhase["kind"],
+    {
+      readonly line: (problem: Problem, position: number) => string;
+      readonly stage: Stage;
+      /** Idle Ollie talks while the line is being spoken. */
+      readonly pose: OlliePose | "idle";
+      readonly answering: boolean;
+    }
+  >
+> = {
+  asking: { line: (problem) => problem.spoken, stage: "asking", pose: "idle", answering: true },
+  hint: { line: hintFor, stage: "hint", pose: "encourage", answering: true },
+  correct: { line: (problem, position) => cheerFor(position, problem.answer), stage: "reveal", pose: "celebrate", answering: false },
+  reveal: { line: (problem) => revealLine(problem.answer), stage: "reveal", pose: "encourage", answering: false },
 };
-
-function poseFor(phase: Phase, speaking: boolean): OlliePose {
-  if (phase.kind === "correct") return "celebrate";
-  if (phase.kind === "hint" || phase.kind === "reveal") return "encourage";
-  return speaking ? "talking" : "idle";
-}
 
 /**
  * One Session, tap by tap: the state lives in the Play reducer, every step
@@ -63,9 +56,12 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
   const [repeats, setRepeats] = useState(0);
   const { phase, session } = state;
   const problem = problemShown(state);
-  const position = session.entries.length + (phase.kind === "asking" || phase.kind === "hint" ? 1 : 0);
-  const line = problem ? lineFor(phase, problem, position) : "";
-  const speaking = useTimedSpeech(`${problem?.id ?? "done"}:${phase.kind}:${repeats}`, line);
+  const view = phase.kind === "celebration" ? undefined : VIEW[phase.kind];
+  const position = session.entries.length + (view?.answering ? 1 : 0);
+  const line = problem && view ? view.line(problem, position) : "";
+  // Ollie talks for as long as the line takes to read, until ticket 11 plays audio.
+  const lineKey = `${problem?.id ?? "done"}:${phase.kind}:${repeats}`;
+  const speaking = useTimedFlag(lineKey, speakingMs(line));
 
   useEffect(() => {
     if (phase.kind === "celebration") {
@@ -85,11 +81,11 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
   if (phase.kind === "celebration") {
     return <Celebration result={phase.result} onDone={() => router.push("/")} />;
   }
-  if (!problem) return null;
+  if (!problem || !view) return null;
 
-  const stage = STAGE[phase.kind];
+  const { stage, answering } = view;
   const visual = visualFor(problem, stage);
-  const answering = phase.kind === "asking" || phase.kind === "hint";
+  const pose = view.pose === "idle" && speaking ? "talking" : view.pose;
 
   return (
     <main className="learner-stage" data-phase={phase.kind} data-problem={problem.id}>
@@ -100,7 +96,7 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
       <div className="mx-auto mt-4 grid max-w-content grid-cols-[minmax(0,1fr)_352px] gap-8 px-gutter">
         <section className="flex flex-col gap-6" aria-label="Problem">
           <div className="flex items-start gap-4">
-            <SpeechBubble key={`${problem.id}:${phase.kind}:${repeats}`} className="max-w-110">
+            <SpeechBubble key={lineKey} className="max-w-110">
               {line}
             </SpeechBubble>
             <RepeatButton onClick={() => setRepeats((n) => n + 1)} />
@@ -123,13 +119,8 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
           )}
         </aside>
       </div>
-      <Ollie pose={poseFor(phase, speaking)} size={200} className="absolute bottom-6 left-gutter" />
+      <Ollie pose={pose} size={200} className="absolute bottom-6 left-gutter" />
     </main>
   );
 }
 
-
-/** Ollie talks for as long as the line takes to read, until ticket 11 plays audio. */
-function useTimedSpeech(key: string, line: string): boolean {
-  return useTimedFlag(key, speakingMs(line));
-}

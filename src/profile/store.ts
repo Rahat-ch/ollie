@@ -23,19 +23,9 @@ function read(): Profile {
   return cached;
 }
 
-function onStorage(event: StorageEvent): void {
-  if (event.key !== null && event.key !== PROFILE_KEY) return;
-  cached = undefined;
-  notify();
-}
-
 function subscribe(listener: Listener): () => void {
   listeners.add(listener);
-  if (listeners.size === 1) window.addEventListener("storage", onStorage);
-  return () => {
-    listeners.delete(listener);
-    if (listeners.size === 0) window.removeEventListener("storage", onStorage);
-  };
+  return () => listeners.delete(listener);
 }
 
 export const profileStore = {

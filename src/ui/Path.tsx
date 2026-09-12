@@ -1,10 +1,9 @@
 import type { PathStop } from "@/play/path";
-
-const ink60 = { stroke: "var(--ink)", strokeOpacity: 0.6 } as const;
+import { INK_STROKE } from "./icons";
 
 function Check() {
   return (
-    <svg viewBox="0 0 24 24" width="56" height="56" fill="none" {...ink60} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="56" height="56" {...INK_STROKE} aria-hidden="true">
       <path d="M5 12.5l4.5 4.5L19 7.5" />
     </svg>
   );
@@ -12,7 +11,7 @@ function Check() {
 
 function Lock() {
   return (
-    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" {...ink60} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="48" height="48" {...INK_STROKE} aria-hidden="true">
       <rect x="5" y="10.5" width="14" height="10" rx="3" />
       <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" />
     </svg>
@@ -29,6 +28,7 @@ function Stop({ stop }: { readonly stop: PathStop }) {
         </div>
       )}
       {stop.state === "current" && (
+        // The sun ring around the current stop is the canvas's own treatment (Main.dc.html), not an elevation.
         <div className="flex size-33 items-center justify-center rounded-pill bg-paper shadow-[0_0_0_6px_var(--sun)]">
           <div className="flex size-27 items-center justify-center rounded-pill bg-sun shadow-[0_4px_0_var(--sun-deep)]">
             {/* eslint-disable-next-line @next/next/no-img-element -- the project's own SVG, no optimisation wanted */}

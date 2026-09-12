@@ -19,7 +19,8 @@ export type Mark = "count" | "arrive" | "gone" | null;
 
 export type Cell = { readonly counter: CounterColor | null; readonly mark: Mark };
 
-export type LooseCounter = { readonly color: CounterColor; readonly mark: Mark };
+/** A yellow counter waiting beside the frame. */
+export type LooseCounter = { readonly mark: Mark };
 
 export type TenFrameModel = {
   readonly kind: "ten-frame";
@@ -55,8 +56,11 @@ function frame(filled: number, color: CounterColor, filledMark: Mark = null, emp
   );
 }
 
-const loose = (count: number, mark: Mark = null): LooseCounter[] =>
-  Array.from({ length: count }, () => ({ color: "yellow", mark }));
+const loose = (count: number, mark: Mark = null): LooseCounter[] => Array.from({ length: count }, () => ({ mark }));
+
+/** `given` red counters, then yellow ones arriving in the rest of the frame. */
+const filledFrom = (given: number): Cell[] =>
+  frame(given, "red").map((c, i) => (i < given ? c : cell("yellow", "arrive")));
 
 function partnersTo10(problem: Problem, stage: Stage): TenFrameModel {
   const { equation } = problem;
@@ -73,10 +77,7 @@ function partnersTo10(problem: Problem, stage: Stage): TenFrameModel {
   }
   // a + ? = 10: `a` counters; the empty spaces are the partner.
   const given = equation.left;
-  if (stage === "reveal") {
-    const cells = frame(given, "red").map((c, i) => (i < given ? c : cell("yellow", "arrive")));
-    return { kind: "ten-frame", frames: [cells], loose: [] };
-  }
+  if (stage === "reveal") return { kind: "ten-frame", frames: [filledFrom(given)], loose: [] };
   return { kind: "ten-frame", frames: [frame(given, "red", null, stage === "hint" ? "count" : null)], loose: [] };
 }
 
@@ -97,8 +98,7 @@ function makeATen(problem: Problem, stage: Stage): TenFrameModel {
     return { kind: "ten-frame", frames: [frame(larger, "red")], loose: loose(smaller) };
   }
   const movedIn = FRAME_SIZE - larger;
-  const cells = frame(larger, "red").map((c, i) => (i < larger ? c : cell("yellow", "arrive")));
-  return { kind: "ten-frame", frames: [cells], loose: loose(smaller - movedIn, "count") };
+  return { kind: "ten-frame", frames: [filledFrom(larger)], loose: loose(smaller - movedIn, "count") };
 }
 
 function countingOn(problem: Problem, stage: Stage): NumberLineModel {

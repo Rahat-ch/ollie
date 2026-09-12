@@ -51,9 +51,9 @@ h4 {
   opacity: 0.55;
 }
 
-/* Ollie's bubble pops in with each new line. */
+/* Ollie's bubble comes in with each new line: a state change, 180ms ease-out. */
 .speech-bubble {
-  animation: pop-in var(--duration-celebrate) var(--ease-celebrate);
+  animation: pop-in var(--duration-state) var(--ease-state);
   transform-origin: bottom left;
 }
 
@@ -68,21 +68,24 @@ h4 {
   border-bottom: var(--frame-line);
 }
 
-/* The Hint: counters pulse in sequence so the Learner counts along. */
+/*
+ * The Hint: counters pulse in sequence so the Learner counts along. Each
+ * beat is the celebrate overshoot; leaving is a state change.
+ */
 .counter-count {
-  animation: counter-pulse 600ms var(--ease-celebrate) both;
+  animation: counter-pulse var(--duration-celebrate) var(--ease-celebrate) both;
 }
 .counter-count-empty {
   display: block;
   border: 3px dashed color-mix(in srgb, var(--ink) 60%, transparent);
-  animation: counter-pulse 600ms var(--ease-celebrate) both;
+  animation: counter-pulse var(--duration-celebrate) var(--ease-celebrate) both;
 }
 .counter-arrive {
   animation: counter-arrive var(--duration-celebrate) var(--ease-celebrate) both;
 }
 .counter-gone {
   display: block;
-  animation: counter-gone 500ms var(--ease-state) forwards;
+  animation: counter-gone var(--duration-state) var(--ease-state) forwards;
 }
 
 /* The number line: ink at 60% for lines, sky hops that draw in, a leaf landing. */
@@ -95,7 +98,7 @@ h4 {
 .number-line-label {
   font-family: var(--font-display), ui-rounded, system-ui, sans-serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: var(--text-caption);
   fill: var(--ink-soft);
 }
 .number-line-hop {
@@ -105,7 +108,7 @@ h4 {
   stroke-linecap: round;
   stroke-dasharray: 60;
   stroke-dashoffset: 60;
-  animation: hop-draw 320ms var(--ease-state) forwards;
+  animation: hop-draw var(--duration-celebrate) var(--ease-state) forwards;
 }
 .number-line-landing {
   transform-box: fill-box;
@@ -113,14 +116,14 @@ h4 {
   animation: pop-in var(--duration-celebrate) var(--ease-celebrate) both;
 }
 
-/* The celebration. */
+/* The celebration: the headline overshoots, the confetti drifts in over four beats. */
 .celebrate-in {
   animation: pop-in var(--duration-celebrate) var(--ease-celebrate);
 }
 .confetti {
   transform-box: fill-box;
   transform-origin: center;
-  animation: confetti-drift 1800ms ease-out both;
+  animation: confetti-drift calc(var(--duration-celebrate) * 4) ease-out both;
 }
 
 @keyframes pop-in {
@@ -176,6 +179,7 @@ h4 {
   }
 }
 
+/* One-shot animations jump to their end state; Ollie's loops are turned off in ollie.css. */
 @media (prefers-reduced-motion: reduce) {
   .speech-bubble,
   .counter-count,
