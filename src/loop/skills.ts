@@ -1,4 +1,4 @@
-import type { Equation, NumberRange, SkillId, Unit, Visual } from "./types";
+import type { Equation, NumberRange, Problem, SkillId, Unit, Visual } from "./types";
 import type { Rng } from "./random";
 
 /** Bayesian Knowledge Tracing parameters, hand-set per Skill. */
@@ -34,8 +34,11 @@ export type Skill = {
   readonly defaultRange: NumberRange;
   /** Which number the range describes, in words, so a planner knows what it is narrowing. */
   readonly rangeOf: string;
-  /** Hand-written, keyed to the strategy, with no numbers so it can be voiced once. */
-  readonly hint: string;
+  /**
+   * Hand-written per structure, keyed to the strategy, with no numbers so
+   * each can be voiced once. Never model-written (ADR 0001).
+   */
+  readonly hints: Readonly<Record<string, string>>;
   readonly bkt: BktParams;
   readonly generate: (rng: Rng, options: GenerateOptions) => ProblemDraft;
 };
@@ -50,7 +53,10 @@ const partnersTo10: Skill = {
   standardRange: { min: 0, max: 10 },
   defaultRange: { min: 1, max: 9 },
   rangeOf: "the partner the Learner is given",
-  hint: "Look at the ten-frame. Count the empty spaces. That is how many more make ten.",
+  hints: {
+    "missing-partner": "Look at the ten-frame. Count the empty spaces. That is how many more make ten.",
+    "take-from-ten": "Look at the ten-frame. Ten take away some leaves the rest. Count the counters that are left.",
+  },
   bkt: { prior: 0.3, learn: 0.2, guess: 0.15, slip: 0.1 },
   generate(rng, { range, structures }) {
     const structure = rng.pick(structures);
@@ -83,7 +89,10 @@ const teenNumbers: Skill = {
   standardRange: { min: 11, max: 19 },
   defaultRange: { min: 11, max: 19 },
   rangeOf: "the teen number",
-  hint: "Look at the ten-frames. One whole frame is ten. Count the extra ones and say ten and some more.",
+  hints: {
+    compose: "Look at the ten-frames. One whole frame is ten. Count the extra ones and say ten and some more.",
+    decompose: "Look at the ten-frames. One whole frame is ten. Count the extra ones. That is how many more than ten.",
+  },
   bkt: { prior: 0.3, learn: 0.2, guess: 0.15, slip: 0.1 },
   generate(rng, { range, structures }) {
     const structure = rng.pick(structures);
@@ -116,7 +125,10 @@ const countingOn: Skill = {
   standardRange: { min: 3, max: 19 },
   defaultRange: { min: 5, max: 15 },
   rangeOf: "the larger addend; the other addend is 1, 2, or 3",
-  hint: "Start at the bigger number on the number line. Hop forward one at a time and count each hop.",
+  hints: {
+    "larger-first": "Start at the bigger number on the number line. Hop forward one at a time and count each hop.",
+    "smaller-first": "Start at the bigger number on the number line, even if it comes second. Hop forward one at a time and count each hop.",
+  },
   bkt: { prior: 0.25, learn: 0.2, guess: 0.15, slip: 0.1 },
   generate(rng, { range, structures }) {
     const structure = rng.pick(structures);
@@ -150,7 +162,10 @@ const makeATen: Skill = {
   standardRange: { min: 6, max: 9 },
   defaultRange: { min: 7, max: 9 },
   rangeOf: "the larger addend; the sum always crosses ten",
-  hint: "Fill the ten-frame first. Take just enough from the other number to make ten, then add on what is left.",
+  hints: {
+    "larger-first": "Fill the ten-frame first. Take just enough from the other number to make ten, then add on what is left.",
+    "smaller-first": "Fill the ten-frame first. Take just enough from the other number to make ten, then add on what is left.",
+  },
   bkt: { prior: 0.2, learn: 0.2, guess: 0.15, slip: 0.1 },
   generate(rng, { range, structures }) {
     const structure = rng.pick(structures);
@@ -184,7 +199,10 @@ const unknownAddend: Skill = {
   standardRange: { min: 2, max: 20 },
   defaultRange: { min: 11, max: 18 },
   rangeOf: "the whole; the missing part is 1 to 5",
-  hint: "Start at the number you know on the number line. Count up until you reach the bigger number. Your hops are the answer.",
+  hints: {
+    subtract: "Start at the smaller number on the number line. Count up until you reach the bigger number. Your hops are the answer.",
+    "missing-addend": "Start at the number you know on the number line. Count up until you reach the bigger number. Your hops are the answer.",
+  },
   bkt: { prior: 0.2, learn: 0.2, guess: 0.15, slip: 0.1 },
   generate(rng, { range, structures }) {
     const structure = rng.pick(structures);
@@ -215,4 +233,11 @@ export function getSkill(id: SkillId): Skill {
   const skill = SKILLS.find((s) => s.id === id);
   if (!skill) throw new Error(`Unknown Skill: ${id}`);
   return skill;
+}
+
+/** The hand-written Hint for a Problem: its Skill's, for its structure. */
+export function hintFor(problem: Pick<Problem, "skill" | "structure">): string {
+  const hint = getSkill(problem.skill).hints[problem.structure];
+  if (!hint) throw new Error(`No Hint for ${problem.skill} structure ${problem.structure}`);
+  return hint;
 }

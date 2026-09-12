@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createRng } from "@/loop/random";
-import { getSkill, SKILLS, type GenerateOptions, type Skill } from "@/loop/skills";
+import { getSkill, hintFor, SKILLS, type GenerateOptions, type Skill } from "@/loop/skills";
 import type { Equation, SkillId } from "@/loop/types";
 
 const SEEDS = 2000;
@@ -80,14 +80,28 @@ describe.each(SKILLS.map((s) => [s.id, s] as const))("Skill %s", (_, skill) => {
     }
   });
 
-  it("has a hand-written Hint with no numbers in it, so it can be voiced once", () => {
-    expect(skill.hint).toMatch(/^[A-Z].*\.$/);
-    expect(skill.hint).not.toMatch(/\d/);
+  it("has a hand-written Hint per structure with no numbers in it, so each can be voiced once", () => {
+    for (const structure of skill.structures) {
+      const hint = skill.hints[structure];
+      expect(hint).toMatch(/^[A-Z].*\.$/);
+      expect(hint).not.toMatch(/\d/);
+    }
+    expect(Object.keys(skill.hints).sort()).toEqual([...skill.structures].sort());
   });
 
   it("has a default range inside its standard's range", () => {
     expect(skill.defaultRange.min).toBeGreaterThanOrEqual(skill.standardRange.min);
     expect(skill.defaultRange.max).toBeLessThanOrEqual(skill.standardRange.max);
+  });
+});
+
+describe("hintFor", () => {
+  it("gives the Hint for the Problem's own structure, so take-from-ten is not told to count empty spaces", () => {
+    const [draft] = drafts(getSkill("partners-to-10"), "hint", { structures: ["take-from-ten"] }, 1);
+    const problem = { id: "p1", skill: "partners-to-10" as const, review: false, ...draft };
+    expect(hintFor(problem)).toBe(getSkill("partners-to-10").hints["take-from-ten"]);
+    expect(hintFor(problem)).toMatch(/left/);
+    expect(hintFor(problem)).not.toMatch(/empty/);
   });
 });
 

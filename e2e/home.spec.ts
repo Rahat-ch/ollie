@@ -1,11 +1,15 @@
 import { expect, test } from "@playwright/test";
 
-test("home page shows the Ollie placeholder", async ({ page }) => {
+test("home page shows Ollie, the Avatar, the Path, and one Play button", async ({ page }) => {
   await page.goto("/");
 
   await expect(page).toHaveTitle("Ollie");
-  await expect(page.getByRole("heading", { level: 1, name: "Ollie" })).toBeVisible();
-  await expect(page.getByText("Ollie learns how you learn.")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Ollie" })).toBeAttached();
+  await expect(page.getByText("Hi! Ready to play?")).toBeVisible();
+  await expect(page.getByRole("img", { name: "Ollie the owl, idle" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Your Avatar" })).toBeVisible();
+  await expect(page.getByTestId("path-stop")).toHaveText([/Partners to 10/, /Counting on and make-a-ten/, /Word problems/]);
+  await expect(page.getByRole("link", { name: "Play" })).toHaveCount(1);
 });
 
 test("home page exposes the icon and social image", async ({ page, request }) => {
