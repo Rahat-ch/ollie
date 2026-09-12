@@ -27,11 +27,12 @@ export default defineConfig({
     // Run the standalone server the Dockerfile runs, not `next start`, so the
     // browser tests exercise the same artefact that ships. Standalone output
     // does not include client assets, so copy them in first (as the Dockerfile
-    // does with COPY).
+    // does with COPY), and public/ alongside.
     command: [
       "pnpm build",
-      "rm -rf .next/standalone/.next/static",
+      "rm -rf .next/standalone/.next/static .next/standalone/public",
       "cp -R .next/static .next/standalone/.next/static",
+      "cp -R public .next/standalone/public",
       `PORT=${PORT} node .next/standalone/server.js`,
     ].join(" && "),
     url: BASE_URL,

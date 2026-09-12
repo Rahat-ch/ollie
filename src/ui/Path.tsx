@@ -1,19 +1,11 @@
 import type { PathStop } from "@/play/path";
 import { INK_STROKE } from "./icons";
+import { LockIcon } from "./LockIcon";
 
 function Check() {
   return (
     <svg viewBox="0 0 24 24" width="56" height="56" {...INK_STROKE} aria-hidden="true">
       <path d="M5 12.5l4.5 4.5L19 7.5" />
-    </svg>
-  );
-}
-
-function Lock() {
-  return (
-    <svg viewBox="0 0 24 24" width="48" height="48" {...INK_STROKE} aria-hidden="true">
-      <rect x="5" y="10.5" width="14" height="10" rx="3" />
-      <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" />
     </svg>
   );
 }
@@ -38,7 +30,7 @@ function Stop({ stop }: { readonly stop: PathStop }) {
       )}
       {stop.state === "locked" && (
         <div className="flex size-27 items-center justify-center rounded-pill bg-paper-3">
-          <Lock />
+          <LockIcon />
         </div>
       )}
       <div className="font-text text-caption text-ink-soft">{label}</div>

@@ -1,25 +1,29 @@
 /**
  * The Profile as the browser keeps it: the Loop's progress, the Session in
  * progress (so a reload resumes it), and the seed every Session's numbers
- * derive from. One per device, in localStorage, never sent anywhere
- * (ADR 0002). The Nickname, Avatar, and Theme join in ticket 09.
+ * derive from, and the identity the Parent chose at onboarding. One per
+ * device, in localStorage, never sent anywhere (ADR 0002).
  */
 import { newProfile, SKILLS } from "@/loop";
 import type { ProfileState, SessionState } from "@/loop";
+import { isIdentity, type Identity } from "./identity";
 
-export const PROFILE_VERSION = 1;
+/** Version 1 had no identity; a stored version 1 Profile is carried forward with none, so onboarding runs. */
+export const PROFILE_VERSION = 2;
 
 export type Profile = {
   readonly version: typeof PROFILE_VERSION;
   /** Fixed at creation; the Loop derives each Session's numbers from it. */
   readonly seed: string;
+  /** The Nickname, Avatar colour, and Theme; null until onboarding is done. */
+  readonly identity: Identity | null;
   readonly progress: ProfileState;
   /** The Session being played, or null between Sessions. */
   readonly session: SessionState | null;
 };
 
 export function createProfile(seed: string): Profile {
-  return { version: PROFILE_VERSION, seed, progress: newProfile(), session: null };
+  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), session: null };
 }
 
 export function serializeProfile(profile: Profile): string {
@@ -64,12 +68,16 @@ export function parseProfile(text: string | null): Profile | null {
   } catch {
     return null;
   }
-  if (!isRecord(value) || value.version !== PROFILE_VERSION) return null;
+  if (!isRecord(value)) return null;
+  const identity = value.version === 1 ? null : value.identity;
+  if (value.version !== 1 && value.version !== PROFILE_VERSION) return null;
   if (typeof value.seed !== "string" || !isProgress(value.progress)) return null;
+  if (identity !== null && !isIdentity(identity)) return null;
   if (value.session !== null && !isSession(value.session)) return null;
   return {
     version: PROFILE_VERSION,
     seed: value.seed,
+    identity,
     progress: value.progress,
     session: value.session as SessionState | null,
   };

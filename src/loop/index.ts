@@ -7,7 +7,7 @@ export type { Skill, BktParams } from "./skills";
 export { SKILLS, getSkill, hintFor } from "./skills";
 export { DIAGNOSTIC_PLAN, isDiagnosticPlan } from "./diagnostic";
 export { baselinePlan, BASELINE_CURRENT_PROBLEMS, BASELINE_REVIEW_PROBLEMS } from "./baseline";
-export { UNITS, isUnitUnlocked, unlockedUnits } from "./units";
+export { UNITS, isUnitUnlocked, unitName, unlockedUnits } from "./units";
 export type { PlanSpace, PlanSpaceSkill, PlanValidation } from "./plan-space";
 export { describeRange, planSpace, validatePlan, REVIEW_SHARE, SESSION_LENGTH } from "./plan-space";
 export { bktUpdate } from "./bkt";
