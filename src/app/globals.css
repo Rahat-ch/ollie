@@ -29,8 +29,15 @@ h4 {
   touch-action: manipulation;
 }
 
-/* Paper buttons and keys: a flat deep-tone shadow that drops when pressed. */
+/*
+ * Paper buttons and keys: a flat deep-tone shadow that drops when pressed.
+ * The shadow tokens are declared again here so that --button-shadow-color
+ * set on the button itself is what they resolve with; declared only on
+ * :root they would have settled on --sun-deep before the button was seen.
+ */
 .paper-button {
+  --shadow-button: 0 4px 0 var(--button-shadow-color, var(--sun-deep));
+  --shadow-button-pressed: 0 1px 0 var(--button-shadow-color, var(--sun-deep));
   box-shadow: var(--shadow-button);
   transition:
     transform var(--duration-state) var(--ease-state),
@@ -191,5 +198,26 @@ h4 {
   .celebrate-in,
   .confetti {
     animation-duration: 1ms;
+  }
+}
+
+/*
+ * The Parent Gate: the ring fills over the hold time while the press lasts
+ * and snaps back the moment it is let go. A tap never gets far.
+ */
+.gate-button {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+.gate-button[data-holding="true"] .gate-ring {
+  animation: gate-fill var(--gate-hold) linear forwards;
+}
+@keyframes gate-fill {
+  to {
+    stroke-dashoffset: 0;
   }
 }

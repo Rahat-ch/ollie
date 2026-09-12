@@ -7,6 +7,9 @@ const UNIT_NAMES: Record<Unit, string> = {
   3: "Word problems",
 };
 
+/** The Unit's name on the Path and in the Parent Area, whether or not it has Skills yet. */
+export const unitName = (unit: Unit): string => UNIT_NAMES[unit];
+
 /** The Units that have Skills, in progression order. */
 export const UNITS: readonly { readonly unit: Unit; readonly name: string }[] = [
   ...new Set(SKILLS.map((s) => s.unit)),

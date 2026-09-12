@@ -2,7 +2,8 @@
  * Ollie's fixed lines: hand-written, never model-written. Ticket 11 renders
  * each once in Ollie's voice; until then they are read on screen.
  */
-export const GREETING = "Hi! Ready to play?";
+/** The home greeting, by Nickname: the handover from onboarding is Ollie saying it. */
+export const greeting = (nickname: string): string => `Hi, ${nickname}! Ready to play?`;
 
 const CHEERS = ["Yes!", "You got it!", "That's it!", "Nice one!"] as const;
 

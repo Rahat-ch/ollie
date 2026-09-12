@@ -1,15 +1,17 @@
 import { expect, test } from "@playwright/test";
+import { setUpProfile } from "./onboarding";
 
-test("home page shows Ollie, the Avatar, the Path, and one Play button", async ({ page }) => {
-  await page.goto("/");
+test("home page shows Ollie, the Avatar, the Path, and one Play button once the Profile is set up", async ({ page }) => {
+  await setUpProfile(page, "Sam");
 
   await expect(page).toHaveTitle("Ollie");
   await expect(page.getByRole("heading", { level: 1, name: "Ollie" })).toBeAttached();
-  await expect(page.getByText("Hi! Ready to play?")).toBeVisible();
-  await expect(page.getByRole("img", { name: "Ollie the owl, idle" })).toBeVisible();
+  await expect(page.getByText("Hi, Sam! Ready to play?")).toBeVisible();
+  await expect(page.getByRole("img", { name: /Ollie the owl/ })).toBeVisible();
   await expect(page.getByRole("img", { name: "Your Avatar" })).toBeVisible();
   await expect(page.getByTestId("path-stop")).toHaveText([/Partners to 10/, /Counting on and make-a-ten/, /Word problems/]);
   await expect(page.getByRole("link", { name: "Play" })).toHaveCount(1);
+  await expect(page.getByRole("link", { name: "Grown-ups" })).toBeVisible();
 });
 
 test("home page exposes the icon and social image", async ({ page, request }) => {
