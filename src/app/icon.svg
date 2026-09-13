@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ollie the owl">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ollie">
 <g id="shadow"><path d="M60 16C92 16 114 36 116 68C117 98 96 120 60 120C24 120 3 98 4 68C6 36 28 16 60 16Z" fill="#A8532C"/></g>
 <g id="body"><path d="M60 14C92 14 114 34 116 66C117 96 96 118 60 118C24 118 3 96 4 66C6 34 28 14 60 14Z" fill="#C9713F"/></g>
 <g id="face">
 <g id="ear-tufts"><path d="M8 4C16 12 28 20 40 24C30 30 21 37 17 46C10 34 8 20 8 4Z" fill="#C9713F"/><path d="M112 5C104 13 92 21 80 24C90 30 99 37 103 46C110 34 112 21 112 5Z" fill="#C9713F"/></g>
-<g id="eyes"><circle cx="38" cy="62" r="22" fill="#FFF7EC"/><circle cx="38" cy="62" r="13" fill="#2E5E6B"/><circle cx="38" cy="62" r="8" fill="#3B2E2A"/><circle cx="34" cy="58" r="4" fill="#FFF7EC"/><circle cx="82" cy="62" r="22" fill="#FFF7EC"/><circle cx="82" cy="62" r="13" fill="#2E5E6B"/><circle cx="82" cy="62" r="8" fill="#3B2E2A"/><circle cx="78" cy="58" r="4" fill="#FFF7EC"/></g>
-<g id="brows"><path d="M14 42C22 30 36 26 52 32C40 32 27 35 20 46Z" fill="#A8532C"/><path d="M106 42C98 30 84 26 68 32C80 32 93 35 100 46Z" fill="#A8532C"/></g>
-<g id="beak"><path d="M47 85C52 81 68 81 73 85C70 95 64 103 60 107C56 103 50 95 47 85Z" fill="#D0901E"/><path d="M47 82C52 78 68 78 73 82C70 92 64 100 60 104C56 100 50 92 47 82Z" fill="#F2B134"/></g>
+<g id="eyes"><circle cx="38" cy="62" r="20" fill="#FFF7EC"/><circle cx="38" cy="62" r="11.5" fill="#2E5E6B"/><circle cx="38" cy="62" r="7" fill="#3B2E2A"/><circle cx="34.2" cy="58.2" r="3.5" fill="#FFF7EC"/><circle cx="82" cy="62" r="20" fill="#FFF7EC"/><circle cx="82" cy="62" r="11.5" fill="#2E5E6B"/><circle cx="82" cy="62" r="7" fill="#3B2E2A"/><circle cx="78.2" cy="58.2" r="3.5" fill="#FFF7EC"/></g>
+<g id="brows"><path d="M16.7 44.6C19.6 32.3 37 25.8 55.7 32.3C44.1 33.7 32.6 37.3 23.9 48.2Z" fill="#A8532C"/><path d="M103.3 44.6C100.4 32.3 83 25.8 64.3 32.3C75.9 33.7 87.4 37.3 96.1 48.2Z" fill="#A8532C"/></g>
+<g id="beak"><path d="M51.4 81.5C55 78.6 65.1 78.6 68.7 81.5C65.9 90.2 62.3 96.7 60 99.6C57.7 96.7 54.1 90.2 51.4 81.5Z" fill="#D0901E"/><path d="M51.4 79.3C55 76.4 65.1 76.4 68.7 79.3C65.9 88 62.3 94.5 60 97.4C57.7 94.5 54.1 88 51.4 79.3Z" fill="#F2B134"/></g>
 </g>
 </svg>

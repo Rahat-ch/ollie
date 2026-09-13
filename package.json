@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "brand:images": "node scripts/brand-images.mjs",
+    "design:review": "node scripts/design-review.mjs",
     "ollie:poses": "node scripts/ollie-poses.mjs",
     "licenses:check": "node scripts/third-party.mjs --check",
     "diagnostic": "tsx src/cli/diagnostic.ts",

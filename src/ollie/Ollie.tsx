@@ -29,7 +29,7 @@ export function Ollie({ pose, size, speaking = false, className = "" }: OlliePro
       width={size}
       height={size}
       role="img"
-      aria-label={`Ollie the owl, ${pose.replace(/-/g, " ")}`}
+      aria-label={`Ollie, ${pose.replace(/-/g, " ")}`}
       data-pose={pose}
       data-speaking={speaking ? "" : undefined}
       dangerouslySetInnerHTML={{ __html: POSES[pose] }}
