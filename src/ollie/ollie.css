@@ -47,8 +47,9 @@
   animation: ollie-wave calc(var(--duration-celebrate) * 2) ease-in-out 2;
 }
 
-/* Talking: the beak moves while Ollie speaks (the design's "mouth while audio plays"); ticket 11 ties it to the audio. */
-.ollie-talking [data-part="beak"] {
+/* The beak moves for as long as the audio plays, whatever the pose: the
+   speaking flag comes from the playback itself, not from a clip length. */
+.ollie-speaking [data-part="beak"] {
   transform-origin: 120px 116px;
   animation: ollie-chatter calc(var(--duration-state) * 2) ease-in-out infinite alternate;
 }

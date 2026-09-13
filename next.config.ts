@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
   // (prohibited by the hackathon terms), and Ollie ships SVG, not raster.
   // The matching pnpm override that removes `sharp` is in pnpm-workspace.yaml.
   images: { unoptimized: true },
+  // Ollie's bundled lines are named after a hash of what they say, so a file
+  // at one name never changes: a device fetches each line once, ever.
+  headers() {
+    return Promise.resolve([
+      {
+        source: "/voice/:path*",
+        headers: [{ key: "cache-control", value: "public, max-age=31536000, immutable" }],
+      },
+    ]);
+  },
 };
 
 export default nextConfig;

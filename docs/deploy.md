@@ -16,7 +16,7 @@ The build is multi-stage: `deps` installs from the frozen lockfile with the pnpm
 
 ## Persistent volume for audio
 
-Generated speech is written under `AUDIO_DIR`, which the image sets to `/data/audio`. That directory must be a volume, otherwise every redeploy starts with an empty cache and every Nickname line is re-rendered through ElevenLabs.
+Generated speech is written under `AUDIO_DIR`, which the image sets to `/data/audio`. That directory must be a volume, otherwise every redeploy starts with an empty store and every Nickname line is re-rendered through ElevenLabs. Only the lines with the Nickname in them live there, one file per line named after a non-cryptographic hash of what the line says. That hash is an address, not a hiding place: the line has the Nickname in it and the audio says it aloud, so treat the volume as holding what a Learner is called. Nothing on it ties a line to a Profile. The fixed lines are rendered at build time into `public/voice/` and ship inside the image.
 
 | Setting | Value |
 | --- | --- |
@@ -35,9 +35,11 @@ Set these in the resource's environment variables tab. Secrets live only here: t
 | --- | --- | --- |
 | `ANTHROPIC_API_KEY` | for Stories, Coach, Summary (optional at boot) | from <https://console.anthropic.com/settings/keys> |
 | `ELEVENLABS_API_KEY` | for Ollie's voice (optional at boot) | from the ElevenLabs dashboard, profile / API keys |
+| `ELEVENLABS_VOICE_ID` | for Ollie's voice (optional at boot) | the voice ID `pnpm voice:design --save <preview id>` prints; the voice is never named in the code |
+| `ELEVENLABS_MODEL_ID` | no | defaults to `eleven_v3`; set it to `eleven_flash_v2_5` for a cheaper render with no audio tags |
 | `AUDIO_DIR` | no | defaults to `/data/audio` inside the image; set it only if you change the volume mount path |
 
-Mark the two API keys as runtime (not build-time) variables if Coolify asks; the build does not need them. Locally the app defaults `AUDIO_DIR` to `./data/audio` (git-ignored).
+Without `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` the speech route answers 503 and the browser falls through the chain (bundled fixed line, platform speech synthesis, the line on screen), so the app runs, speaks the bundled lines, and never blocks; only the lines with the Nickname in them go quiet. Mark the two API keys as runtime (not build-time) variables if Coolify asks; the build does not need them. Locally the app defaults `AUDIO_DIR` to `./data/audio` (git-ignored).
 
 ## Cloudflare DNS and TLS
 
@@ -54,7 +56,7 @@ Docker is required (it is not installed on the Mac Mini used for development, so
 ```sh
 docker build -t ollie .
 docker run --rm -p 3000:3000 -v ollie-audio:/data/audio \
-  -e ANTHROPIC_API_KEY=... -e ELEVENLABS_API_KEY=... ollie
+  -e ANTHROPIC_API_KEY=... -e ELEVENLABS_API_KEY=... -e ELEVENLABS_VOICE_ID=... ollie
 ```
 
 Then open <http://localhost:3000> and <http://localhost:3000/api/health>; the health payload should show `"audioDir": "/data/audio"` and `"audioDirWritable": true`. The keys are only needed once routes that call the vendors exist; the placeholder page runs without them.

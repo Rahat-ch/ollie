@@ -18,8 +18,9 @@
 import { parseArgs } from "node:util";
 import { mapLimit } from "@/lib/map-limit";
 import { readPoolFile, writePoolFile } from "@/lib/pool-file";
+import type { SkillRange } from "@/loop";
 import { THEMES, type ThemeId } from "@/profile/identity";
-import { poolInputs, type PoolRange } from "@/play/stories";
+import { poolInputs } from "@/play/stories";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { addToPool, poolKey, poolVariants, type ContentPool, type PoolInput } from "@/story/pool";
 import { writeValidStory } from "@/story/write";
@@ -50,7 +51,7 @@ if (values.range !== "default" && values.range !== "standard") {
   console.error(`--range must be default or standard, got "${values.range}"`);
   process.exit(1);
 }
-const range: PoolRange = values.range;
+const range: SkillRange = values.range;
 const variants = Number(values.variants);
 const limit = values.limit === undefined ? Infinity : Number(values.limit);
 const concurrency = Number(values.concurrency);

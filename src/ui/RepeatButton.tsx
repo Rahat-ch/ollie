@@ -1,6 +1,6 @@
 import { INK_STROKE } from "./icons";
 
-/** Hear the line again. On every Problem; the audio arrives with ticket 11. */
+/** Hear the line again, from what is already on the device: never a new render. */
 export function RepeatButton({ onClick }: { readonly onClick: () => void }) {
   return (
     <button

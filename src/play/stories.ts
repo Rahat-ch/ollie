@@ -3,7 +3,7 @@
  * how they are keyed into the Content Pool, and every key the Pool is
  * filled with at build time. Pure; the hook and the API route do the I/O.
  */
-import { getSkill, type Equation, type Problem, type SkillId } from "@/loop";
+import { getSkill, rangeFor, type Equation, type Problem, type SkillId, type SkillRange } from "@/loop";
 import type { ThemeId } from "@/profile/identity";
 import { poolVariants, type ContentPool, type PoolInput } from "@/story/pool";
 import { storyShape } from "@/story/shapes";
@@ -28,12 +28,10 @@ export function pooledStory(pool: ContentPool, problem: Problem, theme: ThemeId)
 
 const UNIT_3: readonly SkillId[] = ["result-unknown", "change-unknown"];
 
-export type PoolRange = "default" | "standard";
-
 /** Every whole and part the engine can draw for a structure in the range, laid out by the structure's shape. */
-function equationsFor(skill: SkillId, structure: string, range: PoolRange): Equation[] {
+function equationsFor(skill: SkillId, structure: string, range: SkillRange): Equation[] {
   const shape = storyShape(structure);
-  const bounds = range === "default" ? getSkill(skill).defaultRange : getSkill(skill).standardRange;
+  const bounds = rangeFor(getSkill(skill), range);
   const equations: Equation[] = [];
   for (let whole = bounds.min; whole <= bounds.max; whole++) {
     for (let part = 1; part <= shape.maxPart(whole); part++) equations.push(shape.equation(whole, part));
@@ -42,7 +40,7 @@ function equationsFor(skill: SkillId, structure: string, range: PoolRange): Equa
 }
 
 /** Every Pool key `pnpm pool` fills: each Theme, each Unit 3 Skill and structure, each equation in the Skill's default (or standard) range. */
-export function poolInputs(themes: readonly ThemeId[], range: PoolRange = "default"): PoolInput[] {
+export function poolInputs(themes: readonly ThemeId[], range: SkillRange = "default"): PoolInput[] {
   return themes.flatMap((theme) =>
     UNIT_3.flatMap((skill) =>
       getSkill(skill).structures.flatMap((structure) =>

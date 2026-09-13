@@ -4,6 +4,7 @@ import { getSkill } from "@/loop";
 import type { SessionResult } from "@/loop";
 import { Ollie } from "@/ollie/Ollie";
 import { MASTERED_LINE, milestoneLine, SESSION_DONE, streakLine } from "@/play/lines";
+import { useSpeech } from "@/play/use-speech";
 import type { Award } from "@/rewards/rewards";
 import { BigButton } from "@/ui/BigButton";
 import { CoinIcon, StreakIcon } from "@/ui/RewardChips";
@@ -90,15 +91,22 @@ type CelebrationProps = {
 /** The end of every Session: Ollie celebrates what was earned, then Done goes home. Powers join in ticket 13. */
 export function Celebration({ result, award, onDone }: CelebrationProps) {
   const mastered = result.newlyMastered.map((id) => getSkill(id).name);
+  // The end of a Session is a fixed line, bundled with the app; Ollie is
+  // already celebrating, so only the audio is new here.
+  const { speaking, source } = useSpeech({ text: SESSION_DONE }, "session-done");
   const { streak } = award.rewards;
   return (
-    <main className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12" data-testid="celebration">
+    <main
+      className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
+      data-testid="celebration"
+      data-speech-source={source ?? undefined}
+    >
       <Confetti />
       <h1 className="celebrate-in max-w-205 text-center font-display text-display-xl font-semibold text-balance text-ink">
         {SESSION_DONE}
       </h1>
       <div className="flex items-center justify-center gap-12">
-        <Ollie pose="celebrate" size={300} />
+        <Ollie pose="celebrate" speaking={speaking} size={300} />
         <div className="flex w-90 flex-col gap-5">
           <div className="rounded-card bg-paper-2 px-6 py-5 shadow-card">
             <div className="font-text text-caption text-ink-soft">This Session</div>
