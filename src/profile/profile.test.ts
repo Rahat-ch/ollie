@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
+import { awardSession, buyItem, newRewards } from "@/rewards/rewards";
 import { AVATAR_COLORS, cleanNickname, THEMES } from "./identity";
 import { createProfile, parseProfile, serializeProfile } from "./profile";
 
@@ -48,7 +49,7 @@ describe("the identity chosen at onboarding", () => {
 
   it("carries a version 1 Profile forward with its progress, no identity, and fresh Unit 3 states, so onboarding runs once", () => {
     const v1 = { version: 1, seed: "seed-1", progress: { ...fresh, skills: beforeUnit3 }, session: null };
-    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 3, identity: null, progress: fresh });
+    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 4, identity: null, progress: fresh, rewards: newRewards() });
   });
 
   it("carries a version 2 Profile, stored before Unit 3 had Skills, forward with fresh states for them, so nothing is lost", () => {
@@ -82,5 +83,33 @@ describe("the choices onboarding offers", () => {
     expect(cleanNickname("Mia\nRose")).toBe("Mia Rose");
     expect(cleanNickname("Bartholomew Montgomery III")).toBe("Bartholomew Montgome");
     expect(cleanNickname("   ")).toBe("");
+  });
+});
+
+describe("the rewards the Profile keeps", () => {
+  const identity = { nickname: "Mia", avatarColor: "sky", theme: "puppies" } as const;
+
+  it("starts a fresh Profile with no Coins, no Streak, both Freezes, and nothing worn", () => {
+    expect(createProfile("seed-1").rewards).toEqual(newRewards());
+  });
+
+  it("round-trips Coins, the Streak, and a bought Avatar Item", () => {
+    const rewards = buyItem(awardSession(newRewards(), 1, new Date(2026, 8, 13)).rewards, "party-hat");
+    const profile = { ...createProfile("seed-1"), identity, rewards };
+    const parsed = parseProfile(serializeProfile(profile));
+    expect(parsed).toEqual(profile);
+    expect(parsed?.rewards.worn.hat).toBe("party-hat");
+  });
+
+  it("carries a version 3 Profile, stored before there were Coins, forward with fresh rewards", () => {
+    const stored = { ...createProfile("seed-1"), version: 3, identity, rewards: undefined };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({ ...createProfile("seed-1"), identity });
+  });
+
+  it("starts fresh when the rewards are not a shape this version knows", () => {
+    const stored = (rewards: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity, rewards });
+    expect(parseProfile(stored({ ...newRewards(), coins: "ten" }))).toBeNull();
+    expect(parseProfile(stored({ ...newRewards(), owned: ["jetpack"] }))).toBeNull();
+    expect(parseProfile(stored(null))).toBeNull();
   });
 });

@@ -1,6 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-
-const PROFILE_KEY = "ollie.profile";
+import { expect, test } from "@playwright/test";
+import { key, PROFILE_KEY, solve } from "./play";
 
 const mastered = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
 const fresh = (estimate: number) => ({ estimate, recentFirstAttempts: [], mastered: false });
@@ -25,19 +24,6 @@ const UNIT_3_PROFILE = {
   },
   session: null,
 };
-
-/** The engine's arithmetic, done independently from the equation on screen. */
-function solve(equation: string): number {
-  const match = equation.replace(/\s+/g, " ").match(/^(\d+|\?) ([+−]) (\d+|\?) = (\d+|\?)$/);
-  if (!match) throw new Error(`not an equation: "${equation}"`);
-  const [, left, op, right, result] = match;
-  const num = Number;
-  if (result === "?") return op === "+" ? num(left) + num(right) : num(left) - num(right);
-  if (right === "?") return op === "+" ? num(result) - num(left) : num(left) - num(result);
-  return op === "+" ? num(result) - num(right) : num(result) + num(right);
-}
-
-const key = (page: Page, n: number) => page.getByRole("button", { name: String(n), exact: true });
 
 type StoredProblem = { id: string; skill: string; structure: string; spoken: string };
 

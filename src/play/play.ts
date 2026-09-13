@@ -6,6 +6,7 @@
 import { answerProblem, baselinePlan, currentProblem, finishSession, startSession } from "@/loop";
 import type { Problem, SessionResult, SessionState } from "@/loop";
 import type { Profile } from "@/profile/profile";
+import { awardSession, type Award, type Rewards } from "@/rewards/rewards";
 
 export type Phase =
   /** Waiting for a tap on the number pad. */
@@ -16,11 +17,13 @@ export type Phase =
   | { readonly kind: "correct"; readonly assistance: "first-try-correct" | "hint-assisted-correct" }
   /** After the second miss: Ollie shows the answer and the strategy. */
   | { readonly kind: "reveal" }
-  /** The Session is over and the Profile has moved on. */
-  | { readonly kind: "celebration"; readonly result: SessionResult };
+  /** The Session is over and the Profile has moved on, with the Coins and the Streak it earned. */
+  | { readonly kind: "celebration"; readonly result: SessionResult; readonly award: Award };
 
 export type PlayState = {
   readonly session: SessionState;
+  /** The rewards as they stand: the Session's Coins and Streak land on them at the celebration. */
+  readonly rewards: Rewards;
   readonly phase: Phase;
   /** When the Problem (or its retry after the Hint) was put to the Learner, in ms; the response time runs from it. */
   readonly askedAt: number;
@@ -31,8 +34,16 @@ export type PlayEvent =
   /** Move on from Ollie's reaction to the next Problem, or to the celebration. */
   | { readonly type: "next"; readonly at: number };
 
-function celebrate(session: SessionState): PlayState {
-  return { session, phase: { kind: "celebration", result: finishSession(session) }, askedAt: 0 };
+/**
+ * The Session is over: the Loop's result, and the Coins and Streak it earned
+ * by the device's local time. A Session pays its Coins once, so celebrating
+ * the same Session again (a Session left uncelebrated, finished on the next
+ * visit) adds nothing.
+ */
+function celebrate(session: SessionState, rewards: Rewards, at: number): PlayState {
+  const result = finishSession(session);
+  const award = awardSession(rewards, result.log.sessionNumber, new Date(at));
+  return { session, rewards: award.rewards, phase: { kind: "celebration", result, award }, askedAt: 0 };
 }
 
 /**
@@ -42,13 +53,18 @@ function celebrate(session: SessionState): PlayState {
  * Diagnostic Session first, then 6 from the current Skill plus 2 Review.
  */
 export function beginPlay(profile: Profile, now: number): PlayState {
-  const { session } = profile;
-  if (session && session.status !== "in-progress") return celebrate(session);
+  const { session, rewards } = profile;
+  if (session && session.status !== "in-progress") return celebrate(session, rewards, now);
   if (session) {
-    return { session, phase: { kind: session.attempts.length === 0 ? "asking" : "hint" }, askedAt: now };
+    return { session, rewards, phase: { kind: session.attempts.length === 0 ? "asking" : "hint" }, askedAt: now };
   }
   const plan = baselinePlan(profile.progress);
-  return { session: startSession(plan, profile.progress, profile.seed), phase: { kind: "asking" }, askedAt: now };
+  return {
+    session: startSession(plan, profile.progress, profile.seed),
+    rewards,
+    phase: { kind: "asking" },
+    askedAt: now,
+  };
 }
 
 export function playReducer(state: PlayState, event: PlayEvent): PlayState {
@@ -57,7 +73,7 @@ export function playReducer(state: PlayState, event: PlayEvent): PlayState {
     if (kind !== "asking" && kind !== "hint") return state;
     const session = answerProblem(state.session, event.answer, event.at - state.askedAt);
     if (session.entries.length === state.session.entries.length) {
-      return { session, phase: { kind: "hint" }, askedAt: event.at };
+      return { ...state, session, phase: { kind: "hint" }, askedAt: event.at };
     }
     const { assistance } = session.entries[session.entries.length - 1];
     if (assistance === "revealed") return { ...state, session, phase: { kind: "reveal" } };
@@ -65,7 +81,7 @@ export function playReducer(state: PlayState, event: PlayEvent): PlayState {
     return { ...state, session, phase: { kind: "correct", assistance } };
   }
   if (kind !== "correct" && kind !== "reveal") return state;
-  if (state.session.status !== "in-progress") return celebrate(state.session);
+  if (state.session.status !== "in-progress") return celebrate(state.session, state.rewards, event.at);
   return { ...state, phase: { kind: "asking" }, askedAt: event.at };
 }
 

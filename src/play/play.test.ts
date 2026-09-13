@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
-import { createProfile } from "@/profile/profile";
+import { createProfile, type Profile } from "@/profile/profile";
+import { COINS_PER_SESSION, newRewards } from "@/rewards/rewards";
 import { beginPlay, playReducer, problemShown, triedAnswer, type PlayState } from "./play";
 
 const wrong = (answer: number): number => (answer === 0 ? 1 : answer - 1);
@@ -101,5 +102,40 @@ describe("playReducer", () => {
     expect(result.profile.sessionsCompleted).toBe(1);
     expect(problemShown(state)).toBeUndefined();
     expect(next(state)).toBe(state);
+  });
+});
+
+describe("the rewards a Session earns", () => {
+  /** Play every Problem of a Session first-try, finishing at the given moment. */
+  function playThrough(profile: Profile, at: number): PlayState {
+    let state = beginPlay(profile, at);
+    while (state.phase.kind !== "celebration") state = next(play(state, "f"), at);
+    return state;
+  }
+
+  it("hands the celebration the Coins, the Streak, and no milestone on the first day", () => {
+    const day = new Date(2026, 8, 13, 10).getTime();
+    const state = playThrough(createProfile("seed-1"), day);
+    if (state.phase.kind !== "celebration") throw new Error("unreachable");
+    const { award } = state.phase;
+    expect(award.coins).toBe(COINS_PER_SESSION);
+    expect(award.milestone).toBeNull();
+    expect(award.rewards.streak).toBe(1);
+    expect(state.rewards).toBe(award.rewards);
+  });
+
+  it("earns Coins on the rewards the Profile already holds, and pays the Session once when it is celebrated again", () => {
+    const day = new Date(2026, 8, 13, 10).getTime();
+    const held = { ...createProfile("seed-1"), rewards: { ...newRewards(), coins: 40 } };
+    const state = playThrough(held, day);
+    if (state.phase.kind !== "celebration") throw new Error("unreachable");
+    expect(state.phase.award.rewards.coins).toBe(50);
+
+    // The Session that ended without its celebration, finished on the next visit.
+    const ended = { ...held, rewards: state.phase.award.rewards, session: state.session };
+    const again = beginPlay(ended, day);
+    if (again.phase.kind !== "celebration") throw new Error("unreachable");
+    expect(again.phase.award.coins).toBe(0);
+    expect(again.phase.award.rewards.coins).toBe(50);
   });
 });

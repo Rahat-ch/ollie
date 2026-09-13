@@ -1,18 +1,6 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { setUpProfile } from "./onboarding";
-
-const PROFILE_KEY = "ollie.profile";
-
-/** The engine's arithmetic, done independently from the equation on screen. */
-function solve(equation: string): number {
-  const match = equation.replace(/\s+/g, " ").match(/^(\d+|\?) ([+−]) (\d+|\?) = (\d+|\?)$/);
-  if (!match) throw new Error(`not an equation: "${equation}"`);
-  const [, left, op, right, result] = match;
-  const num = Number;
-  if (result === "?") return op === "+" ? num(left) + num(right) : num(left) - num(right);
-  if (right === "?") return op === "+" ? num(result) - num(left) : num(left) - num(result);
-  return op === "+" ? num(result) - num(right) : num(result) + num(right);
-}
+import { asked, key, readProfile } from "./play";
 
 const wrongAnswer = (answer: number): number => (answer === 0 ? 1 : answer - 1);
 
@@ -20,21 +8,6 @@ const wrongAnswer = (answer: number): number => (answer === 0 ? 1 : answer - 1);
 function twoMisses(answer: number): [number, number] {
   const [first, second] = [answer - 1, answer + 1, answer - 2, answer + 2].filter((n) => n >= 0 && n <= 20);
   return [first, second];
-}
-
-/** Wait for a Problem to be asked and read it off the screen. */
-async function asked(page: Page): Promise<{ id: string; answer: number }> {
-  const stage = page.locator('main[data-phase="asking"]');
-  await expect(stage).toBeVisible();
-  const id = (await stage.getAttribute("data-problem")) ?? "";
-  const answer = solve(await page.getByTestId("equation").innerText());
-  return { id, answer };
-}
-
-const key = (page: Page, n: number) => page.getByRole("button", { name: String(n), exact: true });
-
-async function readProfile(page: Page) {
-  return page.evaluate((k) => JSON.parse(localStorage.getItem(k) ?? "null"), PROFILE_KEY);
 }
 
 test("a Parent sets up the Profile, a Learner plays the first Session to the celebration with taps only, and the Parent opens the gate; no network", async ({ page, baseURL }) => {

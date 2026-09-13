@@ -42,6 +42,12 @@ describe("pooledStory", () => {
     expect(pooledStory(pool, p, "space")).toBeUndefined();
     expect(pooledStory(pool, problem("counting-on", "larger-first", p.equation), "puppies")).toBeUndefined();
   });
+
+  it("follows the Profile's Theme, so changing it in the Shop changes the Stories the next Session is asked with", () => {
+    const both = addToPool(pool, storyInputFor(p, "dinosaurs")!, "a dinosaur Story for {{nickname}}");
+    expect(pooledStory(both, p, "puppies")).toBe("second {{nickname}}");
+    expect(pooledStory(both, p, "dinosaurs")).toBe("a dinosaur Story for {{nickname}}");
+  });
 });
 
 describe("poolInputs", () => {

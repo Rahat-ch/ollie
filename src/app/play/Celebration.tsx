@@ -3,8 +3,10 @@
 import { getSkill } from "@/loop";
 import type { SessionResult } from "@/loop";
 import { Ollie } from "@/ollie/Ollie";
-import { MASTERED_LINE, SESSION_DONE } from "@/play/lines";
+import { MASTERED_LINE, milestoneLine, SESSION_DONE, streakLine } from "@/play/lines";
+import type { Award } from "@/rewards/rewards";
 import { BigButton } from "@/ui/BigButton";
+import { CoinIcon, StreakIcon } from "@/ui/RewardChips";
 
 const CONFETTI = [
   ["rect", 70, 60, "sun", -24],
@@ -54,14 +56,41 @@ function Confetti() {
   );
 }
 
+/**
+ * A Streak milestone: the day count on a plum card with paper rays coming
+ * out of it, once each at 3, 7, and 14 days. One overshoot, then still.
+ */
+function Milestone({ days }: { readonly days: number }) {
+  return (
+    <div
+      className="milestone relative flex items-center gap-4 rounded-card bg-plum px-8 py-4 shadow-[0_4px_0_var(--plum-deep)]"
+      data-testid="milestone"
+      data-days={days}
+    >
+      <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true" className="milestone-rays">
+        {Array.from({ length: 8 }, (_, i) => (
+          <rect key={i} x="30" y="4" width="4" height="12" rx="2" className="fill-sun" transform={`rotate(${i * 45} 32 32)`} />
+        ))}
+        <circle cx="32" cy="32" r="13" className="fill-sun" />
+      </svg>
+      <div className="flex flex-col">
+        <span className="font-display text-display-m font-semibold text-paper">{milestoneLine(days)}</span>
+        <span className="font-text text-caption text-paper">A Freeze for the day you miss.</span>
+      </div>
+    </div>
+  );
+}
+
 type CelebrationProps = {
   readonly result: SessionResult;
+  readonly award: Award;
   readonly onDone: () => void;
 };
 
-/** The end of every Session: Ollie celebrates, then Done goes home. Powers, Coins, and the Streak join in tickets 13 and 14. */
-export function Celebration({ result, onDone }: CelebrationProps) {
+/** The end of every Session: Ollie celebrates what was earned, then Done goes home. Powers join in ticket 13. */
+export function Celebration({ result, award, onDone }: CelebrationProps) {
   const mastered = result.newlyMastered.map((id) => getSkill(id).name);
+  const { streak } = award.rewards;
   return (
     <main className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12" data-testid="celebration">
       <Confetti />
@@ -75,6 +104,23 @@ export function Celebration({ result, onDone }: CelebrationProps) {
             <div className="font-text text-caption text-ink-soft">This Session</div>
             <div className="font-display text-display-m font-semibold text-ink">{result.log.entries.length} Problems</div>
           </div>
+          <div className="flex items-center gap-4 rounded-card bg-sun px-6 py-5 shadow-[0_4px_0_var(--sun-deep)]" data-testid="coins-earned">
+            {/* The Coin sits on paper here: a sun disc on a sun card would disappear. */}
+            <span className="flex size-14 items-center justify-center rounded-pill bg-paper">
+              <CoinIcon size={40} />
+            </span>
+            <div className="flex flex-col">
+              <span className="font-text text-caption text-ink">Coins for finishing</span>
+              <span className="font-display text-display-m font-semibold text-ink">+{award.coins}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 rounded-card bg-leaf px-6 py-5 shadow-[0_4px_0_var(--leaf-deep)]" data-testid="streak-earned">
+            <StreakIcon size={44} />
+            <div className="flex flex-col">
+              <span className="font-text text-caption text-ink">Days in a row</span>
+              <span className="font-display text-display-m font-semibold text-ink">{streakLine(streak)}</span>
+            </div>
+          </div>
           {mastered.map((name) => (
             <div key={name} className="rounded-card bg-leaf px-6 py-5 shadow-[0_4px_0_var(--leaf-deep)]" data-testid="mastered">
               <div className="font-text text-caption text-ink">Mastered</div>
@@ -83,6 +129,7 @@ export function Celebration({ result, onDone }: CelebrationProps) {
           ))}
         </div>
       </div>
+      {award.milestone !== null && <Milestone days={award.milestone} />}
       <BigButton size="xl" onClick={onDone} autoFocus>
         Done
       </BigButton>
