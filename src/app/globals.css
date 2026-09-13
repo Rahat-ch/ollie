@@ -133,6 +133,29 @@ h4 {
   animation: confetti-drift calc(var(--duration-celebrate) * 4) ease-out both;
 }
 
+/*
+ * A Streak milestone: the card overshoots in and its rays turn a half-turn
+ * out of it, once. Nothing here loops; the milestone is a moment on the
+ * day it is reached, not something that keeps moving on the screen.
+ */
+.milestone {
+  animation: pop-in var(--duration-celebrate) var(--ease-celebrate) both;
+  animation-delay: var(--duration-celebrate);
+}
+.milestone-rays {
+  transform-origin: center;
+  animation: milestone-turn calc(var(--duration-celebrate) * 2) var(--ease-celebrate) both;
+  animation-delay: var(--duration-celebrate);
+}
+
+@keyframes milestone-turn {
+  from {
+    transform: rotate(-90deg) scale(0.4);
+  }
+  to {
+    transform: none;
+  }
+}
 @keyframes pop-in {
   from {
     transform: scale(0.85);
@@ -196,8 +219,11 @@ h4 {
   .number-line-hop,
   .number-line-landing,
   .celebrate-in,
-  .confetti {
+  .confetti,
+  .milestone,
+  .milestone-rays {
     animation-duration: 1ms;
+    animation-delay: 0ms;
   }
 }
 

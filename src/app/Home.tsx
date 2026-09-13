@@ -6,6 +6,7 @@ import { greeting } from "@/play/lines";
 import { pathStops } from "@/play/path";
 import { useSpeech } from "@/play/use-speech";
 import { useProfile } from "@/profile/store";
+import { streakToday } from "@/rewards/rewards";
 import { Avatar } from "@/ui/Avatar";
 import { bigButtonClasses } from "@/ui/BigButton";
 import { BlankStage } from "@/ui/BlankStage";
@@ -13,6 +14,8 @@ import { INK_STROKE } from "@/ui/icons";
 import { LockIcon } from "@/ui/LockIcon";
 import { Path } from "@/ui/Path";
 import { PillLink } from "@/ui/PillLink";
+import { CoinChip, CoinIcon, StreakChip } from "@/ui/RewardChips";
+
 import { SpeechBubble } from "@/ui/SpeechBubble";
 import { Onboarding } from "./Onboarding";
 
@@ -46,8 +49,10 @@ export function Home() {
         <LockIcon size={22} />
         Grown-ups
       </PillLink>
-      <div className="absolute top-6 right-gutter">
-        <Avatar color={identity.avatarColor} />
+      <div className="absolute top-6 right-gutter flex items-center gap-4">
+        <StreakChip streak={streakToday(profile.rewards, new Date())} freezes={profile.rewards.freezes} />
+        <CoinChip coins={profile.rewards.coins} />
+        <Avatar color={identity.avatarColor} worn={profile.rewards.worn} />
       </div>
       <SpeechBubble size="m" className="absolute top-30 left-12">
         {line}
@@ -59,6 +64,10 @@ export function Home() {
       <Link href="/play" className={`${bigButtonClasses("xl")} absolute bottom-12 left-1/2 -translate-x-1/2`}>
         <PlayIcon />
         Play
+      </Link>
+      <Link href="/shop" className={`${bigButtonClasses("l", "paper")} absolute right-gutter bottom-12`}>
+        <CoinIcon />
+        Shop
       </Link>
     </main>
   );

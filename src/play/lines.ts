@@ -22,6 +22,12 @@ export const SESSION_DONE = "You did it!";
 
 export const MASTERED_LINE = (skillName: string): string => `You know ${skillName} now!`;
 
+/** The Streak on the celebration: one day, then days. */
+export const streakLine = (days: number): string => `${days} ${days === 1 ? "day" : "days"}`;
+
+/** A Streak milestone, at 3, 7, and 14 days. */
+export const milestoneLine = (days: number): string => `${days} days in a row!`;
+
 /** How long a line is on Ollie's beak with no audio yet: reading pace, bounded. */
 export function speakingMs(line: string): number {
   return Math.min(5000, Math.max(1500, line.length * 55));

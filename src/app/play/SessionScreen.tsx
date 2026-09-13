@@ -79,7 +79,9 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   useEffect(() => {
     if (phase.kind === "celebration") {
       const { profile: progress } = phase.result;
-      profileStore.update((current) => ({ ...current, progress, session: null }));
+      // The Session's Coins and Streak land with its progress, and only once: a
+      // Session that has already paid adds nothing when it is celebrated again.
+      profileStore.update((current) => ({ ...current, progress, rewards: phase.award.rewards, session: null }));
     } else {
       profileStore.update((current) => ({ ...current, session }));
     }
@@ -92,7 +94,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   }, [phase]);
 
   if (phase.kind === "celebration") {
-    return <Celebration result={phase.result} onDone={() => router.push("/")} />;
+    return <Celebration result={phase.result} award={phase.award} onDone={() => router.push("/")} />;
   }
   if (!problem || !view) return null;
 
