@@ -2,9 +2,12 @@
 
 import { unitName } from "@/loop";
 import { masteryRows, type MasteryRow } from "@/parent/mastery";
+import { notebook } from "@/parent/notebook";
 import type { Identity } from "@/profile/identity";
 import type { Profile } from "@/profile/profile";
 import { PillLink } from "@/ui/PillLink";
+import { Notebook } from "./Notebook";
+import { Summaries } from "./Summaries";
 
 const BAR_FILL: Readonly<Record<MasteryRow["state"], string>> = {
   mastered: "bg-leaf",
@@ -52,19 +55,11 @@ function Legend() {
   );
 }
 
-function Placeholder({ title, children }: { readonly title: string; readonly children: React.ReactNode }) {
-  return (
-    <section className="flex flex-col gap-2 rounded-card bg-paper-2 px-5 py-4 shadow-card" aria-label={title}>
-      <h3 className="font-display text-body font-semibold text-teal">{title}</h3>
-      <p className="font-text text-caption text-ink text-pretty">{children}</p>
-    </section>
-  );
-}
-
 /**
  * Text-first, on paper, 44px targets. Mastery per Skill is live from the
- * Loop; the Parent Summaries, Ollie's Notebook, and Powers have their
- * places here and arrive with tickets 12 and 13.
+ * Loop, and the Parent Summaries and Ollie's Notebook from what the Coach
+ * has left on the device; Powers have their place here and arrive with
+ * ticket 13.
  */
 export function ParentArea({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const rows = masteryRows(profile.progress);
@@ -85,15 +80,8 @@ export function ParentArea({ profile, identity }: { readonly profile: Profile; r
           <p className="font-text text-caption text-ink-soft">
             {nickname} · {sessions} {sessions === 1 ? "Session" : "Sessions"} played
           </p>
-          <Placeholder title="Parent Summaries">
-            After each Session, Ollie will write you a short note: the strategies {nickname} practised, with the evidence
-            (first-try, with a Hint, or Revealed), what was Mastered, and one thing to try together. The last seven will be listed
-            here.
-          </Placeholder>
-          <Placeholder title="Ollie's Notebook">
-            What Ollie believes about how {nickname} is learning, each belief with the actual Problems it rests on, what changed
-            after the last Session, and what Ollie is testing next.
-          </Placeholder>
+          <Summaries summaries={profile.coach.summaries} nickname={nickname} />
+          <Notebook view={notebook(profile.coach)} nickname={nickname} />
         </div>
 
         <section className="flex w-full flex-col gap-4 rounded-card bg-paper-2 p-5 shadow-card md:w-88 md:shrink-0" aria-labelledby="mastery">

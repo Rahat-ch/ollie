@@ -68,7 +68,7 @@ const errorMessage = (error: unknown): string => (error instanceof Error ? error
  * its reason and no output to show the retry.
  */
 async function callCoach(
-  generation: Generation,
+  generation: Pick<Generation, "runCoach">,
   input: CoachInput,
   result: SessionResult,
   notes: LearnerNotes,
@@ -98,7 +98,7 @@ function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: fa
  * rejections, so play never stops.
  */
 export async function coachSession(
-  generation: Generation,
+  generation: Pick<Generation, "runCoach">,
   result: SessionResult,
   notes: LearnerNotes,
 ): Promise<CoachStep> {

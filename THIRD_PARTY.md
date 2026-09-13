@@ -5,7 +5,7 @@ This file is pasted into the Nerdy AI Hackathon submission form. It lists every 
 ## APIs and models
 
 - **Anthropic Claude** via the official `@anthropic-ai/sdk` (MIT), with `zod` (MIT) for the structured-output schema; both are dependencies.
-  - Claude Opus 5 (`claude-opus-5`) runs the Coach and the Judge (the eval-only rubric grader for Stories). The Parent Summary on Opus 5 is **planned**.
+  - Claude Opus 5 (`claude-opus-5`) runs the Coach, the Parent Summary, and the Judge (the eval-only rubric grader for Story readability and Parent Summary faithfulness). The Coach reads the Session Log and the Learner Notes and writes the next Session Plan; the Parent Summary is written from the engine's tally of the Session Log and those Notes, and is checked by a deterministic validator before a Parent reads it. Neither is ever given the Nickname.
   - Claude Sonnet 5 (`claude-sonnet-5`) writes Stories: the two-sentence word problems around the engine's numbers, at build time into the Content Pool and live for a missing variant. Every Story is checked by a deterministic validator before a child hears it.
   - Used under the Anthropic Commercial Terms of Service; no model weights are distributed.
 - **ElevenLabs** Voice Design and the `eleven_v3` text-to-speech model for Ollie's voice — **planned**, not yet a dependency. Used under the ElevenLabs Terms of Service; generated audio is stored on a server volume and is not redistributed as a dataset.

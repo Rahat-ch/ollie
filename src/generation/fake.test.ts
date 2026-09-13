@@ -7,11 +7,16 @@ import { fakeGeneration } from "@/generation/fake";
 import { parseCoachOutput } from "@/generation/coach-schema";
 import type { CoachEvidence, CoachInput, CoachOutput, StoryInput } from "@/generation/types";
 import { validateStory } from "@/story/validate";
+import { summaryInput } from "@/summary/summary";
+import { validateSummary } from "@/summary/validate";
 
 const emptyNotes: LearnerNotes = { hypotheses: [], strengths: [] };
 
 /** A Diagnostic Session: p3 and p8 (teen numbers) Hint-assisted, p4 (partners to 10) Revealed. */
 const diagnostic = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-f", scripted("ffhrfffhf"));
+
+/** The same Session as the Parent Summary is told about it: the Log tallied, no Nickname. */
+const summary = summaryInput(diagnostic, emptyNotes, []);
 
 const story: StoryInput = {
   skill: "result-unknown",
@@ -32,7 +37,7 @@ describe("the Generation fake", () => {
     const generation = fakeGeneration({ runCoach: async () => bad });
     expect(await generation.runCoach(coachInput(diagnostic, emptyNotes))).toBe(bad);
     expect((await generation.writeStory(story)).text).toContain("Sam");
-    expect((await generation.writeSummary({ log: diagnostic.log, notes: emptyNotes })).text).toContain("Session 1");
+    expect((await generation.writeSummary(summary)).practiced).toContain("Session 1");
     expect((await generation.renderSpeech({ text: "" })).mimeType).toBe("audio/mpeg");
   });
 });
@@ -142,10 +147,13 @@ describe("the other three operations", () => {
     expect(validateStory(text, story)).toEqual({ ok: true });
   });
 
-  it("writes a Parent Summary that names the Session number and Problem count", async () => {
-    const { text } = await fakeGeneration().writeSummary({ log: diagnostic.log, notes: emptyNotes });
-    expect(text).toContain("Session 1");
-    expect(text).toContain("9 Problems");
+  it("writes a Parent Summary the validator accepts, with the Session's own evidence by Assistance State", async () => {
+    const output = await fakeGeneration().writeSummary(summary);
+    expect(output.practiced).toContain("9 Problems");
+    expect(output.practiced).toContain("Partners to 10: 2 on the first try, 0 after a Hint, 1 Revealed.");
+    expect(output.practiced).toContain("Teen numbers as 10 + n: 1 on the first try, 2 after a Hint, 0 Revealed.");
+    expect(output.activity).toContain("Teen numbers as 10 + n");
+    expect(validateSummary(output, summary)).toEqual({ ok: true });
   });
 
   it("renders no audio, so nothing waits on it", async () => {

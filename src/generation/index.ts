@@ -5,5 +5,7 @@
  */
 export type * from "./types";
 export type { CoachOutputParse } from "./coach-schema";
-export { CoachOutputSchema, parseCoachOutput } from "./coach-schema";
+export { CoachInputSchema, CoachOutputSchema, parseCoachOutput } from "./coach-schema";
+export type { SummaryOutputParse } from "./summary-schema";
+export { parseSummaryOutput, SummaryInputSchema, SummaryOutputSchema } from "./summary-schema";
 export { fakeGeneration } from "./fake";

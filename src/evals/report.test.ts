@@ -5,6 +5,7 @@ import { runEvals } from "@/evals/evals";
 import { evalReport, reportFileName } from "@/evals/report";
 
 const STORIES = { generation: fakeGeneration(), name: "fake", judge: fakeJudge, judgeName: "fake" };
+const SUMMARIES = STORIES;
 
 describe("eval reports", () => {
   it("are named by their UTC date and time so they sort by run", () => {
@@ -12,7 +13,7 @@ describe("eval reports", () => {
   });
 
   it("carry when they were generated alongside both planners' results and the Hypothesis scores", async () => {
-    const results = await runEvals({ sessions: 2, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES });
+    const results = await runEvals({ sessions: 2, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES, summaries: SUMMARIES });
     const report = evalReport(results, new Date("2026-09-10T19:06:01Z"));
     expect(report.generatedAt).toBe("2026-09-10T19:06:01.000Z");
     expect(report.sessions).toBe(2);

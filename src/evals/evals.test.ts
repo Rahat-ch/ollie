@@ -5,9 +5,10 @@ import { runEvals } from "@/evals/evals";
 import type { SimulatedLearnerId } from "@/evals/learners";
 
 const STORIES = { generation: fakeGeneration(), name: "fake", judge: fakeJudge, judgeName: "fake" };
+const SUMMARIES = STORIES;
 
 describe("runEvals", () => {
-  const options = { sessions: 20, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES };
+  const options = { sessions: 20, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES, summaries: SUMMARIES };
   const promise = runEvals(options);
   const baseline = async (id: SimulatedLearnerId) => (await promise).convergence.baseline.learners.find((l) => l.id === id)!;
   const coach = async (id: SimulatedLearnerId) => (await promise).convergence.coach.learners.find((l) => l.id === id)!;

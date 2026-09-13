@@ -4,18 +4,24 @@
  * before the engine sees it; it never receives or produces a Problem, a
  * number to ask, or an answer (ADR 0001, ADR 0003). The Story writer
  * (ticket 10) runs on Sonnet 5 around the engine's numbers; what it
- * returns is checked by the Story validator, not here.
+ * returns is checked by the Story validator, not here. The Parent Summary
+ * (ticket 12) runs on Opus 5 over the engine's tally of the Session Log and
+ * the Learner Notes, and never sees the Nickname (ADR 0002); the Summary
+ * validator, not this adapter, decides whether a Parent reads it.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import { STORY_SYSTEM_PROMPT, storyUserMessage } from "@/story/prompt";
+import { SUMMARY_SYSTEM_PROMPT, summaryUserMessage } from "@/summary/prompt";
 import { COACH_SYSTEM_PROMPT, coachUserMessage } from "./coach-prompt";
 import { CoachOutputSchema, parseCoachOutput } from "./coach-schema";
-import type { CoachInput, CoachOutput, Generation, StoryInput, StoryOutput } from "./types";
+import { SummaryOutputSchema, parseSummaryOutput } from "./summary-schema";
+import type { CoachInput, CoachOutput, Generation, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
 export const COACH_MODEL = "claude-opus-5";
 export const STORY_MODEL = "claude-sonnet-5";
+export const SUMMARY_MODEL = "claude-opus-5";
 
 const StoryOutputSchema = z.strictObject({ text: z.string().describe("The Story: two sentences, nothing else") });
 
@@ -50,6 +56,27 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     return parsed.output;
   }
 
+  async function writeSummary(input: SummaryInput): Promise<SummaryOutput> {
+    const response = await client.messages.parse({
+      model: SUMMARY_MODEL,
+      max_tokens: 4000,
+      system: SUMMARY_SYSTEM_PROMPT,
+      messages: [{ role: "user", content: summaryUserMessage(input) }],
+      output_config: { effort: "medium", format: zodOutputFormat(SummaryOutputSchema) },
+    });
+    if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
+      throw new Error(`Parent Summary rejected: the model stopped with ${response.stop_reason}`);
+    }
+    if (response.parsed_output === null) {
+      throw new Error("Parent Summary rejected: the response could not be parsed as a Summary");
+    }
+    const parsed = parseSummaryOutput(response.parsed_output);
+    if (!parsed.ok) {
+      throw new Error(`Parent Summary rejected: ${parsed.reasons.join("; ")}`);
+    }
+    return parsed.output;
+  }
+
   async function writeStory(input: StoryInput): Promise<StoryOutput> {
     const response = await client.messages.parse({
       model: STORY_MODEL,
@@ -70,7 +97,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
   return {
     writeStory,
     runCoach,
-    writeSummary: notBuilt("writeSummary", "12"),
+    writeSummary,
     renderSpeech: notBuilt("renderSpeech", "11"),
   };
 }

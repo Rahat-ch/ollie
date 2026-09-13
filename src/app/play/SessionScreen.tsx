@@ -7,6 +7,7 @@ import type { Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
 import { cheerFor, revealLine, speakingMs } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
+import { useSessionCoach } from "@/play/use-coach";
 import { useStories } from "@/play/use-stories";
 import { visualFor, type Stage } from "@/play/visuals";
 import type { Identity } from "@/profile/identity";
@@ -61,6 +62,8 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const [repeats, setRepeats] = useState(0);
   const { phase, session } = state;
   const stories = useStories(session.problems, identity);
+  // One Coach run and one Parent Summary per completed Session, in the background.
+  useSessionCoach(phase.kind === "celebration" ? phase.result : null);
   const problem = problemShown(state);
   const view = phase.kind === "celebration" ? undefined : VIEW[phase.kind];
   const position = session.entries.length + (view?.answering ? 1 : 0);

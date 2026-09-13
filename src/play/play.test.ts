@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
+import { BASELINE_CURRENT_PROBLEMS, baselinePlan, currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
 import { createProfile, type Profile } from "@/profile/profile";
 import { COINS_PER_SESSION, newRewards } from "@/rewards/rewards";
 import { beginPlay, playReducer, problemShown, triedAnswer, type PlayState } from "./play";
@@ -37,6 +37,53 @@ describe("beginPlay", () => {
     expect(state.phase).toEqual({ kind: "hint" });
     expect(problemShown(state)).toBe(first);
     expect(triedAnswer(state)).toBe(wrong(first.answer));
+  });
+});
+
+describe("the Session the next tap on Play builds", () => {
+  /** A Profile that has completed one Session, with the Coach's Plan for the next one. */
+  function coached(plan: Profile["coach"]["plan"], lastSessionCoached = 1): Profile {
+    const profile = createProfile("seed-plan");
+    return {
+      ...profile,
+      progress: { ...profile.progress, sessionsCompleted: 1, nextProblemNumber: 10 },
+      coach: { ...profile.coach, plan, source: "coach", lastSessionCoached },
+    };
+  }
+
+  const plan = {
+    length: 7,
+    skills: [{ skill: "partners-to-10" as const, weight: 1, numberRange: { min: 6, max: 8 } }],
+    reviewShare: 0,
+    hypothesisUnderTest: null,
+  };
+
+  it("is the Coach's Plan, and its Problems match the Plan's mix and ranges", () => {
+    const state = beginPlay(coached(plan), 0);
+
+    expect(state.session.plan).toEqual(plan);
+    expect(state.session.problems).toHaveLength(7);
+    expect(state.session.problems.every((problem) => problem.skill === "partners-to-10")).toBe(true);
+    // Partners to 10: the range is the partner the Learner is given.
+    for (const problem of state.session.problems) {
+      const given = problem.equation.unknown === "right" ? problem.equation.left : problem.equation.right;
+      expect(given).toBeGreaterThanOrEqual(6);
+      expect(given).toBeLessThanOrEqual(8);
+    }
+  });
+
+  it("is the Baseline Plan when the Coach has not run on the Session just played, so a failed Coach never stops play", () => {
+    const state = beginPlay(coached(plan, 0), 0);
+
+    expect(state.session.plan).toEqual(baselinePlan(coached(plan, 0).progress));
+    expect(state.session.problems).toHaveLength(BASELINE_CURRENT_PROBLEMS);
+  });
+
+  it("is the Diagnostic Session before anything has been played, whatever the record holds", () => {
+    const profile = createProfile("seed-plan");
+    const state = beginPlay({ ...profile, coach: { ...profile.coach, plan, lastSessionCoached: 0 } }, 0);
+
+    expect(state.session.plan).toBe(DIAGNOSTIC_PLAN);
   });
 });
 

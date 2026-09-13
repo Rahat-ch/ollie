@@ -10,7 +10,6 @@ import type {
   LearnerNotes,
   PlanSpace,
   ProblemId,
-  SessionLog,
   SessionPlan,
   SkillId,
   SkillState,
@@ -74,13 +73,47 @@ export type CoachInput = {
   };
 };
 
-/** Parent Summary input. Shape settled by ticket 12. */
+/**
+ * One Skill the Session practiced, with its evidence by Assistance State.
+ * The counts are the engine's own tally of the Session Log: the Summary
+ * writer is handed them and never asked for arithmetic (ADR 0001).
+ */
+export type SummaryPractice = {
+  readonly skill: SkillId;
+  /** The strategy's name, as the Parent reads it. */
+  readonly name: string;
+  readonly firstTryCorrect: number;
+  readonly hintAssisted: number;
+  readonly revealed: number;
+  readonly unresolved: number;
+};
+
+/**
+ * Parent Summary input: the Session Log tallied, and the Learner Notes.
+ * Nothing personal crosses it — the Nickname never reaches the Summary
+ * writer (ADR 0002), which speaks of the Learner as "your child".
+ */
 export type SummaryInput = {
-  readonly log: SessionLog;
+  readonly sessionNumber: number;
+  readonly problems: number;
+  /** The Skills practiced, in progression order. */
+  readonly practice: readonly SummaryPractice[];
+  /** Skills Mastered in this Session, by name. */
+  readonly mastered: readonly string[];
+  /** Powers earned in this Session, by name. */
+  readonly powers: readonly string[];
+  /** The Skill the activity is for: the weakest practiced. Null when nothing was practiced. */
+  readonly weakest: { readonly skill: SkillId; readonly name: string } | null;
+  /** What the Coach believes, so the Summary can say what Ollie is watching. */
   readonly notes: LearnerNotes;
 };
 
-export type SummaryOutput = { readonly text: string };
+export type SummaryOutput = {
+  /** Two or three sentences: the strategies practiced and the Powers earned, with the evidence. */
+  readonly practiced: string;
+  /** One thing the Parent and the Learner can do together in five minutes, for the weakest Skill. */
+  readonly activity: string;
+};
 
 /** Speech input. Shape settled by ticket 11. */
 export type SpeechInput = { readonly text: string };
