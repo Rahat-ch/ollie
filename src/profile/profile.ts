@@ -7,7 +7,7 @@
 import { newProfile, SKILLS } from "@/loop";
 import type { ProfileState, SessionState } from "@/loop";
 import { newRewards, type Rewards } from "@/rewards/rewards";
-import { SHOP_ITEMS, type AvatarItemId } from "@/rewards/shop";
+import { AVATAR_SLOTS, SHOP_ITEMS, shopItem, type AvatarItemId } from "@/rewards/shop";
 import { isIdentity, type Identity } from "./identity";
 
 /**
@@ -72,18 +72,24 @@ const withEverySkillState = (progress: ProfileState): ProfileState => ({ ...prog
 
 const isItemId = (value: unknown): value is AvatarItemId => SHOP_ITEMS.some((item) => item.id === value);
 
+/** An Item is worn only if the Learner bought it and it belongs in that slot. */
+function isWorn(worn: unknown, owned: readonly AvatarItemId[]): boolean {
+  if (!isRecord(worn)) return false;
+  return AVATAR_SLOTS.every((slot) => {
+    const id = worn[slot];
+    return id === null || (isItemId(id) && owned.includes(id) && shopItem(id).slot === slot);
+  });
+}
+
 function isRewards(value: unknown): value is Rewards {
   if (!isRecord(value)) return false;
-  const { coins, sessionsAwarded, streak, lastSessionDay, freezes, milestonesSeen, owned, worn } = value;
+  const { coins, lastSessionPaid, streak, lastSessionDay, freezes, owned, worn } = value;
   return (
-    [coins, sessionsAwarded, streak, freezes].every((n) => typeof n === "number") &&
+    [coins, lastSessionPaid, streak, freezes].every((n) => typeof n === "number") &&
     (lastSessionDay === null || typeof lastSessionDay === "string") &&
-    Array.isArray(milestonesSeen) &&
-    milestonesSeen.every((milestone) => typeof milestone === "number") &&
     Array.isArray(owned) &&
     owned.every(isItemId) &&
-    isRecord(worn) &&
-    (["hat", "accessory", "pet"] as const).every((slot) => worn[slot] === null || isItemId(worn[slot]))
+    isWorn(worn, owned)
   );
 }
 

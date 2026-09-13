@@ -138,4 +138,18 @@ describe("the rewards a Session earns", () => {
     expect(again.phase.award.coins).toBe(0);
     expect(again.phase.award.rewards.coins).toBe(50);
   });
+
+  it("counts the Streak on the day the last Problem was answered, not the day the celebration was tapped", () => {
+    const lateEvening = new Date(2026, 8, 13, 23, 50).getTime();
+    const afterMidnight = new Date(2026, 8, 14, 0, 5).getTime();
+    let state = beginPlay(createProfile("seed-1"), lateEvening);
+    while (state.session.status === "in-progress") {
+      const answered = playReducer(state, { type: "tap", answer: problemShown(state)!.answer, at: lateEvening });
+      state = answered.session.status === "in-progress" ? next(answered, lateEvening) : answered;
+    }
+    const celebrated = next(state, afterMidnight);
+    if (celebrated.phase.kind !== "celebration") throw new Error("unreachable");
+    expect(celebrated.phase.award.rewards.lastSessionDay).toBe("2026-09-13");
+    expect(celebrated.phase.award.rewards.streak).toBe(1);
+  });
 });

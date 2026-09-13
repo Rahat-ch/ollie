@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { setUpProfile } from "./onboarding";
-import { playSession, PROFILE_KEY, readProfile } from "./play";
+import { daysAgo, key, playSession, PROFILE_KEY, readProfile, seedRewards, solve, storedProblems, UNIT_3_PROFILE } from "./play";
 
 test("a completed Session pays ten Coins, the Shop turns them into a hat the Avatar still wears after a reload", async ({ page, baseURL }) => {
   const offHost: string[] = [];
@@ -48,35 +48,52 @@ test("a completed Session pays ten Coins, the Shop turns them into a hat the Ava
   expect(offHost).toEqual([]);
 });
 
-test("the third day in a row is a milestone, celebrated once", async ({ page }) => {
+test("the third day in a row is a milestone, fired on the day the Streak reaches it", async ({ page }) => {
   await setUpProfile(page);
 
   // Two days in a row already, the last of them yesterday by the device's local time.
-  await page.evaluate((k) => {
-    const profile = JSON.parse(localStorage.getItem(k)!);
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const pad = (n: number) => String(n).padStart(2, "0");
-    profile.rewards = {
-      ...profile.rewards,
-      coins: 20,
-      sessionsAwarded: 2,
-      streak: 2,
-      lastSessionDay: `${yesterday.getFullYear()}-${pad(yesterday.getMonth() + 1)}-${pad(yesterday.getDate())}`,
-    };
-    profile.progress = { ...profile.progress, sessionsCompleted: 2 };
-    localStorage.setItem(k, JSON.stringify(profile));
-  }, PROFILE_KEY);
-
+  await seedRewards(page, { coins: 20, lastSessionPaid: 2, streak: 2, lastSessionDay: daysAgo(1) }, 2);
   await page.goto("/play");
   await playSession(page);
   await expect(page.getByTestId("milestone")).toContainText("3");
   await expect(page.getByTestId("streak-earned")).toContainText("3");
-
-  // Seen once: the Streak's milestone does not fire again on a later Session.
   await page.getByRole("button", { name: "Done" }).click();
-  await page.getByRole("link", { name: "Play" }).click();
+  await expect(page.getByTestId("streak-count")).toHaveText("3");
+
+  // The next day: the Streak becomes four, which is no milestone, and three does not fire again.
+  await seedRewards(page, { lastSessionDay: daysAgo(1) });
+  await page.goto("/play");
   await playSession(page);
+  await expect(page.getByTestId("streak-earned")).toContainText("4");
   await expect(page.getByTestId("milestone")).toHaveCount(0);
-  await expect(page.getByTestId("streak-earned")).toContainText("3");
+});
+
+test("the Theme picked in the Shop is the one the next Session's Stories are set in", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
+
+  // The Profile was set up in space; the Learner picks dinosaurs instead.
+  await page.goto("/shop");
+  await page.getByRole("button", { name: "Dinosaurs" }).click();
+  await expect(page.locator('[data-testid="shop-theme"][data-theme="dinosaurs"]')).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("link", { name: "Back to Ollie" }).click();
+  await page.getByRole("link", { name: "Play" }).click();
+
+  // The first word problem of the next Session is told in the dinosaurs' words, not in space's.
+  const problems = await storedProblems(page);
+  let told = false;
+  for (const problem of problems) {
+    const stage = page.locator(`main[data-phase="asking"][data-problem="${problem.id}"]`);
+    await expect(stage).toBeVisible();
+    if (problem.skill === "result-unknown" || problem.skill === "change-unknown") {
+      await expect(stage).toHaveAttribute("data-story-source", "template");
+      const bubble = page.getByTestId("speech-bubble");
+      await expect(bubble).toContainText(/dinosaurs?|eggs?/);
+      await expect(bubble).not.toContainText(/rockets?|stars?/);
+      told = true;
+      break;
+    }
+    await key(page, solve(await page.getByTestId("equation").innerText())).click();
+  }
+  expect(told).toBe(true);
 });

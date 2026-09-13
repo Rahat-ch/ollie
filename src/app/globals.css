@@ -135,8 +135,8 @@ h4 {
 
 /*
  * A Streak milestone: the card overshoots in and its rays turn a half-turn
- * out of it, once. Nothing here loops; the milestone is an event, not a
- * badge that keeps moving.
+ * out of it, once. Nothing here loops; the milestone is a moment on the
+ * day it is reached, not something that keeps moving on the screen.
  */
 .milestone {
   animation: pop-in var(--duration-celebrate) var(--ease-celebrate) both;

@@ -1,9 +1,10 @@
 import { avatarColor, type AvatarColor } from "@/profile/identity";
-import type { AvatarItemId, AvatarSlot } from "@/rewards/shop";
+import type { Rewards } from "@/rewards/rewards";
+import { AVATAR_SLOTS, type AvatarItemId } from "@/rewards/shop";
 import { AVATAR_ITEM_ART } from "./AvatarItems";
 
 /** What the Avatar wears: one Avatar Item to a slot, bought in the Shop. */
-type Worn = Readonly<Record<AvatarSlot, AvatarItemId | null>>;
+type Worn = Rewards["worn"];
 
 type AvatarProps = {
   readonly color: AvatarColor;
@@ -14,13 +15,11 @@ type AvatarProps = {
 
 const NOTHING_WORN: Worn = { hat: null, accessory: null, pet: null };
 
-/** Behind the Avatar, then on it: the pet sits beside, the accessory and the hat go on top. */
-const SLOT_ORDER: readonly AvatarSlot[] = ["pet", "accessory", "hat"];
-
 /** The Avatar: a round creature in its chosen colour, wearing what the Shop sold it. */
 export function Avatar({ color, worn = NOTHING_WORN, size = 72, label = "Your Avatar" }: AvatarProps) {
   const { fill, deepFill } = avatarColor(color);
-  const items = SLOT_ORDER.map((slot) => worn[slot]).filter((id): id is AvatarItemId => id !== null);
+  // AVATAR_SLOTS is in drawing order: the pet beside, then what goes on top.
+  const items = AVATAR_SLOTS.map((slot) => worn[slot]).filter((id): id is AvatarItemId => id !== null);
   return (
     <svg
       viewBox="0 0 80 80"

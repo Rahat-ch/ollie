@@ -1,3 +1,4 @@
+import { streakLine } from "@/play/lines";
 import { MAX_FREEZES } from "@/rewards/rewards";
 
 /** A Coin: a flat sun disc with the deep tone behind it, never a gradient. */
@@ -38,7 +39,7 @@ export function StreakChip({ streak, freezes }: { readonly streak: number; reado
   return (
     <div
       className={`${chip} bg-leaf shadow-[0_3px_0_var(--leaf-deep)]`}
-      aria-label={`${streak} ${streak === 1 ? "day" : "days"} in a row, ${freezes} ${freezes === 1 ? "Freeze" : "Freezes"} in hand`}
+      aria-label={`${streakLine(streak)} in a row, ${freezes} ${freezes === 1 ? "Freeze" : "Freezes"} in hand`}
     >
       <StreakIcon />
       <span data-testid="streak-count">{streak}</span>

@@ -5,6 +5,7 @@ import { Ollie } from "@/ollie/Ollie";
 import { greeting, speakingMs } from "@/play/lines";
 import { pathStops } from "@/play/path";
 import { useProfile } from "@/profile/store";
+import { streakToday } from "@/rewards/rewards";
 import { Avatar } from "@/ui/Avatar";
 import { bigButtonClasses } from "@/ui/BigButton";
 import { BlankStage } from "@/ui/BlankStage";
@@ -13,6 +14,7 @@ import { LockIcon } from "@/ui/LockIcon";
 import { Path } from "@/ui/Path";
 import { PillLink } from "@/ui/PillLink";
 import { CoinChip, CoinIcon, StreakChip } from "@/ui/RewardChips";
+
 import { SpeechBubble } from "@/ui/SpeechBubble";
 import { useTimedFlag } from "@/ui/use-timed-flag";
 import { Onboarding } from "./Onboarding";
@@ -44,7 +46,7 @@ export function Home() {
         Grown-ups
       </PillLink>
       <div className="absolute top-6 right-gutter flex items-center gap-4">
-        <StreakChip streak={profile.rewards.streak} freezes={profile.rewards.freezes} />
+        <StreakChip streak={streakToday(profile.rewards, new Date())} freezes={profile.rewards.freezes} />
         <CoinChip coins={profile.rewards.coins} />
         <Avatar color={identity.avatarColor} worn={profile.rewards.worn} />
       </div>

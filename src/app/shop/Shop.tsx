@@ -4,7 +4,7 @@ import Link from "next/link";
 import { THEMES, type Identity, type ThemeId } from "@/profile/identity";
 import type { Profile } from "@/profile/profile";
 import { profileStore } from "@/profile/store";
-import { buyItem, wearItem } from "@/rewards/rewards";
+import { buyItem, itemState, streakToday, wearItem, type ItemState } from "@/rewards/rewards";
 import { SHOP_ITEMS, type AvatarItem, type AvatarItemId } from "@/rewards/shop";
 import { Avatar } from "@/ui/Avatar";
 import { AvatarItemArt } from "@/ui/AvatarItems";
@@ -12,9 +12,7 @@ import { bigButtonClasses } from "@/ui/BigButton";
 import { CoinChip, CoinIcon, StreakChip } from "@/ui/RewardChips";
 import { ThemeIcon } from "@/ui/ThemeIcon";
 
-/** What the Learner can do with an Item right now, and what the card says. */
-type ItemState = "worn" | "owned" | "affordable" | "saving-up";
-
+/** What the card offers for each state an Item can be in. */
 const LABEL: Readonly<Record<ItemState, string>> = {
   worn: "Take off",
   owned: "Put on",
@@ -62,11 +60,8 @@ function ShopCard({ item, state }: { readonly item: AvatarItem; readonly state: 
  */
 export function Shop({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const { rewards } = profile;
-  const stateOf = (item: AvatarItem): ItemState => {
-    if (rewards.worn[item.slot] === item.id) return "worn";
-    if (rewards.owned.includes(item.id)) return "owned";
-    return rewards.coins >= item.price ? "affordable" : "saving-up";
-  };
+  // The Streak as it stands today, not as it stood on the last Session's day.
+  const streak = streakToday(rewards, new Date());
   const setTheme = (theme: ThemeId) =>
     profileStore.update((current) => ({ ...current, identity: current.identity && { ...current.identity, theme } }));
 
@@ -75,7 +70,7 @@ export function Shop({ profile, identity }: { readonly profile: Profile; readonl
       <header className="mx-auto flex w-full max-w-content items-center justify-between gap-6">
         <h1 className="font-display text-display-l font-semibold text-ink">Shop</h1>
         <div className="flex items-center gap-4">
-          <StreakChip streak={rewards.streak} freezes={rewards.freezes} />
+          <StreakChip streak={streak} freezes={rewards.freezes} />
           <CoinChip coins={rewards.coins} />
         </div>
       </header>
@@ -88,7 +83,7 @@ export function Shop({ profile, identity }: { readonly profile: Profile; readonl
 
         <section className="grid grid-cols-3 gap-4" aria-label="Avatar Items">
           {SHOP_ITEMS.map((item) => (
-            <ShopCard key={item.id} item={item} state={stateOf(item)} />
+            <ShopCard key={item.id} item={item} state={itemState(rewards, item)} />
           ))}
         </section>
       </div>

@@ -90,11 +90,20 @@ describe("the rewards the Profile keeps", () => {
   const identity = { nickname: "Mia", avatarColor: "sky", theme: "puppies" } as const;
 
   it("starts a fresh Profile with no Coins, no Streak, both Freezes, and nothing worn", () => {
-    expect(createProfile("seed-1").rewards).toEqual(newRewards());
+    expect(createProfile("seed-1").rewards).toEqual({
+      coins: 0,
+      lastSessionPaid: 0,
+      streak: 0,
+      lastSessionDay: null,
+      freezes: 2,
+      owned: [],
+      worn: { hat: null, accessory: null, pet: null },
+    });
   });
 
   it("round-trips Coins, the Streak, and a bought Avatar Item", () => {
-    const rewards = buyItem(awardSession(newRewards(), 1, new Date(2026, 8, 13)).rewards, "party-hat");
+    const played = awardSession(newRewards(), { sessionNumber: 1, status: "complete" }, new Date(2026, 8, 13));
+    const rewards = buyItem(played.rewards, "party-hat");
     const profile = { ...createProfile("seed-1"), identity, rewards };
     const parsed = parseProfile(serializeProfile(profile));
     expect(parsed).toEqual(profile);
@@ -111,5 +120,14 @@ describe("the rewards the Profile keeps", () => {
     expect(parseProfile(stored({ ...newRewards(), coins: "ten" }))).toBeNull();
     expect(parseProfile(stored({ ...newRewards(), owned: ["jetpack"] }))).toBeNull();
     expect(parseProfile(stored(null))).toBeNull();
+  });
+
+  it("starts fresh when the Avatar wears an Item it does not own, or one in the wrong slot", () => {
+    const stored = (rewards: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity, rewards });
+    const fresh = newRewards();
+    expect(parseProfile(stored({ ...fresh, worn: { ...fresh.worn, hat: "party-hat" } }))).toBeNull();
+    const owned = { ...fresh, owned: ["party-hat"] };
+    expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, pet: "party-hat" } }))).toBeNull();
+    expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, hat: "party-hat" } }))).not.toBeNull();
   });
 });

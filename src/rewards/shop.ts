@@ -4,8 +4,14 @@
  * lives beside it in src/ui/AvatarItems.tsx.
  */
 
-/** The Avatar's three slots; one Item is worn in each. */
-export type AvatarSlot = "hat" | "accessory" | "pet";
+/**
+ * The Avatar's three slots, in the order the Avatar draws them (the pet
+ * beside it, then what goes on it); one Item is worn in each. The one list:
+ * the Profile checks it, the Avatar draws it, fresh rewards start it empty.
+ */
+export const AVATAR_SLOTS = ["pet", "accessory", "hat"] as const;
+
+export type AvatarSlot = (typeof AVATAR_SLOTS)[number];
 
 export type AvatarItemId =
   | "party-hat"
