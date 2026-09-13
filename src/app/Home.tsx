@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { Ollie } from "@/ollie/Ollie";
-import { greeting, speakingMs } from "@/play/lines";
+import { greeting } from "@/play/lines";
 import { pathStops } from "@/play/path";
+import { useSpeech } from "@/play/use-speech";
 import { useProfile } from "@/profile/store";
 import { Avatar } from "@/ui/Avatar";
 import { bigButtonClasses } from "@/ui/BigButton";
@@ -13,7 +14,6 @@ import { LockIcon } from "@/ui/LockIcon";
 import { Path } from "@/ui/Path";
 import { PillLink } from "@/ui/PillLink";
 import { SpeechBubble } from "@/ui/SpeechBubble";
-import { useTimedFlag } from "@/ui/use-timed-flag";
 import { Onboarding } from "./Onboarding";
 
 function PlayIcon() {
@@ -29,14 +29,18 @@ export function Home() {
   const profile = useProfile();
   const identity = profile?.identity ?? null;
   const line = identity ? greeting(identity.nickname) : "";
-  // Ollie says the greeting once the screen is up; audio arrives with ticket 11.
-  const speaking = useTimedFlag(line, speakingMs(line));
+  // The greeting is the one fixed line with the Nickname in it, so it is
+  // rendered per Nickname and cached; the chain falls through until it is there.
+  const { speaking, source } = useSpeech(
+    { text: line, request: identity ? { kind: "greeting", nickname: identity.nickname } : undefined },
+    line,
+  );
 
   if (!profile) return <BlankStage />;
   if (!identity) return <Onboarding />;
 
   return (
-    <main className="learner-stage">
+    <main className="learner-stage" data-speech-source={source ?? undefined}>
       <h1 className="sr-only">Ollie</h1>
       <PillLink href="/parent" tone="paper" className="absolute top-6 left-gutter pl-3">
         <LockIcon size={22} />

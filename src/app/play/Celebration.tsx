@@ -4,6 +4,7 @@ import { getSkill } from "@/loop";
 import type { SessionResult } from "@/loop";
 import { Ollie } from "@/ollie/Ollie";
 import { MASTERED_LINE, SESSION_DONE } from "@/play/lines";
+import { useSpeech } from "@/play/use-speech";
 import { BigButton } from "@/ui/BigButton";
 
 const CONFETTI = [
@@ -62,8 +63,15 @@ type CelebrationProps = {
 /** The end of every Session: Ollie celebrates, then Done goes home. Powers, Coins, and the Streak join in tickets 13 and 14. */
 export function Celebration({ result, onDone }: CelebrationProps) {
   const mastered = result.newlyMastered.map((id) => getSkill(id).name);
+  // The end of a Session is a fixed line, bundled with the app; Ollie is
+  // already celebrating, so only the audio is new here.
+  const { source } = useSpeech({ text: SESSION_DONE }, "session-done");
   return (
-    <main className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12" data-testid="celebration">
+    <main
+      className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
+      data-testid="celebration"
+      data-speech-source={source ?? undefined}
+    >
       <Confetti />
       <h1 className="celebrate-in max-w-205 text-center font-display text-display-xl font-semibold text-balance text-ink">
         {SESSION_DONE}

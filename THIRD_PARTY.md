@@ -8,7 +8,11 @@ This file is pasted into the Nerdy AI Hackathon submission form. It lists every 
   - Claude Opus 5 (`claude-opus-5`) runs the Coach and the Judge (the eval-only rubric grader for Stories). The Parent Summary on Opus 5 is **planned**.
   - Claude Sonnet 5 (`claude-sonnet-5`) writes Stories: the two-sentence word problems around the engine's numbers, at build time into the Content Pool and live for a missing variant. Every Story is checked by a deterministic validator before a child hears it.
   - Used under the Anthropic Commercial Terms of Service; no model weights are distributed.
-- **ElevenLabs** Voice Design and the `eleven_v3` text-to-speech model for Ollie's voice — **planned**, not yet a dependency. Used under the ElevenLabs Terms of Service; generated audio is stored on a server volume and is not redistributed as a dataset.
+- **ElevenLabs** for Ollie's voice, called over HTTPS with `fetch` from `src/generation/elevenlabs.ts`; no npm package is added for it.
+  - **Voice Design** (`POST /v1/text-to-voice/design`, then `POST /v1/text-to-voice` to save the chosen preview) designs Ollie's voice once from a written brief and gives it a reusable voice ID. The ID is configuration (`ELEVENLABS_VOICE_ID`), never in the code.
+  - **Text to speech** (`POST /v1/text-to-speech/{voice_id}`, `output_format=mp3_44100_128`) renders each line on the model named by `ELEVENLABS_MODEL_ID`, which defaults to `eleven_v3`, the model documented to support audio tags. 128 kbps is used because "MP3 with 192kbps bitrate requires you to be subscribed to Creator tier or above" ([API reference](https://elevenlabs.io/docs/api-reference/text-to-speech/convert)).
+  - **Commercial licence.** ElevenLabs' Terms of Use §1(c): a Free User "may only use the Services for non-commercial purposes"; a paid subscriber "may use the Services for commercial purposes" ([terms](https://elevenlabs.io/terms-of-use)). The cheapest paid tier carrying the Commercial License bullet is **Starter, $6/month, 30,000 credits** ([pricing](https://elevenlabs.io/pricing)). **Every voice render for this entry must therefore be made on a Starter or higher subscription; the entrant must be on such a plan before rendering.** This file does not claim that the account used was on a paid tier — that is for the entrant to confirm at submission. Output ownership is the user's under §4(c)(ii), and §4(a) permits using downloaded Output outside the Services. Full fact-check, with what could not be verified, in `docs/research/k5-math-game/06-elevenlabs-terms.md`.
+  - No child audio is ever sent to ElevenLabs: the app has no microphone and records nothing (ADR 0002). The only personal word sent is the Nickname, and only so that a line addressed to the Learner can be spoken; onboarding says so verbatim. Generated audio is stored (bundled fixed lines in `public/voice/`, Nickname lines on the server volume) and is not redistributed as a dataset.
 
 ## Fonts
 
@@ -22,12 +26,12 @@ Both fonts are under the **SIL Open Font License 1.1** and are self-hosted with 
 - **Ollie illustrations** (`public/ollie/*.svg`): hand-tuned flat SVG in one consistent style, original to this project. Authored as SVG source with Claude Code under the entrant's direction and review (see "Generative-AI assistance"); no third-party assets and no image-model output.
 - **Icon set and social image** (`src/app/icon.svg`, `src/app/favicon.ico`, `src/app/apple-icon.png`, `src/app/opengraph-image.png`): rendered from those SVGs and the fonts above by `scripts/brand-images.mjs` (Playwright's bundled Chromium; no image library). Derivative of the entrant's own work.
 - **Planned:** small icons only from Kenney (kenney.nl), CC0 1.0 Universal (public domain dedication).
-- **Planned:** Ollie's spoken lines, generated with ElevenLabs as listed above.
+- **Ollie's spoken lines** (`public/voice/*.mp3`): every fixed line of Ollie's and every Problem's spoken line, rendered from the app's own hand-written text on the ElevenLabs voice above by `pnpm voice:lines`, one file per line. The words are the entrant's; only the voice is generated. Lines with the Nickname in them are not bundled: they are rendered per Nickname at creation time and kept on the server volume. **The bundled files are not in this commit**: no ElevenLabs key was available while the app was built, so `src/voice/lines.generated.json` is empty and the speech chain falls through to the platform's own speech and then to the line on screen. Running `pnpm voice:lines` with a key fills them in.
 
 ## Generative-AI assistance
 
 - This codebase is developed with **Claude Code**, Anthropic's agentic coding tool, acting as the implementer under the entrant's direction. Specs, design decisions, and review are the entrant's; code, tests, documentation, the design canvas, and the Ollie SVG illustrations (and the icon and Open Graph renders made from them) are written with Claude Code.
-- Image models may be used for reference and ideation only (mood boards, poses, palette ideas). No AI-generated pixels ship in the app at present; if any generated image or audio asset ever ships, it will be listed in "Images and audio" above with the model and prompt source.
+- Image models may be used for reference and ideation only (mood boards, poses, palette ideas). No AI-generated pixels ship in the app at present. Ollie's voice is generated: the words are hand-written by the entrant and the speech is rendered by ElevenLabs from the brief in `src/voice/design.ts`, as listed in "Images and audio" above.
 
 ## Open-source dependencies
 

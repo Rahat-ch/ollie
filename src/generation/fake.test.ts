@@ -148,10 +148,10 @@ describe("the other three operations", () => {
     expect(text).toContain("9 Problems");
   });
 
-  it("renders no audio, so nothing waits on it", async () => {
-    expect(await fakeGeneration().renderSpeech({ text: "8 and 5 more?" })).toEqual({
-      audio: new Uint8Array(0),
-      mimeType: "audio/mpeg",
-    });
+  it("renders a stand-in rather than real audio, so a dry run of the render script writes a file and resumes", async () => {
+    const { audio, mimeType } = await fakeGeneration().renderSpeech({ text: "8 and 5 more?" });
+    expect(mimeType).toBe("audio/mpeg");
+    expect(new TextDecoder().decode(audio)).toContain("8 and 5 more?");
+    expect(new TextDecoder().decode(audio)).toContain("not audio");
   });
 });

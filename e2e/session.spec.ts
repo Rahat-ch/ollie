@@ -60,7 +60,7 @@ test("a Parent sets up the Profile, a Learner plays the first Session to the cel
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByTestId("onboarding")).toHaveAttribute("data-step", "note");
   await expect(page.getByTestId("disclosure")).toHaveText(
-    "The Nickname is sent to generate Stories and audio. Nothing else leaves this device. No account, no recording.",
+    "The Nickname is sent to voice the lines Ollie reads aloud. Nothing else leaves this device. No account, no recording.",
   );
   await page.getByRole("button", { name: "Start playing" }).click();
 

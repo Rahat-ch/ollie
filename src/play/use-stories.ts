@@ -12,6 +12,7 @@ import { BUNDLED_POOL } from "@/story/bundled";
 import { withNickname } from "@/story/nickname";
 import type { PoolInput } from "@/story/pool";
 import { templateStory } from "@/story/template";
+import { requestSpeech } from "./speech-cache";
 import { pooledStory, storyInputFor, variantFor } from "./stories";
 
 export type StoryLine = {
@@ -72,6 +73,19 @@ export function useStories(problems: readonly Problem[], identity: Identity): St
     }
     return () => controller.abort();
   }, [problems, theme, nickname]);
+
+  // A Story is voiced with the Nickname in it, which the server renders once
+  // and keeps, so it is asked for the moment the Story is known rather than
+  // when the Problem comes up. Nothing waits on the answer: a Problem whose
+  // audio has not arrived is spoken by the next step of the chain.
+  useEffect(() => {
+    for (const problem of problems) {
+      const line = lines.get(problem.id);
+      const input = storyInputFor(problem, theme);
+      if (!line || !input) continue;
+      void requestSpeech({ kind: "story", nickname, text: line.text, ...input });
+    }
+  }, [lines, problems, theme, nickname]);
 
   return lines;
 }

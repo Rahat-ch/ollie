@@ -71,6 +71,9 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     writeStory,
     runCoach,
     writeSummary: notBuilt("writeSummary", "12"),
-    renderSpeech: notBuilt("renderSpeech", "11"),
+    // Ollie's voice is ElevenLabs, not Claude: src/generation/elevenlabs.ts.
+    renderSpeech: async (): Promise<never> => {
+      throw new Error("renderSpeech is ElevenLabs, not Anthropic (src/generation/elevenlabs.ts)");
+    },
   };
 }

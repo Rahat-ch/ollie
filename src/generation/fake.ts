@@ -1,7 +1,7 @@
 import { getSkill } from "@/loop";
 import { templateStory } from "@/story/template";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
-import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
+import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
 const hypothesisId = (skill: SkillId): string => `h-${skill}`;
 
@@ -101,9 +101,13 @@ async function writeSummary({ log }: SummaryInput): Promise<SummaryOutput> {
   };
 }
 
-/** Nothing to play, so the fake never blocks on audio. */
-async function renderSpeech(): Promise<SpeechOutput> {
-  return { audio: new Uint8Array(0), mimeType: "audio/mpeg" };
+/**
+ * Not audio: a stand-in for a rendered line, so a dry run of the render
+ * script writes a file and can be seen to resume. Nothing ever plays it, and
+ * the script refuses to write the fake into the bundled voice directory.
+ */
+async function renderSpeech({ text }: SpeechInput): Promise<SpeechOutput> {
+  return { audio: new TextEncoder().encode(`not audio, the Generation fake: ${text}\n`), mimeType: "audio/mpeg" };
 }
 
 /**

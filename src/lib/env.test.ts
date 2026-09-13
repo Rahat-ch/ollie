@@ -14,13 +14,23 @@ describe("readEnv", () => {
       AUDIO_DIR: "/mnt/audio",
       ANTHROPIC_API_KEY: "anthropic-test-key",
       ELEVENLABS_API_KEY: "elevenlabs-test-key",
+      ELEVENLABS_VOICE_ID: "ollie-voice-id",
+      ELEVENLABS_MODEL_ID: "eleven_flash_v2_5",
     });
     expect(env).toEqual({
       audioDir: "/mnt/audio",
       poolFile: "/mnt/audio/stories.json",
       anthropicApiKey: "anthropic-test-key",
       elevenLabsApiKey: "elevenlabs-test-key",
+      elevenLabsVoiceId: "ollie-voice-id",
+      elevenLabsModelId: "eleven_flash_v2_5",
     });
+  });
+
+  it("defaults the voice model to eleven_v3 and leaves the voice ID unset, so the adapter hard-codes neither", () => {
+    const env = readEnv({});
+    expect(env.elevenLabsModelId).toBe("eleven_v3");
+    expect(env.elevenLabsVoiceId).toBeUndefined();
   });
 
   it("leaves a vendor key undefined when it is unset so the app can boot without it", () => {
@@ -46,6 +56,9 @@ describe("requireEnv", () => {
     const env = readEnv({});
     expect(() => requireEnv(env, "anthropicApiKey")).toThrow(
       "ANTHROPIC_API_KEY is not set",
+    );
+    expect(() => requireEnv(env, "elevenLabsVoiceId")).toThrow(
+      "ELEVENLABS_VOICE_ID is not set",
     );
   });
 
