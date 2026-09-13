@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="One Session end to end: Session, engine, evidence, Coach, validator, next Session, with the line: the AI can personalise the learning path, it cannot make up the math.">
+  <title>Ollie's Loop: Session, engine, evidence, Coach, validator, next Session</title>
+  <desc>A Session of 6 to 10 Problems is drawn by the engine, which owns every number and answer. The Session Log is the evidence. The Coach, Opus 5, rewrites the Learner Notes as Hypotheses citing Problem IDs and writes the next Session Plan. The engine's validator rejects an unknown citation or a Plan outside the Plan Space, retries once, then falls back to the Baseline Plan. The accepted Plan builds the next Session.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7A6660"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="720" fill="#FFF7EC"/>
+
+  <text x="60" y="62" font-size="30" font-weight="600" fill="#3B2E2A">One Session, end to end</text>
+  <text x="60" y="92" font-size="15" fill="#7A6660">The engine owns the math. The model chooses where to look next, inside a space the engine bounds.</text>
+
+  <!-- Session -->
+  <g>
+    <rect x="60" y="144" width="300" height="140" rx="20" fill="#D0901E"/>
+    <rect x="60" y="140" width="300" height="140" rx="20" fill="#F2B134"/>
+    <text x="84" y="176" font-size="21" font-weight="600" fill="#3B2E2A">Session</text>
+    <text x="84" y="206" font-size="13.5" fill="#3B2E2A">6 to 10 Problems, one Skill mix, no</text>
+    <text x="84" y="226" font-size="13.5" fill="#3B2E2A">timers. Ollie reads each one aloud;</text>
+    <text x="84" y="246" font-size="13.5" fill="#3B2E2A">a first miss shows the hand-written</text>
+    <text x="84" y="266" font-size="13.5" fill="#3B2E2A">Hint, a second is a Reveal.</text>
+  </g>
+
+  <!-- engine -->
+  <g>
+    <rect x="490" y="144" width="300" height="140" rx="20" fill="#2F8A5B"/>
+    <rect x="490" y="140" width="300" height="140" rx="20" fill="#4CAF7A"/>
+    <text x="514" y="176" font-size="21" font-weight="600" fill="#3B2E2A">engine</text>
+    <text x="514" y="206" font-size="13.5" fill="#3B2E2A">Seven Skills as template families.</text>
+    <text x="514" y="226" font-size="13.5" fill="#3B2E2A">Every type, every number, every</text>
+    <text x="514" y="246" font-size="13.5" fill="#3B2E2A">answer and every Hint is the</text>
+    <text x="514" y="266" font-size="13.5" fill="#3B2E2A">engine's, never the model's.</text>
+  </g>
+
+  <!-- evidence -->
+  <g>
+    <rect x="920" y="144" width="300" height="140" rx="20" fill="#2F8A5B"/>
+    <rect x="920" y="140" width="300" height="140" rx="20" fill="#4CAF7A"/>
+    <text x="944" y="176" font-size="21" font-weight="600" fill="#3B2E2A">evidence</text>
+    <text x="944" y="206" font-size="13.5" fill="#3B2E2A">The Session Log: per Problem an</text>
+    <text x="944" y="226" font-size="13.5" fill="#3B2E2A">ID, Skill, structure, numbers, time,</text>
+    <text x="944" y="246" font-size="13.5" fill="#3B2E2A">position, and one Assistance State.</text>
+    <text x="944" y="266" font-size="13.5" fill="#3B2E2A">First attempts alone move Mastery.</text>
+  </g>
+
+  <!-- Coach -->
+  <g>
+    <rect x="920" y="384" width="300" height="160" rx="20" fill="#4E3676"/>
+    <rect x="920" y="380" width="300" height="160" rx="20" fill="#6B4E9C"/>
+    <text x="944" y="416" font-size="21" font-weight="600" fill="#FFF7EC">Coach</text>
+    <text x="944" y="446" font-size="13.5" fill="#FFF7EC">Opus 5, once per Session. Rewrites</text>
+    <text x="944" y="466" font-size="13.5" fill="#FFF7EC">the Learner Notes as Hypotheses,</text>
+    <text x="944" y="486" font-size="13.5" fill="#FFF7EC">each citing Problem IDs, and writes</text>
+    <text x="944" y="506" font-size="13.5" fill="#FFF7EC">the next Session Plan. It never sees</text>
+    <text x="944" y="526" font-size="13.5" fill="#FFF7EC">a Nickname and never writes a sum.</text>
+  </g>
+
+  <!-- validator -->
+  <g>
+    <rect x="490" y="384" width="300" height="160" rx="20" fill="#3F8FB4"/>
+    <rect x="490" y="380" width="300" height="160" rx="20" fill="#6FB7D6"/>
+    <text x="514" y="416" font-size="21" font-weight="600" fill="#3B2E2A">validator</text>
+    <text x="514" y="446" font-size="13.5" fill="#3B2E2A">Rejects a Hypothesis citing a</text>
+    <text x="514" y="466" font-size="13.5" fill="#3B2E2A">Problem it was not shown, and any</text>
+    <text x="514" y="486" font-size="13.5" fill="#3B2E2A">Plan outside the Plan Space. One</text>
+    <text x="514" y="506" font-size="13.5" fill="#3B2E2A">retry with every reason, then the</text>
+    <text x="514" y="526" font-size="13.5" fill="#3B2E2A">Baseline Plan, so play never stops.</text>
+  </g>
+
+  <!-- next Session -->
+  <g>
+    <rect x="60" y="384" width="300" height="160" rx="20" fill="#D0901E"/>
+    <rect x="60" y="380" width="300" height="160" rx="20" fill="#F2B134"/>
+    <text x="84" y="416" font-size="21" font-weight="600" fill="#3B2E2A">next Session</text>
+    <text x="84" y="446" font-size="13.5" fill="#3B2E2A">Built from the Plan the engine</text>
+    <text x="84" y="466" font-size="13.5" fill="#3B2E2A">accepted: Skills, number ranges,</text>
+    <text x="84" y="486" font-size="13.5" fill="#3B2E2A">structures, review share, length,</text>
+    <text x="84" y="506" font-size="13.5" fill="#3B2E2A">and the Hypothesis under test.</text>
+  </g>
+
+  <!-- arrows -->
+  <line x1="372" y1="210" x2="478" y2="210" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="802" y1="210" x2="908" y2="210" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="1070" y1="292" x2="1070" y2="368" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="908" y1="460" x2="802" y2="460" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="478" y1="460" x2="372" y2="460" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <line x1="210" y1="368" x2="210" y2="292" stroke="#7A6660" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <text x="1082" y="336" font-size="12.5" fill="#7A6660">the Log, never a Problem</text>
+  <text x="222" y="336" font-size="12.5" fill="#7A6660">and the Learner plays it</text>
+
+  <!-- the line -->
+  <text x="60" y="620" font-size="27" font-weight="600" fill="#3B2E2A">The AI can personalise the learning path. It cannot make up the math.</text>
+
+  <!-- legend -->
+  <g>
+    <rect x="60" y="650" width="14" height="14" rx="4" fill="#4CAF7A"/>
+    <text x="82" y="662" font-size="13" fill="#3B2E2A">deterministic: the engine, its evidence, and the checks</text>
+    <rect x="430" y="650" width="14" height="14" rx="4" fill="#6B4E9C"/>
+    <text x="452" y="662" font-size="13" fill="#3B2E2A">generative: the Coach's Hypotheses and Plans</text>
+    <rect x="770" y="650" width="14" height="14" rx="4" fill="#F2B134"/>
+    <text x="792" y="662" font-size="13" fill="#3B2E2A">what the Learner plays</text>
+  </g>
+</svg>
