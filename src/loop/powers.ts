@@ -1,7 +1,7 @@
 /**
- * Ollie's Powers: the abilities Ollie learns when the Learner Masters a
- * strategy, and then visibly uses on every matching Problem. Four exist and
- * no more; each is a pure function of Mastery, so a Power is never bought,
+ * Ollie's Powers: what Ollie learns when the Learner Masters a strategy,
+ * and then visibly uses on every matching Problem. Four exist and no more;
+ * each is a pure function of Mastery, so a Power is never bought,
  * never deducted, and never lost, and it is earned on exactly one Session —
  * the one where the Skill (or the Unit) becomes Mastered.
  */
@@ -18,6 +18,8 @@ export type Power = {
   /** The Power's name, said aloud and written on the Path, in the Parent Area, and in the Parent Summary. */
   readonly name: string;
   readonly mastery: PowerMastery;
+  /** The Unit the Power belongs to: the Path stop it is shown at, and the Unit its Mastery is in. */
+  readonly unit: Unit;
   /** The Skills whose Problems Ollie uses it on. */
   readonly usedOn: readonly SkillId[];
   /** What Ollie does with it, in the Learner's own words. */
@@ -30,6 +32,7 @@ const UNIT_3_SKILLS: readonly SkillId[] = ["result-unknown", "change-unknown"];
 export const POWERS: readonly Power[] = [
   {
     id: "count-on-flight",
+    unit: 2,
     name: "Count-On Flight",
     mastery: { kind: "skill", skill: "counting-on" },
     usedOn: ["counting-on"],
@@ -37,6 +40,7 @@ export const POWERS: readonly Power[] = [
   },
   {
     id: "make-ten-magic",
+    unit: 2,
     name: "Make-Ten Magic",
     mastery: { kind: "skill", skill: "make-a-ten" },
     usedOn: ["make-a-ten"],
@@ -44,6 +48,7 @@ export const POWERS: readonly Power[] = [
   },
   {
     id: "missing-number-detective",
+    unit: 2,
     name: "Missing Number Detective",
     mastery: { kind: "skill", skill: "unknown-addend" },
     usedOn: ["unknown-addend"],
@@ -51,6 +56,7 @@ export const POWERS: readonly Power[] = [
   },
   {
     id: "story-solver",
+    unit: 3,
     name: "Story Solver",
     mastery: { kind: "unit", unit: 3 },
     usedOn: UNIT_3_SKILLS,

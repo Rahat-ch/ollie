@@ -44,17 +44,3 @@ export function PowerMark({ power, size = 40 }: { readonly power: PowerId; reado
     </svg>
   );
 }
-
-/** A Power by name, with its mark, wherever one is listed. */
-export function PowerChip({ power, name }: { readonly power: PowerId; readonly name: string }) {
-  return (
-    <span
-      className="flex items-center gap-2 rounded-pill bg-plum py-1 pr-3 pl-1 font-text text-caption font-bold text-paper"
-      data-testid="power-chip"
-      data-power={power}
-    >
-      <PowerMark power={power} size={24} />
-      {name}
-    </span>
-  );
-}

@@ -304,7 +304,12 @@ h4 {
   .celebrate-in,
   .confetti,
   .milestone,
-  .milestone-rays {
+  .milestone-rays,
+  .hop-beat,
+  .detective-glass,
+  .ten-frame-magic .counter-arrive,
+  .ten-frame-magic .counter-count,
+  .story-page {
     animation-duration: 1ms;
     animation-delay: 0ms;
   }

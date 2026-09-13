@@ -73,21 +73,21 @@ describe("templateStory", () => {
 describe("the rich template sentence", () => {
   it("is a valid Story for every Theme and structure, so Story Solver never falls back to a Story the validator refuses", () => {
     for (const input of inputs("Mia")) {
-      const rich = { ...input, rich: true };
+      const rich = { ...input, set: "rich" as const };
       expect(validateStory(templateStory(rich), rich)).toEqual({ ok: true });
     }
   });
 
   it("sets the scene where the Theme happens, which the plain sentence does not", () => {
     const plain = { ...addTo(7, 5) };
-    expect(templateStory({ ...plain, rich: true })).toBe(
+    expect(templateStory({ ...plain, set: "rich" as const })).toBe(
       "Mia plays at the park with 7 puppies. Then 5 more puppies come along, so how many puppies are there now?",
     );
     expect(templateStory(plain)).not.toContain("park");
   });
 
   it("keeps the singular, so it never says 1 puppies", () => {
-    expect(templateStory({ ...addTo(1, 1), rich: true })).toBe(
+    expect(templateStory({ ...addTo(1, 1), set: "rich" as const })).toBe(
       "Mia plays at the park with 1 puppy. Then 1 more puppy comes along, so how many puppies are there now?",
     );
   });

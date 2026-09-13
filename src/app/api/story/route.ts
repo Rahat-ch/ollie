@@ -15,7 +15,7 @@ import { storyFor } from "@/lib/story-service";
 import { storyProblemIssue, storyProblemShape } from "@/story/request";
 
 const StoryRequestSchema = z
-  .strictObject({ ...storyProblemShape, variant: z.int().min(0).optional(), rich: z.boolean().optional() })
+  .strictObject({ ...storyProblemShape, variant: z.int().min(0).optional(), set: z.enum(["plain", "rich"]).optional() })
   .check((ctx) => {
     const issue = storyProblemIssue(ctx.value);
     if (issue) ctx.issues.push({ code: "custom", input: ctx.value, path: [issue.path], message: issue.message });

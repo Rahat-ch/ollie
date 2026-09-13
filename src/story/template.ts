@@ -15,7 +15,7 @@ export function templateStory(input: StoryInput, thing = 0): string {
   const { things, where } = themeVocabulary(input.theme);
   const shape = storyShape(input.structure);
   const counted = things[thing % things.length];
-  return input.rich
+  return input.set === "rich"
     ? shape.rich(input.nickname, input.equation, counted, where)
     : shape.template(input.nickname, input.equation, counted);
 }

@@ -3,6 +3,7 @@
 import { getSkill, powerFor } from "@/loop";
 import type { Power, SessionResult } from "@/loop";
 import { Ollie } from "@/ollie/Ollie";
+import { poseFor } from "@/ollie/powers";
 import { MASTERED_LINE, milestoneLine, powerLine, SESSION_DONE, streakLine } from "@/play/lines";
 import { useSpeech } from "@/play/use-speech";
 import type { Award } from "@/rewards/rewards";
@@ -138,7 +139,7 @@ export function Celebration({ result, award, onDone }: CelebrationProps) {
         {headline}
       </h1>
       <div className="flex items-center justify-center gap-12">
-        <Ollie pose={powers[0]?.id ?? "celebrate"} speaking={speaking} size={300} />
+        <Ollie pose={powers.length > 0 ? poseFor(powers[0].id) : "celebrate"} speaking={speaking} size={300} />
         <div className="flex w-90 flex-col gap-5">
           <div className="rounded-card bg-paper-2 px-6 py-5 shadow-card">
             <div className="font-text text-caption text-ink-soft">This Session</div>

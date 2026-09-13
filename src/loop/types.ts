@@ -19,7 +19,7 @@ export type SkillRef = { readonly skill: SkillId; readonly name: string };
 
 export type Visual = "ten-frame" | "number-line" | "theme-picture";
 
-/** The four abilities Ollie learns from Mastery; the catalogue is in powers.ts. */
+/** The four Powers Mastery teaches Ollie; the catalogue is in powers.ts. */
 export type PowerId = "count-on-flight" | "make-ten-magic" | "missing-number-detective" | "story-solver";
 
 /** Inclusive bounds on the number a Skill's template family draws. */

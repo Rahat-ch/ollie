@@ -28,10 +28,10 @@ describe("POST /api/story", () => {
 
   it("answers the rich set apart from the plain one, so Story Solver hears its own Story", async () => {
     delete process.env.ANTHROPIC_API_KEY;
-    const response = await post({ ...body, rich: true });
+    const response = await post({ ...body, set: "rich" });
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({
-      text: templateStory({ ...body, nickname: NICKNAME_PLACEHOLDER, rich: true }),
+      text: templateStory({ ...body, nickname: NICKNAME_PLACEHOLDER, set: "rich" as const }),
       source: "template",
     });
   });

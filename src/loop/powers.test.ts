@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { alwaysFirstTry, alwaysRevealed, newProfile, runSession, type ProfileState, type SessionPlan } from "@/loop";
+import { alwaysFirstTry, alwaysRevealed, getSkill, newProfile, runSession, type ProfileState, type SessionPlan } from "@/loop";
 import { profileWithMastered } from "@/loop/testing";
 import { getSimulatedLearner, simulatedLearner } from "@/evals/learners";
 import { POWERS, powerFor, powersEarned, powersFor, powerUsedOn, withPowers } from "./powers";
@@ -25,6 +25,13 @@ describe("the four Powers", () => {
       "Missing Number Detective",
       "Story Solver",
     ]);
+  });
+
+  it("belongs to the Unit that teaches it, so the Path stop and the catalogue can never drift apart", () => {
+    for (const power of POWERS) {
+      const unit = power.mastery.kind === "skill" ? getSkill(power.mastery.skill).unit : power.mastery.unit;
+      expect(power.unit).toBe(unit);
+    }
   });
 
   it("is taught by Mastering counting on, make-a-ten, unknown addend, and Unit 3", () => {
@@ -99,29 +106,34 @@ describe("finishSession returns the Powers the Session earned", () => {
 });
 
 describe("a Simulated Learner's Mastery transitions", () => {
-  /** Twenty Sessions of one Skill, as the eval command runs them: every Power earned, in order. */
-  function playOut(id: Parameters<typeof getSimulatedLearner>[0], skill: Parameters<typeof plan>[0]) {
+  /** Sessions of one Skill, as the eval command runs them: the Powers earned, in the Session each was earned on. */
+  function playOut(id: Parameters<typeof getSimulatedLearner>[0], skill: Parameters<typeof plan>[0], sessions: number) {
     const policy = simulatedLearner(getSimulatedLearner(id));
     let profile: ProfileState = unit1();
-    const earned: string[] = [];
-    for (let session = 1; session <= 20; session++) {
+    const earned: { session: number; power: string }[] = [];
+    for (let session = 1; session <= sessions; session++) {
       const result = runSession(plan(skill), profile, `seed-${id}`, policy);
-      earned.push(...result.powersEarned);
+      for (const power of result.powersEarned) earned.push({ session, power });
       profile = result.profile;
     }
     return { profile, earned };
   }
 
   it("teaches Ollie Count-On Flight once, however many Sessions the strong Learner plays after it", () => {
-    const { profile, earned } = playOut("strong", "counting-on");
+    const { profile, earned } = playOut("strong", "counting-on", 20);
     expect(profile.skills["counting-on"].mastered).toBe(true);
-    expect(earned).toEqual(["count-on-flight"]);
+    expect(earned).toEqual([{ session: 1, power: "count-on-flight" }]);
   });
 
-  it("teaches Ollie nothing while the weak Learner has not Mastered the Skill", () => {
-    const { profile, earned } = playOut("weak", "make-a-ten");
-    expect(profile.skills["make-a-ten"].mastered).toBe(earned.length > 0);
-    expect(earned.length).toBeLessThanOrEqual(1);
+  it("teaches Ollie nothing over the Sessions the weak Learner takes to Master the Skill, and the Power on the one that does", () => {
+    // The weak Learner Masters make-a-ten on the eighth Session of it.
+    const before = playOut("weak", "make-a-ten", 7);
+    expect(before.profile.skills["make-a-ten"].mastered).toBe(false);
+    expect(before.earned).toEqual([]);
+
+    const after = playOut("weak", "make-a-ten", 20);
+    expect(after.profile.skills["make-a-ten"].mastered).toBe(true);
+    expect(after.earned).toEqual([{ session: 8, power: "make-ten-magic" }]);
   });
 });
 

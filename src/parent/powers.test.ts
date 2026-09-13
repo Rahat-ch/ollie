@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { POWERS } from "@/loop";
 import { powerRows } from "./powers";
 
 describe("powerRows", () => {
@@ -20,7 +21,20 @@ describe("powerRows", () => {
     ]);
   });
 
-  it("says what Ollie does with each Power, so the Parent knows what changed on screen", () => {
-    expect(powerRows([])[0].does).toBe("Ollie flies the hops on the number line, one wing beat for each one.");
+  it("says what Ollie does with each Power in a sentence of its own, so the Parent knows what changed on screen", () => {
+    const rows = powerRows([]);
+    expect(new Set(rows.map((row) => row.does)).size).toBe(rows.length);
+    for (const row of rows) {
+      expect(row.does.startsWith("Ollie ")).toBe(true);
+      expect(row.does.endsWith(".")).toBe(true);
+      // Every one of them says what it does with, which is what the Learner sees change.
+      expect(row.does).toMatch(/number line|ten-frame|magnifying glass|story book/);
+    }
+  });
+
+  it("lists every Power there is, in the order they are learned, and marks nothing else", () => {
+    const rows = powerRows(POWERS.map((power) => power.id));
+    expect(rows.map((row) => row.id)).toEqual(POWERS.map((power) => power.id));
+    expect(rows.every((row) => row.learned)).toBe(true);
   });
 });

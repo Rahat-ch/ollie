@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
 import { awaitCoach } from "@/coach";
-import { hintFor, powerUsedOn, withPowers } from "@/loop";
+import { hintFor, powerUsedOn } from "@/loop";
 import type { PowerId, Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
+import { poseFor } from "@/ollie/powers";
 import { cheerFor, revealLine } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
 import { storySpeechRequest } from "@/play/speech-pool";
@@ -42,7 +43,7 @@ type ProblemPhase = Exclude<Phase, { kind: "celebration" }>;
  */
 function olliePose(phasePose: OlliePose | "idle", power: PowerId | null, speaking: boolean): OlliePose {
   if (phasePose !== "idle") return phasePose;
-  if (power) return power;
+  if (power) return poseFor(power);
   return speaking ? "talking" : "idle";
 }
 
@@ -99,26 +100,27 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
 
   useEffect(() => {
     if (phase.kind === "celebration") {
-      const { profile: progress, powersEarned } = phase.result;
+      const { profile: progress } = phase.result;
       // The Session's Coins and Streak land with its progress, and only once: a
       // Session that has already paid adds nothing when it is celebrated again.
-      // The Powers it taught Ollie are added to the ones already held, which
-      // are never taken away, so celebrating it again changes nothing. The
-      // Session itself waits on the record until a Coach run writes it, so
-      // the run outlives this screen and a reload, and the Powers it earned
-      // wait with it, for the Parent Summary to name.
+      // The Powers are the reducer's, which added what this Session taught to
+      // the ones already held and never takes one away, so celebrating the
+      // same Session again changes nothing. The Session itself waits on the
+      // record until a Coach run writes it, so the run outlives this screen
+      // and a reload, and the Powers it earned wait with it, for the Parent
+      // Summary to name.
       profileStore.update((current) => ({
         ...current,
         progress,
         rewards: phase.award.rewards,
-        powers: withPowers(current.powers, powersEarned),
+        powers,
         session: null,
         coach: awaitCoach(current.coach, phase.result),
       }));
     } else {
       profileStore.update((current) => ({ ...current, session }));
     }
-  }, [phase, session]);
+  }, [phase, session, powers]);
 
   useEffect(() => {
     if (phase.kind !== "correct") return;

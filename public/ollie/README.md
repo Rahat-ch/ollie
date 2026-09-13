@@ -40,6 +40,7 @@ All pose files use `viewBox="0 0 240 240"`. Body spans roughly x 43–198, y 36�
 - Eyes: move `#eye-left`/`#eye-right` iris + pupil + catchlight together for a look; never move the white. Blink by scaling the eye group at its centre (90, 92) / (150, 92) on the y axis.
 - Brows are translated 2–9 px per pose; beak variants are separate path sets in `#beak`.
 - Idle breathing: scale `#body`, `#belly`, `#face` about (120, 208) (the feet).
+- `#prop` is empty in the base states; where a Power pose has one, its animation turns about the prop's own middle: the ten-frame chip at **(30, 47)** (make-ten-magic), the magnifying glass at **(208, 34)** (missing-number-detective), and the book's spine at **(120, 167)** (story-solver). Count-On Flight's wing-beat arcs are not moved on their own: the wings carry them.
 
 ## How poses differ
 

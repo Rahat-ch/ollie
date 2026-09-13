@@ -67,7 +67,7 @@ for (const [name, value] of [["variants", variants], ["limit", limit], ["concurr
 async function main(): Promise<void> {
   const { generation, storyName } = await chooseGeneration(values.fake ? "fake" : "real");
   let pool: ContentPool = await readPoolFile(values.out);
-  const wanted = poolInputs(themes, range, values.rich);
+  const wanted = poolInputs(themes, range, values.rich ? "rich" : "plain");
   const jobs: PoolInput[] = wanted.flatMap((input) => Array<PoolInput>(Math.max(0, variants - poolVariants(pool, input).length)).fill(input));
   const todo = jobs.slice(0, limit);
   console.log(`Stories: ${storyName}. Pool: ${values.out} (${Object.keys(pool).length} keys).`);

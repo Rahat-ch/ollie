@@ -24,10 +24,11 @@ export type StoryShape = {
 /** `7 puppies` or `1 puppy`. */
 const count = (n: number, { one, many }: Thing): string => `${n} ${n === 1 ? one : many}`;
 
-/** `7 puppies come` or `1 puppy comes`. */
+/** `7 more puppies come` or `1 more puppy comes`. */
 const arrive = (n: number, { one, many }: Thing): string => `${n} more ${n === 1 ? `${one} comes` : `${many} come`}`;
 
-const isOne = (n: number): string => (n === 1 ? "is" : "are");
+/** The verb that goes with a count: `there is 1 puppy`, `there are 7 puppies`. */
+const isOrAre = (n: number): string => (n === 1 ? "is" : "are");
 
 const wholeMinusOne = (whole: number): number => whole - 1;
 const changeUpToNine = (whole: number): number => Math.min(9, whole - 1);
@@ -70,7 +71,7 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     template: (who, { left, result }, thing) =>
       `${who} had ${count(left, thing)}. Now there are ${count(result, thing)}, so how many ${thing.many} came?`,
     rich: (who, { left, result }, thing, where) =>
-      `${who} had ${count(left, thing)} ${where}. Now there ${isOne(result)} ${count(result, thing)}, so how many ${thing.many} came along?`,
+      `${who} had ${count(left, thing)} ${where}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} came along?`,
     equation: (whole, part) => ({ left: whole - part, op: "+", right: part, result: whole, unknown: "right" }),
     maxPart: changeUpToNine,
   },
@@ -79,9 +80,9 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     describe: ({ left, result }) =>
       `There are ${left} at the start. Some go away, and now there are ${result}. Ask how many went away. Never say how many went away.`,
     template: (who, { left, result }, thing) =>
-      `${who} had ${count(left, thing)}. Now there ${isOne(result)} ${count(result, thing)}, so how many ${thing.many} went away?`,
+      `${who} had ${count(left, thing)}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} went away?`,
     rich: (who, { left, result }, thing, where) =>
-      `${who} had ${count(left, thing)} ${where}. Now there ${isOne(result)} ${count(result, thing)}, so how many ${thing.many} went home?`,
+      `${who} had ${count(left, thing)} ${where}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} went home?`,
     equation: (whole, part) => ({ left: whole, op: "-", right: part, result: whole - part, unknown: "right" }),
     maxPart: changeUpToNine,
   },

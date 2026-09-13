@@ -87,7 +87,7 @@ describe("the Content Pool", () => {
 });
 
 describe("the rich Story set, which the Story Solver Power opens", () => {
-  const rich: PoolInput = { ...input, rich: true };
+  const rich: PoolInput = { ...input, set: "rich" as const };
 
   it("is keyed apart from the plain set, so one Problem has a Story in each", () => {
     expect(poolKey(rich)).toBe("rich/puppies/result-unknown/add-to/7+5=12");

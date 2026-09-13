@@ -9,6 +9,7 @@
  */
 import { useEffect, useState } from "react";
 import type { PowerId, Problem, ProblemId } from "@/loop";
+import type { StorySet } from "@/generation/types";
 import type { Identity } from "@/profile/identity";
 import { BUNDLED_POOL } from "@/story/bundled";
 import { withNickname } from "@/story/nickname";
@@ -27,10 +28,10 @@ export const STORY_TIMEOUT_MS = 8000;
 
 export type StoryLines = ReadonlyMap<ProblemId, StoryLine>;
 
-function fromBundledPool(problems: readonly Problem[], theme: Identity["theme"], nickname: string, rich: boolean): Map<ProblemId, StoryLine> {
+function fromBundledPool(problems: readonly Problem[], theme: Identity["theme"], nickname: string, set: StorySet): Map<ProblemId, StoryLine> {
   const lines = new Map<ProblemId, StoryLine>();
   for (const problem of problems) {
-    const text = pooledStory(BUNDLED_POOL, problem, theme, rich);
+    const text = pooledStory(BUNDLED_POOL, problem, theme, set);
     if (text !== undefined) lines.set(problem.id, { text: withNickname(text, nickname), source: "pool" });
   }
   return lines;
@@ -62,22 +63,22 @@ export function useStories(problems: readonly Problem[], identity: Identity, pow
   const { theme, nickname } = identity;
   // Story Solver is Ollie's Power on every Unit 3 Problem, so one read of the
   // held Powers says which set this Session's Stories come from.
-  const rich = powers.includes("story-solver");
-  const [lines, setLines] = useState<StoryLines>(() => fromBundledPool(problems, theme, nickname, rich));
+  const set: StorySet = powers.includes("story-solver") ? "rich" : "plain";
+  const [lines, setLines] = useState<StoryLines>(() => fromBundledPool(problems, theme, nickname, set));
 
   // Problem IDs are unique across the Profile's history, so a line is never stale.
   useEffect(() => {
     const controller = new AbortController();
     for (const problem of problems) {
-      const input = storyInputFor(problem, theme, rich);
-      if (!input || pooledStory(BUNDLED_POOL, problem, theme, rich) !== undefined) continue;
+      const input = storyInputFor(problem, theme, set);
+      if (!input || pooledStory(BUNDLED_POOL, problem, theme, set) !== undefined) continue;
       void fetchStory(input, variantFor(problem), nickname, controller.signal).then((line) => {
         if (controller.signal.aborted) return;
         setLines((current) => new Map(current).set(problem.id, line));
       });
     }
     return () => controller.abort();
-  }, [problems, theme, nickname, rich]);
+  }, [problems, theme, nickname, set]);
 
   // A Story is voiced with the Nickname in it, which the server renders once
   // and adds to the Pool, so it is asked for the moment the Story is known

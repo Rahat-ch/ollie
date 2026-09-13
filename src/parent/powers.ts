@@ -16,9 +16,7 @@ export type PowerRow = {
 };
 
 const from = (power: Power): string =>
-  power.mastery.kind === "skill"
-    ? getSkill(power.mastery.skill).name
-    : `Unit ${power.mastery.unit} · ${unitName(power.mastery.unit)}`;
+  power.mastery.kind === "skill" ? getSkill(power.mastery.skill).name : `Unit ${power.unit} · ${unitName(power.unit)}`;
 
 export function powerRows(held: readonly PowerId[]): PowerRow[] {
   return POWERS.map((power) => ({

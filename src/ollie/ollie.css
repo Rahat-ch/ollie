@@ -71,7 +71,7 @@
   animation: ollie-lift calc(var(--duration-celebrate) * 2) var(--ease-celebrate) 2;
 }
 .ollie-make-ten-magic [data-part="prop"] {
-  transform-origin: 120px 120px;
+  transform-origin: 30px 47px;
   animation: ollie-sparkle calc(var(--duration-celebrate) * 2) ease-in-out 3;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .ollie-story-solver [data-part="prop"] {
-  transform-origin: 120px 150px;
+  transform-origin: 120px 167px;
   animation: ollie-open-book calc(var(--duration-celebrate) * 2) var(--ease-celebrate) both;
 }
 

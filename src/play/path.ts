@@ -2,7 +2,7 @@
  * The Path on the home screen: the three Units in order, where the Learner
  * is, and the Powers Ollie has learned at each of them.
  */
-import { getSkill, isUnitUnlocked, POWERS, SKILLS, unitName } from "@/loop";
+import { isUnitUnlocked, POWERS, SKILLS, unitName } from "@/loop";
 import type { Power, PowerId, ProfileState, Unit } from "@/loop";
 
 export type PathStop = {
@@ -12,10 +12,6 @@ export type PathStop = {
   /** The Powers Ollie has learned here, in the order they are learned. */
   readonly powers: readonly Power[];
 };
-
-/** The Unit whose Mastery teaches a Power: its Skill's Unit, or the Unit itself. */
-const unitOf = (power: Power): Unit =>
-  power.mastery.kind === "skill" ? getSkill(power.mastery.skill).unit : power.mastery.unit;
 
 /** A Unit is done when every one of its Skills is Mastered. */
 export function pathStops(progress: ProfileState, held: readonly PowerId[]): PathStop[] {
@@ -27,7 +23,7 @@ export function pathStops(progress: ProfileState, held: readonly PowerId[]): Pat
       unit,
       name: unitName(unit),
       state: done ? "done" : open ? "current" : "locked",
-      powers: POWERS.filter((power) => held.includes(power.id) && unitOf(power) === unit),
+      powers: POWERS.filter((power) => held.includes(power.id) && power.unit === unit),
     };
   });
 }
