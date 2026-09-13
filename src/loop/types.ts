@@ -14,6 +14,9 @@ export type SkillId =
 
 export type Unit = 1 | 2 | 3;
 
+/** A Skill named for a reader: the id the engine uses and the name a Parent sees. */
+export type SkillRef = { readonly skill: SkillId; readonly name: string };
+
 export type Visual = "ten-frame" | "number-line" | "theme-picture";
 
 /** The four abilities Ollie learns from Mastery; the catalogue is in powers.ts. */

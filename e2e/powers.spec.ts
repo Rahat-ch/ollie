@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { asked, COUNTING_ON_PROFILE, key, playSession, readProfile, seedProfile, storedProblems, type StoredProblem } from "./play";
+import { asked, COUNTING_ON_PROFILE, key, openParentArea, playSession, readProfile, storedProblems, writeProfile, type StoredProblem } from "./play";
 
 // Several Sessions end to end, each Problem waiting on Ollie's beat: more than the default budget.
 test.slow();
@@ -10,7 +10,7 @@ test("Mastering counting on teaches Ollie Count-On Flight: the celebration is th
     if (!request.url().startsWith(baseURL!)) offHost.push(request.url());
   });
 
-  await seedProfile(page, COUNTING_ON_PROFILE);
+  await writeProfile(page, COUNTING_ON_PROFILE);
 
   // Before the Power there is nothing on the Path.
   await page.goto("/");
@@ -80,13 +80,7 @@ test("Mastering counting on teaches Ollie Count-On Flight: the celebration is th
   // A reload keeps the Power: on the Path, and by name in the Parent Area.
   await page.goto("/");
   await expect(page.getByTestId("path-power")).toHaveAttribute("data-power", "count-on-flight");
-  await page.goto("/parent");
-  const gate = page.getByRole("button", { name: "Hold to open the Parent Area" });
-  await gate.hover();
-  await page.mouse.down();
-  await page.waitForTimeout(3400);
-  await page.mouse.up();
-  await expect(page.getByTestId("parent-area")).toBeVisible();
+  await openParentArea(page);
   const rows = page.getByTestId("power-row");
   await expect(rows).toHaveCount(4);
   await expect(rows).toHaveText([/Count-On Flight/, /Make-Ten Magic/, /Missing Number Detective/, /Story Solver/]);

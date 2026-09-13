@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Ollie } from "@/ollie/Ollie";
 import { greeting } from "@/play/lines";
 import { pathStops } from "@/play/path";
+import { useSessionCoach } from "@/play/use-coach";
 import { useSpeech } from "@/play/use-speech";
 import { useProfile } from "@/profile/store";
 import { streakToday } from "@/rewards/rewards";
@@ -30,6 +31,9 @@ function PlayIcon() {
 /** Ollie, the Avatar, the Path, and one big Play button; onboarding until the Profile has an identity. */
 export function Home() {
   const profile = useProfile();
+  // A Session waiting for its Coach run is run from here too, so a reload
+  // between the celebration and the next Session does not lose it.
+  useSessionCoach(profile);
   const identity = profile?.identity ?? null;
   const line = identity ? greeting(identity.nickname) : "";
   // The greeting is the one fixed line with the Nickname in it, so it is

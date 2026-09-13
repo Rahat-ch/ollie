@@ -3,6 +3,7 @@ import type { LearnerNotes, SessionResult } from "@/loop";
 import { formatEquation } from "@/loop/format";
 import { parseCoachOutput } from "@/generation/coach-schema";
 import type { CoachEvidence, CoachInput, CoachOutput, Generation } from "@/generation/types";
+import { errorMessage, isUnavailable } from "@/lib/errors";
 import type { CoachRejection, CoachStep } from "./types";
 
 /**
@@ -58,17 +59,16 @@ export function checkCoachOutput(value: unknown, result: SessionResult, notes: L
 
 type CoachCall =
   | { readonly ok: true; readonly output: CoachOutput }
-  | { readonly ok: false; readonly output?: CoachOutput; readonly reasons: readonly string[] };
-
-const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+  | { readonly ok: false; readonly output?: CoachOutput; readonly reasons: readonly string[]; readonly unavailable?: boolean };
 
 /**
  * One call to the Coach, checked. A thrown error (the network, the schema
  * gate in the adapter) is a rejection like any other, with the message as
- * its reason and no output to show the retry.
+ * its reason and no output to show the retry; a Coach that could not be
+ * reached at all is marked, because there is nothing to retry.
  */
 async function callCoach(
-  generation: Generation,
+  generation: Pick<Generation, "runCoach">,
   input: CoachInput,
   result: SessionResult,
   notes: LearnerNotes,
@@ -78,7 +78,7 @@ async function callCoach(
   try {
     output = await generation.runCoach(input);
   } catch (error) {
-    return { ok: false, reasons: [errorMessage(error)] };
+    return { ok: false, reasons: [errorMessage(error)], unavailable: isUnavailable(error) };
   }
   const check = checkCoachOutput(output, result, notes);
   if (check.ok) return check;
@@ -87,7 +87,13 @@ async function callCoach(
 
 /** A rejection carrying the rejected output when there was one. */
 function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: false }): CoachRejection {
-  return call.output ? { attempt, reasons: call.reasons, output: call.output } : { attempt, reasons: call.reasons };
+  const rejection = { attempt, reasons: call.reasons, ...(call.unavailable ? { unavailable: true } : {}) };
+  return call.output ? { ...rejection, output: call.output } : rejection;
+}
+
+/** The Baseline Plan with the Notes as they stood before the Session, so play never stops. */
+function baselineStep(result: SessionResult, notes: LearnerNotes, rejections: readonly CoachRejection[]): CoachStep {
+  return { notes, plan: baselinePlan(result.profile), source: "baseline", rejections };
 }
 
 /**
@@ -95,10 +101,12 @@ function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: fa
  * output if the engine allows it; otherwise retry once with the rejected
  * output and every reason. After a failed retry the engine uses the
  * Baseline Plan, keeps the Notes from before the Session, and records both
- * rejections, so play never stops.
+ * rejections, so play never stops. A Coach that could not be reached at all
+ * is not retried: there is no output to fix and no reason to think a second
+ * call would arrive, so the Baseline Plan is used at once.
  */
 export async function coachSession(
-  generation: Generation,
+  generation: Pick<Generation, "runCoach">,
   result: SessionResult,
   notes: LearnerNotes,
 ): Promise<CoachStep> {
@@ -106,6 +114,7 @@ export async function coachSession(
   const first = await callCoach(generation, input, result, notes);
   if (first.ok) return { ...first.output, source: "coach", rejections: [] };
   const rejection = rejected(1, first);
+  if (first.unavailable) return baselineStep(result, notes, [rejection]);
   const retry = await callCoach(
     generation,
     { ...input, rejected: { output: first.output, reasons: first.reasons } },
@@ -113,10 +122,5 @@ export async function coachSession(
     notes,
   );
   if (retry.ok) return { ...retry.output, source: "retry", rejections: [rejection] };
-  return {
-    notes,
-    plan: baselinePlan(result.profile),
-    source: "baseline",
-    rejections: [rejection, rejected(2, retry)],
-  };
+  return baselineStep(result, notes, [rejection, rejected(2, retry)]);
 }

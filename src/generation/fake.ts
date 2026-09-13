@@ -1,4 +1,5 @@
 import { getSkill } from "@/loop";
+import { evidenceParts } from "@/summary/assistance";
 import { templateStory } from "@/story/template";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
 import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
@@ -94,11 +95,23 @@ async function writeStory(input: StoryInput): Promise<StoryOutput> {
   return { text: templateStory(input, 1) };
 }
 
-/** Two fixed sentences about the Session, nothing about how the Learner was thinking. */
-async function writeSummary({ log }: SummaryInput): Promise<SummaryOutput> {
-  return {
-    text: `Session ${log.sessionNumber} had ${log.entries.length} Problems. Ollie's Notebook has what to try next.`,
-  };
+/**
+ * The Session's own tally in plain sentences, and an activity for the
+ * weakest Skill: a valid Parent Summary, so tests and the eval command read
+ * as a Summary and not as the template fallback. It claims nothing about
+ * how the Learner was thinking, because it says nothing the Log did not.
+ */
+async function writeSummary(input: SummaryInput): Promise<SummaryOutput> {
+  const practiced = [
+    `Your child answered ${input.problems} Problems in Session ${input.sessionNumber}.`,
+    ...input.practice.map((row) => `${row.name}: ${evidenceParts(row, true).join(", ")}.`),
+    ...input.mastered.map((name) => `${name} is Mastered.`),
+    ...input.powers.map((name) => `Ollie learned ${name}.`),
+  ].join(" ");
+  const activity = input.weakest
+    ? `Practise ${input.weakest.name} together at bedtime and let your child show you how Ollie asks it.`
+    : "Play the next Session together and let your child show you how Ollie asks the Problems.";
+  return { practiced, activity };
 }
 
 /**

@@ -139,7 +139,7 @@ The deterministic eval that every Problem ID a Hypothesis cites exists in the Lo
 _Avoid_: hallucination check, grounding score
 
 **Judge**:
-The Opus 5 rubric grader used only where a deterministic check cannot apply: Story readability and theme fit, Parent Summary faithfulness to the Session Log.
+Opus 5 reading against a written rubric, used only where a deterministic check cannot apply: Story readability and theme fit, Parent Summary faithfulness to the Session Log.
 _Avoid_: grader, evaluator, LLM-as-judge
 
 **Calibration Set**:

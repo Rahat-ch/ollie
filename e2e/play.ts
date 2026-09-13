@@ -42,6 +42,28 @@ export async function playSession(page: Page): Promise<void> {
   await expect(page.getByTestId("celebration")).toBeVisible();
 }
 
+/** Rewrite parts of the stored Profile in the browser: the progress, or the record the Coach has left. */
+export async function seedProfile(page: Page, patch: Record<string, unknown>): Promise<void> {
+  await page.evaluate(
+    ([k, changes]) => {
+      const profile = JSON.parse(localStorage.getItem(k as string)!);
+      localStorage.setItem(k as string, JSON.stringify({ ...profile, ...(changes as object) }));
+    },
+    [PROFILE_KEY, patch] as const,
+  );
+}
+
+/** Hold the Parent Gate until the Parent Area opens. */
+export async function openParentArea(page: Page): Promise<void> {
+  await page.goto("/parent");
+  const gate = page.getByRole("button", { name: "Hold to open the Parent Area" });
+  await gate.hover();
+  await page.mouse.down();
+  await page.waitForTimeout(3400);
+  await page.mouse.up();
+  await expect(page.getByTestId("parent-area")).toBeVisible();
+}
+
 /**
  * Rewrite the Profile's rewards in the browser, as though the Learner had
  * been playing for days, and the Sessions the Loop counts with them.
@@ -93,11 +115,12 @@ export const UNIT_3_PROFILE = {
  * A Profile one Session away from teaching Ollie Count-On Flight: Unit 1
  * Mastered so the Baseline plans counting on, one Session played, and four
  * first attempts at counting on already correct, so the six Problems of the
- * next Session carry it over the 8-of-10 rule. Stored as version 4, before
- * Powers existed, so the browser runs the migration too.
+ * next Session carry it over the 8-of-10 rule. Stored as version 5, the
+ * version deployed before Powers existed, with the Coach's own record and
+ * no Powers, so the browser runs the migration too.
  */
 export const COUNTING_ON_PROFILE = {
-  version: 4,
+  version: 5,
   seed: "e2e-counting-on",
   identity: { nickname: "Mia", avatarColor: "sky", theme: "space" },
   progress: {
@@ -114,11 +137,23 @@ export const COUNTING_ON_PROFILE = {
     },
   },
   rewards: { coins: 0, lastSessionPaid: 1, streak: 1, lastSessionDay: null, freezes: 2, owned: [], worn: { hat: null, accessory: null, pet: null } },
+  coach: {
+    notes: { hypotheses: [], strengths: [] },
+    plan: null,
+    source: null,
+    reasons: [],
+    unavailable: false,
+    lastSessionCoached: 0,
+    cited: [],
+    changed: [],
+    summaries: [],
+    awaiting: null,
+  },
   session: null,
 };
 
-/** Write a Profile to the device, as though the Learner had been playing on it. */
-export async function seedProfile(page: Page, profile: unknown): Promise<void> {
+/** Write a whole Profile to the device, as though the Learner had been playing on it. */
+export async function writeProfile(page: Page, profile: unknown): Promise<void> {
   await page.goto("/");
   await page.evaluate(([k, value]) => localStorage.setItem(k as string, JSON.stringify(value)), [PROFILE_KEY, profile] as const);
 }

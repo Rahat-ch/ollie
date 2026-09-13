@@ -12,8 +12,8 @@ import { THEMES } from "@/profile/identity";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { writeValidStory, type StoryRejection } from "@/story/write";
 import { STORY_CALIBRATION_SET } from "./calibration";
-import { calibrateJudge, type Calibration, type Judge, type StoryJudgement } from "./judge";
-import { share } from "./stats";
+import { calibrateJudge, type Calibration, type Judge, type Judgement } from "./judge";
+import { share, writtenValidity, type Validity } from "./stats";
 
 const UNIT_3: readonly SkillId[] = ["result-unknown", "change-unknown"];
 
@@ -36,20 +36,11 @@ export type StoryTrace = {
   readonly source: "story" | "template";
   readonly rejections: readonly StoryRejection[];
   /** The Judge's verdict on a valid Story; absent for a template. */
-  readonly judged?: StoryJudgement;
+  readonly judged?: Judgement;
 };
 
-export type StoryValidity = {
-  readonly sample: number;
-  readonly attempts: number;
-  /** Stories valid on the model's first attempt, over the sample. */
-  readonly firstAttemptRate: number;
-  /** Stories that ended as a model Story (within the bounded attempts), over the sample. */
-  readonly validRate: number;
-  readonly templates: number;
-  /** Every rejection reason seen, most frequent first. */
-  readonly rejectionReasons: readonly { readonly reason: string; readonly count: number }[];
-};
+/** The Stories' share of the shared validity shape. */
+export type StoryValidity = Validity;
 
 export type StoryReadability = {
   readonly judged: number;
@@ -83,28 +74,6 @@ export type StoryEvalOptions = {
 /** A rejection reason without its particulars, so the same kind of failure counts together. */
 const reasonKind = (reason: string): string => reason.replace(/\d+(, \d+)*/g, "n").replace(/vocabulary: .*$/, "vocabulary").replace(/the Nickname .* is missing/, "the Nickname is missing");
 
-function validity(traces: readonly StoryTrace[]): StoryValidity {
-  const counts = new Map<string, number>();
-  let attempts = 0;
-  for (const trace of traces) {
-    attempts += trace.rejections.length + (trace.source === "story" ? 1 : 0);
-    for (const rejection of trace.rejections) {
-      for (const reason of rejection.reasons) {
-        const kind = reasonKind(reason);
-        counts.set(kind, (counts.get(kind) ?? 0) + 1);
-      }
-    }
-  }
-  return {
-    sample: traces.length,
-    attempts,
-    firstAttemptRate: share(traces.filter((t) => t.source === "story" && t.rejections.length === 0).length, traces.length),
-    validRate: share(traces.filter((t) => t.source === "story").length, traces.length),
-    templates: traces.filter((t) => t.source === "template").length,
-    rejectionReasons: [...counts].map(([reason, count]) => ({ reason, count })).sort((a, b) => b.count - a.count || a.reason.localeCompare(b.reason)),
-  };
-}
-
 export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryReport> {
   const { generation, judge } = options;
   const sample = options.sample ?? storySample();
@@ -113,7 +82,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
     const story = await writeValidStory(generation, input);
     return { input, ...story };
   });
-  const calibration = await calibrateJudge(judge, STORY_CALIBRATION_SET);
+  const calibration = await calibrateJudge(STORY_CALIBRATION_SET, (story) => judge.judgeStory(story));
   let stories = written;
   let readability: StoryReadability | null = null;
   if (calibration.passes) {
@@ -126,7 +95,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
   }
   return {
     generation: options.name,
-    validity: validity(stories),
+    validity: writtenValidity(stories, reasonKind),
     judge: { name: options.judgeName, calibration, readability },
     stories,
   };
