@@ -57,6 +57,10 @@ Scale on tablet (px / line-height): display-xl 64/1.05, display-l 44/1.1, displa
 
 Tablet landscape first: 1024×768 design frame, 32px page gutter, content max 960. Learner screens have one primary action, big and centred low on the screen where a thumb rests. Ollie sits bottom-left on Learner screens and speaks in a paper bubble. The Parent Area is denser, text-first, still on paper.
 
+## The illustration pass
+
+Every asset was drawn to this document in ticket 15: Ollie's nine SVGs, the six Theme pictures, the four Avatar bases and the six Avatar Items, the four Power marks, the Coin and the Streak's flame, and the celebration and milestone art. `pnpm design:review` puts each one beside the line above that asks for it, with screenshots of the real screens, in `docs/design/review-<date>.html`; `/design-review` is the same page inside the app. The size budget and what was measured are in the ticket's Comments.
+
 ## What we never do
 
 No gradients, glow, glassmorphism, or blur shadows. No emoji as UI. No red X for wrong answers. No timers, lives, or leaderboards. No pure white or pure black.

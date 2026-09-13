@@ -1,23 +1,31 @@
 import { streakLine } from "@/play/lines";
 import { MAX_FREEZES } from "@/rewards/rewards";
 
-/** A Coin: a flat sun disc with the deep tone behind it, never a gradient. */
+/**
+ * A Coin: a flat sun disc with the deep tone behind it, never a gradient.
+ * The rim and the stamp are cut from the same deep tone, so the Coin still
+ * reads where it sits on a sun chip as well as on paper.
+ */
 export function CoinIcon({ size = 28 }: { readonly size?: number }) {
   return (
     <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
       <circle cx="17" cy="17" r="13" className="fill-sun-deep" />
-      <circle cx="16" cy="15" r="13" className="fill-sun" />
-      <circle cx="16" cy="15" r="7" className="fill-sun-deep" />
+      <circle cx="16" cy="15" r="13" className="fill-sun-deep" />
+      <circle cx="16" cy="15" r="10.5" className="fill-sun" />
+      <circle cx="16" cy="15" r="4.5" className="fill-sun-deep" />
     </svg>
   );
 }
 
-/** The Streak's mark: a paper flame, cut out of the leaf the Streak is coloured with. */
+/**
+ * The Streak's mark: a paper flame cut out of the leaf the Streak is
+ * coloured with — a leaning tip, one lick up the near side, a sun heart.
+ */
 export function StreakIcon({ size = 28 }: { readonly size?: number }) {
   return (
     <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
-      <path d="M16 3 C20 10 27 12 24 20 A9 9 0 0 1 8 20 C6 13 12 11 16 3 Z" className="fill-paper" />
-      <path d="M16 14 C18 17 21 18 19 22 A4.5 4.5 0 0 1 12 22 C11 18 14 17 16 14 Z" className="fill-sun" />
+      <path d="M18 2C18 8 22 10 24 15C26 20 23 28 16 28C9 28 6 22 8 16C9 13 11 12 12 9C13 13 15 14 16 16C17 13 18 8 18 2Z" className="fill-paper" />
+      <path d="M17 14C17 17 19 18 20 21C21 24 19 26.5 16 26.5C13 26.5 12 24 13 21.5C14 19.5 16 18 17 14Z" className="fill-sun" />
     </svg>
   );
 }
