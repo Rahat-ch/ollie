@@ -6,17 +6,10 @@
  * Nickname (ADR 0002).
  */
 import { getSkill, SKILLS } from "@/loop";
-import type { AssistanceState, SessionResult, SkillId } from "@/loop";
+import type { SessionResult, SkillRef } from "@/loop";
 import type { SummaryInput, SummaryOutput, SummaryPractice } from "@/generation/types";
+import { COUNT_OF } from "./assistance";
 import type { WrittenSummary } from "./write";
-
-/** Which count of a practice row an Assistance State falls in. */
-const COUNT_OF: Readonly<Record<AssistanceState, keyof Omit<SummaryPractice, "skill" | "name">>> = {
-  "first-try-correct": "firstTryCorrect",
-  "hint-assisted-correct": "hintAssisted",
-  revealed: "revealed",
-  unresolved: "unresolved",
-};
 
 /** The Skills the Session practiced, in progression order, tallied by Assistance State. */
 export function practiceRows(result: SessionResult): SummaryPractice[] {
@@ -66,7 +59,7 @@ export function parentSummary(input: SummaryInput, written: WrittenSummary, at: 
  * The Skill the Parent's activity is for: the practiced Skill with the
  * lowest Knowledge Estimate once the Session's first attempts are in.
  */
-export function weakestSkill(result: SessionResult): { readonly skill: SkillId; readonly name: string } | null {
+export function weakestSkill(result: SessionResult): SkillRef | null {
   const rows = practiceRows(result);
   if (rows.length === 0) return null;
   const weakest = rows.reduce((lowest, row) =>

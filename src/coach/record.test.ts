@@ -3,7 +3,7 @@ import { baselinePlan, DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession, scri
 import type { Hypothesis, LearnerNotes } from "@/loop";
 import type { ParentSummary } from "@/summary/summary";
 import type { CoachStep } from "./types";
-import { addSummary, applyCoachStep, emptyRecord, notesChanges, SUMMARIES_KEPT } from "./record";
+import { addSummary, applyCoachStep, awaitCoach, emptyRecord, notesChanges, SUMMARIES_KEPT } from "./record";
 
 /** A Diagnostic Session: p3 and p8 Hint-assisted, p4 Revealed. */
 const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-r", scripted("ffhrfffhf"));
@@ -87,6 +87,7 @@ describe("applyCoachStep", () => {
 
     expect(record.source).toBe("baseline");
     expect(record.reasons).toEqual(["the Coach could not be reached", "the Coach could not be reached"]);
+    expect(record.unavailable).toBe(false);
     expect(record.lastSessionCoached).toBe(1);
   });
 
@@ -105,6 +106,17 @@ describe("applyCoachStep", () => {
   });
 });
 
+describe("awaitCoach", () => {
+  it("keeps the Session the Coach has still to run on, and never a Session it has already run on", () => {
+    const waiting = awaitCoach(emptyRecord(), result);
+    expect(waiting.awaiting).toBe(result);
+
+    const coached = applyCoachStep(waiting, step(), result);
+    expect(coached.awaiting).toBe(result);
+    expect(awaitCoach({ ...coached, awaiting: null }, result).awaiting).toBeNull();
+  });
+});
+
 describe("addSummary", () => {
   it("keeps the last seven Parent Summaries, newest first", () => {
     const record = Array.from({ length: SUMMARIES_KEPT + 2 }, (_, i) => i + 1).reduce(
@@ -114,6 +126,12 @@ describe("addSummary", () => {
 
     expect(record.summaries).toHaveLength(7);
     expect(record.summaries.map((s) => s.sessionNumber)).toEqual([9, 8, 7, 6, 5, 4, 3]);
+  });
+
+  it("orders the Summaries by Session, newest first, whatever order they were written in", () => {
+    const record = [3, 1, 5, 2].reduce((current, sessionNumber) => addSummary(current, summary(sessionNumber)), emptyRecord());
+
+    expect(record.summaries.map((s) => s.sessionNumber)).toEqual([5, 3, 2, 1]);
   });
 
   it("replaces the Summary of a Session that already has one", () => {

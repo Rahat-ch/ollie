@@ -150,8 +150,8 @@ describe("the other three operations", () => {
   it("writes a Parent Summary the validator accepts, with the Session's own evidence by Assistance State", async () => {
     const output = await fakeGeneration().writeSummary(summary);
     expect(output.practiced).toContain("9 Problems");
-    expect(output.practiced).toContain("Partners to 10: 2 on the first try, 0 after a Hint, 1 Revealed.");
-    expect(output.practiced).toContain("Teen numbers as 10 + n: 1 on the first try, 2 after a Hint, 0 Revealed.");
+    expect(output.practiced).toContain("Partners to 10: 2 first-try correct, 0 correct after a Hint, 1 Revealed, 0 left unanswered.");
+    expect(output.practiced).toContain("Teen numbers as 10 + n: 1 first-try correct, 2 correct after a Hint, 0 Revealed, 0 left unanswered.");
     expect(output.activity).toContain("Teen numbers as 10 + n");
     expect(validateSummary(output, summary)).toEqual({ ok: true });
   });

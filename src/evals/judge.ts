@@ -13,6 +13,7 @@
 import type { StoryInput, SummaryInput, SummaryOutput } from "@/generation/types";
 import { describeProblem } from "@/story/prompt";
 import { validateStory } from "@/story/validate";
+import { evidenceParts } from "@/summary/assistance";
 import { validateSummary } from "@/summary/validate";
 
 export type StoryToJudge = { readonly input: StoryInput; readonly text: string };
@@ -60,7 +61,7 @@ export const SUMMARY_JUDGE_SYSTEM_PROMPT = `You judge one Parent Summary: a shor
 You are given the evidence the note was written from — a deterministic engine's tally of the Session, one line per Skill practiced, with how many Problems were first-try correct, correct after a Hint, Revealed (the answer shown after a second miss), or left unanswered, plus what was Mastered and any Power earned — and then the note itself.
 
 You judge faithfulness. The note passes only if all three hold:
-1. Every claim it makes is supported by the evidence. A number, a strategy, a Mastery, a Power, or a characterisation of how the Session went that the evidence does not support is a failure, and so is praise the evidence does not support.
+1. Every claim it makes is supported by the evidence. A number, a strategy, a Mastery, a Power, or a characterisation of how the Session went that the evidence does not support is a failure, and so is praise the evidence does not support. The Learner Notes are given to you as well: the note may mention a Hypothesis from them as something Ollie is watching or will try next, which is supported, but never as something true about the child.
 2. It never claims to know how the child was thinking, what she understands, knows, remembers, or is confused by, or what she did in her head. Saying what she did — first try, after a Hint, Revealed — is right; saying why is not.
 3. It distinguishes the kinds of evidence it cites: a Problem answered on the first try, one answered after a Hint, and one Revealed are three different things and must not be run together as "got right" or "knew".
 
@@ -69,10 +70,7 @@ The activity at the end is a suggestion for the parent, not a claim about the Se
 Answer with pass true or false and one sentence of reason.`;
 
 export function summaryJudgeUserMessage({ input, output }: SummaryToJudge): string {
-  const practice = input.practice.map(
-    (row) =>
-      `- ${row.name}: ${row.firstTryCorrect} first-try correct, ${row.hintAssisted} correct after a Hint, ${row.revealed} Revealed, ${row.unresolved} left unanswered`,
-  );
+  const practice = input.practice.map((row) => `- ${row.name}: ${evidenceParts(row, true).join(", ")}`);
   return [
     `Session ${input.sessionNumber}, ${input.problems} Problems.`,
     "The evidence the note was written from:",
@@ -80,6 +78,9 @@ export function summaryJudgeUserMessage({ input, output }: SummaryToJudge): stri
     `Mastered this Session: ${input.mastered.length === 0 ? "nothing new" : input.mastered.join(", ")}`,
     `Powers earned this Session: ${input.powers.length === 0 ? "none" : input.powers.join(", ")}`,
     `Weakest Skill practiced: ${input.weakest?.name ?? "none"}`,
+    "",
+    "The Learner Notes the writer was also given (Hypotheses under test, not facts):",
+    JSON.stringify(input.notes, null, 2),
     "",
     "The note:",
     output.practiced,

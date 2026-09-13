@@ -12,6 +12,7 @@ import type {
   ProblemId,
   SessionPlan,
   SkillId,
+  SkillRef,
   SkillState,
 } from "@/loop";
 import type { ThemeId } from "@/profile/identity";
@@ -78,10 +79,7 @@ export type CoachInput = {
  * The counts are the engine's own tally of the Session Log: the Summary
  * writer is handed them and never asked for arithmetic (ADR 0001).
  */
-export type SummaryPractice = {
-  readonly skill: SkillId;
-  /** The strategy's name, as the Parent reads it. */
-  readonly name: string;
+export type SummaryPractice = SkillRef & {
   readonly firstTryCorrect: number;
   readonly hintAssisted: number;
   readonly revealed: number;
@@ -103,7 +101,7 @@ export type SummaryInput = {
   /** Powers earned in this Session, by name. */
   readonly powers: readonly string[];
   /** The Skill the activity is for: the weakest practiced. Null when nothing was practiced. */
-  readonly weakest: { readonly skill: SkillId; readonly name: string } | null;
+  readonly weakest: SkillRef | null;
   /** What the Coach believes, so the Summary can say what Ollie is watching. */
   readonly notes: LearnerNotes;
 };

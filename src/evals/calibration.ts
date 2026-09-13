@@ -61,8 +61,8 @@ const practice = (skill: SkillId, firstTryCorrect: number, hintAssisted: number,
   unresolved: 0,
 });
 
-/** The evidence a Parent Summary was written from: a Session tallied, with nothing personal in it. */
-function evidence(
+/** The Summary input for a Session tallied, with nothing personal in it. */
+function summaryInputFor(
   sessionNumber: number,
   rows: readonly SummaryPractice[],
   over: Partial<SummaryInput> = {},
@@ -89,9 +89,9 @@ const summary = (id: string, pass: boolean, note: string, input: SummaryInput, p
   output: { practiced, activity },
 });
 
-const CROSSING_TEN = evidence(4, [practice("make-a-ten", 4, 2, 1)]);
-const TWO_SKILLS = evidence(6, [practice("counting-on", 5, 0, 0), practice("unknown-addend", 2, 1, 2)]);
-const MASTERED_SESSION = evidence(9, [practice("partners-to-10", 8, 0, 0)], { mastered: ["Partners to 10"] });
+const CROSSING_TEN = summaryInputFor(4, [practice("make-a-ten", 4, 2, 1)]);
+const TWO_SKILLS = summaryInputFor(6, [practice("counting-on", 5, 0, 0), practice("unknown-addend", 2, 1, 2)]);
+const MASTERED_SESSION = summaryInputFor(9, [practice("partners-to-10", 8, 0, 0)], { mastered: ["Partners to 10"] });
 
 /**
  * The Calibration Set for Parent Summaries: 10 notes over evidence the
@@ -148,7 +148,7 @@ export const SUMMARY_CALIBRATION_SET: readonly CalibrationSummary[] = [
     "s06",
     true,
     "Mentions the Hypothesis as something Ollie is watching, not as fact.",
-    evidence(4, [practice("make-a-ten", 4, 2, 1)], {
+    summaryInputFor(4, [practice("make-a-ten", 4, 2, 1)], {
       notes: {
         hypotheses: [
           {
@@ -163,7 +163,7 @@ export const SUMMARY_CALIBRATION_SET: readonly CalibrationSummary[] = [
         strengths: [],
       },
     }),
-    "Make-a-ten this Session: 4 first-try correct, 2 right after a Hint, 1 Revealed. Ollie is watching whether sums that cross ten are the harder ones and will try a few more next time.",
+    "Make-a-ten this Session: 4 first-try correct, 2 right after a Hint, 1 Revealed. Ollie is watching whether the bigger sums are the harder ones and will try a few more next time.",
     "Fill a bowl to ten with grapes before adding the rest, and count the two groups out loud together.",
   ),
 
@@ -179,9 +179,9 @@ export const SUMMARY_CALIBRATION_SET: readonly CalibrationSummary[] = [
   summary(
     "s08",
     false,
-    "Claims how she was thinking, in words no list of phrases catches.",
+    "Claims why she missed, in words no list of phrases catches: the Log says nothing about rushing.",
     CROSSING_TEN,
-    "Make-a-ten: 4 first-try correct, 2 after a Hint, 1 Revealed. She is clearly picturing the ten-frame before she answers, and only slips when she rushes.",
+    "Make-a-ten: 4 first-try correct, 2 after a Hint, 1 Revealed. She only slips when she rushes, and takes her time whenever the numbers get bigger.",
     "Fill a ten-frame with coins and talk about what is missing.",
   ),
   summary(
@@ -189,7 +189,7 @@ export const SUMMARY_CALIBRATION_SET: readonly CalibrationSummary[] = [
     false,
     "Claims a Mastery and a Power the evidence does not have.",
     TWO_SKILLS,
-    "Counting on is now Mastered and Ollie has learned Count-On Flight. Unknown addend had 2 first-try correct, 1 after a Hint, and 2 Revealed.",
+    "Counting on is Mastered and Ollie now has Count-On Flight. Unknown addend had 2 first-try correct, 1 after a Hint, and 2 Revealed.",
     "Say a number and count on three more together, without starting again at one.",
   ),
   summary(

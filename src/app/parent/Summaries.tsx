@@ -1,19 +1,14 @@
 "use client";
 
-import { SUMMARIES_KEPT } from "@/coach";
 import type { SummaryPractice } from "@/generation/types";
+import { evidenceParts } from "@/summary/assistance";
 import type { ParentSummary } from "@/summary/summary";
 
 const day = (at: string): string => new Date(at).toLocaleDateString(undefined, { day: "numeric", month: "short" });
 
 /** The evidence by Assistance State, as the engine counted it: never the model's numbers. */
 function Evidence({ row }: { readonly row: SummaryPractice }) {
-  const parts = [
-    `${row.firstTryCorrect} first try`,
-    `${row.hintAssisted} with a Hint`,
-    `${row.revealed} Revealed`,
-    ...(row.unresolved > 0 ? [`${row.unresolved} not answered`] : []),
-  ];
+  const parts = evidenceParts(row, true);
   return (
     <li className="flex flex-wrap items-baseline gap-x-3 font-text text-caption" data-testid="summary-evidence" data-skill={row.skill}>
       <span className="text-ink">{row.name}</span>
@@ -65,21 +60,19 @@ function Summary({ summary }: { readonly summary: ParentSummary }) {
  * thing to do together.
  */
 export function Summaries({ summaries, nickname }: { readonly summaries: readonly ParentSummary[]; readonly nickname: string }) {
-  // The record keeps seven; a store written by hand might hold more, and a week is what a Parent asked for.
-  const shown = summaries.slice(0, SUMMARIES_KEPT);
   return (
     <section className="flex flex-col gap-3" aria-labelledby="summaries" data-testid="summaries">
       <h3 id="summaries" className="font-display text-body font-semibold text-teal">
         Parent Summaries
       </h3>
-      {shown.length === 0 ? (
+      {summaries.length === 0 ? (
         <p className="rounded-card bg-paper-2 px-5 py-4 font-text text-caption text-ink shadow-card text-pretty">
           After each Session, Ollie writes you a short note: the strategies {nickname} practised, with the evidence (first try, with a
           Hint, or Revealed), what was Mastered, and one thing to try together. The last seven are listed here.
         </p>
       ) : (
         <ul className="flex flex-col gap-3">
-          {shown.map((summary) => (
+          {summaries.map((summary) => (
             <Summary key={summary.sessionNumber} summary={summary} />
           ))}
         </ul>

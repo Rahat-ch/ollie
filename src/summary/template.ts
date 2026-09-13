@@ -5,6 +5,7 @@
  */
 import type { SkillId } from "@/loop";
 import type { SummaryInput, SummaryOutput, SummaryPractice } from "@/generation/types";
+import { evidenceParts } from "./assistance";
 
 /** Five minutes with what is in the kitchen, one per Skill. Hand-written, never model-written. */
 export const BEDTIME_ACTIVITY: Readonly<Record<SkillId, string>> = {
@@ -17,16 +18,8 @@ export const BEDTIME_ACTIVITY: Readonly<Record<SkillId, string>> = {
   "change-unknown": "Line up some crayons, take a few away when your child looks away, and work out together how many went missing.",
 };
 
-/** `1 first-try correct, 2 with a Hint, 1 Revealed`: only the states that happened. */
-function evidenceLine(row: SummaryPractice): string {
-  const parts = [
-    row.firstTryCorrect > 0 ? `${row.firstTryCorrect} first-try correct` : "",
-    row.hintAssisted > 0 ? `${row.hintAssisted} correct after a Hint` : "",
-    row.revealed > 0 ? `${row.revealed} Revealed` : "",
-    row.unresolved > 0 ? `${row.unresolved} left unanswered` : "",
-  ].filter((part) => part !== "");
-  return `${row.name}: ${parts.join(", ")}`;
-}
+/** `Partners to 10: 1 first-try correct, 2 correct after a Hint, 1 Revealed`: only the states that happened. */
+const evidenceLine = (row: SummaryPractice): string => `${row.name}: ${evidenceParts(row).join(", ")}`;
 
 export function templateSummary(input: SummaryInput): SummaryOutput {
   const practiced = [

@@ -20,7 +20,9 @@ export type SummaryValidation = { readonly ok: true } | { readonly ok: false; re
 /**
  * Claims about the Learner's mind rather than her answers. A Summary
  * describes what the Log shows; anything here is the overreach the spec
- * forbids, whichever way round the sentence puts it.
+ * forbids, whichever way round the sentence puts it. The list grew from the
+ * Parent Summary Calibration Set: every phrase a hand-labelled failure used
+ * is here, so the Judge is left with what a word list cannot see.
  */
 const MIND_READING = [
   "thinking",
@@ -32,12 +34,21 @@ const MIND_READING = [
   "knows",
   "knew",
   "realised",
+  "realises",
   "realized",
+  "realizes",
   "figured out",
+  "figures out",
   "worked it out in her head",
   "worked it out in his head",
   "in her head",
   "in his head",
+  "picturing",
+  "pictures",
+  "sees that",
+  "gets it",
+  "has learned",
+  "have learned",
   "confused",
   "remembers",
   "remembered",
@@ -86,21 +97,27 @@ function numbersIn(text: string): number[] {
 }
 
 /**
- * Every number the input carried: its counts, the numbers inside the names
- * and claims it holds ("Partners to 10", "a sum that crosses ten"), and the
- * lengths of its lists, which is how a Summary may say "three strategies".
- * Every run of letters in the input is read for a number word, because in
- * JSON there is no whitespace to split on.
+ * Every number the tally gave the writer: the counts by Skill and Assistance
+ * State, the Session number, the Problems, the lengths of its lists (which is
+ * how a Summary may say "three strategies"), and the numbers inside the names
+ * it may repeat ("Partners to 10", "Make-a-ten within 20"). The Learner Notes
+ * are deliberately not a source: a Hypothesis's confidence and the Problem IDs
+ * it cites are not numbers a Parent should read as evidence of a Session.
  */
-export function supportedNumbers(input: SummaryInput): Set<number> {
-  const text = JSON.stringify(input);
-  const digits = (text.match(/\d+/g) ?? []).map(Number);
-  const spelled = (text.toLowerCase().match(/[a-z]+/g) ?? []).flatMap((word) => {
-    const value = NUMBER_WORDS[word];
-    return value === undefined ? [] : [value];
-  });
-  // Zero is always supported: "0 Revealed" and "none Revealed" say the same true thing.
-  return new Set([0, ...digits, ...spelled, input.practice.length, input.mastered.length, input.powers.length]);
+function supportedNumbers(input: SummaryInput): Set<number> {
+  const names = [...input.practice.map((row) => row.name), ...input.mastered, ...input.powers, input.weakest?.name ?? ""];
+  const counts = input.practice.flatMap((row) => [row.firstTryCorrect, row.hintAssisted, row.revealed, row.unresolved]);
+  return new Set([
+    // Zero is always supported: "0 Revealed" and "none Revealed" say the same true thing.
+    0,
+    input.sessionNumber,
+    input.problems,
+    input.practice.length,
+    input.mastered.length,
+    input.powers.length,
+    ...counts,
+    ...numbersIn(names.join(" ")),
+  ]);
 }
 
 function mindReading(text: string): string[] {

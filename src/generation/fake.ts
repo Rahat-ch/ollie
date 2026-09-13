@@ -1,4 +1,5 @@
 import { getSkill } from "@/loop";
+import { evidenceParts } from "@/summary/assistance";
 import { templateStory } from "@/story/template";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
 import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
@@ -103,9 +104,7 @@ async function writeStory(input: StoryInput): Promise<StoryOutput> {
 async function writeSummary(input: SummaryInput): Promise<SummaryOutput> {
   const practiced = [
     `Your child answered ${input.problems} Problems in Session ${input.sessionNumber}.`,
-    ...input.practice.map(
-      (row) => `${row.name}: ${row.firstTryCorrect} on the first try, ${row.hintAssisted} after a Hint, ${row.revealed} Revealed.`,
-    ),
+    ...input.practice.map((row) => `${row.name}: ${evidenceParts(row, true).join(", ")}.`),
     ...input.mastered.map((name) => `${name} is Mastered.`),
     ...input.powers.map((name) => `Ollie learned ${name}.`),
   ].join(" ");

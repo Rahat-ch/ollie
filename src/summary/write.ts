@@ -2,9 +2,11 @@
  * Write one Parent Summary through the Generation seam and keep it only if
  * the validator allows it; otherwise try again, a bounded number of times,
  * and then use the hand-written template, so a Parent always gets a note
- * even when the model is unreachable.
+ * even when the model is unreachable. A writer that could not be reached at
+ * all is not asked twice: the template stands in at once.
  */
 import type { Generation, SummaryInput, SummaryOutput } from "@/generation/types";
+import { errorMessage, isUnavailable } from "@/lib/errors";
 import { templateSummary } from "./template";
 import { validateSummary } from "./validate";
 
@@ -24,8 +26,6 @@ export type WrittenSummary = SummaryOutput & {
   readonly rejections: readonly SummaryRejection[];
 };
 
-const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : String(error));
-
 export async function writeValidSummary(
   generation: Pick<Generation, "writeSummary">,
   input: SummaryInput,
@@ -37,6 +37,7 @@ export async function writeValidSummary(
       output = await generation.writeSummary(input);
     } catch (error) {
       rejections.push({ attempt, reasons: [errorMessage(error)] });
+      if (isUnavailable(error)) break;
       continue;
     }
     const verdict = validateSummary(output, input);

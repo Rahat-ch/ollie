@@ -6,7 +6,8 @@
  * rows a screen can render.
  */
 import type { CitedProblem, CoachRecord } from "@/coach";
-import type { HypothesisStatus, ProblemId } from "@/loop";
+import { getSkill } from "@/loop";
+import type { HypothesisStatus, ProblemId, SessionPlan } from "@/loop";
 
 export type NotebookBelief = {
   readonly id: string;
@@ -30,9 +31,27 @@ export type Notebook = {
   readonly changed: readonly string[];
   /** The Hypothesis the next Session is gathering evidence for. */
   readonly testingNext: { readonly claim: string; readonly nextTest: string } | null;
-  /** Set when the Coach's output was rejected and the next Session is the Baseline's. */
-  readonly baseline: { readonly reasons: readonly string[] } | null;
+  /**
+   * Set when the next Session is the Baseline's: either the Coach could not
+   * be reached at all, or what it wrote was rejected twice. The Parent reads
+   * a plain sentence and the Plan it fell back to; the reasons themselves
+   * stay on the record, where they are for the developer.
+   */
+  readonly baseline: { readonly unavailable: boolean; readonly plan: string } | null;
 };
+
+/**
+ * `6 Problems on Make-a-ten within 20, and 2 to keep an earlier Skill warm`:
+ * a Session Plan in the Parent's words, counted from the Plan itself the way
+ * the engine counts it, never written down twice.
+ */
+export function describePlan(plan: SessionPlan): string {
+  const review = Math.round(plan.length * plan.reviewShare);
+  const planned = plan.length - review;
+  const mix = plan.skills.map((skill) => getSkill(skill.skill).name).join(" and ");
+  const warm = review > 0 ? `, and ${review} to keep an earlier Skill warm` : "";
+  return `${planned} ${planned === 1 ? "Problem" : "Problems"} on ${mix}${warm}`;
+}
 
 export function notebook(record: CoachRecord): Notebook {
   const held = new Map(record.cited.map((problem) => [problem.id, problem]));
@@ -52,6 +71,9 @@ export function notebook(record: CoachRecord): Notebook {
     strengths: record.notes.strengths,
     changed: record.changed,
     testingNext: underTest ? { claim: underTest.claim, nextTest: underTest.nextTest } : null,
-    baseline: record.source === "baseline" ? { reasons: record.reasons } : null,
+    baseline:
+      record.source === "baseline" && record.plan
+        ? { unavailable: record.unavailable, plan: describePlan(record.plan) }
+        : null,
   };
 }

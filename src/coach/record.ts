@@ -2,9 +2,9 @@
  * What the Coach leaves behind on the device: the Learner Notes, the next
  * Session Plan, where that Plan came from, the Problems the Notes cite (so
  * Ollie's Notebook can show the evidence as the actual Problems), what
- * changed after the last Session, and the last seven Parent Summaries.
- * Plain data and pure functions; the Profile stores it and the Parent Area
- * reads it.
+ * changed after the last Session, the last seven Parent Summaries, and the
+ * Session still waiting for a Coach run. Plain data and pure functions; the
+ * Profile stores it and the Parent Area reads it.
  */
 import { emptyNotes } from "@/loop";
 import { formatEquation } from "@/loop/format";
@@ -37,14 +37,50 @@ export type CoachRecord = {
   readonly lastSessionCoached: number;
   /** The Problems the Notes cite, from this Session's Log and the Sessions before it. */
   readonly cited: readonly CitedProblem[];
+  /** The Coach could not be reached at all after the last Session, so nothing was rejected: there was nothing to reject. */
+  readonly unavailable: boolean;
   /** What changed in the Notes after the last Session, in plain English. */
   readonly changed: readonly string[];
-  /** Newest first. */
+  /** Newest first, by Session. */
   readonly summaries: readonly ParentSummary[];
+  /**
+   * The completed Session still waiting for its Coach run, kept so the run
+   * survives a reload: whichever screen is open starts it again, and it is
+   * cleared when the record is written, by the Coach or by the Baseline.
+   */
+  readonly awaiting: SessionResult | null;
+};
+
+/** What one Coach run settled: the Session it ran on, the step, and the Parent Summary written from it. */
+export type CoachRun = {
+  readonly result: SessionResult;
+  readonly step: CoachStep;
+  readonly summary: ParentSummary;
 };
 
 export function emptyRecord(): CoachRecord {
-  return { notes: emptyNotes(), plan: null, source: null, reasons: [], lastSessionCoached: 0, cited: [], changed: [], summaries: [] };
+  return {
+    notes: emptyNotes(),
+    plan: null,
+    source: null,
+    reasons: [],
+    unavailable: false,
+    lastSessionCoached: 0,
+    cited: [],
+    changed: [],
+    summaries: [],
+    awaiting: null,
+  };
+}
+
+/**
+ * A Session has ended and its Coach run has not: keep what the run needs
+ * until the record is written. A Session the Coach has already run on is
+ * never set waiting again, however often its celebration is shown.
+ */
+export function awaitCoach(record: CoachRecord, result: SessionResult): CoachRecord {
+  if (record.lastSessionCoached >= result.log.sessionNumber) return record;
+  return { ...record, awaiting: result };
 }
 
 /** This Session's Problems as evidence: the same view the Coach was given. */
@@ -92,19 +128,33 @@ export function applyCoachStep(record: CoachRecord, step: CoachStep, result: Ses
   const cites = new Set(step.notes.hypotheses.flatMap((hypothesis) => hypothesis.evidence));
   const known = new Map([...record.cited, ...citedFromSession(result)].map((problem) => [problem.id, problem]));
   return {
+    ...record,
     notes: step.notes,
     plan: step.plan,
     source: step.source,
     reasons: step.rejections.flatMap((rejection) => rejection.reasons),
+    unavailable: step.rejections.some((rejection) => rejection.unavailable === true),
     lastSessionCoached: result.log.sessionNumber,
     cited: [...cites].flatMap((id) => known.get(id) ?? []),
     changed: notesChanges(record.notes, step.notes),
-    summaries: record.summaries,
   };
 }
 
-/** The Session's Parent Summary, newest first, the last seven kept. A Session has one Summary. */
+/** The Session's Parent Summary, in Session order newest first, the last seven kept. A Session has one Summary. */
 export function addSummary(record: CoachRecord, summary: ParentSummary): CoachRecord {
   const others = record.summaries.filter((kept) => kept.sessionNumber !== summary.sessionNumber);
-  return { ...record, summaries: [summary, ...others].slice(0, SUMMARIES_KEPT) };
+  const summaries = [summary, ...others].sort((a, b) => b.sessionNumber - a.sessionNumber).slice(0, SUMMARIES_KEPT);
+  return { ...record, summaries };
+}
+
+/**
+ * One finished Coach run written onto the record as it stands now, not as it
+ * stood when the run began: the caller reads the stored record at write time,
+ * so a run that took a while cannot drop the Notes or the Summary of one that
+ * landed while it was away. The Session it ran on stops waiting.
+ */
+export function applyCoachRun(record: CoachRecord, run: CoachRun): CoachRecord {
+  const written = addSummary(applyCoachStep(record, run.step, run.result), run.summary);
+  const stillWaiting = written.awaiting !== null && written.awaiting.log.sessionNumber !== run.result.log.sessionNumber;
+  return { ...written, awaiting: stillWaiting ? written.awaiting : null };
 }

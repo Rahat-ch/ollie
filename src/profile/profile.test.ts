@@ -192,10 +192,22 @@ describe("what the Coach has left on the device", () => {
     expect(parseProfile(JSON.stringify(stored))).toEqual({ ...createProfile("seed-1"), identity });
   });
 
-  it("starts fresh when the record is not a shape this version knows", () => {
-    const stored = (coach: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity, coach });
-    expect(parseProfile(stored({ ...emptyRecord(), plan: { length: 8 } }))).toBeNull();
-    expect(parseProfile(stored({ ...emptyRecord(), notes: { hypotheses: [{ id: "h1" }], strengths: [] } }))).toBeNull();
-    expect(parseProfile(stored(null))).toBeNull();
+  it("loses the record alone when it is not a shape this version knows, and keeps the identity, the progress, and the rewards", () => {
+    const rewards = buyItem(awardSession(newRewards(), { sessionNumber: 1, status: "complete" }, new Date(2026, 8, 13)).rewards, "party-hat");
+    const profile = { ...createProfile("seed-1"), identity, rewards, progress: { ...newProfile(), sessionsCompleted: 4 } };
+    const stored = (coach: unknown) => JSON.stringify({ ...profile, coach });
+
+    for (const broken of [
+      { ...emptyRecord(), plan: { length: 8 } },
+      { ...emptyRecord(), notes: { hypotheses: [{ id: "h1" }], strengths: [] } },
+      { ...emptyRecord(), summaries: Array.from({ length: 8 }, (_, i) => ({ ...summary, sessionNumber: i + 1 })) },
+      null,
+    ]) {
+      const parsed = parseProfile(stored(broken));
+      expect(parsed?.coach).toEqual(emptyRecord());
+      expect(parsed?.identity).toEqual(identity);
+      expect(parsed?.rewards).toEqual(rewards);
+      expect(parsed?.progress.sessionsCompleted).toBe(4);
+    }
   });
 });

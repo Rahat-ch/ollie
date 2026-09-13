@@ -4,8 +4,9 @@
  * template fallbacks counted) and faithfulness (the Judge's rubric over
  * every Summary kept, checking each claim against the evidence it was
  * written from, reported only when the Judge clears calibration against the
- * hand-labelled set of 10). The sample is the Summary the app would have
- * written after a real Session of a Simulated Learner.
+ * hand-labelled set of 10, and only over the Summaries the model itself
+ * wrote). The sample is the Summary the app would have written after a real
+ * Session of a Simulated Learner.
  */
 import type { Generation, SummaryInput, SummaryOutput } from "@/generation/types";
 import { mapLimit } from "@/lib/map-limit";
@@ -80,12 +81,13 @@ export async function runSummaryEvals(options: SummaryEvalOptions): Promise<Summ
   let summaries = written;
   let faithfulness: SummaryFaithfulness | null = null;
   if (calibration.passes) {
-    summaries = await mapLimit(written, concurrency, async (trace): Promise<SummaryTrace> => ({
-      ...trace,
-      judged: await judge.judgeSummary(trace),
-    }));
-    const passed = summaries.filter((trace) => trace.judged?.pass).length;
-    faithfulness = { judged: summaries.length, passed, passRate: share(passed, summaries.length) };
+    // The template Summary is the developer's own words; the Judge grades the model's.
+    summaries = await mapLimit(written, concurrency, async (trace): Promise<SummaryTrace> =>
+      trace.source === "summary" ? { ...trace, judged: await judge.judgeSummary(trace) } : trace,
+    );
+    const judged = summaries.filter((trace) => trace.judged !== undefined);
+    const passed = judged.filter((trace) => trace.judged?.pass).length;
+    faithfulness = { judged: judged.length, passed, passRate: share(passed, judged.length) };
   }
   return {
     generation: options.name,

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { setUpProfile } from "./onboarding";
-import { asked, key, openParentArea, readProfile, seedProfile } from "./play";
+import { asked, key, openParentArea, playSession, readProfile, seedProfile } from "./play";
 
 const mastered = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
 const fresh = (estimate: number) => ({ estimate, recentFirstAttempts: [], mastered: false });
@@ -59,8 +59,10 @@ const RECORD = {
     { id: "p12", skill: "make-a-ten", equation: "8 + 5 = ?", assistance: "hint-assisted-correct", sessionNumber: 2 },
     { id: "p15", skill: "make-a-ten", equation: "9 + 4 = ?", assistance: "revealed", sessionNumber: 3 },
   ],
+  unavailable: false,
   changed: ['Now supported: "May need more practice when a sum crosses ten", with more evidence'],
-  summaries: [9, 8, 7, 6, 5, 4, 3, 2, 1].map(summary),
+  summaries: [9, 8, 7, 6, 5, 4, 3].map(summary),
+  awaiting: null,
 };
 
 test("completing a Session runs the Coach once; with no key on the server the next Session is the Baseline's, the Notebook says so, and the Parent still gets a Summary", async ({ page, baseURL }) => {
@@ -95,14 +97,15 @@ test("completing a Session runs the Coach once; with no key on the server the ne
   }
   await expect(page.getByTestId("celebration")).toBeVisible();
 
-  // One Coach run: the call and the engine's one retry, and no more, however the page is left and come back to.
+  // One Coach run, and no more however the page is left and come back to. A
+  // server with no key answers 503, which is not retried: one call each.
   await expect.poll(async () => (await readProfile(page)).coach.lastSessionCoached).toBe(1);
   await page.getByRole("button", { name: "Done" }).click();
   await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
   await page.reload();
   await page.waitForTimeout(500);
-  expect(coachRequests).toHaveLength(2);
-  expect(summaryRequests).toHaveLength(2);
+  expect(coachRequests).toHaveLength(1);
+  expect(summaryRequests).toHaveLength(1);
   for (const body of [...coachRequests, ...summaryRequests]) {
     expect(body).not.toContain("Mia");
     expect(body).not.toContain("theme");
@@ -110,19 +113,27 @@ test("completing a Session runs the Coach once; with no key on the server the ne
 
   const record = (await readProfile(page)).coach;
   expect(record.source).toBe("baseline");
+  expect(record.unavailable).toBe(true);
+  expect(record.awaiting).toBeNull();
   expect(record.notes.hypotheses).toEqual([]);
   expect(record.summaries).toHaveLength(1);
   expect(record.summaries[0].source).toBe("template");
+  // The raw reason is kept for the developer; the Parent never reads it.
+  expect(record.reasons[0]).toContain("ANTHROPIC_API_KEY is not set");
 
   // The Parent Area: the Notebook says the Baseline Plan is in use, and the Summary has the evidence by Assistance State.
   await openParentArea(page);
-  await expect(page.getByTestId("notebook-baseline")).toContainText("ANTHROPIC_API_KEY is not set");
+  const baseline = page.getByTestId("notebook-baseline");
+  await expect(baseline).toContainText("Ollie could not reach the Coach after the last Session");
+  // The Plan it fell back to, counted from the Plan itself.
+  await expect(baseline).toContainText("6 Problems on Partners to 10");
+  await expect(baseline).not.toContainText("ANTHROPIC_API_KEY");
   const summaryCard = page.getByTestId("parent-summary");
   await expect(summaryCard).toHaveCount(1);
   await expect(summaryCard).toHaveAttribute("data-session", "1");
   await expect(summaryCard).toContainText("9 Problems");
-  await expect(summaryCard.getByTestId("summary-evidence").first()).toContainText("first try");
-  await expect(summaryCard).toContainText("with a Hint");
+  await expect(summaryCard.getByTestId("summary-evidence").first()).toContainText("first-try correct");
+  await expect(summaryCard).toContainText("correct after a Hint");
   await expect(summaryCard).toContainText("Revealed");
   await expect(page.getByTestId("summary-activity")).toContainText("Try tonight:");
   // A Summary says what the Learner did, never what she was thinking.
@@ -132,6 +143,39 @@ test("completing a Session runs the Coach once; with no key on the server the ne
   await page.goto("/play");
   await expect(page.getByTestId("progress-dot")).toHaveCount(6);
   expect(offHost).toEqual([]);
+});
+
+test("a Coach run that a reload interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {
+  let calls = 0;
+  // The first Coach call is held long enough for the reload to cancel it.
+  await page.route(`${baseURL}/api/coach`, async (route) => {
+    if (calls++ === 0) await new Promise((done) => setTimeout(done, 5000));
+    await route.continue();
+  });
+
+  await setUpProfile(page);
+  await page.goto("/play");
+  await playSession(page);
+
+  // The Session waits on the record while the run is away.
+  await expect.poll(async () => (await readProfile(page)).coach.awaiting?.log.sessionNumber).toBe(1);
+  expect((await readProfile(page)).coach.lastSessionCoached).toBe(0);
+
+  // Done goes home with the run still away; the reload cancels it, and the
+  // home screen finds the Session still waiting and runs it again.
+  await page.getByRole("button", { name: "Done" }).click();
+  await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
+  await expect.poll(async () => (await readProfile(page)).coach.lastSessionCoached, { timeout: 15000 }).toBe(1);
+  const record = (await readProfile(page)).coach;
+  expect(record.awaiting).toBeNull();
+  expect(record.summaries).toHaveLength(1);
+  expect(calls).toBe(2);
+
+  await openParentArea(page);
+  await expect(page.getByTestId("notebook-baseline")).toContainText("Ollie could not reach the Coach");
+  await expect(page.getByTestId("parent-summary")).toHaveCount(1);
 });
 
 test("Play builds the next Session from the Coach's stored Plan, and its Problems match the Plan's mix and ranges", async ({ page }) => {
@@ -173,7 +217,7 @@ test("the Notebook shows each Hypothesis's evidence as the actual Problems, tapp
   const evidence = page.getByTestId("evidence-problem");
   await expect(evidence).toHaveCount(2);
   await expect(evidence.nth(0)).toContainText("8 + 5 = ?");
-  await expect(evidence.nth(0)).toContainText("right after a Hint");
+  await expect(evidence.nth(0)).toContainText("correct after a Hint");
   await expect(evidence.nth(1)).toContainText("9 + 4 = ?");
   await expect(evidence.nth(1)).toContainText("Revealed");
 
@@ -182,7 +226,9 @@ test("the Notebook shows each Hypothesis's evidence as the actual Problems, tapp
   await expect(summaries).toHaveCount(7);
   await expect(summaries.nth(0)).toHaveAttribute("data-session", "9");
   await expect(summaries.nth(6)).toHaveAttribute("data-session", "3");
-  await expect(summaries.nth(0).getByTestId("summary-evidence")).toContainText("4 first try · 1 with a Hint · 1 Revealed");
+  await expect(summaries.nth(0).getByTestId("summary-evidence")).toContainText(
+    "4 first-try correct · 1 correct after a Hint · 1 Revealed · 0 left unanswered",
+  );
 
   await page.reload();
   await openParentArea(page);

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DIAGNOSTIC_PLAN, newProfile, runSession, scripted } from "@/loop";
 import { summaryInput } from "./summary";
+import { ASSISTANCE_WORDS } from "./assistance";
 import { SUMMARY_SYSTEM_PROMPT, summaryUserMessage } from "./prompt";
 
 const notes = {
@@ -31,6 +32,12 @@ describe("summaryUserMessage", () => {
     expect(message).toContain("May need more practice with partners to 10");
   });
 
+  it("names every Assistance State, so a Summary can tell them apart", () => {
+    const message = summaryUserMessage(input);
+
+    for (const word of Object.values(ASSISTANCE_WORDS)) expect(message, word).toContain(word);
+  });
+
   it("sends no Nickname, no Problem, and no answer", () => {
     const message = summaryUserMessage(input);
 
@@ -48,10 +55,13 @@ describe("summaryUserMessage", () => {
 });
 
 describe("SUMMARY_SYSTEM_PROMPT", () => {
-  it("forbids a claim about thinking and a number of the model's own, and asks for the three Assistance States", () => {
-    expect(SUMMARY_SYSTEM_PROMPT).toContain("Never claim to know how the child was thinking");
-    expect(SUMMARY_SYSTEM_PROMPT).toContain("Use only the numbers you are given");
-    expect(SUMMARY_SYSTEM_PROMPT).toContain("Distinguish first-try correct from correct after a Hint from Revealed");
-    expect(SUMMARY_SYSTEM_PROMPT).toContain('Say "your child"');
+  it("names every Assistance State in the words the Parent will read them in", () => {
+    for (const word of Object.values(ASSISTANCE_WORDS)) expect(SUMMARY_SYSTEM_PROMPT, word).toContain(word);
+  });
+
+  it("asks for the two parts the seam expects and for no name it was not given", () => {
+    for (const part of ["practiced", "activity"] as const) expect(SUMMARY_SYSTEM_PROMPT, part).toContain(`${part}:`);
+    expect(SUMMARY_SYSTEM_PROMPT).toContain("your child");
+    expect(SUMMARY_SYSTEM_PROMPT.toLowerCase()).not.toContain("nickname");
   });
 });

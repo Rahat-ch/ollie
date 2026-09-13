@@ -134,9 +134,9 @@ export function parseProfile(text: string | null): Profile | null {
   // Versions before 4 had no rewards at all; every later Profile must carry them.
   const rewards = version < 4 ? newRewards() : value.rewards;
   if (!isRewards(rewards)) return null;
-  // Versions before 5 had no Coach on the device; the record starts empty.
-  const coach = version < 5 ? emptyRecord() : parseCoachRecord(value.coach);
-  if (coach === null) return null;
+  // Versions before 5 had no Coach on the device, and a record this version
+  // does not know is lost on its own: the progress beside it is not.
+  const coach = parseCoachRecord(value.coach, version);
   const session = value.session as SessionState | null;
   return {
     version: PROFILE_VERSION,

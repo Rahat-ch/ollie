@@ -5,6 +5,7 @@
  * of "your child" and never of a name it was not given (ADR 0002).
  */
 import type { SummaryInput, SummaryPractice } from "@/generation/types";
+import { evidenceParts } from "./assistance";
 
 export const SUMMARY_SYSTEM_PROMPT = `You write the Parent Summary: a short note to a parent after one Session of a Grade 1 math game, about a child of six or seven. The parent reads it in the app behind a Parent Gate.
 
@@ -27,10 +28,8 @@ Rules.
 - A Hypothesis from the Notes may be mentioned as something Ollie is watching, never as something true.
 - Warm, plain, and short. No praise that the evidence does not support, no jargon beyond the strategy names.`;
 
-/** `Partners to 10: 4 first-try correct, 1 correct after a Hint, 1 Revealed`. */
-function practiceLine(row: SummaryPractice): string {
-  return `- ${row.name}: ${row.firstTryCorrect} first-try correct, ${row.hintAssisted} correct after a Hint, ${row.revealed} Revealed, ${row.unresolved} left unanswered`;
-}
+/** `- Partners to 10: 4 first-try correct, 1 correct after a Hint, 1 Revealed, 0 left unanswered`: every state, zeros said out loud. */
+const practiceLine = (row: SummaryPractice): string => `- ${row.name}: ${evidenceParts(row, true).join(", ")}`;
 
 const list = (items: readonly string[], none: string): string => (items.length === 0 ? none : items.join(", "));
 

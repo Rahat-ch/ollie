@@ -2,16 +2,8 @@
 
 import { useState } from "react";
 import type { CitedProblem } from "@/coach";
-import type { AssistanceState } from "@/loop";
 import type { Notebook as NotebookView, NotebookBelief } from "@/parent/notebook";
-
-/** The Assistance State in the Parent's words, on the evidence the belief rests on. */
-const ASSISTANCE_WORD: Readonly<Record<AssistanceState, string>> = {
-  "first-try-correct": "right first try",
-  "hint-assisted-correct": "right after a Hint",
-  revealed: "Revealed",
-  unresolved: "not answered",
-};
+import { ASSISTANCE_WORDS } from "@/summary/assistance";
 
 const STATUS_WORD = { proposed: "watching", supported: "supported", refuted: "refuted" } as const;
 
@@ -23,7 +15,7 @@ function Evidence({ problem }: { readonly problem: CitedProblem }) {
       <span className="w-10 shrink-0 text-ink-soft tabular-nums">{problem.id}</span>
       <span className="w-24 shrink-0 tabular-nums">{problem.equation}</span>
       <span className="min-w-0 flex-1 text-ink-soft">
-        {ASSISTANCE_WORD[problem.assistance]} · Session {problem.sessionNumber}
+        {ASSISTANCE_WORDS[problem.assistance]} · Session {problem.sessionNumber}
       </span>
     </li>
   );
@@ -81,8 +73,10 @@ export function Notebook({ view, nickname }: { readonly view: NotebookView; read
       </h3>
       {view.baseline && (
         <p className="rounded-card bg-paper-3 px-4 py-3 font-text text-caption text-ink text-pretty" data-testid="notebook-baseline">
-          Ollie could not think about the last Session, so the next one follows the usual plan: six Problems on the current Skill and
-          two to keep an earlier one warm. {view.baseline.reasons[0]}
+          {view.baseline.unavailable
+            ? "Ollie could not reach the Coach after the last Session"
+            : "Ollie's plan for the next Session could not be used"}
+          , so the next Session follows the usual plan: {view.baseline.plan}.
         </p>
       )}
       {!view.coached && (

@@ -45,7 +45,7 @@ describe("notebook", () => {
     expect(view.baseline).toBeNull();
   });
 
-  it("says the Baseline Plan is in use, and why, when the Coach's output was rejected twice", () => {
+  it("says the Baseline Plan is in use, and describes it from the Plan itself, when the Coach's output was rejected twice", () => {
     const record = applyCoachStep(
       emptyRecord(),
       {
@@ -60,10 +60,26 @@ describe("notebook", () => {
       result,
     );
 
-    expect(notebook(record).baseline).toEqual({
-      reasons: ["/api/coach answered 503: ANTHROPIC_API_KEY is not set", "/api/coach answered 503: ANTHROPIC_API_KEY is not set"],
-    });
+    // The Baseline Plan after the Diagnostic Session: 6 Problems on the current Skill, nothing yet to review.
+    expect(notebook(record).baseline).toEqual({ unavailable: false, plan: "6 Problems on Partners to 10" });
     expect(notebook(record).beliefs).toEqual([]);
+    // The reasons stay on the record; the Parent is not shown them.
+    expect(record.reasons).toHaveLength(2);
+  });
+
+  it("says the Coach could not be reached when that is what happened", () => {
+    const record = applyCoachStep(
+      emptyRecord(),
+      {
+        notes: emptyNotes(),
+        plan: baselinePlan(result.profile),
+        source: "baseline",
+        rejections: [{ attempt: 1, reasons: ["/api/coach answered 503: ANTHROPIC_API_KEY is not set"], unavailable: true }],
+      },
+      result,
+    );
+
+    expect(notebook(record).baseline).toEqual({ unavailable: true, plan: "6 Problems on Partners to 10" });
   });
 
   it("is empty before the Coach has ever run", () => {

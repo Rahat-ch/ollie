@@ -4,6 +4,7 @@
  * then use the template sentence so play never waits on the model.
  */
 import type { Generation, StoryInput } from "@/generation/types";
+import { errorMessage } from "@/lib/errors";
 import { templateStory } from "./template";
 import { validateStory } from "./validate";
 
@@ -23,8 +24,6 @@ export type WrittenStory = {
   readonly source: "story" | "template";
   readonly rejections: readonly StoryRejection[];
 };
-
-const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
 export async function writeValidStory(generation: Pick<Generation, "writeStory">, input: StoryInput): Promise<WrittenStory> {
   const rejections: StoryRejection[] = [];

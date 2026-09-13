@@ -35,6 +35,61 @@ describe("validateSummary", () => {
     expect(!verdict.ok && verdict.reasons.join("; ")).toContain("12");
   });
 
+  it("accepts a Summary that names the strategies and what was Mastered, numbers in their names and all", () => {
+    const mastered = { ...input, mastered: ["Partners to 10"] };
+    const verdict = validateSummary(
+      summary("Partners to 10 is Mastered. Teen numbers as 10 + n had 2 first-try correct and 1 correct after a Hint."),
+      mastered,
+    );
+
+    expect(verdict).toEqual({ ok: true });
+  });
+
+  it("accepts a Summary that counts the strategies and says a state did not happen", () => {
+    expect(validateSummary(summary("Your child practised three strategies over 9 Problems, with 0 left unanswered."), input)).toEqual({
+      ok: true,
+    });
+  });
+
+  it("rejects a number taken from the Learner Notes rather than the Session: a confidence or a Problem ID", () => {
+    const notes = {
+      hypotheses: [
+        {
+          id: "h1",
+          claim: "May need more practice with partners to 10",
+          status: "proposed" as const,
+          confidence: 0.55,
+          evidence: ["p12"],
+          nextTest: "Give 3 more partners to 10 Problems",
+        },
+      ],
+      strengths: [],
+    };
+    const watching = { ...input, notes };
+
+    const confidence = validateSummary(summary("Ollie is 0.55 sure that partners to 10 need more practice."), watching);
+    const problemId = validateSummary(summary("The Problem she missed was p12, out of 9."), watching);
+
+    expect(!confidence.ok && confidence.reasons.join("; ")).toContain("55");
+    expect(!problemId.ok && problemId.reasons.join("; ")).toContain("12");
+  });
+
+  it("rejects each of the hand-written claims about the Learner's mind", () => {
+    const bad = [
+      "Your child understands partners to 10 now.",
+      "She is picturing the ten-frame before she answers.",
+      "She gets it when the numbers are small.",
+      "She sees that ten is made of two parts.",
+      "Your child has learned to count on without help.",
+      "She was confused by the teen numbers.",
+    ];
+
+    for (const practiced of bad) {
+      const verdict = validateSummary(summary(practiced), input);
+      expect(verdict.ok, practiced).toBe(false);
+    }
+  });
+
   it("rejects a claim about how the Learner was thinking", () => {
     const verdict = validateSummary(
       summary("Your child worked through 9 Problems and now understands that partners to 10 always make a whole ten."),
