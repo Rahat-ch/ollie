@@ -22,6 +22,13 @@ import type { ThemeId } from "@/profile/identity";
  * dresses, the Theme whose words it may use, and the Nickname to write
  * (the placeholder, when the Story is for the Content Pool).
  */
+/**
+ * Which set of Stories a Problem's Story comes from: the plain one, or the
+ * rich one the Story Solver Power opens, where the same numbers are told as
+ * a scene in the Theme. The two are kept apart in the Content Pool.
+ */
+export type StorySet = "plain" | "rich";
+
 export type StoryInput = {
   readonly skill: SkillId;
   readonly structure: string;
@@ -29,6 +36,8 @@ export type StoryInput = {
   readonly answer: number;
   readonly theme: ThemeId;
   readonly nickname: string;
+  /** Which set the Story is written for; the plain one unless said otherwise. */
+  readonly set?: StorySet;
 };
 
 export type StoryOutput = { readonly text: string };

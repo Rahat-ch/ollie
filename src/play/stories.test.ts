@@ -18,7 +18,7 @@ const problem = (skill: Problem["skill"], structure: string, equation: Problem["
 describe("storyInputFor", () => {
   it("keys a Unit 3 Problem by the Profile's Theme and the engine's numbers, and nothing for Units 1 and 2", () => {
     const p = problem("result-unknown", "add-to", { left: 7, op: "+", right: 5, result: 12, unknown: "result" });
-    expect(storyInputFor(p, "space")).toEqual({ skill: "result-unknown", structure: "add-to", equation: p.equation, answer: 12, theme: "space" });
+    expect(storyInputFor(p, "space")).toEqual({ skill: "result-unknown", structure: "add-to", equation: p.equation, answer: 12, theme: "space", set: "plain" });
     expect(storyInputFor(problem("make-a-ten", "larger-first", { left: 8, op: "+", right: 5, result: 13, unknown: "result" }), "space")).toBeNull();
   });
 });
@@ -86,5 +86,29 @@ describe("poolInputs", () => {
     expect(unit3).toHaveLength(6);
     expect(unit3.every((i) => keys.has(poolKey(i)))).toBe(true);
     expect(newProfile().sessionsCompleted).toBe(0);
+  });
+});
+
+describe("the rich Story set once Story Solver is learned", () => {
+  const p = problem("result-unknown", "add-to", { left: 7, op: "+", right: 5, result: 12, unknown: "result" }, "p3");
+
+  it("keys the Problem into the rich set, so the Learner hears a Story written as a scene", () => {
+    expect(storyInputFor(p, "space", "rich")).toMatchObject({ theme: "space", set: "rich" });
+    expect(storyInputFor(p, "space")).toMatchObject({ set: "plain" });
+  });
+
+  it("reads the rich set from the Pool and never the plain one", () => {
+    const plain = addToPool({}, storyInputFor(p, "puppies")!, "plain {{nickname}}");
+    expect(pooledStory(plain, p, "puppies", "rich")).toBeUndefined();
+    const rich = addToPool(plain, storyInputFor(p, "puppies", "rich")!, "rich {{nickname}}");
+    expect(pooledStory(rich, p, "puppies", "rich")).toBe("rich {{nickname}}");
+    expect(pooledStory(rich, p, "puppies")).toBe("plain {{nickname}}");
+  });
+
+  it("is the same keys again for the fill script, one set for each", () => {
+    const plain = poolInputs(["puppies"]);
+    const rich = poolInputs(["puppies"], "default", "rich");
+    expect(rich).toHaveLength(plain.length);
+    expect(new Set([...plain, ...rich].map(poolKey)).size).toBe(plain.length * 2);
   });
 });

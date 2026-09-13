@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, runSession, scripted, startSession } from "@/loop";
+import { alwaysFirstTry, answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, runSession, scripted, startSession } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 import { awardSession, buyItem, newRewards } from "@/rewards/rewards";
-import { addSummary, applyCoachStep, emptyRecord } from "@/coach";
+import { addSummary, applyCoachStep, awaitCoach, emptyRecord } from "@/coach";
 import { AVATAR_COLORS, cleanNickname, THEMES } from "./identity";
 import { createProfile, parseProfile, serializeProfile } from "./profile";
 
@@ -52,10 +53,11 @@ describe("the identity chosen at onboarding", () => {
     const v1 = { version: 1, seed: "seed-1", progress: { ...fresh, skills: beforeUnit3 }, session: null };
     expect(parseProfile(JSON.stringify(v1))).toEqual({
       ...v1,
-      version: 5,
+      version: 6,
       identity: null,
       progress: fresh,
       rewards: newRewards(),
+      powers: [],
       coach: emptyRecord(),
     });
   });
@@ -137,6 +139,79 @@ describe("the rewards the Profile keeps", () => {
     const owned = { ...fresh, owned: ["party-hat"] };
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, pet: "party-hat" } }))).toBeNull();
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, hat: "party-hat" } }))).not.toBeNull();
+  });
+});
+
+describe("the Powers the Profile holds", () => {
+  const identity = { nickname: "Mia", avatarColor: "sky", theme: "puppies" } as const;
+  const mastered = profileWithMastered("partners-to-10", "teen-numbers", "counting-on");
+  const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-powers", scripted("ffhrfffhf"));
+  const step = {
+    notes: { hypotheses: [], strengths: ["Counts on from the larger number"] },
+    plan: { length: 8, skills: [{ skill: "counting-on" as const, weight: 1 }], reviewShare: 0, hypothesisUnderTest: null },
+    source: "coach" as const,
+    rejections: [],
+  };
+
+  it("starts a fresh Profile with none: a Power is learned in play and never bought", () => {
+    expect(createProfile("seed-1").powers).toEqual([]);
+  });
+
+  it("round-trips the Powers Ollie has learned", () => {
+    const profile = { ...createProfile("seed-1"), identity, powers: ["count-on-flight" as const] };
+    expect(parseProfile(serializeProfile(profile))).toEqual(profile);
+  });
+
+  it("gives a version 5 Profile, stored before Powers existed, the Powers its Mastery has already taught, and keeps the Coach's record beside them", () => {
+    const coach = applyCoachStep(emptyRecord(), step, result);
+    const stored = { ...createProfile("seed-1"), version: 5, identity, progress: mastered, coach, powers: undefined };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({
+      ...createProfile("seed-1"),
+      identity,
+      progress: mastered,
+      coach,
+      powers: ["count-on-flight"],
+    });
+  });
+
+  it("gives a version 4 Profile, stored before either, the Powers its Mastery taught and an empty record", () => {
+    const stored = { ...createProfile("seed-1"), version: 4, identity, progress: mastered, coach: undefined, powers: undefined };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({
+      ...createProfile("seed-1"),
+      identity,
+      progress: mastered,
+      powers: ["count-on-flight"],
+    });
+  });
+
+  it("keeps the Powers the waiting Session earned, so the Parent Summary can name them after a reload", () => {
+    const earned = runSession(
+      { length: 10, skills: [{ skill: "counting-on", weight: 1 }], reviewShare: 0, hypothesisUnderTest: null },
+      profileWithMastered("partners-to-10", "teen-numbers"),
+      "seed-earned",
+      alwaysFirstTry,
+    );
+    expect(earned.powersEarned).toEqual(["count-on-flight"]);
+    const profile = { ...createProfile("seed-1"), identity, coach: awaitCoach(emptyRecord(), earned) };
+    expect(parseProfile(serializeProfile(profile))?.coach.awaiting?.powersEarned).toEqual(["count-on-flight"]);
+  });
+
+  it("reads a Session that was waiting before Powers existed as having earned none", () => {
+    const stored = { ...createProfile("seed-1"), version: 5, identity, coach: awaitCoach(emptyRecord(), result), powers: undefined };
+    const text = JSON.stringify(stored).replace(/,"powersEarned":\[[^\]]*\]/, "");
+    expect(text).not.toContain("powersEarned");
+    expect(parseProfile(text)?.coach.awaiting?.powersEarned).toEqual([]);
+  });
+
+  it("gives a version 1 Profile with nothing Mastered no Powers", () => {
+    const stored = { version: 1, seed: "seed-1", progress: newProfile(), session: null };
+    expect(parseProfile(JSON.stringify(stored))?.powers).toEqual([]);
+  });
+
+  it("starts fresh when the Powers are not four this version knows", () => {
+    const stored = (powers: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity, powers });
+    expect(parseProfile(stored(["x-ray-vision"]))).toBeNull();
+    expect(parseProfile(stored("count-on-flight"))).toBeNull();
   });
 });
 

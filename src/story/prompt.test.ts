@@ -48,3 +48,12 @@ describe("the Story prompt", () => {
     expect(message.match(/\d+/g)).toEqual(["12", "7"]);
   });
 });
+
+describe("the rich Story set's brief", () => {
+  it("asks for the scene where the Theme happens, under the same rules", () => {
+    const message = storyUserMessage({ ...addTo, set: "rich" as const });
+    expect(message).toContain("Say where it happens");
+    expect(message).toContain("at the park");
+    expect(storyUserMessage(addTo)).not.toContain("Say where it happens");
+  });
+});

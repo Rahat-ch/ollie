@@ -3,9 +3,11 @@
 import { unitName } from "@/loop";
 import { masteryRows, type MasteryRow } from "@/parent/mastery";
 import { notebook } from "@/parent/notebook";
+import { powerRows, type PowerRow as PowerRowData } from "@/parent/powers";
 import type { Identity } from "@/profile/identity";
 import type { Profile } from "@/profile/profile";
 import { PillLink } from "@/ui/PillLink";
+import { PowerMark } from "@/ui/PowerMark";
 import { Notebook } from "./Notebook";
 import { Summaries } from "./Summaries";
 
@@ -42,6 +44,23 @@ function SkillRow({ row }: { readonly row: MasteryRow }) {
   );
 }
 
+/** One Power by name: what Ollie does with it, and whether the Learner has taught it yet. */
+function PowerRow({ row }: { readonly row: PowerRowData }) {
+  return (
+    <li className="flex items-start gap-3" data-testid="power-row" data-power={row.id} data-learned={row.learned ? "yes" : "no"}>
+      <span className={row.learned ? "" : "opacity-35"}>
+        <PowerMark power={row.id} size={32} />
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="font-text text-caption font-bold text-ink">{row.name}</span>
+        <span className="font-text text-caption text-ink-soft text-pretty">
+          {row.learned ? row.does : `Mastering ${row.from} teaches it.`}
+        </span>
+      </span>
+    </li>
+  );
+}
+
 function Legend() {
   return (
     <ul className="flex gap-4" aria-label="Legend">
@@ -56,13 +75,13 @@ function Legend() {
 }
 
 /**
- * Text-first, on paper, 44px targets. Mastery per Skill is live from the
- * Loop, and the Parent Summaries and Ollie's Notebook from what the Coach
- * has left on the device; Powers have their place here and arrive with
- * ticket 13.
+ * Text-first, on paper, 44px targets. Mastery per Skill and the Powers
+ * Ollie has learned are live from the Loop, and the Parent Summaries and
+ * Ollie's Notebook from what the Coach has left on the device.
  */
 export function ParentArea({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const rows = masteryRows(profile.progress);
+  const powers = powerRows(profile.powers);
   const { nickname } = identity;
   const sessions = profile.progress.sessionsCompleted;
   const units = ([1, 2, 3] as const).map((unit) => ({ unit, rows: rows.filter((r) => r.unit === unit) }));
@@ -103,9 +122,16 @@ export function ParentArea({ profile, identity }: { readonly profile: Profile; r
           <Legend />
           <div className="flex flex-col gap-2">
             <h3 className="font-text text-caption font-bold text-ink-soft">Powers Ollie has learned</h3>
-            <p className="font-text text-caption text-ink text-pretty">
-              None yet. Ollie learns a Power when {nickname} Masters counting on, make-a-ten, unknown addend, or word problems.
-            </p>
+            {powers.every((power) => !power.learned) && (
+              <p className="font-text text-caption text-ink text-pretty">
+                None yet. Ollie learns a Power when {nickname} Masters the strategy it comes from, and never loses it.
+              </p>
+            )}
+            <ul className="flex flex-col gap-3">
+              {powers.map((power) => (
+                <PowerRow key={power.id} row={power} />
+              ))}
+            </ul>
           </div>
         </section>
       </div>

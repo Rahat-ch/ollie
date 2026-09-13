@@ -116,3 +116,37 @@ describe("number line for unknown addend", () => {
     expect(numberLine(p, "hint")).toMatchObject({ showHops: true, showEnd: true });
   });
 });
+
+describe("the Power Ollie uses on the visual", () => {
+  const countingOn = problem("counting-on", "larger-first", { left: 9, op: "+", right: 2, result: 11, unknown: "result" }, 11);
+  const makeATen = problem("make-a-ten", "larger-first", { left: 8, op: "+", right: 5, result: 13, unknown: "result" }, 13);
+  const unknownAddend = problem("unknown-addend", "subtract", { left: 13, op: "-", right: 9, result: 4, unknown: "result" }, 4);
+  const wordProblem = problem("result-unknown", "add-to", { left: 5, op: "+", right: 4, result: 9, unknown: "result" }, 9);
+
+  it("is none until the Learner has taught it, whatever the Problem", () => {
+    expect(visualFor(countingOn, "asking").power).toBeNull();
+    expect(visualFor(makeATen, "hint", []).power).toBeNull();
+  });
+
+  it("flies the number line's hops on a counting-on Problem once Count-On Flight is learned", () => {
+    expect(visualFor(countingOn, "hint", ["count-on-flight"]).power).toBe("count-on-flight");
+    expect(visualFor(makeATen, "hint", ["count-on-flight"]).power).toBeNull();
+  });
+
+  it("fills and splits the ten-frame on a make-a-ten Problem once Make-Ten Magic is learned", () => {
+    expect(visualFor(makeATen, "hint", ["make-ten-magic"]).power).toBe("make-ten-magic");
+  });
+
+  it("searches the number line on an unknown-addend Problem once Missing Number Detective is learned", () => {
+    expect(visualFor(unknownAddend, "asking", ["missing-number-detective"]).power).toBe("missing-number-detective");
+  });
+
+  it("opens the book on a word problem once Story Solver is learned", () => {
+    expect(visualFor(wordProblem, "asking", ["story-solver"]).power).toBe("story-solver");
+  });
+
+  it("changes nothing else about the visual: the Power is how it is drawn, not what it says", () => {
+    const flown = visualFor(countingOn, "hint", ["count-on-flight"]);
+    expect({ ...flown, power: null }).toEqual(visualFor(countingOn, "hint"));
+  });
+});

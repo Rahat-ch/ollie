@@ -19,6 +19,9 @@ export type SkillRef = { readonly skill: SkillId; readonly name: string };
 
 export type Visual = "ten-frame" | "number-line" | "theme-picture";
 
+/** The four Powers Mastery teaches Ollie; the catalogue is in powers.ts. */
+export type PowerId = "count-on-flight" | "make-ten-magic" | "missing-number-detective" | "story-solver";
+
 /** Inclusive bounds on the number a Skill's template family draws. */
 export type NumberRange = { readonly min: number; readonly max: number };
 
@@ -124,6 +127,8 @@ export type SessionResult = {
   readonly newlyMastered: readonly SkillId[];
   /** Units whose Skills all became Mastered during this Session, opening the next. */
   readonly newlyUnlockedUnits: readonly Unit[];
+  /** Powers Ollie learned during this Session: a pure function of what became Mastered. */
+  readonly powersEarned: readonly PowerId[];
 };
 
 export type HypothesisStatus = "proposed" | "supported" | "refuted";

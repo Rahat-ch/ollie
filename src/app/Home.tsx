@@ -63,7 +63,7 @@ export function Home() {
       </SpeechBubble>
       <Ollie pose={speaking ? "talking" : "idle"} speaking={speaking} size={220} className="absolute bottom-6 left-gutter" />
       <div className="flex min-h-dvh items-center justify-center pt-24 pb-44 pl-72">
-        <Path stops={pathStops(profile.progress)} />
+        <Path stops={pathStops(profile.progress, profile.powers)} />
       </div>
       <Link href="/play" className={`${bigButtonClasses("xl")} absolute bottom-12 left-1/2 -translate-x-1/2`}>
         <PlayIcon />

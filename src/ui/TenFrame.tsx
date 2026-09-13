@@ -9,8 +9,11 @@ const STAGGER_MS = 220;
 export function TenFrame({ model }: { readonly model: TenFrameModel }) {
   const twoFrames = model.frames.length > 1;
   const sizes = twoFrames ? { "--cell": "50px", "--counter": "36px" } : { "--cell": "60px", "--counter": "44px" };
+  // Make-Ten Magic: the counters that fill the frame and the ones left over
+  // are ringed in plum as they move, so the filling and the split are seen.
+  const magic = model.power === "make-ten-magic" ? " ten-frame-magic" : "";
   return (
-    <div className="flex items-center gap-5" style={sizes as React.CSSProperties} data-testid="ten-frame">
+    <div className={`flex items-center gap-5${magic}`} style={sizes as React.CSSProperties} data-testid="ten-frame" data-power={model.power ?? undefined}>
       <div className="flex shrink-0 gap-4 rounded-card bg-paper-2 p-5 shadow-card">
         {model.frames.map((cells, f) => (
           <Frame key={f} cells={cells} />

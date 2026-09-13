@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
 import { awaitCoach } from "@/coach";
-import { hintFor } from "@/loop";
-import type { Problem } from "@/loop";
+import { hintFor, powerUsedOn } from "@/loop";
+import type { PowerId, Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
+import { poseFor } from "@/ollie/powers";
 import { cheerFor, revealLine } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
 import { storySpeechRequest } from "@/play/speech-pool";
@@ -20,6 +21,7 @@ import { BigButton } from "@/ui/BigButton";
 import { Equation } from "@/ui/Equation";
 import { NumberLine } from "@/ui/NumberLine";
 import { NumberPad } from "@/ui/NumberPad";
+import { PowerMark } from "@/ui/PowerMark";
 import { ProgressDots } from "@/ui/ProgressDots";
 import { RepeatButton } from "@/ui/RepeatButton";
 import { SpeechBubble } from "@/ui/SpeechBubble";
@@ -31,6 +33,19 @@ import { Celebration } from "./Celebration";
 export const CORRECT_BEAT_MS = 1400;
 
 type ProblemPhase = Exclude<Phase, { kind: "celebration" }>;
+
+/**
+ * Ollie's pose: the Power's on a Problem Ollie has one for, so the Learner
+ * sees it used from the Problem it is asked on; the phase's own pose when
+ * Ollie is reacting (encouraging after a miss, celebrating a right answer),
+ * and talking while a line is being said. The beak moves on its own class,
+ * so a Power pose still speaks.
+ */
+function olliePose(phasePose: OlliePose | "idle", power: PowerId | null, speaking: boolean): OlliePose {
+  if (phasePose !== "idle") return phasePose;
+  if (power) return poseFor(power);
+  return speaking ? "talking" : "idle";
+}
 
 /** What each phase puts on screen: the line Ollie says, the visual's stage, Ollie's pose, and whether the pad takes taps. */
 const VIEW: Readonly<
@@ -64,13 +79,16 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const router = useRouter();
   const [state, dispatch] = useReducer(playReducer, profile, (p) => beginPlay(p, Date.now()));
   const [repeats, setRepeats] = useState(0);
-  const { phase, session } = state;
-  const stories = useStories(session.problems, identity);
+  const { phase, session, powers } = state;
+  const stories = useStories(session.problems, identity, powers);
   // One Coach run and one Parent Summary per completed Session, in the background.
   useSessionCoach(profile);
   const problem = problemShown(state);
   const view = phase.kind === "celebration" ? undefined : VIEW[phase.kind];
   const position = session.entries.length + (view?.answering ? 1 : 0);
+  // The Power Ollie uses on this Problem: the pose while it is asked, and
+  // the way the ten-frame, the number line, or the Story is drawn.
+  const power = problem ? powerUsedOn(powers, problem) : null;
   const story = problem && phase.kind === "asking" ? stories.get(problem.id) : undefined;
   const line = story ? story.text : problem && view ? view.line(problem, position) : "";
   // A Story is the one line on this screen with the Nickname in it, so it is
@@ -85,19 +103,24 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
       const { profile: progress } = phase.result;
       // The Session's Coins and Streak land with its progress, and only once: a
       // Session that has already paid adds nothing when it is celebrated again.
-      // The Session itself waits on the record until a Coach run writes it,
-      // so the run outlives this screen and a reload.
+      // The Powers are the reducer's, which added what this Session taught to
+      // the ones already held and never takes one away, so celebrating the
+      // same Session again changes nothing. The Session itself waits on the
+      // record until a Coach run writes it, so the run outlives this screen
+      // and a reload, and the Powers it earned wait with it, for the Parent
+      // Summary to name.
       profileStore.update((current) => ({
         ...current,
         progress,
         rewards: phase.award.rewards,
+        powers,
         session: null,
         coach: awaitCoach(current.coach, phase.result),
       }));
     } else {
       profileStore.update((current) => ({ ...current, session }));
     }
-  }, [phase, session]);
+  }, [phase, session, powers]);
 
   useEffect(() => {
     if (phase.kind !== "correct") return;
@@ -111,8 +134,8 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   if (!problem || !view) return null;
 
   const { stage, answering } = view;
-  const visual = visualFor(problem, stage);
-  const pose = view.pose === "idle" && speaking ? "talking" : view.pose;
+  const visual = visualFor(problem, stage, powers);
+  const pose = olliePose(view.pose, power, speaking);
 
   return (
     <main
@@ -120,6 +143,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
       data-phase={phase.kind}
       data-problem={problem.id}
       data-story-source={story?.source}
+      data-power={power ?? undefined}
       data-speech-source={speechSource ?? undefined}
     >
       <h1 className="sr-only">Play</h1>
@@ -139,8 +163,18 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
             {visual.kind === "ten-frame" && <TenFrame model={visual} />}
             {visual.kind === "number-line" && <NumberLine model={visual} />}
             {visual.kind === "theme-picture" && (
-              <div className="flex size-56 items-center justify-center rounded-card bg-paper-2 shadow-card" data-testid="theme-picture">
+              <div
+                className="relative flex size-56 items-center justify-center rounded-card bg-paper-2 shadow-card"
+                data-testid="theme-picture"
+                data-power={visual.power ?? undefined}
+              >
                 <ThemeIcon theme={identity.theme} size={176} />
+                {/* Story Solver: the book opens on the picture, and the Story itself comes from the rich set. */}
+                {visual.power === "story-solver" && (
+                  <span className="story-page absolute right-3 bottom-3" data-testid="story-book">
+                    <PowerMark power="story-solver" size={44} />
+                  </span>
+                )}
               </div>
             )}
           </div>

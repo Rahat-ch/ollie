@@ -22,6 +22,15 @@ function inputs(nickname: string): StoryInput[] {
   );
 }
 
+const addTo = (left: number, right: number): StoryInput => ({
+  skill: "result-unknown",
+  structure: "add-to",
+  equation: { left, op: "+", right, result: left + right, unknown: "result" },
+  answer: left + right,
+  theme: "puppies",
+  nickname: "Mia",
+});
+
 describe("templateStory", () => {
   it("is a valid Story for every Theme and structure, so the fallback never fails the validator", () => {
     for (const input of inputs("Mia")) {
@@ -33,15 +42,6 @@ describe("templateStory", () => {
     for (const input of inputs(NICKNAME_PLACEHOLDER)) {
       expect(validateStory(templateStory(input), input)).toEqual({ ok: true });
     }
-  });
-
-  const addTo = (left: number, right: number): StoryInput => ({
-    skill: "result-unknown",
-    structure: "add-to",
-    equation: { left, op: "+", right, result: left + right, unknown: "result" },
-    answer: left + right,
-    theme: "puppies",
-    nickname: "Mia",
   });
 
   it("reads as a word problem in the Theme, with the Nickname, the numbers, and a question", () => {
@@ -67,5 +67,28 @@ describe("templateStory", () => {
     expect(templateStory(input)).toContain("rockets");
     expect(templateStory(input, 1)).toContain("stars");
     expect(validateStory(templateStory(input, 1), input)).toEqual({ ok: true });
+  });
+});
+
+describe("the rich template sentence", () => {
+  it("is a valid Story for every Theme and structure, so Story Solver never falls back to a Story the validator refuses", () => {
+    for (const input of inputs("Mia")) {
+      const rich = { ...input, set: "rich" as const };
+      expect(validateStory(templateStory(rich), rich)).toEqual({ ok: true });
+    }
+  });
+
+  it("sets the scene where the Theme happens, which the plain sentence does not", () => {
+    const plain = { ...addTo(7, 5) };
+    expect(templateStory({ ...plain, set: "rich" as const })).toBe(
+      "Mia plays at the park with 7 puppies. Then 5 more puppies come along, so how many puppies are there now?",
+    );
+    expect(templateStory(plain)).not.toContain("park");
+  });
+
+  it("keeps the singular, so it never says 1 puppies", () => {
+    expect(templateStory({ ...addTo(1, 1), set: "rich" as const })).toBe(
+      "Mia plays at the park with 1 puppy. Then 1 more puppy comes along, so how many puppies are there now?",
+    );
   });
 });

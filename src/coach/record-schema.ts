@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { SKILLS } from "@/loop";
-import type { SkillId } from "@/loop";
+import { POWERS, SKILLS } from "@/loop";
+import type { PowerId, SkillId } from "@/loop";
 import { LearnerNotesSchema, SessionPlanSchema } from "@/generation/coach-schema";
 import { SummaryOutputSchema, SummaryPracticeSchema } from "@/generation/summary-schema";
 import { emptyRecord, SUMMARIES_KEPT, type CoachRecord } from "./record";
 
 const skillIds = SKILLS.map((s) => s.id) as [SkillId, ...SkillId[]];
+const powerIds = POWERS.map((power) => power.id) as [PowerId, ...PowerId[]];
 
 const AssistanceSchema = z.enum(["first-try-correct", "hint-assisted-correct", "revealed", "unresolved"]);
 
@@ -75,6 +76,9 @@ const SessionResultSchema = z.strictObject({
   profile: ProfileStateSchema,
   newlyMastered: z.array(z.enum(skillIds)),
   newlyUnlockedUnits: z.array(z.union([z.literal(1), z.literal(2), z.literal(3)])),
+  // A record written before Powers existed has none on the Session it kept;
+  // the Parent Summary then names none, which is what was true at the time.
+  powersEarned: z.array(z.enum(powerIds)).default([]),
 });
 
 /**

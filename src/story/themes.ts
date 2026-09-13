@@ -14,6 +14,8 @@ export type ThemeVocabulary = {
   readonly id: ThemeId;
   /** The things the Theme counts. The first is what the template sentence counts. */
   readonly things: readonly Thing[];
+  /** Where the Theme happens, as the rich template says it: "at the park". Its words are the Theme's own. */
+  readonly where: string;
   /** Everything else the Theme lets a Story say, beyond the core words. */
   readonly words: readonly string[];
 };
@@ -39,6 +41,7 @@ export const CORE_WORDS: readonly string[] = split(`
 const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   {
     id: "puppies",
+    where: "at the park",
     things: [{ one: "puppy", many: "puppies" }, { one: "bone", many: "bones" }],
     words: split(`
       puppy puppies dog dogs bone bones ball balls park yard bark barks barked wag wags wagged
@@ -48,6 +51,7 @@ const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   },
   {
     id: "dinosaurs",
+    where: "in the jungle",
     things: [{ one: "dinosaur", many: "dinosaurs" }, { one: "egg", many: "eggs" }],
     words: split(`
       dinosaur dinosaurs dino dinos egg eggs nest nests roar roars roared stomp stomps stomped
@@ -57,6 +61,7 @@ const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   },
   {
     id: "space",
+    where: "on the moon",
     things: [{ one: "rocket", many: "rockets" }, { one: "star", many: "stars" }],
     words: split(`
       rocket rockets star stars moon moons planet planets ship ships astronaut astronauts
@@ -67,6 +72,7 @@ const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   },
   {
     id: "ocean",
+    where: "at the beach",
     things: [{ one: "fish", many: "fish" }, { one: "shell", many: "shells" }],
     words: split(`
       fish crab crabs shell shells wave waves whale whales dolphin dolphins turtle turtles
@@ -76,6 +82,7 @@ const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   },
   {
     id: "fairies",
+    where: "in the garden",
     things: [{ one: "fairy", many: "fairies" }, { one: "flower", many: "flowers" }],
     words: split(`
       fairy fairies wing wings wand wands flower flowers garden gardens sparkle sparkles sparkled
@@ -86,6 +93,7 @@ const THEME_VOCABULARIES: readonly ThemeVocabulary[] = [
   },
   {
     id: "trucks",
+    where: "at the site",
     things: [{ one: "truck", many: "trucks" }, { one: "rock", many: "rocks" }],
     words: split(`
       truck trucks wheel wheels load loads loaded dump dumps dumped digger diggers crane cranes

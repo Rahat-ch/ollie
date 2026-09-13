@@ -9,6 +9,7 @@
  *   pnpm pool --themes puppies,space   # some Themes only
  *   pnpm pool --variants 2             # up to two variants per key
  *   pnpm pool --range standard         # every equation in the Skills' standard ranges (2 to 20), not only the defaults
+ *   pnpm pool --rich                   # the rich set, which the Story Solver Power opens
  *   pnpm pool --limit 50               # at most 50 new Stories this run
  *   pnpm pool --fake --out /tmp/p.json # the Generation fake, a dry run of the script
  *
@@ -35,6 +36,7 @@ const { values } = parseArgs({
     range: { type: "string", default: "default" },
     limit: { type: "string" },
     concurrency: { type: "string", default: "6" },
+    rich: { type: "boolean", default: false },
     fake: { type: "boolean", default: false },
     out: { type: "string", default: POOL_FILE },
   },
@@ -65,11 +67,11 @@ for (const [name, value] of [["variants", variants], ["limit", limit], ["concurr
 async function main(): Promise<void> {
   const { generation, storyName } = await chooseGeneration(values.fake ? "fake" : "real");
   let pool: ContentPool = await readPoolFile(values.out);
-  const wanted = poolInputs(themes, range);
+  const wanted = poolInputs(themes, range, values.rich ? "rich" : "plain");
   const jobs: PoolInput[] = wanted.flatMap((input) => Array<PoolInput>(Math.max(0, variants - poolVariants(pool, input).length)).fill(input));
   const todo = jobs.slice(0, limit);
   console.log(`Stories: ${storyName}. Pool: ${values.out} (${Object.keys(pool).length} keys).`);
-  console.log(`${wanted.length} keys for ${themes.join(", ")}; ${jobs.length} Stories to write for ${variants} variant${variants === 1 ? "" : "s"} each; writing ${todo.length} now.\n`);
+  console.log(`${wanted.length} ${values.rich ? "rich" : "plain"} keys for ${themes.join(", ")}; ${jobs.length} Stories to write for ${variants} variant${variants === 1 ? "" : "s"} each; writing ${todo.length} now.\n`);
 
   let generated = 0;
   let failed = 0;

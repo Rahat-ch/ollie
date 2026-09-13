@@ -3,8 +3,8 @@
  * tap, plus the moments between them where Ollie reacts. Plain data and pure
  * functions; the screen renders the state and forwards taps.
  */
-import { answerProblem, baselinePlan, currentProblem, finishSession, startSession } from "@/loop";
-import type { Problem, SessionPlan, SessionResult, SessionState } from "@/loop";
+import { answerProblem, baselinePlan, currentProblem, finishSession, startSession, withPowers } from "@/loop";
+import type { PowerId, Problem, SessionPlan, SessionResult, SessionState } from "@/loop";
 import type { Profile } from "@/profile/profile";
 import { awardSession, type Award, type Rewards } from "@/rewards/rewards";
 
@@ -24,6 +24,12 @@ export type PlayState = {
   readonly session: SessionState;
   /** The rewards as they stand: the Session's Coins and Streak land on them at the celebration. */
   readonly rewards: Rewards;
+  /**
+   * The Powers Ollie has learned. Held for the whole Session, so a Power
+   * earned at the celebration is used from the next Session's Problems on;
+   * the ones earned here are added at the celebration and never taken away.
+   */
+  readonly powers: readonly PowerId[];
   /**
    * When the Session's last Problem was answered, in ms; the Streak's day
    * comes from it. Null while the Session is in progress, and for a Session
@@ -47,10 +53,17 @@ export type PlayEvent =
  * its Coins once, so celebrating the same Session again (a Session left
  * uncelebrated, finished on the next visit) adds nothing.
  */
-function celebrate(session: SessionState, rewards: Rewards, completedAt: number): PlayState {
+function celebrate(session: SessionState, rewards: Rewards, powers: readonly PowerId[], completedAt: number): PlayState {
   const result = finishSession(session);
   const award = awardSession(rewards, { sessionNumber: result.log.sessionNumber, status: session.status }, new Date(completedAt));
-  return { session, rewards: award.rewards, phase: { kind: "celebration", result, award }, askedAt: 0, completedAt };
+  return {
+    session,
+    rewards: award.rewards,
+    powers: withPowers(powers, result.powersEarned),
+    phase: { kind: "celebration", result, award },
+    askedAt: 0,
+    completedAt,
+  };
 }
 
 /**
@@ -73,16 +86,17 @@ export function nextPlan(profile: Profile): SessionPlan {
  * being celebrated, or start the next Session from the Plan the Coach left.
  */
 export function beginPlay(profile: Profile, now: number): PlayState {
-  const { session, rewards } = profile;
+  const { session, rewards, powers } = profile;
   // A Session that ended without its celebration is paid for on the day it is
   // picked up again: the device kept the Session, not the moment it ended.
-  if (session && session.status !== "in-progress") return celebrate(session, rewards, now);
+  if (session && session.status !== "in-progress") return celebrate(session, rewards, powers, now);
   if (session) {
-    return { session, rewards, completedAt: null, phase: { kind: session.attempts.length === 0 ? "asking" : "hint" }, askedAt: now };
+    return { session, rewards, powers, completedAt: null, phase: { kind: session.attempts.length === 0 ? "asking" : "hint" }, askedAt: now };
   }
   return {
     session: startSession(nextPlan(profile), profile.progress, profile.seed),
     rewards,
+    powers,
     completedAt: null,
     phase: { kind: "asking" },
     askedAt: now,
@@ -105,7 +119,7 @@ export function playReducer(state: PlayState, event: PlayEvent): PlayState {
     return { ...state, session, completedAt, phase: { kind: "correct", assistance } };
   }
   if (kind !== "correct" && kind !== "reveal") return state;
-  if (state.session.status !== "in-progress") return celebrate(state.session, state.rewards, state.completedAt ?? event.at);
+  if (state.session.status !== "in-progress") return celebrate(state.session, state.rewards, state.powers, state.completedAt ?? event.at);
   return { ...state, phase: { kind: "asking" }, askedAt: event.at };
 }
 

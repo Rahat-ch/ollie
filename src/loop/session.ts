@@ -5,6 +5,7 @@ import { MASTERY_WINDOW, meetsMastery } from "./mastery";
 import type { AnswerPolicy } from "./policies";
 import { createRng, type Rng } from "./random";
 import { getSkill, SKILLS } from "./skills";
+import { powersEarned } from "./powers";
 import { unlockedUnits } from "./units";
 import type {
   AssistanceState,
@@ -241,6 +242,7 @@ export function finishSession(state: SessionState): SessionResult {
     profile: next,
     newlyMastered,
     newlyUnlockedUnits,
+    powersEarned: powersEarned(profile, next),
   };
 }
 

@@ -14,5 +14,6 @@ export { isStoryStructure, storyShape } from "./shapes";
 export { describeProblem, STORY_SYSTEM_PROMPT, storyUserMessage } from "./prompt";
 export type { StoryRejection, WrittenStory } from "./write";
 export { STORY_ATTEMPTS, writeValidStory } from "./write";
+export type { StorySet } from "@/generation/types";
 export type { ContentPool, FilledStory, PoolInput } from "./pool";
 export { addToPool, fillStory, poolKey, poolVariants } from "./pool";

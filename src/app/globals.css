@@ -123,6 +123,89 @@ h4 {
   animation: pop-in var(--duration-celebrate) var(--ease-celebrate) both;
 }
 
+/*
+ * Ollie's Powers on the visuals. Each is a Power's own move, played a
+ * bounded number of times on a matching Problem and then still: nothing
+ * here loops, and every one of them is off under prefers-reduced-motion.
+ */
+
+/* Count-On Flight: a pair of wings beats over each hop, in the hops' order. */
+.hop-beat {
+  animation: wing-beat var(--duration-celebrate) var(--ease-state) 3 both;
+}
+@keyframes wing-beat {
+  0% {
+    transform: translateY(6px) scaleY(0.4);
+    opacity: 0;
+  }
+  40% {
+    transform: translateY(-4px) scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scaleY(0.7);
+    opacity: 0.9;
+  }
+}
+
+/* Missing Number Detective: the glass searches from the number known up to the whole, twice. */
+.detective-glass {
+  animation: detective-search calc(var(--duration-celebrate) * 4) var(--ease-state) 2 both;
+}
+.detective-rim {
+  fill: none;
+  stroke: var(--ink);
+  stroke-opacity: 0.6;
+  stroke-width: 3;
+}
+@keyframes detective-search {
+  from {
+    transform: translateX(var(--sweep-from)) rotate(-8deg);
+  }
+  to {
+    transform: translateX(var(--sweep-to)) rotate(8deg);
+  }
+}
+
+/* Make-Ten Magic: a flat plum ring turns out of each counter as it lands or is left over. */
+.ten-frame-magic .counter-arrive,
+.ten-frame-magic .counter-count {
+  outline: 3px solid transparent;
+  animation-name: counter-arrive, magic-ring;
+  animation-duration: var(--duration-celebrate), calc(var(--duration-celebrate) * 2);
+}
+.ten-frame-magic .counter-count {
+  animation-name: counter-pulse, magic-ring;
+}
+@keyframes magic-ring {
+  0% {
+    outline-color: transparent;
+    outline-offset: 0;
+  }
+  50% {
+    outline-color: var(--plum);
+    outline-offset: 4px;
+  }
+  100% {
+    outline-color: transparent;
+    outline-offset: 9px;
+  }
+}
+
+/* Story Solver: the Theme picture's book mark turns a page, once. */
+.story-page {
+  transform-origin: 50% 50%;
+  animation: page-turn calc(var(--duration-celebrate) * 2) var(--ease-celebrate) both;
+}
+@keyframes page-turn {
+  from {
+    transform: scaleX(-0.2);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* The celebration: the headline overshoots, the confetti drifts in over four beats. */
 .celebrate-in {
   animation: pop-in var(--duration-celebrate) var(--ease-celebrate);
@@ -221,7 +304,12 @@ h4 {
   .celebrate-in,
   .confetti,
   .milestone,
-  .milestone-rays {
+  .milestone-rays,
+  .hop-beat,
+  .detective-glass,
+  .ten-frame-magic .counter-arrive,
+  .ten-frame-magic .counter-count,
+  .story-page {
     animation-duration: 1ms;
     animation-delay: 0ms;
   }

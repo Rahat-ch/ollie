@@ -5,8 +5,8 @@
  * the Nickname in it is not here — those are rendered per Nickname at
  * creation time into the Content Pool on the volume (see the speech API route).
  */
-import { hintFor, rangeFor, SKILLS, type SkillRange } from "@/loop";
-import { CHEER_COUNT, cheerFor, revealLine, SESSION_DONE } from "@/play/lines";
+import { hintFor, POWERS, rangeFor, SKILLS, type SkillRange } from "@/loop";
+import { CHEER_COUNT, cheerFor, powerLine, revealLine, SESSION_DONE } from "@/play/lines";
 import { everyDraft } from "./drafts";
 
 /**
@@ -39,11 +39,13 @@ function dedupe(lines: readonly OllieLine[]): OllieLine[] {
 /**
  * Ollie's hand-written lines, each once. Never model-written (ADR 0001).
  * Only what something on screen actually says: the Mastered line on the
- * celebration card is read, not spoken, so it is not here until it is.
+ * celebration card is read, not spoken, so it is not here until it is; the
+ * Power line is, because Ollie says it on the celebration it is earned on.
  */
 export function ollieLines(): OllieLine[] {
   const texts = [
     SESSION_DONE,
+    ...POWERS.map((power) => powerLine(power.name)),
     ...SKILLS.flatMap((skill) => skill.structures.map((structure) => hintFor({ skill: skill.id, structure }))),
     ...PAD_ANSWERS.flatMap((answer) => [
       revealLine(answer),

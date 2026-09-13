@@ -22,6 +22,9 @@ export const SESSION_DONE = "You did it!";
 
 export const MASTERED_LINE = (skillName: string): string => `You know ${skillName} now!`;
 
+/** The headline of the Session a Power is earned on: the Learner taught it to Ollie. */
+export const powerLine = (powerName: string): string => `You taught me ${powerName}!`;
+
 /** The Streak on the celebration: one day, then days. */
 export const streakLine = (days: number): string => `${days} ${days === 1 ? "day" : "days"}`;
 

@@ -9,6 +9,7 @@
  * and the Parent gets a note.
  */
 import { coachSession, type CoachRecord, type CoachRun } from "@/coach";
+import { powerFor } from "@/loop";
 import type { SessionResult } from "@/loop";
 import { parseCoachOutput } from "@/generation/coach-schema";
 import { ModelUnavailableError } from "@/lib/errors";
@@ -68,8 +69,8 @@ export function routeCoaching(): Coaching {
  * back is what the run settled, not a whole record: the caller writes it
  * onto the record as it stands at that moment (`applyCoachRun`), so a slow
  * run cannot drop what landed while it was away. `powers` is the Powers the
- * Session earned, which live outside the Session Log (ticket 13; empty
- * until then).
+ * Session earned, by name, which live beside the Session Log rather than in
+ * it (`powersEarnedIn`).
  */
 export async function runCoaching(
   coaching: Coaching,
@@ -83,3 +84,11 @@ export async function runCoaching(
   const written = await writeValidSummary(coaching, input);
   return { result, step, summary: parentSummary(input, written, at) };
 }
+
+/**
+ * The Powers a Session taught Ollie, by name, as the Parent Summary names
+ * them. They are read from the Session's own result, which is what the
+ * record keeps while it waits for its Coach run, so a reload mid-run names
+ * the same Powers as the run that was interrupted.
+ */
+export const powersEarnedIn = (result: SessionResult): string[] => result.powersEarned.map((id) => powerFor(id).name);

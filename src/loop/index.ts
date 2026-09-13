@@ -11,6 +11,8 @@ export { UNITS, isUnitUnlocked, unitName, unlockedUnits } from "./units";
 export type { PlanSpace, PlanSpaceSkill, PlanValidation } from "./plan-space";
 export { describeRange, planSpace, validatePlan, REVIEW_SHARE, SESSION_LENGTH } from "./plan-space";
 export { bktUpdate } from "./bkt";
+export type { Power, PowerMastery } from "./powers";
+export { POWERS, powerFor, powersEarned, powersFor, powerUsedOn, withPowers } from "./powers";
 export { meetsMastery, MASTERY_ESTIMATE, MASTERY_REQUIRED_CORRECT, MASTERY_WINDOW } from "./mastery";
 export type { SessionState } from "./session";
 export {

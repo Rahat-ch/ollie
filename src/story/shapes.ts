@@ -13,6 +13,8 @@ export type StoryShape = {
   readonly describe: (equation: Equation) => string;
   /** The hand-written Story: `who` (the Nickname or its placeholder) and one of the Theme's things. */
   readonly template: (who: string, equation: Equation, thing: Thing) => string;
+  /** The rich set's hand-written Story: the same numbers with the scene set where the Theme happens. */
+  readonly rich: (who: string, equation: Equation, thing: Thing, where: string) => string;
   /** The equation for a whole and a part, as the Skill's generator builds it. */
   readonly equation: (whole: number, part: number) => Equation;
   /** The largest part the generator draws for a whole. */
@@ -22,6 +24,12 @@ export type StoryShape = {
 /** `7 puppies` or `1 puppy`. */
 const count = (n: number, { one, many }: Thing): string => `${n} ${n === 1 ? one : many}`;
 
+/** `7 more puppies come` or `1 more puppy comes`. */
+const arrive = (n: number, { one, many }: Thing): string => `${n} more ${n === 1 ? `${one} comes` : `${many} come`}`;
+
+/** The verb that goes with a count: `there is 1 puppy`, `there are 7 puppies`. */
+const isOrAre = (n: number): string => (n === 1 ? "is" : "are");
+
 const wholeMinusOne = (whole: number): number => whole - 1;
 const changeUpToNine = (whole: number): number => Math.min(9, whole - 1);
 
@@ -30,7 +38,9 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     skill: "result-unknown",
     describe: ({ left, right }) => `There are ${left} at the start. Then ${right} more come. Ask how many there are now.`,
     template: (who, { left, right }, thing) =>
-      `${who} has ${count(left, thing)}. ${right} more ${right === 1 ? `${thing.one} comes` : `${thing.many} come`}, so how many ${thing.many} are there now?`,
+      `${who} has ${count(left, thing)}. ${arrive(right, thing)}, so how many ${thing.many} are there now?`,
+    rich: (who, { left, right }, thing, where) =>
+      `${who} plays ${where} with ${count(left, thing)}. Then ${arrive(right, thing)} along, so how many ${thing.many} are there now?`,
     equation: (whole, part) => ({ left: part, op: "+", right: whole - part, result: whole, unknown: "result" }),
     maxPart: wholeMinusOne,
   },
@@ -39,6 +49,8 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     describe: ({ left, right }) => `There are ${left} at the start. Then ${right} go away. Ask how many are left.`,
     template: (who, { left, right }, thing) =>
       `${who} has ${count(left, thing)}. ${count(right, thing)} ${right === 1 ? "goes" : "go"} away, so how many ${thing.many} are left?`,
+    rich: (who, { left, right }, thing, where) =>
+      `${who} plays ${where} with ${count(left, thing)}. Then ${count(right, thing)} ${right === 1 ? "goes" : "go"} home, so how many ${thing.many} are left?`,
     equation: (whole, part) => ({ left: whole, op: "-", right: part, result: whole - part, unknown: "result" }),
     maxPart: wholeMinusOne,
   },
@@ -47,6 +59,8 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     describe: ({ left, right }) => `There are ${left} of one kind and ${right} of another kind. Ask how many there are altogether.`,
     template: (who, { left, right }, thing) =>
       `${who} sees ${count(left, thing)} and then ${count(right, thing)} more. How many ${thing.many} are there altogether?`,
+    rich: (who, { left, right }, thing, where) =>
+      `${who} sees ${count(left, thing)} ${where} and then ${count(right, thing)} more. How many ${thing.many} are there altogether?`,
     equation: (whole, part) => ({ left: part, op: "+", right: whole - part, result: whole, unknown: "result" }),
     maxPart: wholeMinusOne,
   },
@@ -56,6 +70,8 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
       `There are ${left} at the start. Some more come, and now there are ${result}. Ask how many came. Never say how many came.`,
     template: (who, { left, result }, thing) =>
       `${who} had ${count(left, thing)}. Now there are ${count(result, thing)}, so how many ${thing.many} came?`,
+    rich: (who, { left, result }, thing, where) =>
+      `${who} had ${count(left, thing)} ${where}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} came along?`,
     equation: (whole, part) => ({ left: whole - part, op: "+", right: part, result: whole, unknown: "right" }),
     maxPart: changeUpToNine,
   },
@@ -64,7 +80,9 @@ const STORY_SHAPES: Readonly<Record<string, StoryShape>> = {
     describe: ({ left, result }) =>
       `There are ${left} at the start. Some go away, and now there are ${result}. Ask how many went away. Never say how many went away.`,
     template: (who, { left, result }, thing) =>
-      `${who} had ${count(left, thing)}. Now there ${result === 1 ? "is" : "are"} ${count(result, thing)}, so how many ${thing.many} went away?`,
+      `${who} had ${count(left, thing)}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} went away?`,
+    rich: (who, { left, result }, thing, where) =>
+      `${who} had ${count(left, thing)} ${where}. Now there ${isOrAre(result)} ${count(result, thing)}, so how many ${thing.many} went home?`,
     equation: (whole, part) => ({ left: whole, op: "-", right: part, result: whole - part, unknown: "right" }),
     maxPart: changeUpToNine,
   },

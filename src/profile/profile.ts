@@ -4,8 +4,8 @@
  * derive from, and the identity the Parent chose at onboarding. One per
  * device, in localStorage, never sent anywhere (ADR 0002).
  */
-import { newProfile, SKILLS } from "@/loop";
-import type { ProfileState, SessionState } from "@/loop";
+import { newProfile, POWERS, powersFor, SKILLS } from "@/loop";
+import type { PowerId, ProfileState, SessionState } from "@/loop";
 import { emptyRecord, type CoachRecord } from "@/coach/record";
 import { parseCoachRecord } from "@/coach/record-schema";
 import { newRewards, type Rewards } from "@/rewards/rewards";
@@ -20,9 +20,12 @@ import { isIdentity, type Identity } from "./identity";
  * playing before the Shop existed keeps her progress and starts earning.
  * Version 4 had no Coach on the device; a stored version 4 Profile gets an
  * empty record, so the next Session is the Baseline's until the Coach has
- * run once.
+ * run once. Version 5 had no Powers; a stored version 4 or 5 Profile gets
+ * the Powers its own Mastery has already taught, so a Learner who Mastered
+ * counting on before Ollie could learn from it finds Count-On Flight
+ * waiting.
  */
-export const PROFILE_VERSION = 5;
+export const PROFILE_VERSION = 6;
 
 export type Profile = {
   readonly version: typeof PROFILE_VERSION;
@@ -33,6 +36,8 @@ export type Profile = {
   readonly progress: ProfileState;
   /** Coins, the Streak, the Freezes, and what the Avatar wears. */
   readonly rewards: Rewards;
+  /** The Powers Ollie has learned, in the order they were learned. Never lost, never bought. */
+  readonly powers: readonly PowerId[];
   /** The Learner Notes, the next Session Plan, and the Parent Summaries the Coach has left. */
   readonly coach: CoachRecord;
   /** The Session being played, or null between Sessions. */
@@ -40,7 +45,16 @@ export type Profile = {
 };
 
 export function createProfile(seed: string): Profile {
-  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), rewards: newRewards(), coach: emptyRecord(), session: null };
+  return {
+    version: PROFILE_VERSION,
+    seed,
+    identity: null,
+    progress: newProfile(),
+    rewards: newRewards(),
+    powers: [],
+    coach: emptyRecord(),
+    session: null,
+  };
 }
 
 export function serializeProfile(profile: Profile): string {
@@ -100,6 +114,10 @@ function isRewards(value: unknown): value is Rewards {
   );
 }
 
+const isPowerId = (value: unknown): value is PowerId => POWERS.some((power) => power.id === value);
+
+const isPowers = (value: unknown): value is readonly PowerId[] => Array.isArray(value) && value.every(isPowerId);
+
 function isSession(value: unknown, version: number): value is SessionState {
   return (
     isRecord(value) &&
@@ -134,6 +152,11 @@ export function parseProfile(text: string | null): Profile | null {
   // Versions before 4 had no rewards at all; every later Profile must carry them.
   const rewards = version < 4 ? newRewards() : value.rewards;
   if (!isRewards(rewards)) return null;
+  const progress = withEverySkillState(value.progress);
+  // Versions before 6 had no Powers; they are derived from the Mastery the
+  // Profile already holds, which is what the Loop would have awarded.
+  const powers = version < 6 ? powersFor(progress) : value.powers;
+  if (!isPowers(powers)) return null;
   // Versions before 5 had no Coach on the device, and a record this version
   // does not know is lost on its own: the progress beside it is not.
   const coach = parseCoachRecord(value.coach, version);
@@ -142,8 +165,9 @@ export function parseProfile(text: string | null): Profile | null {
     version: PROFILE_VERSION,
     seed: value.seed,
     identity,
-    progress: withEverySkillState(value.progress),
+    progress,
     rewards,
+    powers,
     coach,
     session: session && { ...session, profile: withEverySkillState(session.profile), skills: withEverySkill(session.skills) },
   };

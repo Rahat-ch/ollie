@@ -1,6 +1,7 @@
 import type { PathStop } from "@/play/path";
 import { INK_STROKE } from "./icons";
 import { LockIcon } from "./LockIcon";
+import { PowerMark } from "./PowerMark";
 
 function Check() {
   return (
@@ -37,6 +38,16 @@ function Stop({ stop }: { readonly stop: PathStop }) {
       <div className={`text-center font-display text-display-s font-semibold ${stop.state === "locked" ? "text-ink-soft" : "text-ink"}`}>
         {stop.name}
       </div>
+      {stop.powers.length > 0 && (
+        <ul className="flex flex-wrap justify-center gap-1" aria-label={`Powers Ollie learned in Unit ${stop.unit}`}>
+          {stop.powers.map((power) => (
+            <li key={power.id} data-testid="path-power" data-power={power.id} title={power.name}>
+              <PowerMark power={power.id} size={34} />
+              <span className="sr-only">{power.name}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
