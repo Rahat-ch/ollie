@@ -42,6 +42,28 @@ export async function playSession(page: Page): Promise<void> {
   await expect(page.getByTestId("celebration")).toBeVisible();
 }
 
+/** Rewrite parts of the stored Profile in the browser: the progress, or the record the Coach has left. */
+export async function seedProfile(page: Page, patch: Record<string, unknown>): Promise<void> {
+  await page.evaluate(
+    ([k, changes]) => {
+      const profile = JSON.parse(localStorage.getItem(k as string)!);
+      localStorage.setItem(k as string, JSON.stringify({ ...profile, ...(changes as object) }));
+    },
+    [PROFILE_KEY, patch] as const,
+  );
+}
+
+/** Hold the Parent Gate until the Parent Area opens. */
+export async function openParentArea(page: Page): Promise<void> {
+  await page.goto("/parent");
+  const gate = page.getByRole("button", { name: "Hold to open the Parent Area" });
+  await gate.hover();
+  await page.mouse.down();
+  await page.waitForTimeout(3400);
+  await page.mouse.up();
+  await expect(page.getByTestId("parent-area")).toBeVisible();
+}
+
 /**
  * Rewrite the Profile's rewards in the browser, as though the Learner had
  * been playing for days, and the Sessions the Loop counts with them.

@@ -2,12 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useState } from "react";
+import { awaitCoach } from "@/coach";
 import { hintFor } from "@/loop";
 import type { Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
 import { cheerFor, revealLine } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
 import { storySpeechRequest } from "@/play/speech-pool";
+import { useSessionCoach } from "@/play/use-coach";
 import { useSpeech } from "@/play/use-speech";
 import { useStories } from "@/play/use-stories";
 import { visualFor, type Stage } from "@/play/visuals";
@@ -64,6 +66,8 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const [repeats, setRepeats] = useState(0);
   const { phase, session } = state;
   const stories = useStories(session.problems, identity);
+  // One Coach run and one Parent Summary per completed Session, in the background.
+  useSessionCoach(profile);
   const problem = problemShown(state);
   const view = phase.kind === "celebration" ? undefined : VIEW[phase.kind];
   const position = session.entries.length + (view?.answering ? 1 : 0);
@@ -81,7 +85,15 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
       const { profile: progress } = phase.result;
       // The Session's Coins and Streak land with its progress, and only once: a
       // Session that has already paid adds nothing when it is celebrated again.
-      profileStore.update((current) => ({ ...current, progress, rewards: phase.award.rewards, session: null }));
+      // The Session itself waits on the record until a Coach run writes it,
+      // so the run outlives this screen and a reload.
+      profileStore.update((current) => ({
+        ...current,
+        progress,
+        rewards: phase.award.rewards,
+        session: null,
+        coach: awaitCoach(current.coach, phase.result),
+      }));
     } else {
       profileStore.update((current) => ({ ...current, session }));
     }

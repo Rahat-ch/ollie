@@ -11,6 +11,7 @@ describe("renderConvergenceChart", () => {
     sessions: 20,
     coach: { generation, name: "fake" },
     stories: { generation, name: "fake", judge: fakeJudge, judgeName: "fake" },
+    summaries: { generation, name: "fake", judge: fakeJudge, judgeName: "fake" },
   });
   const svg = async () => renderConvergenceChart(evalReport(await results, new Date("2026-09-10T19:06:01Z")), "2026-09-10T19-06-01Z.json");
 

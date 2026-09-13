@@ -6,6 +6,8 @@
  */
 import { newProfile, SKILLS } from "@/loop";
 import type { ProfileState, SessionState } from "@/loop";
+import { emptyRecord, type CoachRecord } from "@/coach/record";
+import { parseCoachRecord } from "@/coach/record-schema";
 import { newRewards, type Rewards } from "@/rewards/rewards";
 import { AVATAR_SLOTS, SHOP_ITEMS, shopItem, type AvatarItemId } from "@/rewards/shop";
 import { isIdentity, type Identity } from "./identity";
@@ -16,8 +18,11 @@ import { isIdentity, type Identity } from "./identity";
  * version 2 Profile gets their fresh states. Version 3 had no Coins, Streak,
  * or Shop; a stored version 3 Profile gets fresh rewards, so a Learner
  * playing before the Shop existed keeps her progress and starts earning.
+ * Version 4 had no Coach on the device; a stored version 4 Profile gets an
+ * empty record, so the next Session is the Baseline's until the Coach has
+ * run once.
  */
-export const PROFILE_VERSION = 4;
+export const PROFILE_VERSION = 5;
 
 export type Profile = {
   readonly version: typeof PROFILE_VERSION;
@@ -28,12 +33,14 @@ export type Profile = {
   readonly progress: ProfileState;
   /** Coins, the Streak, the Freezes, and what the Avatar wears. */
   readonly rewards: Rewards;
+  /** The Learner Notes, the next Session Plan, and the Parent Summaries the Coach has left. */
+  readonly coach: CoachRecord;
   /** The Session being played, or null between Sessions. */
   readonly session: SessionState | null;
 };
 
 export function createProfile(seed: string): Profile {
-  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), rewards: newRewards(), session: null };
+  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), rewards: newRewards(), coach: emptyRecord(), session: null };
 }
 
 export function serializeProfile(profile: Profile): string {
@@ -127,6 +134,9 @@ export function parseProfile(text: string | null): Profile | null {
   // Versions before 4 had no rewards at all; every later Profile must carry them.
   const rewards = version < 4 ? newRewards() : value.rewards;
   if (!isRewards(rewards)) return null;
+  // Versions before 5 had no Coach on the device, and a record this version
+  // does not know is lost on its own: the progress beside it is not.
+  const coach = parseCoachRecord(value.coach, version);
   const session = value.session as SessionState | null;
   return {
     version: PROFILE_VERSION,
@@ -134,6 +144,7 @@ export function parseProfile(text: string | null): Profile | null {
     identity,
     progress: withEverySkillState(value.progress),
     rewards,
+    coach,
     session: session && { ...session, profile: withEverySkillState(session.profile), skills: withEverySkill(session.skills) },
   };
 }

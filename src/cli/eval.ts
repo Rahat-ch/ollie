@@ -4,7 +4,9 @@
  * by side and the Coach's Hypotheses (detection of planted weaknesses,
  * false positives, Evidence Integrity); write a Story per Theme and Unit 3
  * structure and score validity and, once the Judge clears the Calibration
- * Set, readability; write a dated JSON report under docs/evals, and
+ * Set, readability; write a Parent Summary for each Learner's last Session
+ * and score validity and, once the Judge clears the Calibration Set,
+ * faithfulness; write a dated JSON report under docs/evals, and
  * regenerate the convergence chart from that file. Run it before any prompt
  * or Plan Space change so the numbers can be compared.
  *
@@ -41,10 +43,10 @@ async function main(): Promise<void> {
   const coach = await chooseGeneration(mode);
   const judge = await chooseJudge(mode);
   console.log(`Coach: ${describeGeneration(coach.name)}${values.fake ? " (no network)" : ""}`);
-  console.log(`Stories: ${describeGeneration(coach.storyName)}; Judge: ${describeGeneration(judge.name)}`);
+  console.log(`Stories: ${describeGeneration(coach.storyName)}; Parent Summaries: ${describeGeneration(coach.name)}; Judge: ${describeGeneration(judge.name)}`);
   if (values.fake) {
     console.log("The fake plans like a slightly smarter Baseline and never names a pattern: its columns show the seams, not the Coach's judgement.");
-    console.log("The fake Judge is the validator's opinion and fails calibration by design, so its scores are withheld.");
+    console.log("The fake Judge is the validators' opinion and fails calibration by design, so its scores are withheld.");
   }
   console.log("");
   const started = performance.now();
@@ -52,6 +54,7 @@ async function main(): Promise<void> {
     sessions,
     coach,
     stories: { generation: coach.generation, name: coach.storyName, judge: judge.judge, judgeName: judge.name },
+    summaries: { generation: coach.generation, name: coach.name, judge: judge.judge, judgeName: judge.name },
     onSession: values.fake
       ? undefined
       : (learner, { result, step }) => console.log(`${learner}: ${formatSessionLine(result)}; Plan from ${step.source}`),

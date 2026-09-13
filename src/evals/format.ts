@@ -7,6 +7,7 @@ import { describeWeakness, type SimulatedLearnerId } from "./learners";
 import { describeGeneration } from "./report";
 import type { SplitKey } from "./stats";
 import type { StoryReport } from "./stories";
+import type { SummaryReport } from "./summaries";
 
 export const pct = (share: number): string => `${Math.round(share * 100)}%`;
 
@@ -114,11 +115,27 @@ export function formatStories(stories: StoryReport): string {
   ].join("\n");
 }
 
+/** The Parent Summary evals: validity, then the Judge, whose faithfulness score is shown only when it cleared calibration. */
+export function formatSummaries(summaries: SummaryReport): string {
+  const { validity, judge } = summaries;
+  const { calibration, faithfulness } = judge;
+  const reasons = validity.rejectionReasons.map((r) => `${r.reason} (${r.count})`).join("; ");
+  return [
+    `Parent Summaries (${describeGeneration(summaries.generation)}): ${validity.sample} written, one for each Simulated Learner's last Session, ${validity.attempts} attempts`,
+    `Valid on the first attempt: ${pct(validity.firstAttemptRate)}; valid within the bounded attempts: ${pct(validity.validRate)}; template fallbacks: ${validity.templates}`,
+    `Rejection reasons: ${reasons || "none"}`,
+    `Judge (${judge.name === "fake" ? "the fake Judge" : describeGeneration(judge.name)}): agreed with the Calibration Set on ${calibration.agreements} of ${calibration.size} Summaries (${pct(calibration.agreement)}), threshold ${pct(calibration.threshold)}: ` +
+      (faithfulness
+        ? `faithfulness ${faithfulness.passed} of ${faithfulness.judged} Summaries pass (${pct(faithfulness.passRate)})`
+        : "scores withheld"),
+  ].join("\n");
+}
+
 /**
  * The Eval Run as text: the tuning Learners, then the held-out Learners in
  * their own section, each with convergence under the Coach and the Baseline
  * side by side, the Hypothesis scores, and the split's summary; then the
- * Stories.
+ * Stories and the Parent Summaries.
  */
 export function formatEvalResults(results: EvalResults): string {
   const { min, max } = results.targetAccuracyBand;
@@ -131,5 +148,7 @@ export function formatEvalResults(results: EvalResults): string {
     formatSplit(results, "heldOut"),
     "",
     formatStories(results.stories),
+    "",
+    formatSummaries(results.summaries),
   ].join("\n");
 }

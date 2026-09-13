@@ -4,7 +4,7 @@
  * functions; the screen renders the state and forwards taps.
  */
 import { answerProblem, baselinePlan, currentProblem, finishSession, startSession } from "@/loop";
-import type { Problem, SessionResult, SessionState } from "@/loop";
+import type { Problem, SessionPlan, SessionResult, SessionState } from "@/loop";
 import type { Profile } from "@/profile/profile";
 import { awardSession, type Award, type Rewards } from "@/rewards/rewards";
 
@@ -54,10 +54,23 @@ function celebrate(session: SessionState, rewards: Rewards, completedAt: number)
 }
 
 /**
+ * The Plan the next Session is built from: the Coach's, when a Coach run
+ * stands behind the Session just played, and the Baseline's otherwise — the
+ * Diagnostic Session first, then 6 Problems from the current Skill plus 2
+ * Review. A Coach run rejected twice leaves the Baseline Plan on the record
+ * itself, and a Coach that never answered leaves an earlier Session's
+ * number, so either way play goes on (ADR 0003). The Diagnostic Session
+ * stays on the Baseline path, which the engine knows by identity.
+ */
+export function nextPlan(profile: Profile): SessionPlan {
+  const { plan, lastSessionCoached } = profile.coach;
+  const coached = plan !== null && lastSessionCoached > 0 && lastSessionCoached === profile.progress.sessionsCompleted;
+  return coached ? plan : baselinePlan(profile.progress);
+}
+
+/**
  * Resume the Session in progress where it was, finish one that ended without
- * being celebrated, or start the next Session from the Profile's Plan. Until
- * the Coach reaches the app (ticket 12) the Plan is the Baseline's: the
- * Diagnostic Session first, then 6 from the current Skill plus 2 Review.
+ * being celebrated, or start the next Session from the Plan the Coach left.
  */
 export function beginPlay(profile: Profile, now: number): PlayState {
   const { session, rewards } = profile;
@@ -67,9 +80,8 @@ export function beginPlay(profile: Profile, now: number): PlayState {
   if (session) {
     return { session, rewards, completedAt: null, phase: { kind: session.attempts.length === 0 ? "asking" : "hint" }, askedAt: now };
   }
-  const plan = baselinePlan(profile.progress);
   return {
-    session: startSession(plan, profile.progress, profile.seed),
+    session: startSession(nextPlan(profile), profile.progress, profile.seed),
     rewards,
     completedAt: null,
     phase: { kind: "asking" },

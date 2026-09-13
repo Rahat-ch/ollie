@@ -33,6 +33,62 @@ export const SessionPlanSchema = z.strictObject({
   hypothesisUnderTest: z.string().nullable().describe("The id of one Hypothesis in the Notes, or null"),
 });
 
+export const CoachEvidenceSchema = z.strictObject({
+  id: z.string().min(1),
+  skill: z.enum(skillIds),
+  structure: z.string().min(1),
+  equation: z.string().min(1).describe("The equation with its unknown blanked, e.g. 8 + 5 = ?"),
+  review: z.boolean(),
+  position: z.int().min(1),
+  assistance: z.enum(["first-try-correct", "hint-assisted-correct", "revealed", "unresolved"]),
+  firstTryMs: z.number().min(0).nullable(),
+});
+
+const SkillStateSchema = z.strictObject({
+  estimate: z.number().min(0).max(1),
+  recentFirstAttempts: z.array(z.boolean()),
+  mastered: z.boolean(),
+});
+
+const NumberRangeSchema = z.strictObject({ min: z.int(), max: z.int() });
+
+const PlanSpaceSchema = z.strictObject({
+  skills: z.array(
+    z.strictObject({
+      skill: z.enum(skillIds),
+      name: z.string().min(1),
+      unit: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+      structures: z.array(z.string()),
+      numberRange: NumberRangeSchema,
+      rangeOf: z.string(),
+      mastered: z.boolean(),
+    }),
+  ),
+  length: NumberRangeSchema,
+  reviewShare: NumberRangeSchema,
+});
+
+/**
+ * What the Coach is given, as one zod schema. The browser sends it to the
+ * Coach route, so the route checks it here before any model call: the
+ * Session's evidence, the Notes, the Knowledge Estimates, and the Plan
+ * Space, and nothing else. There is no Nickname, Avatar, or Theme in it and
+ * a body carrying one is rejected (ADR 0002).
+ */
+export const CoachInputSchema = z.strictObject({
+  sessionNumber: z.int().min(1),
+  evidence: z.array(CoachEvidenceSchema),
+  notes: LearnerNotesSchema,
+  estimates: z.record(z.enum(skillIds), SkillStateSchema),
+  planSpace: PlanSpaceSchema,
+  rejected: z
+    .strictObject({
+      output: z.lazy(() => CoachOutputSchema).optional(),
+      reasons: z.array(z.string()),
+    })
+    .optional(),
+});
+
 /**
  * The shape the Coach must return, as one zod schema: it is sent to the model
  * as the structured-output format and run over whatever comes back, so a

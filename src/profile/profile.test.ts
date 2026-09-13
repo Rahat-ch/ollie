@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
+import { answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, runSession, scripted, startSession } from "@/loop";
 import { awardSession, buyItem, newRewards } from "@/rewards/rewards";
+import { addSummary, applyCoachStep, emptyRecord } from "@/coach";
 import { AVATAR_COLORS, cleanNickname, THEMES } from "./identity";
 import { createProfile, parseProfile, serializeProfile } from "./profile";
 
@@ -49,7 +50,14 @@ describe("the identity chosen at onboarding", () => {
 
   it("carries a version 1 Profile forward with its progress, no identity, and fresh Unit 3 states, so onboarding runs once", () => {
     const v1 = { version: 1, seed: "seed-1", progress: { ...fresh, skills: beforeUnit3 }, session: null };
-    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 4, identity: null, progress: fresh, rewards: newRewards() });
+    expect(parseProfile(JSON.stringify(v1))).toEqual({
+      ...v1,
+      version: 5,
+      identity: null,
+      progress: fresh,
+      rewards: newRewards(),
+      coach: emptyRecord(),
+    });
   });
 
   it("carries a version 2 Profile, stored before Unit 3 had Skills, forward with fresh states for them, so nothing is lost", () => {
@@ -129,5 +137,77 @@ describe("the rewards the Profile keeps", () => {
     const owned = { ...fresh, owned: ["party-hat"] };
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, pet: "party-hat" } }))).toBeNull();
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, hat: "party-hat" } }))).not.toBeNull();
+  });
+});
+
+describe("what the Coach has left on the device", () => {
+  const identity = { nickname: "Mia", avatarColor: "sky", theme: "puppies" } as const;
+  const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-1", scripted("ffhrfffhf"));
+  const step = {
+    notes: {
+      hypotheses: [
+        {
+          id: "h1",
+          claim: "May need more practice with partners to 10",
+          status: "proposed" as const,
+          confidence: 0.4,
+          evidence: ["p3", "p4"],
+          nextTest: "Give 3 more partners to 10 Problems",
+        },
+      ],
+      strengths: [],
+    },
+    plan: { length: 8, skills: [{ skill: "partners-to-10" as const, weight: 1 }], reviewShare: 0, hypothesisUnderTest: "h1" },
+    source: "coach" as const,
+    rejections: [],
+  };
+  const summary = {
+    sessionNumber: 1,
+    at: "2026-09-13T20:00:00.000Z",
+    practiced: "Your child answered 9 Problems.",
+    activity: "Count ten spoons together.",
+    source: "summary" as const,
+    problems: 9,
+    practice: [],
+    mastered: [],
+    powers: [],
+  };
+
+  it("is empty on a fresh Profile", () => {
+    expect(createProfile("seed-1").coach).toEqual(emptyRecord());
+  });
+
+  it("round-trips the Learner Notes, the next Session Plan, the cited Problems, and a Parent Summary", () => {
+    const coach = addSummary(applyCoachStep(emptyRecord(), step, result), summary);
+    const profile = { ...createProfile("seed-1"), identity, coach };
+    const parsed = parseProfile(serializeProfile(profile));
+    expect(parsed).toEqual(profile);
+    expect(parsed?.coach.plan).toEqual(step.plan);
+    expect(parsed?.coach.cited.map((problem) => problem.id)).toEqual(["p3", "p4"]);
+    expect(parsed?.coach.summaries[0].practiced).toBe("Your child answered 9 Problems.");
+  });
+
+  it("carries a version 4 Profile, stored before the Coach reached the app, forward with an empty record", () => {
+    const stored = { ...createProfile("seed-1"), version: 4, identity, coach: undefined };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({ ...createProfile("seed-1"), identity });
+  });
+
+  it("loses the record alone when it is not a shape this version knows, and keeps the identity, the progress, and the rewards", () => {
+    const rewards = buyItem(awardSession(newRewards(), { sessionNumber: 1, status: "complete" }, new Date(2026, 8, 13)).rewards, "party-hat");
+    const profile = { ...createProfile("seed-1"), identity, rewards, progress: { ...newProfile(), sessionsCompleted: 4 } };
+    const stored = (coach: unknown) => JSON.stringify({ ...profile, coach });
+
+    for (const broken of [
+      { ...emptyRecord(), plan: { length: 8 } },
+      { ...emptyRecord(), notes: { hypotheses: [{ id: "h1" }], strengths: [] } },
+      { ...emptyRecord(), summaries: Array.from({ length: 8 }, (_, i) => ({ ...summary, sessionNumber: i + 1 })) },
+      null,
+    ]) {
+      const parsed = parseProfile(stored(broken));
+      expect(parsed?.coach).toEqual(emptyRecord());
+      expect(parsed?.identity).toEqual(identity);
+      expect(parsed?.rewards).toEqual(rewards);
+      expect(parsed?.progress.sessionsCompleted).toBe(4);
+    }
   });
 });

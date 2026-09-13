@@ -15,13 +15,23 @@ export { convergenceReport, scoreConvergence, TARGET_ACCURACY_BAND } from "./con
 export type { CitationCheck, CitationVerdict, ClaimPolarity, EvidenceIntegrity, LearnerHypotheses, PlanSources } from "./hypotheses";
 export { checkEvidence, claimPolarity, namesWeakness, scoreHypotheses } from "./hypotheses";
 export type { CoachGeneration, EvalOptions, EvalResults, HypothesisReport, HypothesisSplit } from "./evals";
-export type { Split, SplitKey } from "./stats";
+export type { Split, SplitKey, Validity, WrittenTrace } from "./stats";
 export { hypothesisReport, runEvals } from "./evals";
 export type { EvalReport } from "./report";
 export { describeGeneration, evalReport, EVALS_DIR, isReportFileName, reportFileName } from "./report";
 export { renderConvergenceChart } from "./chart";
-export type { Calibration, CalibrationStory, Judge, StoryJudgement, StoryToJudge } from "./judge";
-export { calibrateJudge, fakeJudge, JUDGE_AGREEMENT_THRESHOLD, STORY_JUDGE_SYSTEM_PROMPT, storyJudgeUserMessage } from "./judge";
-export { STORY_CALIBRATION_SET } from "./calibration";
+export type { Calibrated, Calibration, CalibrationStory, CalibrationSummary, Judge, Judgement, StoryToJudge, SummaryToJudge } from "./judge";
+export {
+  calibrateJudge,
+  fakeJudge,
+  JUDGE_AGREEMENT_THRESHOLD,
+  STORY_JUDGE_SYSTEM_PROMPT,
+  storyJudgeUserMessage,
+  SUMMARY_JUDGE_SYSTEM_PROMPT,
+  summaryJudgeUserMessage,
+} from "./judge";
+export { STORY_CALIBRATION_SET, SUMMARY_CALIBRATION_SET } from "./calibration";
 export type { StoryEvalOptions, StoryReadability, StoryReport, StoryTrace, StoryValidity } from "./stories";
 export { runStoryEvals, storySample } from "./stories";
+export type { SummaryEvalOptions, SummaryFaithfulness, SummaryReport, SummaryTrace } from "./summaries";
+export { runSummaryEvals, summarySample } from "./summaries";
