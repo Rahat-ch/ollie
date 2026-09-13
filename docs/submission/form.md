@@ -15,7 +15,7 @@ Ollie — a Grade 1 math game that learns how you learn
 ## One-line description / tagline
 
 ```
-Most math apps adapt difficulty. Ollie adapts to how the learner is learning: a voiced owl reads every problem aloud, a deterministic engine owns the math, and an AI coach forms evidence-backed hypotheses after every session and shows the parent its working.
+Most math apps adapt difficulty. Ollie adapts to how the learner is learning: a voiced owl reads every Problem aloud, a deterministic engine owns the math, and an AI Coach forms evidence-backed Hypotheses after every Session and shows the Parent its working.
 ```
 
 ## Prompt
@@ -71,7 +71,7 @@ Re-run `node scripts/third-party.mjs --write` and `pnpm licenses:check` before s
 ## Anything else / notes to the judges (if the form offers a field)
 
 ```
-Two things the write-up says and I would rather say twice. First, the arithmetic is never the model's: the engine owns every problem type, number, answer, and hint, and every piece of model output — a story, a hypothesis, a session plan, a parent summary — passes a deterministic validator before anyone sees it. Second, the committed eval report is from the deterministic stand-in generation, not the live models: there was no API key on the machine this was built on, so the real coach, story writer, parent summary, and judge have not been exercised. Both facts are stated in the write-up and the README rather than papered over.
+Two things the write-up says and I would rather say twice. First, the arithmetic is never the model's: the engine owns every Problem's type, numbers, answer, and Hint, and every piece of model output — a Story, a Hypothesis, a Session Plan, a Parent Summary — passes a deterministic validator before anyone sees it. Second, the committed eval report is from the deterministic stand-in Generation, not the live models: there was no API key on the machine this was built on, so the real Coach, Story writer, Parent Summary, and Judge have not been exercised. Both facts are stated in the write-up and the README rather than papered over.
 ```
 
 ## Before you press submit
