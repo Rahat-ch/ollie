@@ -3,10 +3,10 @@
  * the build-time render script works through, and the set the app looks a
  * line up in before it falls back to the platform's own speech. A line with
  * the Nickname in it is not here — those are rendered per Nickname at
- * creation time and cached on the volume (see the speech API route).
+ * creation time into the Content Pool on the volume (see the speech API route).
  */
-import { hintFor, SKILLS } from "@/loop";
-import { CHEER_COUNT, cheerFor, MASTERED_LINE, revealLine, SESSION_DONE } from "@/play/lines";
+import { hintFor, rangeFor, SKILLS, type SkillRange } from "@/loop";
+import { CHEER_COUNT, cheerFor, revealLine, SESSION_DONE } from "@/play/lines";
 import { everyDraft } from "./drafts";
 
 /**
@@ -20,9 +20,6 @@ export type OllieLine = {
   readonly kind: LineKind;
   readonly text: string;
 };
-
-/** Which range the Problems are enumerated over: the Skills' defaults, or the whole of what their standards allow. */
-export type LineRange = "default" | "standard";
 
 /** Every answer the pad takes, and so every number a cheer or a Reveal can name. */
 export const PAD_ANSWERS: readonly number[] = Array.from({ length: 21 }, (_, n) => n);
@@ -39,11 +36,14 @@ function dedupe(lines: readonly OllieLine[]): OllieLine[] {
   return kept;
 }
 
-/** Ollie's hand-written lines, each once. Never model-written (ADR 0001). */
+/**
+ * Ollie's hand-written lines, each once. Never model-written (ADR 0001).
+ * Only what something on screen actually says: the Mastered line on the
+ * celebration card is read, not spoken, so it is not here until it is.
+ */
 export function ollieLines(): OllieLine[] {
   const texts = [
     SESSION_DONE,
-    ...SKILLS.map((skill) => MASTERED_LINE(skill.name)),
     ...SKILLS.flatMap((skill) => skill.structures.map((structure) => hintFor({ skill: skill.id, structure }))),
     ...PAD_ANSWERS.flatMap((answer) => [
       revealLine(answer),
@@ -54,10 +54,10 @@ export function ollieLines(): OllieLine[] {
 }
 
 /** The spoken line of every Problem the engine can draw, over every Skill and structure in the range. */
-export function problemLines(range: LineRange = "default"): OllieLine[] {
+export function problemLines(range: SkillRange = "default"): OllieLine[] {
   return dedupe(
     SKILLS.flatMap((skill) =>
-      everyDraft(skill, { range: range === "default" ? skill.defaultRange : skill.standardRange, structures: skill.structures }).map(
+      everyDraft(skill, { range: rangeFor(skill, range), structures: skill.structures }).map(
         (draft): OllieLine => ({ kind: "problem", text: draft.spoken }),
       ),
     ),
@@ -65,6 +65,6 @@ export function problemLines(range: LineRange = "default"): OllieLine[] {
 }
 
 /** The whole catalogue: what `pnpm voice:lines` renders and bundles. */
-export function fixedLines(range: LineRange = "default"): OllieLine[] {
+export function fixedLines(range: SkillRange = "default"): OllieLine[] {
   return dedupe([...ollieLines(), ...problemLines(range)]);
 }

@@ -176,6 +176,10 @@ _Avoid_: badge, achievement, trophy, unlock, ability
 The Character: a voiced owl guide who reads every Problem aloud and reacts to answers. Not controlled by the Learner.
 _Avoid_: character, mascot, tutor, avatar, companion, the owl
 
+**Speech Chain**:
+What Ollie says a line with, and what is tried next when that is not there: the line's audio from the Content Pool, the bundled fixed line, the platform's own speech synthesis, and the line on screen. Nothing waits on a step that is not ready, so no Session is ever silent and blank. Nothing to do with the Streak, which is a chain of days.
+_Avoid_: fallback, TTS pipeline, audio cache
+
 **Shop**:
 Where Coins are exchanged for Avatar Items. Six items in three price tiers.
 _Avoid_: store, marketplace, inventory

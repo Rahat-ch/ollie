@@ -1,9 +1,11 @@
 /**
  * The fixed lines as shipped: rendered once by `pnpm voice:lines` into
- * public/voice/ and bundled with the app, so Ollie speaks them offline and
- * with no call at all. The manifest holds the audio key of each line that
- * has a file, so a line whose wording has changed since it was rendered
- * falls through the chain instead of playing the old audio.
+ * public/voice/ and bundled with the app, so Ollie says them with no vendor
+ * call at all and, because each file is named after what it says, a device
+ * fetches one once (next.config sets a year's cache-control on /voice). The
+ * manifest holds the audio key of each line that has a file, so a line whose
+ * wording has changed since it was rendered falls through the Speech Chain
+ * instead of playing the old audio.
  */
 import { audioFileName, audioKey } from "./key";
 import keys from "./lines.generated.json";

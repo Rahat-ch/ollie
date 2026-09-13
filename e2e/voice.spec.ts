@@ -67,8 +67,9 @@ test("with no voice on the server every line falls through to the line on screen
     // screen. Either way the Problem is put to the Learner.
     await expect(stage).toHaveAttribute("data-speech-source", FELL_THROUGH);
     await expect(page.getByTestId("speech-bubble")).not.toBeEmpty();
-    await expect(page.locator("svg.ollie")).toHaveAttribute("data-pose", "talking");
+    await expect(page.locator("svg.ollie[data-speaking]")).toBeVisible();
 
+    const answer = solve(await page.getByTestId("equation").innerText());
     if (!repeated) {
       // Repeat says the line again. What it costs is counted at the end: one
       // render per Story for the whole Session, however often Repeat is pressed.
@@ -76,8 +77,17 @@ test("with no voice on the server every line falls through to the line on screen
       await page.getByRole("button", { name: "Repeat" }).click();
       await page.getByRole("button", { name: "Repeat" }).click();
       await expect(stage).toHaveAttribute("data-speech-source", FELL_THROUGH);
+
+      // One miss: the Hint is said too, and the beak moves while it is, even
+      // though Ollie is encouraging rather than idle.
+      await key(page, answer === 0 ? 1 : answer - 1).click();
+      const hint = page.locator('main[data-phase="hint"]');
+      await expect(hint).toBeVisible();
+      await expect(hint).toHaveAttribute("data-speech-source", FELL_THROUGH);
+      await expect(page.locator("svg.ollie")).toHaveAttribute("data-pose", "encourage");
+      await expect(page.locator("svg.ollie[data-speaking]")).toBeVisible();
     }
-    await key(page, solve(await page.getByTestId("equation").innerText())).click();
+    await key(page, answer).click();
     await expect(page.locator('main[data-phase="correct"]')).toBeVisible();
   }
 

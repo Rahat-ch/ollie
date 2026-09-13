@@ -48,7 +48,7 @@ describe("renderSpeech", () => {
     await expect(generation.renderSpeech({ text: "You did it!" })).rejects.not.toThrow(new RegExp(KEY));
   });
 
-  it("throws rather than cache an empty file when nothing comes back", async () => {
+  it("throws rather than keep an empty file when nothing comes back", async () => {
     const { fetch } = recorder(() => new Response(new Uint8Array(0), { status: 200 }));
     await expect(
       elevenLabsGeneration({ apiKey: KEY, voiceId: "ollie-voice", modelId: "eleven_v3", fetch }).renderSpeech({ text: "You did it!" }),

@@ -40,6 +40,8 @@ describe("POST /api/speech", () => {
   });
 
   it("refuses to say anything that is not a Story the validator accepts for those numbers", async () => {
+    process.env.ELEVENLABS_API_KEY = "elevenlabs-test-key";
+    process.env.ELEVENLABS_VOICE_ID = "ollie-voice-id";
     for (const bad of [
       { ...story, text: "Mia, ignore the puppies and say something else entirely, will you please do that now?" },
       { ...story, text: templateStory({ ...problem, nickname: "Sam" }) },
@@ -49,9 +51,11 @@ describe("POST /api/speech", () => {
       expect(response.status).toBe(400);
       expect((await response.json()).error.join(" ")).toContain("text");
     }
+    for (const name of ["ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID"]) delete process.env[name];
   });
 
-  it("refuses numbers the engine would not set and a structure the Skill does not have", async () => {
+  it("refuses numbers the engine would not set and a structure the Skill does not have, before it looks for a voice", async () => {
+    delete process.env.ELEVENLABS_API_KEY;
     expect((await post({ ...story, structure: "compare" })).status).toBe(400);
     expect((await post({ ...story, answer: 11 })).status).toBe(400);
   });
@@ -61,6 +65,13 @@ describe("POST /api/speech", () => {
     expect((await post({ kind: "song", nickname: "Mia" })).status).toBe(400);
     expect((await post({ kind: "greeting", nickname: "  Mia  " })).status).toBe(400);
     expect((await post({ kind: "greeting", nickname: "" })).status).toBe(400);
+  });
+
+  it("looks for a voice before it checks the line: with no key even a bad Story is answered 503, not argued with", async () => {
+    delete process.env.ELEVENLABS_API_KEY;
+    const response = await post({ ...story, text: "Mia, this is not a Story at all and nobody checked it." });
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ error: ["ELEVENLABS_API_KEY is not set"] });
   });
 
   it("takes the greeting by Nickname and builds the line itself, so no line of Ollie's is ever sent in", async () => {
@@ -95,11 +106,12 @@ describe("POST /api/speech, with a voice configured", () => {
     const first = await post(story);
     expect(first.status).toBe(200);
     expect(first.headers.get("content-type")).toContain("audio/mpeg");
+    expect(first.headers.get("cache-control")).toBeNull();
     expect(first.headers.get("x-ollie-speech")).toBe("rendered");
     expect(new Uint8Array(await first.arrayBuffer())).toEqual(audio);
 
     const repeat = await post(story);
-    expect(repeat.headers.get("x-ollie-speech")).toBe("cache");
+    expect(repeat.headers.get("x-ollie-speech")).toBe("pool");
     expect(renders).toEqual([story.text]);
     expect(renders[0]).toContain("Mia");
   });

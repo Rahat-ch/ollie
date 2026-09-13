@@ -18,10 +18,10 @@ describe("bundledLineUrl", () => {
 });
 
 describe("speechChain", () => {
-  it("falls through in the order the spec lays down: cached audio, the bundled fixed line, platform speech synthesis, the line on screen", () => {
-    const chain = speechChain(LINE, { cachedUrl: "blob:cached", bundledUrl: voiceUrl(LINE), synthesis: true });
+  it("falls through in the order the spec lays down: the line's audio from the Pool, the bundled fixed line, platform speech synthesis, the line on screen", () => {
+    const chain = speechChain(LINE, { poolUrl: "blob:pooled", bundledUrl: voiceUrl(LINE), synthesis: true });
     expect(chain).toEqual([
-      { source: "cached", url: "blob:cached" },
+      { source: "pool", url: "blob:pooled" },
       { source: "bundled", url: voiceUrl(LINE) },
       { source: "synthesis", text: LINE },
       { source: "text", text: LINE },
@@ -35,10 +35,10 @@ describe("speechChain", () => {
   });
 
   it("always ends with the line on screen, so every Problem has something audible or visible", () => {
-    for (const cachedUrl of [undefined, "blob:cached"]) {
+    for (const poolUrl of [undefined, "blob:pooled"]) {
       for (const bundledUrl of [undefined, voiceUrl(LINE)]) {
         for (const synthesis of [true, false]) {
-          const chain = speechChain(LINE, { cachedUrl, bundledUrl, synthesis });
+          const chain = speechChain(LINE, { poolUrl, bundledUrl, synthesis });
           expect(chain[chain.length - 1]).toEqual({ source: "text", text: LINE });
         }
       }
@@ -46,6 +46,6 @@ describe("speechChain", () => {
   });
 
   it("has nothing to say about an empty line", () => {
-    expect(speechChain("", { cachedUrl: "blob:cached", synthesis: true })).toEqual([]);
+    expect(speechChain("", { poolUrl: "blob:pooled", synthesis: true })).toEqual([]);
   });
 });

@@ -16,7 +16,7 @@ The build is multi-stage: `deps` installs from the frozen lockfile with the pnpm
 
 ## Persistent volume for audio
 
-Generated speech is written under `AUDIO_DIR`, which the image sets to `/data/audio`. That directory must be a volume, otherwise every redeploy starts with an empty cache and every Nickname line is re-rendered through ElevenLabs. Only the lines with the Nickname in them live there, one file per line named after a hash of what is said, so no Nickname is written to disk; the fixed lines are rendered at build time into `public/voice/` and ship inside the image.
+Generated speech is written under `AUDIO_DIR`, which the image sets to `/data/audio`. That directory must be a volume, otherwise every redeploy starts with an empty store and every Nickname line is re-rendered through ElevenLabs. Only the lines with the Nickname in them live there, one file per line named after a non-cryptographic hash of what the line says. That hash is an address, not a hiding place: the line has the Nickname in it and the audio says it aloud, so treat the volume as holding what a Learner is called. Nothing on it ties a line to a Profile. The fixed lines are rendered at build time into `public/voice/` and ship inside the image.
 
 | Setting | Value |
 | --- | --- |

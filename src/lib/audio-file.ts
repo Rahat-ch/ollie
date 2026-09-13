@@ -1,8 +1,9 @@
 /**
- * Rendered audio on the persistent volume: one file per line, named by what
- * the line says (src/voice/key), so a Story rendered with the Nickname in it
- * is found again without the Nickname being written anywhere (ADR 0002).
- * The only I/O the speech service has.
+ * Rendered audio on the persistent volume: the Content Pool's audio, one file
+ * per line, named after what the line says (src/voice/key). The name is an
+ * address and not a hiding place — a line with the Nickname in it is spoken
+ * by the file it names — but nothing here ties a line to a Profile (ADR
+ * 0002). The only I/O the speech service has.
  */
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";

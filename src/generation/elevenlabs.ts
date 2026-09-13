@@ -4,7 +4,7 @@
  * Design and named by ELEVENLABS_VOICE_ID; the model by ELEVENLABS_MODEL_ID
  * (src/lib/env). Neither is written down here. Nothing on the Learner's
  * path awaits this adapter: a Story's audio is rendered once at creation
- * time and cached, and every fixed line is rendered at build time, so a
+ * time into the Content Pool, and every fixed line is rendered at build time, so a
  * Session that cannot reach ElevenLabs falls through the chain instead
  * (src/voice/chain).
  *

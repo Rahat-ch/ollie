@@ -17,9 +17,9 @@ export const OLLIE_VOICE_NAME = "Ollie";
  */
 export const OLLIE_VOICE_BRIEF = [
   "Native English.",
-  "Gender-neutral leaning bright, a kid of about eleven.",
+  "Gender-neutral leaning bright, a child of about eleven.",
   "Warm, playful, gently energetic, with slow clear diction and every word landing separately, reading to a six-year-old who cannot read yet.",
-  "Persona: a kind older kid.",
+  "Voice: a kind older child.",
   "Emotion: encouraging and delighted, patient after a wrong answer, never flat.",
   "Not a baby voice, not a teacher voice, not a narrator.",
 ].join(" ");

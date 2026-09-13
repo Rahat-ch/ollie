@@ -65,7 +65,7 @@ export function Celebration({ result, onDone }: CelebrationProps) {
   const mastered = result.newlyMastered.map((id) => getSkill(id).name);
   // The end of a Session is a fixed line, bundled with the app; Ollie is
   // already celebrating, so only the audio is new here.
-  const { source } = useSpeech({ text: SESSION_DONE }, "session-done");
+  const { speaking, source } = useSpeech({ text: SESSION_DONE }, "session-done");
   return (
     <main
       className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
@@ -77,7 +77,7 @@ export function Celebration({ result, onDone }: CelebrationProps) {
         {SESSION_DONE}
       </h1>
       <div className="flex items-center justify-center gap-12">
-        <Ollie pose="celebrate" size={300} />
+        <Ollie pose="celebrate" speaking={speaking} size={300} />
         <div className="flex w-90 flex-col gap-5">
           <div className="rounded-card bg-paper-2 px-6 py-5 shadow-card">
             <div className="font-text text-caption text-ink-soft">This Session</div>

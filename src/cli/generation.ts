@@ -9,8 +9,8 @@ import { existsSync } from "node:fs";
 import type { CoachGeneration } from "@/evals/evals";
 import { fakeJudge, type Judge } from "@/evals/judge";
 import { fakeGeneration } from "@/generation";
-import type { Generation } from "@/generation";
 import { readEnv, requireEnv, type Env } from "@/lib/env";
+import { voiceRenderer, type VoiceRenderer } from "@/lib/voice-renderer";
 
 export type Mode = "fake" | "real";
 
@@ -38,17 +38,10 @@ export async function chooseGeneration(mode: Mode): Promise<CoachGeneration & { 
   return { generation: anthropicGeneration({ apiKey }), name: COACH_MODEL, storyName: STORY_MODEL };
 }
 
-/** The fake renderer, or ElevenLabs on the designed voice, with the name a run records. */
-export async function chooseRenderer(mode: Mode): Promise<{ readonly renderer: Pick<Generation, "renderSpeech">; readonly name: string }> {
+/** The fake renderer, or the same ElevenLabs renderer the speech route uses, with the name a run records. */
+export async function chooseRenderer(mode: Mode): Promise<VoiceRenderer> {
   if (mode === "fake") return { renderer: fakeGeneration(), name: "fake" };
-  const env = localEnv();
-  const apiKey = requireEnv(env, "elevenLabsApiKey");
-  const voiceId = requireEnv(env, "elevenLabsVoiceId");
-  const { elevenLabsGeneration } = await import("@/generation/elevenlabs");
-  return {
-    renderer: elevenLabsGeneration({ apiKey, voiceId, modelId: env.elevenLabsModelId }),
-    name: `${env.elevenLabsModelId} on voice ${voiceId}`,
-  };
+  return voiceRenderer(localEnv());
 }
 
 /** The fake Judge (the validator's opinion, which fails calibration by design), or Opus 5 with the rubric. */

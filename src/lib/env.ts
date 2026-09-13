@@ -12,9 +12,16 @@ export type Env = {
   elevenLabsModelId: string;
 };
 
-export type SecretKey = "anthropicApiKey" | "elevenLabsApiKey" | "elevenLabsVoiceId";
+/** The vendor keys. Never logged, never in an error, never in a file name. */
+export type SecretKey = "anthropicApiKey" | "elevenLabsApiKey";
 
-const VARIABLE_NAME: Record<SecretKey, string> = {
+/**
+ * What may be missing at boot: the two secrets, and the designed voice, which
+ * is configuration and not a secret but is just as needed before Ollie speaks.
+ */
+export type RequiredKey = SecretKey | "elevenLabsVoiceId";
+
+const VARIABLE_NAME: Record<RequiredKey, string> = {
   anthropicApiKey: "ANTHROPIC_API_KEY",
   elevenLabsApiKey: "ELEVENLABS_API_KEY",
   elevenLabsVoiceId: "ELEVENLABS_VOICE_ID",
@@ -34,7 +41,7 @@ export function readEnv(source: EnvSource = process.env): Env {
   };
 }
 
-export function requireEnv(env: Env, key: SecretKey): string {
+export function requireEnv(env: Env, key: RequiredKey): string {
   const value = env[key];
   if (value === undefined || value === "") {
     throw new Error(`${VARIABLE_NAME[key]} is not set`);

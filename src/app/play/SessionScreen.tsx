@@ -7,8 +7,7 @@ import type { Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
 import { cheerFor, revealLine } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
-import type { SpeechRequest } from "@/play/speech-cache";
-import { storyInputFor } from "@/play/stories";
+import { storySpeechRequest } from "@/play/speech-pool";
 import { useSpeech } from "@/play/use-speech";
 import { useStories } from "@/play/use-stories";
 import { visualFor, type Stage } from "@/play/visuals";
@@ -72,9 +71,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const line = story ? story.text : problem && view ? view.line(problem, position) : "";
   // A Story is the one line on this screen with the Nickname in it, so it is
   // the one the server renders; every other line is bundled with the app.
-  const storyInput = story && problem ? storyInputFor(problem, identity.theme) : null;
-  const request: SpeechRequest | undefined =
-    story && storyInput ? { kind: "story", nickname: identity.nickname, text: story.text, ...storyInput } : undefined;
+  const request = story && problem ? storySpeechRequest(problem, identity, story.text) : undefined;
   // Repeat says the line again from what is already on the device; it never sets off a new render.
   const lineKey = `${problem?.id ?? "done"}:${phase.kind}:${repeats}:${story ? story.source : "spoken"}`;
   const { speaking, source: speechSource } = useSpeech({ text: line, request }, lineKey);
@@ -147,7 +144,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
           )}
         </aside>
       </div>
-      <Ollie pose={pose} size={200} className="absolute bottom-6 left-gutter" />
+      <Ollie pose={pose} speaking={speaking} size={200} className="absolute bottom-6 left-gutter" />
     </main>
   );
 }

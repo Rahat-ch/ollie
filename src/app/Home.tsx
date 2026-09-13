@@ -30,7 +30,7 @@ export function Home() {
   const identity = profile?.identity ?? null;
   const line = identity ? greeting(identity.nickname) : "";
   // The greeting is the one fixed line with the Nickname in it, so it is
-  // rendered per Nickname and cached; the chain falls through until it is there.
+  // rendered per Nickname into the Pool; the chain falls through until it is there.
   const { speaking, source } = useSpeech(
     { text: line, request: identity ? { kind: "greeting", nickname: identity.nickname } : undefined },
     line,
@@ -52,7 +52,7 @@ export function Home() {
       <SpeechBubble size="m" className="absolute top-30 left-12">
         {line}
       </SpeechBubble>
-      <Ollie pose={speaking ? "talking" : "idle"} size={220} className="absolute bottom-6 left-gutter" />
+      <Ollie pose={speaking ? "talking" : "idle"} speaking={speaking} size={220} className="absolute bottom-6 left-gutter" />
       <div className="flex min-h-dvh items-center justify-center pt-24 pb-44 pl-72">
         <Path stops={pathStops(profile.progress)} />
       </div>

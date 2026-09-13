@@ -1,8 +1,8 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { AUDIO_MIME, audioFileName } from "@/voice/key";
+import { AUDIO_MIME } from "@/voice/key";
 import { speechFor } from "./speech-service";
 
 const LINE = "Mia has 7 puppies. 5 more puppies come, so how many puppies are there now?";
@@ -26,24 +26,27 @@ describe("the speech service", () => {
   });
   afterEach(() => rm(audioDir, { recursive: true, force: true }));
 
-  it("renders a line once, keeps it on the volume, and reads it back on every repeat", async () => {
+  it("renders a line once, adds it to the Pool on the volume, and reads it back on every repeat", async () => {
     const renderer = countingRenderer();
     const first = await speechFor({ audioDir, renderer }, LINE);
     expect(first.source).toBe("rendered");
     expect(first.mimeType).toBe(AUDIO_MIME);
-    expect(new Uint8Array(await readFile(path.join(audioDir, audioFileName(LINE))))).toEqual(first.audio);
 
     for (let repeat = 0; repeat < 3; repeat++) {
       const again = await speechFor({ audioDir, renderer }, LINE);
-      expect(again).toEqual({ audio: first.audio, mimeType: AUDIO_MIME, source: "cache" });
+      expect(again).toEqual({ audio: first.audio, mimeType: AUDIO_MIME, source: "pool" });
     }
     expect(renderer.said).toEqual([LINE]);
   });
 
-  it("names the file after what is said and never after who it is said to, so no Nickname is written to the volume", async () => {
+  it("leaves one file on the volume holding that line's audio, under a name that is not the Nickname", async () => {
     const renderer = countingRenderer();
-    await speechFor({ audioDir, renderer }, LINE);
-    expect(audioFileName(LINE)).not.toContain("Mia");
+    const rendered = await speechFor({ audioDir, renderer }, LINE);
+    const files = await readdir(audioDir);
+    expect(files).toHaveLength(1);
+    expect(files[0]).not.toContain("Mia");
+    expect(files[0]).toMatch(/\.mp3$/);
+    expect(new Uint8Array(await readFile(path.join(audioDir, files[0])))).toEqual(rendered.audio);
   });
 
   it("renders once when the same line is asked for twice at the same moment", async () => {
@@ -60,13 +63,13 @@ describe("the speech service", () => {
     expect(renderer.said).toEqual([LINE, "You did it!"]);
   });
 
-  it("passes a refusal on and leaves nothing behind, so the chain falls through", async () => {
+  it("passes a refusal on and leaves nothing on the volume, so the Speech Chain falls through", async () => {
     const failing = {
       renderSpeech: async () => {
         throw new Error("ELEVENLABS_API_KEY is not set");
       },
     };
     await expect(speechFor({ audioDir, renderer: failing }, LINE)).rejects.toThrow("ELEVENLABS_API_KEY is not set");
-    await expect(readFile(path.join(audioDir, audioFileName(LINE)))).rejects.toThrow();
+    expect(await readdir(audioDir)).toEqual([]);
   });
 });

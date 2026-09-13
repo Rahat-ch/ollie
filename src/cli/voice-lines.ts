@@ -6,12 +6,16 @@
  * line that already has a file is skipped, so the script resumes and running
  * it twice changes nothing.
  *
- *   pnpm voice:lines                     # Ollie's lines and the Problems' lines in the Skills' default ranges
- *   pnpm voice:lines --kinds ollie       # Ollie's own hand-written lines only: the Hints, cheers, Reveal, Mastered
- *   pnpm voice:lines --range standard    # every Problem the standards allow, not only the default ranges
- *   pnpm voice:lines --limit 100         # at most 100 new lines this run
- *   pnpm voice:lines --dry-run           # what is left to render, and what it would cost in characters
+ *   pnpm voice:lines                        # Ollie's own hand-written lines: the Hints, the cheers, the Reveal, the end of a Session
+ *   pnpm voice:lines --kinds ollie,problem  # and every Problem's spoken line, as the voice budget allows
+ *   pnpm voice:lines --kinds problem --range standard  # every Problem the standards allow, not only the default ranges
+ *   pnpm voice:lines --limit 100            # at most 100 new lines this run
+ *   pnpm voice:lines --dry-run              # what is left to render, and what it would cost in characters
  *   pnpm voice:lines --fake --out /tmp/voice   # the Generation fake, a dry run of the script itself
+ *
+ * Ollie's own lines are the default because they are the spec's fixed lines
+ * and the ones a Learner hears most; the Problems' lines are thousands and
+ * are rendered as the budget allows (.scratch/k5-math/decisions.md).
  *
  * The key, the voice ID, and the model are read from the environment, or
  * from .env.local at the repo root when that file exists. Never hard-code a
@@ -22,8 +26,9 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 import { writeAudioFile } from "@/lib/audio-file";
 import { mapLimit } from "@/lib/map-limit";
+import type { SkillRange } from "@/loop";
 import { audioFileName, audioKey } from "@/voice/key";
-import { fixedLines, ollieLines, problemLines, type LineKind, type LineRange, type OllieLine } from "@/voice/lines";
+import { fixedLines, ollieLines, problemLines, type LineKind, type OllieLine } from "@/voice/lines";
 import { chooseRenderer } from "./generation";
 
 /** Where the bundled audio ships, and the manifest the app reads. */
@@ -32,17 +37,18 @@ export const MANIFEST_FILE = "src/voice/lines.generated.json";
 
 const { values } = parseArgs({
   options: {
-    kinds: { type: "string", default: "ollie,problem" },
+    kinds: { type: "string", default: "ollie" },
     range: { type: "string", default: "default" },
     limit: { type: "string" },
-    concurrency: { type: "string", default: "4" },
+    concurrency: { type: "string", default: "3" },
     "dry-run": { type: "boolean", default: false },
     fake: { type: "boolean", default: false },
     out: { type: "string", default: VOICE_DIR },
   },
 });
 
-const fail = (message: string): never => {
+// Annotated, so TypeScript knows a check that fails never comes back.
+const fail: (message: string) => never = (message) => {
   console.error(message);
   process.exit(1);
 };
@@ -50,7 +56,7 @@ const fail = (message: string): never => {
 const kinds = values.kinds.split(",").map((kind) => kind.trim()) as LineKind[];
 for (const kind of kinds) if (kind !== "ollie" && kind !== "problem") fail(`--kinds must be ollie, problem, or both, got "${kind}"`);
 if (values.range !== "default" && values.range !== "standard") fail(`--range must be default or standard, got "${values.range}"`);
-const range: LineRange = values.range as LineRange;
+const range: SkillRange = values.range;
 const limit = values.limit === undefined ? Infinity : Number(values.limit);
 const concurrency = Number(values.concurrency);
 for (const [name, value] of [["limit", limit], ["concurrency", concurrency]] as const) {
@@ -101,6 +107,10 @@ async function main(): Promise<void> {
   console.log(`Voice: ${values.fake ? "fake" : "ElevenLabs"}. Audio: ${values.out} (${have.size} lines rendered).`);
   console.log(`${wanted.length} lines in the catalogue (${kinds.join(", ")}; ${range} ranges); ${missing.length} without audio; rendering ${todo.length} now.`);
   console.log(`${characters} characters, which is what ElevenLabs charges for.\n`);
+  if (todo.length === 0) {
+    console.log("Nothing to render.");
+    return;
+  }
   if (values["dry-run"]) {
     for (const line of todo.slice(0, 10)) console.log(`  ${audioFileName(line.text)}  ${line.text}`);
     if (todo.length > 10) console.log(`  ... and ${todo.length - 10} more`);

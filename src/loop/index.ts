@@ -3,8 +3,8 @@ export type { AnswerPolicy, PolicyAnswer, PolicyContext, Outcome } from "./polic
 export { alwaysFirstTry, alwaysHintAssisted, alwaysRevealed, scripted } from "./policies";
 export type { Rng } from "./random";
 export { createRng } from "./random";
-export type { Skill, BktParams, ProblemDraft, GenerateOptions } from "./skills";
-export { SKILLS, getSkill, hintFor } from "./skills";
+export type { Skill, BktParams, ProblemDraft, GenerateOptions, SkillRange } from "./skills";
+export { SKILLS, getSkill, hintFor, rangeFor } from "./skills";
 export { DIAGNOSTIC_PLAN, isDiagnosticPlan } from "./diagnostic";
 export { baselinePlan, BASELINE_CURRENT_PROBLEMS, BASELINE_REVIEW_PROBLEMS } from "./baseline";
 export { UNITS, isUnitUnlocked, unitName, unlockedUnits } from "./units";
