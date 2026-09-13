@@ -1,4 +1,5 @@
 import { getSkill } from "@/loop";
+import { templateStory } from "@/story/template";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
 import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
@@ -88,9 +89,9 @@ async function runCoach(input: CoachInput): Promise<CoachOutput> {
   };
 }
 
-/** One line in the Theme, addressed by Nickname, around the engine's numbers. */
-async function writeStory({ nickname, theme, equation }: StoryInput): Promise<StoryOutput> {
-  return { text: `${nickname}, in the land of ${theme}: ${equation.left} ${equation.op} ${equation.right}. How many?` };
+/** A valid Story in the Theme around the engine's numbers: the template shape counting the Theme's second thing, so it is not the fallback itself. */
+async function writeStory(input: StoryInput): Promise<StoryOutput> {
+  return { text: templateStory(input, 1) };
 }
 
 /** Two fixed sentences about the Session, nothing about how the Learner was thinking. */

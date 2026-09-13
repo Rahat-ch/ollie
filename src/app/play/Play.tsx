@@ -14,6 +14,6 @@ export function Play() {
   useEffect(() => {
     if (profile && !ready) router.replace("/");
   }, [profile, ready, router]);
-  if (!profile || !ready) return <BlankStage />;
-  return <SessionScreen key={profile.seed} profile={profile} />;
+  if (!profile || !profile.identity) return <BlankStage />;
+  return <SessionScreen key={profile.seed} profile={profile} identity={profile.identity} />;
 }

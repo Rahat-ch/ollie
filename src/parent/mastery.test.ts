@@ -18,11 +18,11 @@ describe("masteryRows", () => {
     expect(rows.every((r) => r.state === "not-started")).toBe(true);
   });
 
-  it("shows the Knowledge Estimate for a Skill the Loop tracks and none for Unit 3 until it has Skills", () => {
+  it("shows each Skill's Knowledge Estimate, the hand-set prior on a fresh Profile", () => {
     const rows = masteryRows(newProfile());
     expect(rows[0].estimate).toBe(0.3);
-    expect(rows[5].estimate).toBeNull();
-    expect(rows[6].estimate).toBeNull();
+    expect(rows[5].estimate).toBe(0.2);
+    expect(rows[6].estimate).toBe(0.15);
   });
 
   it("is in progress once the Skill has a first attempt, with the Estimate the Loop holds", () => {

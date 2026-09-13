@@ -17,9 +17,14 @@ describe("Unit unlocking", () => {
     expect(isUnitUnlocked(2, mastered("partners-to-10", "teen-numbers"))).toBe(true);
   });
 
-  it("lists the Units that have Skills, in order", () => {
-    expect(UNITS.map((u) => u.unit)).toEqual([1, 2]);
-    expect(UNITS[1].name).toBe("Counting on and make-a-ten");
+  it("opens Unit 3 only once every Skill of Units 1 and 2 is Mastered", () => {
+    expect(isUnitUnlocked(3, mastered("partners-to-10", "teen-numbers", "counting-on", "make-a-ten"))).toBe(false);
+    expect(isUnitUnlocked(3, mastered("partners-to-10", "teen-numbers", "counting-on", "make-a-ten", "unknown-addend"))).toBe(true);
+  });
+
+  it("lists the three Units in order", () => {
+    expect(UNITS.map((u) => u.unit)).toEqual([1, 2, 3]);
+    expect(UNITS.map((u) => u.name)).toEqual(["Partners to 10", "Counting on and make-a-ten", "Word problems"]);
   });
 
   it("reports the Unit a Session unlocked", () => {

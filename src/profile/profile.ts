@@ -40,9 +40,24 @@ function isProgress(value: unknown): value is ProfileState {
     typeof nextProblemNumber === "number" &&
     typeof sessionsCompleted === "number" &&
     isRecord(skills) &&
-    SKILLS.every((skill) => isRecord(skills[skill.id]))
+    SKILLS.some((skill) => isRecord(skills[skill.id]))
   );
 }
+
+/**
+ * A Profile stored before a Skill existed (Unit 3 joined with ticket 10)
+ * has no state for it; it gets the fresh state, as a new Profile would.
+ */
+function withEverySkill(skills: ProfileState["skills"]): ProfileState["skills"] {
+  const fresh = newProfile().skills;
+  const missing = SKILLS.filter((skill) => !isRecord(skills[skill.id]));
+  if (missing.length === 0) return skills;
+  const filled = { ...skills };
+  for (const skill of missing) filled[skill.id] = fresh[skill.id];
+  return filled;
+}
+
+const withEverySkillState = (progress: ProfileState): ProfileState => ({ ...progress, skills: withEverySkill(progress.skills) });
 
 function isSession(value: unknown): value is SessionState {
   return (
@@ -74,11 +89,12 @@ export function parseProfile(text: string | null): Profile | null {
   if (typeof value.seed !== "string" || !isProgress(value.progress)) return null;
   if (identity !== null && !isIdentity(identity)) return null;
   if (value.session !== null && !isSession(value.session)) return null;
+  const session = value.session as SessionState | null;
   return {
     version: PROFILE_VERSION,
     seed: value.seed,
     identity,
-    progress: value.progress,
-    session: value.session as SessionState | null,
+    progress: withEverySkillState(value.progress),
+    session: session && { ...session, profile: withEverySkillState(session.profile), skills: withEverySkill(session.skills) },
   };
 }

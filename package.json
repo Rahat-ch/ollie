@@ -18,7 +18,8 @@
     "baseline": "tsx src/cli/baseline.ts",
     "coach": "tsx src/cli/coach.ts",
     "eval": "tsx src/cli/eval.ts",
-    "eval:chart": "tsx src/cli/eval-chart.ts"
+    "eval:chart": "tsx src/cli/eval-chart.ts",
+    "pool": "tsx src/cli/pool.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.125.0",

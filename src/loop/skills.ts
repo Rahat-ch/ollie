@@ -226,8 +226,97 @@ const unknownAddend: Skill = {
   },
 };
 
+/**
+ * Unit 3's Problems are word problems: the engine still owns the numbers and
+ * the answer, and `spoken` is the hand-written template sentence with no
+ * Theme in it. A Story written around the same numbers replaces it on
+ * screen when one is valid (see src/story); the template is the fallback.
+ */
+const resultUnknown: Skill = {
+  id: "result-unknown",
+  name: "Result or total unknown",
+  unit: 3,
+  standard: "1.OA.1",
+  visual: "theme-picture",
+  structures: ["add-to", "take-from", "put-together"],
+  standardRange: { min: 2, max: 20 },
+  defaultRange: { min: 5, max: 15 },
+  rangeOf: "the whole (the total, or the number before some go away); every part is at least 1",
+  hints: {
+    "add-to": "Start with the number you had. Count on the ones that came, one at a time. Where you stop is how many now.",
+    "take-from": "Start with the number you had. Count back the ones that went away, one at a time. Where you stop is how many are left.",
+    "put-together": "Put the two groups together. Start with the bigger group and count on the smaller one.",
+  },
+  bkt: { prior: 0.2, learn: 0.2, guess: 0.15, slip: 0.1 },
+  generate(rng, { range, structures }) {
+    const structure = rng.pick(structures);
+    const whole = rng.int(range.min, range.max);
+    const part = rng.int(1, whole - 1);
+    const other = whole - part;
+    if (structure === "take-from") {
+      return {
+        structure,
+        equation: { left: whole, op: "-", right: part, result: other, unknown: "result" },
+        answer: other,
+        spoken: `You have ${whole}. ${part} go away. How many are left?`,
+      };
+    }
+    if (structure === "put-together") {
+      return {
+        structure,
+        equation: { left: part, op: "+", right: other, result: whole, unknown: "result" },
+        answer: whole,
+        spoken: `There are ${part} and ${other}. How many in all?`,
+      };
+    }
+    return {
+      structure: "add-to",
+      equation: { left: part, op: "+", right: other, result: whole, unknown: "result" },
+      answer: whole,
+      spoken: `You have ${part}. ${other} more come. How many now?`,
+    };
+  },
+};
+
+const changeUnknown: Skill = {
+  id: "change-unknown",
+  name: "Change unknown",
+  unit: 3,
+  standard: "1.OA.1",
+  visual: "theme-picture",
+  structures: ["add-to-change", "take-from-change"],
+  standardRange: { min: 2, max: 20 },
+  defaultRange: { min: 5, max: 15 },
+  rangeOf: "the whole (the number after some came, or before some went away); the change is 1 to 9",
+  hints: {
+    "add-to-change": "Start at the number you had. Count up until you reach the number you have now. Your counts are how many came.",
+    "take-from-change": "Start at the number you have now. Count up until you reach the number you had. Your counts are how many went away.",
+  },
+  bkt: { prior: 0.15, learn: 0.2, guess: 0.15, slip: 0.1 },
+  generate(rng, { range, structures }) {
+    const structure = rng.pick(structures);
+    const whole = rng.int(range.min, range.max);
+    const change = rng.int(1, Math.min(9, whole - 1));
+    const start = whole - change;
+    if (structure === "take-from-change") {
+      return {
+        structure,
+        equation: { left: whole, op: "-", right: change, result: start, unknown: "right" },
+        answer: change,
+        spoken: `You have ${whole}. Some go away. Now you have ${start}. How many went away?`,
+      };
+    }
+    return {
+      structure: "add-to-change",
+      equation: { left: start, op: "+", right: change, result: whole, unknown: "right" },
+      answer: change,
+      spoken: `You have ${start}. Some more come. Now you have ${whole}. How many came?`,
+    };
+  },
+};
+
 /** Every Skill, in progression order. Prerequisites are earlier in the list. */
-export const SKILLS: readonly Skill[] = [partnersTo10, teenNumbers, countingOn, makeATen, unknownAddend];
+export const SKILLS: readonly Skill[] = [partnersTo10, teenNumbers, countingOn, makeATen, unknownAddend, resultUnknown, changeUnknown];
 
 export function getSkill(id: SkillId): Skill {
   const skill = SKILLS.find((s) => s.id === id);

@@ -51,7 +51,7 @@ describe("baselinePlan", () => {
   it("walks every Skill in progression order and stays on the last one once all are Mastered", () => {
     let profile = newProfile();
     const visited: SkillId[] = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 18; i++) {
       const plan = baselinePlan(profile);
       if (!isDiagnosticPlan(plan)) visited.push(plan.skills[0].skill);
       profile = runSession(plan, profile, `seed-walk-${i}`, alwaysFirstTry).profile;
@@ -62,8 +62,10 @@ describe("baselinePlan", () => {
       "counting-on",
       "make-a-ten",
       "unknown-addend",
+      "result-unknown",
+      "change-unknown",
     ]);
-    expect(visited.at(-1)).toBe("unknown-addend");
+    expect(visited.at(-1)).toBe("change-unknown");
     expect(Object.values(profile.skills).every((s) => s.mastered)).toBe(true);
   });
 

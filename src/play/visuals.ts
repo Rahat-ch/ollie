@@ -43,7 +43,10 @@ export type NumberLineModel = {
   readonly showHops: boolean;
 };
 
-export type VisualModel = TenFrameModel | NumberLineModel;
+/** Unit 3's word problems show the Profile's Theme picture; the screen knows the Theme, the model does not. */
+export type ThemePictureModel = { readonly kind: "theme-picture" };
+
+export type VisualModel = TenFrameModel | NumberLineModel | ThemePictureModel;
 
 const FRAME_SIZE = 10;
 
@@ -146,6 +149,9 @@ export function visualFor(problem: Problem, stage: Stage): VisualModel {
       return countingOn(problem, stage);
     case "unknown-addend":
       return unknownAddend(problem, stage);
+    case "result-unknown":
+    case "change-unknown":
+      return { kind: "theme-picture" };
     default:
       throw new Error(`No visual model for ${String(problem.skill satisfies never)}`);
   }

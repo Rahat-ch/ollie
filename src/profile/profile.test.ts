@@ -48,6 +48,13 @@ describe("the identity chosen at onboarding", () => {
     expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 2, identity: null });
   });
 
+  it("carries a Profile stored before Unit 3 had Skills forward with fresh states for them, so nothing is lost", () => {
+    const fresh = newProfile();
+    const older = Object.fromEntries(Object.entries(fresh.skills).filter(([id]) => id !== "result-unknown" && id !== "change-unknown"));
+    const stored = { ...createProfile("seed-1"), identity, progress: { ...fresh, skills: older } };
+    expect(parseProfile(JSON.stringify(stored))?.progress).toEqual(fresh);
+  });
+
   it("starts fresh when the identity is not one the app knows", () => {
     const stored = (identity: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity });
     expect(parseProfile(stored({ ...identity, theme: "robots" }))).toBeNull();

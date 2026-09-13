@@ -44,13 +44,13 @@ export const WEAKNESS_PENALTY = 0.35;
 
 const isPart = (n: number) => n < 10;
 
-/** The structures where the missing number is the change: unknown addend now, Unit 3's change unknown once it exists. */
-const CHANGE_UNKNOWN_STRUCTURES: readonly string[] = ["missing-addend", "change-unknown"];
+/** The unknown-addend structure that asks for the change; Unit 3's change-unknown Skill asks for it in every structure. */
+const CHANGE_STRUCTURE = "missing-addend";
 
 const WEAKNESS_MATCHERS: Readonly<Record<WeaknessTag, (problem: Problem) => boolean>> = {
   "crossing-ten": ({ equation: { left, op, right, result } }) =>
     op === "+" ? result > 10 && isPart(left) && isPart(right) : left > 10 && isPart(right) && isPart(result),
-  "change-unknown": ({ structure }) => CHANGE_UNKNOWN_STRUCTURES.includes(structure),
+  "change-unknown": ({ skill, structure }) => skill === "change-unknown" || structure === CHANGE_STRUCTURE,
 };
 
 /**
@@ -58,9 +58,9 @@ const WEAKNESS_MATCHERS: Readonly<Record<WeaknessTag, (problem: Problem) => bool
  * lowers accuracy only there. `crossing-ten`: the whole is above ten and both
  * parts below it (8 + 5, 13 - 8), so the sum or difference has to bridge ten;
  * 10 + 3 and 7 + 3 do not. `change-unknown`: the Problem's structure asks for
- * the change (9 + ? = 13 as unknown addend, and Unit 3's change-unknown
- * Stories when ticket 10 adds them); partners to 10 and teen numbers are not
- * matched even though they also blank an addend.
+ * the change (9 + ? = 13 as unknown addend, and every change-unknown word
+ * problem); partners to 10 and teen numbers are not matched even though they
+ * also blank an addend.
  */
 export const matchesWeakness = (tag: WeaknessTag, problem: Problem): boolean =>
   WEAKNESS_MATCHERS[tag](problem);
@@ -81,7 +81,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Strong",
     seed: "sim-strong",
     heldOut: false,
-    ability: { "partners-to-10": 0.97, "teen-numbers": 0.95, "counting-on": 0.93, "make-a-ten": 0.9, "unknown-addend": 0.9 },
+    ability: { "partners-to-10": 0.97, "teen-numbers": 0.95, "counting-on": 0.93, "make-a-ten": 0.9, "unknown-addend": 0.9, "result-unknown": 0.9, "change-unknown": 0.88 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.85,
@@ -91,7 +91,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Average",
     seed: "sim-average",
     heldOut: false,
-    ability: { "partners-to-10": 0.88, "teen-numbers": 0.85, "counting-on": 0.8, "make-a-ten": 0.75, "unknown-addend": 0.75 },
+    ability: { "partners-to-10": 0.88, "teen-numbers": 0.85, "counting-on": 0.8, "make-a-ten": 0.75, "unknown-addend": 0.75, "result-unknown": 0.75, "change-unknown": 0.7 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -101,7 +101,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Weak",
     seed: "sim-weak",
     heldOut: false,
-    ability: { "partners-to-10": 0.75, "teen-numbers": 0.7, "counting-on": 0.62, "make-a-ten": 0.55, "unknown-addend": 0.55 },
+    ability: { "partners-to-10": 0.75, "teen-numbers": 0.7, "counting-on": 0.62, "make-a-ten": 0.55, "unknown-addend": 0.55, "result-unknown": 0.55, "change-unknown": 0.5 },
     weaknesses: [],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.55,
@@ -111,7 +111,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Crossing-ten weakness",
     seed: "sim-crossing-ten",
     heldOut: false,
-    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.85, "unknown-addend": 0.82 },
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.85, "unknown-addend": 0.82, "result-unknown": 0.85, "change-unknown": 0.82 },
     weaknesses: ["crossing-ten"],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -121,7 +121,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Change-unknown weakness",
     seed: "sim-change-unknown",
     heldOut: true,
-    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.82, "unknown-addend": 0.85 },
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.82, "unknown-addend": 0.85, "result-unknown": 0.85, "change-unknown": 0.85 },
     weaknesses: ["change-unknown"],
     fatigue: MILD_FATIGUE,
     hintRecovery: 0.7,
@@ -131,7 +131,7 @@ export const SIMULATED_LEARNERS: readonly SimulatedLearner[] = [
     name: "Fast fatigue",
     seed: "sim-fast-fatigue",
     heldOut: true,
-    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.8, "unknown-addend": 0.8 },
+    ability: { "partners-to-10": 0.9, "teen-numbers": 0.88, "counting-on": 0.85, "make-a-ten": 0.8, "unknown-addend": 0.8, "result-unknown": 0.8, "change-unknown": 0.8 },
     weaknesses: [],
     fatigue: { onset: 4, perProblem: 0.12 },
     hintRecovery: 0.6,
