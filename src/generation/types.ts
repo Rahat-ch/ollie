@@ -15,14 +15,19 @@ import type {
   SkillId,
   SkillState,
 } from "@/loop";
+import type { ThemeId } from "@/profile/identity";
 
-/** Story input: the engine's numbers and answer, which the Story only dresses. Shape settled by ticket 10. */
+/**
+ * Story input: the engine's numbers and answer, which the Story only
+ * dresses, the Theme whose words it may use, and the Nickname to write
+ * (the placeholder, when the Story is for the Content Pool).
+ */
 export type StoryInput = {
   readonly skill: SkillId;
   readonly structure: string;
   readonly equation: Equation;
   readonly answer: number;
-  readonly theme: string;
+  readonly theme: ThemeId;
   readonly nickname: string;
 };
 

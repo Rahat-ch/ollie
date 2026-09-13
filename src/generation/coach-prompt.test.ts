@@ -65,6 +65,8 @@ const input: CoachInput = {
     "counting-on": { estimate: 0.45, recentFirstAttempts: [false, true], mastered: false },
     "make-a-ten": { estimate: 0.3, recentFirstAttempts: [], mastered: false },
     "unknown-addend": { estimate: 0.2, recentFirstAttempts: [], mastered: false },
+    "result-unknown": { estimate: 0.2, recentFirstAttempts: [], mastered: false },
+    "change-unknown": { estimate: 0.15, recentFirstAttempts: [], mastered: false },
   },
   planSpace: {
     skills: [

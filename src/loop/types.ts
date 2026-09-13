@@ -8,7 +8,9 @@ export type SkillId =
   | "teen-numbers"
   | "counting-on"
   | "make-a-ten"
-  | "unknown-addend";
+  | "unknown-addend"
+  | "result-unknown"
+  | "change-unknown";
 
 export type Unit = 1 | 2 | 3;
 

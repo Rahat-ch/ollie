@@ -8,8 +8,12 @@ import { newProfile, SKILLS } from "@/loop";
 import type { ProfileState, SessionState } from "@/loop";
 import { isIdentity, type Identity } from "./identity";
 
-/** Version 1 had no identity; a stored version 1 Profile is carried forward with none, so onboarding runs. */
-export const PROFILE_VERSION = 2;
+/**
+ * Version 1 had no identity; a stored version 1 Profile is carried forward
+ * with none, so onboarding runs. Version 2 had no Unit 3 Skills; a stored
+ * version 2 Profile gets their fresh states. Version 3 has every Skill.
+ */
+export const PROFILE_VERSION = 3;
 
 export type Profile = {
   readonly version: typeof PROFILE_VERSION;
@@ -33,18 +37,34 @@ export function serializeProfile(profile: Profile): string {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-function isProgress(value: unknown): value is ProfileState {
+/** The Skills a stored version had states for: versions 1 and 2 predate Unit 3. */
+const skillsInVersion = (version: number): readonly (typeof SKILLS)[number][] =>
+  version < 3 ? SKILLS.filter((skill) => skill.unit < 3) : SKILLS;
+
+function isProgress(value: unknown, version: number): value is ProfileState {
   if (!isRecord(value)) return false;
   const { nextProblemNumber, sessionsCompleted, skills } = value;
   return (
     typeof nextProblemNumber === "number" &&
     typeof sessionsCompleted === "number" &&
     isRecord(skills) &&
-    SKILLS.every((skill) => isRecord(skills[skill.id]))
+    skillsInVersion(version).every((skill) => isRecord(skills[skill.id]))
   );
 }
 
-function isSession(value: unknown): value is SessionState {
+/** A Skill that did not exist when the Profile was stored gets the fresh state, as a new Profile would. */
+function withEverySkill(skills: ProfileState["skills"]): ProfileState["skills"] {
+  const fresh = newProfile().skills;
+  const missing = SKILLS.filter((skill) => !isRecord(skills[skill.id]));
+  if (missing.length === 0) return skills;
+  const filled = { ...skills };
+  for (const skill of missing) filled[skill.id] = fresh[skill.id];
+  return filled;
+}
+
+const withEverySkillState = (progress: ProfileState): ProfileState => ({ ...progress, skills: withEverySkill(progress.skills) });
+
+function isSession(value: unknown, version: number): value is SessionState {
   return (
     isRecord(value) &&
     Array.isArray(value.problems) &&
@@ -52,7 +72,7 @@ function isSession(value: unknown): value is SessionState {
     Array.isArray(value.attempts) &&
     typeof value.position === "number" &&
     typeof value.status === "string" &&
-    isProgress(value.profile)
+    isProgress(value.profile, version)
   );
 }
 
@@ -69,16 +89,18 @@ export function parseProfile(text: string | null): Profile | null {
     return null;
   }
   if (!isRecord(value)) return null;
-  const identity = value.version === 1 ? null : value.identity;
-  if (value.version !== 1 && value.version !== PROFILE_VERSION) return null;
-  if (typeof value.seed !== "string" || !isProgress(value.progress)) return null;
+  const { version } = value;
+  if (version !== 1 && version !== 2 && version !== PROFILE_VERSION) return null;
+  const identity = version === 1 ? null : value.identity;
+  if (typeof value.seed !== "string" || !isProgress(value.progress, version)) return null;
   if (identity !== null && !isIdentity(identity)) return null;
-  if (value.session !== null && !isSession(value.session)) return null;
+  if (value.session !== null && !isSession(value.session, version)) return null;
+  const session = value.session as SessionState | null;
   return {
     version: PROFILE_VERSION,
     seed: value.seed,
     identity,
-    progress: value.progress,
-    session: value.session as SessionState | null,
+    progress: withEverySkillState(value.progress),
+    session: session && { ...session, profile: withEverySkillState(session.profile), skills: withEverySkill(session.skills) },
   };
 }

@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import { readEnv, requireEnv } from "@/lib/env";
 
 describe("readEnv", () => {
-  it("defaults audioDir to ./data/audio when AUDIO_DIR is unset", () => {
+  it("defaults audioDir to ./data/audio when AUDIO_DIR is unset, and the Pool file to a name inside it", () => {
     const env = readEnv({});
     expect(env.audioDir).toBe("./data/audio");
+    expect(env.poolFile).toBe("./data/audio/stories.json");
+    expect(readEnv({ POOL_FILE: "/tmp/pool.json" }).poolFile).toBe("/tmp/pool.json");
   });
 
   it("reads audioDir and vendor keys from the source", () => {
@@ -15,6 +17,7 @@ describe("readEnv", () => {
     });
     expect(env).toEqual({
       audioDir: "/mnt/audio",
+      poolFile: "/mnt/audio/stories.json",
       anthropicApiKey: "anthropic-test-key",
       elevenLabsApiKey: "elevenlabs-test-key",
     });

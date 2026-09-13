@@ -2,15 +2,17 @@
  * The eval command: run every Simulated Learner for 20 Sessions under the
  * Coach and under the Baseline on identical seeds, score convergence side
  * by side and the Coach's Hypotheses (detection of planted weaknesses,
- * false positives, Evidence Integrity), write a dated JSON report under
- * docs/evals, and regenerate the convergence chart from that file. Run it
- * before any prompt or Plan Space change so the numbers can be compared.
+ * false positives, Evidence Integrity); write a Story per Theme and Unit 3
+ * structure and score validity and, once the Judge clears the Calibration
+ * Set, readability; write a dated JSON report under docs/evals, and
+ * regenerate the convergence chart from that file. Run it before any prompt
+ * or Plan Space change so the numbers can be compared.
  *
- *   pnpm eval                 # the Coach on Opus 5; needs ANTHROPIC_API_KEY
- *   pnpm eval --fake          # the Coach on the Generation fake; no network
+ *   pnpm eval                 # Opus 5 Coach and Judge, Sonnet 5 Stories; needs ANTHROPIC_API_KEY
+ *   pnpm eval --fake          # the Generation fake and the fake Judge; no network
  *   pnpm eval --sessions 10
  *
- * The real Coach reads ANTHROPIC_API_KEY from the environment, or from
+ * The real adapters read ANTHROPIC_API_KEY from the environment, or from
  * .env.local at the repo root when that file exists.
  */
 import { parseArgs } from "node:util";
@@ -19,7 +21,7 @@ import { writeChart, writeReport } from "@/evals/files";
 import { formatEvalResults } from "@/evals/format";
 import { describeGeneration, evalReport } from "@/evals/report";
 import { formatSessionLine } from "@/loop/format";
-import { chooseGeneration } from "./generation";
+import { chooseGeneration, chooseJudge } from "./generation";
 
 const { values } = parseArgs({
   options: {
@@ -35,16 +37,21 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 }
 
 async function main(): Promise<void> {
-  const coach = await chooseGeneration(values.fake ? "fake" : "real");
+  const mode = values.fake ? "fake" : "real";
+  const coach = await chooseGeneration(mode);
+  const judge = await chooseJudge(mode);
   console.log(`Coach: ${describeGeneration(coach.name)}${values.fake ? " (no network)" : ""}`);
+  console.log(`Stories: ${describeGeneration(coach.storyName)}; Judge: ${describeGeneration(judge.name)}`);
   if (values.fake) {
     console.log("The fake plans like a slightly smarter Baseline and never names a pattern: its columns show the seams, not the Coach's judgement.");
+    console.log("The fake Judge is the validator's opinion and fails calibration by design, so its scores are withheld.");
   }
   console.log("");
   const started = performance.now();
   const results = await runEvals({
     sessions,
     coach,
+    stories: { generation: coach.generation, name: coach.storyName, judge: judge.judge, judgeName: judge.name },
     onSession: values.fake
       ? undefined
       : (learner, { result, step }) => console.log(`${learner}: ${formatSessionLine(result)}; Plan from ${step.source}`),

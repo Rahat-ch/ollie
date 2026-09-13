@@ -26,6 +26,8 @@ const RANGED: Record<SkillId, (equation: Equation) => number> = {
   "counting-on": (e) => Math.max(e.left, e.right),
   "make-a-ten": (e) => Math.max(e.left, e.right),
   "unknown-addend": (e) => (e.op === "-" ? e.left : e.result),
+  "result-unknown": (e) => (e.op === "-" ? e.left : e.result),
+  "change-unknown": (e) => (e.op === "-" ? e.left : e.result),
 };
 
 function drafts(skill: Skill, label: string, options: Partial<GenerateOptions> = {}, count = SEEDS) {
@@ -183,5 +185,55 @@ describe("unknown-addend", () => {
 
   it("shows a number line", () => {
     expect(getSkill("unknown-addend").visual).toBe("number-line");
+  });
+});
+
+describe("result-unknown", () => {
+  const all = drafts(getSkill("result-unknown"), "result", {}, 500);
+
+  it("asks for the result of adding to, taking from, or putting together, with the whole at most 20 and every part at least 1", () => {
+    for (const draft of all) {
+      expect(draft.equation.unknown).toBe("result");
+      const whole = draft.equation.op === "-" ? draft.equation.left : draft.equation.result;
+      expect(whole).toBeLessThanOrEqual(20);
+      expect(Math.min(draft.equation.left, draft.equation.right, draft.equation.result)).toBeGreaterThanOrEqual(1);
+      if (draft.structure === "take-from") expect(draft.equation.op).toBe("-");
+      else expect(draft.equation.op).toBe("+");
+    }
+  });
+
+  it("is in Unit 3, mapped to 1.OA.1, and shows the Theme picture", () => {
+    const skill = getSkill("result-unknown");
+    expect(skill.unit).toBe(3);
+    expect(skill.standard).toBe("1.OA.1");
+    expect(skill.visual).toBe("theme-picture");
+    expect(skill.structures).toEqual(["add-to", "take-from", "put-together"]);
+  });
+});
+
+describe("change-unknown", () => {
+  const all = drafts(getSkill("change-unknown"), "change", {}, 500);
+
+  it("asks for the change: 7 + ? = 12 when things come, 12 - ? = 7 when they go, with the change 1 to 9", () => {
+    for (const draft of all) {
+      expect(draft.equation.unknown).toBe("right");
+      expect(draft.answer).toBeGreaterThanOrEqual(1);
+      expect(draft.answer).toBeLessThanOrEqual(9);
+      if (draft.structure === "add-to-change") {
+        expect(draft.equation.op).toBe("+");
+        expect(draft.equation.result).toBeLessThanOrEqual(20);
+      } else {
+        expect(draft.structure).toBe("take-from-change");
+        expect(draft.equation.op).toBe("-");
+        expect(draft.equation.left).toBeLessThanOrEqual(20);
+        expect(draft.equation.result).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
+
+  it("is in Unit 3 after result-unknown, and shows the Theme picture", () => {
+    expect(SKILLS.map((s) => s.id).slice(-2)).toEqual(["result-unknown", "change-unknown"]);
+    expect(getSkill("change-unknown").unit).toBe(3);
+    expect(getSkill("change-unknown").visual).toBe("theme-picture");
   });
 });

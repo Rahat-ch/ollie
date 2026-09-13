@@ -1,7 +1,8 @@
 /**
- * One Eval Run over the simulation: every Simulated Learner under the Coach
- * and under the Baseline on identical seeds, scored for convergence side by
- * side and, for the Coach, for its Hypotheses. The held-out Learners are
+ * One Eval Run: every Simulated Learner under the Coach and under the
+ * Baseline on identical seeds, scored for convergence side by side and, for
+ * the Coach, for its Hypotheses; and the Story evals, validity and Judge
+ * readability, over a fixed sample of Problems. The held-out Learners are
  * scored in their own split and are never used to tune the Coach prompt.
  * Pure over its inputs: on the fake the same options give the same results.
  */
@@ -11,6 +12,7 @@ import { scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hyp
 import { SIMULATED_LEARNERS, type SimulatedLearnerId } from "./learners";
 import { baselinePlanner, coachPlanner, runLearner, type LearnerRun, type SessionTrace } from "./run";
 import { integrityRate, mean, share, summariseSplits, type Split } from "./stats";
+import { runStoryEvals, type StoryEvalOptions, type StoryReport } from "./stories";
 
 export type HypothesisSplit = {
   readonly split: Split;
@@ -35,7 +37,7 @@ export type HypothesisReport = {
   readonly splits: { readonly tuning: HypothesisSplit; readonly heldOut: HypothesisSplit };
 };
 
-/** What one Eval Run scored: both planners' convergence and the Coach's Hypotheses. */
+/** What one Eval Run scored: both planners' convergence, the Coach's Hypotheses, and the Stories. */
 export type EvalResults = {
   readonly sessions: number;
   readonly targetAccuracyBand: typeof TARGET_ACCURACY_BAND;
@@ -43,6 +45,7 @@ export type EvalResults = {
   readonly coach: { readonly generation: string };
   readonly convergence: { readonly baseline: ConvergenceReport; readonly coach: ConvergenceReport };
   readonly hypotheses: HypothesisReport;
+  readonly stories: StoryReport;
 };
 
 /** The Generation the Coach runs on and the name the report records for it. */
@@ -55,6 +58,8 @@ export type CoachGeneration = {
 export type EvalOptions = {
   readonly sessions: number;
   readonly coach: CoachGeneration;
+  /** The Story writer and the Judge, with the names the report records for them. */
+  readonly stories: Omit<StoryEvalOptions, "sample" | "concurrency">;
   /** Called after every Session of every Coach run, so a long run can show progress. */
   readonly onSession?: (learner: SimulatedLearnerId, trace: SessionTrace) => void;
 };
@@ -106,11 +111,13 @@ export function hypothesisReport(runs: readonly LearnerRun[]): HypothesisReport 
 export async function runEvals(options: EvalOptions): Promise<EvalResults> {
   const { sessions, coach, onSession } = options;
   const baseline = await Promise.all(SIMULATED_LEARNERS.map((learner) => runLearner(learner, baselinePlanner, sessions)));
+  const storiesPromise = runStoryEvals(options.stories);
   const coached = await Promise.all(
     SIMULATED_LEARNERS.map((learner) =>
       runLearner(learner, coachPlanner(coach.generation), sessions, (trace) => onSession?.(learner.id, trace)),
     ),
   );
+  const stories = await storiesPromise;
   return {
     sessions,
     targetAccuracyBand: TARGET_ACCURACY_BAND,
@@ -120,5 +127,6 @@ export async function runEvals(options: EvalOptions): Promise<EvalResults> {
       coach: convergenceReport("coach", coached),
     },
     hypotheses: hypothesisReport(coached),
+    stories,
   };
 }

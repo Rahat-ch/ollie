@@ -43,9 +43,23 @@ describe("the identity chosen at onboarding", () => {
     expect(parseProfile(serializeProfile(profile))).toEqual(profile);
   });
 
-  it("carries a version 1 Profile forward with its progress and no identity, so onboarding runs once", () => {
-    const v1 = { version: 1, seed: "seed-1", progress: newProfile(), session: null };
-    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 2, identity: null });
+  const fresh = newProfile();
+  const beforeUnit3 = Object.fromEntries(Object.entries(fresh.skills).filter(([id]) => id !== "result-unknown" && id !== "change-unknown"));
+
+  it("carries a version 1 Profile forward with its progress, no identity, and fresh Unit 3 states, so onboarding runs once", () => {
+    const v1 = { version: 1, seed: "seed-1", progress: { ...fresh, skills: beforeUnit3 }, session: null };
+    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 3, identity: null, progress: fresh });
+  });
+
+  it("carries a version 2 Profile, stored before Unit 3 had Skills, forward with fresh states for them, so nothing is lost", () => {
+    const stored = { ...createProfile("seed-1"), version: 2, identity, progress: { ...fresh, skills: beforeUnit3 } };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({ ...createProfile("seed-1"), identity, progress: fresh });
+  });
+
+  it("starts fresh when a current Profile lacks a Skill, or an old one lacks a Skill of its own time", () => {
+    expect(parseProfile(JSON.stringify({ ...createProfile("seed-1"), progress: { ...fresh, skills: beforeUnit3 } }))).toBeNull();
+    const missingUnit1 = Object.fromEntries(Object.entries(beforeUnit3).filter(([id]) => id !== "teen-numbers"));
+    expect(parseProfile(JSON.stringify({ ...createProfile("seed-1"), version: 2, progress: { ...fresh, skills: missingUnit1 } }))).toBeNull();
   });
 
   it("starts fresh when the identity is not one the app knows", () => {

@@ -6,6 +6,7 @@ import { coachInput } from "@/coach";
 import { fakeGeneration } from "@/generation/fake";
 import { parseCoachOutput } from "@/generation/coach-schema";
 import type { CoachEvidence, CoachInput, CoachOutput, StoryInput } from "@/generation/types";
+import { validateStory } from "@/story/validate";
 
 const emptyNotes: LearnerNotes = { hypotheses: [], strengths: [] };
 
@@ -13,8 +14,8 @@ const emptyNotes: LearnerNotes = { hypotheses: [], strengths: [] };
 const diagnostic = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-f", scripted("ffhrfffhf"));
 
 const story: StoryInput = {
-  skill: "make-a-ten",
-  structure: "larger-first",
+  skill: "result-unknown",
+  structure: "add-to",
   equation: { left: 8, op: "+", right: 5, result: 13, unknown: "result" },
   answer: 13,
   theme: "puppies",
@@ -134,11 +135,11 @@ describe("the fake Coach's decisions", () => {
 });
 
 describe("the other three operations", () => {
-  it("writes a one-line Story addressed by Nickname in the Theme", async () => {
+  it("writes a valid Story addressed by Nickname in the Theme", async () => {
     const { text } = await fakeGeneration().writeStory(story);
     expect(text).toContain("Sam");
-    expect(text).toContain("puppies");
-    expect(text).not.toContain("\n");
+    expect(text).toContain("bones");
+    expect(validateStory(text, story)).toEqual({ ok: true });
   });
 
   it("writes a Parent Summary that names the Session number and Problem count", async () => {

@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation";
+import { fakeJudge } from "@/evals/judge";
 import { runEvals } from "@/evals/evals";
 import type { SimulatedLearnerId } from "@/evals/learners";
 
+const STORIES = { generation: fakeGeneration(), name: "fake", judge: fakeJudge, judgeName: "fake" };
+
 describe("runEvals", () => {
-  const options = { sessions: 20, coach: { generation: fakeGeneration(), name: "fake" } };
+  const options = { sessions: 20, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES };
   const promise = runEvals(options);
   const baseline = async (id: SimulatedLearnerId) => (await promise).convergence.baseline.learners.find((l) => l.id === id)!;
   const coach = async (id: SimulatedLearnerId) => (await promise).convergence.coach.learners.find((l) => l.id === id)!;
@@ -29,6 +32,8 @@ describe("runEvals", () => {
       "counting-on": 4,
       "make-a-ten": 6,
       "unknown-addend": 8,
+      "result-unknown": 10,
+      "change-unknown": 12,
     });
     expect((await baseline("weak")).sessionsToMastery["unknown-addend"]).toBeNull();
     expect((await baseline("average")).inBandShare).toBe(1);

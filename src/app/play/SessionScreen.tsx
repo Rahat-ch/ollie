@@ -7,7 +7,9 @@ import type { Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
 import { cheerFor, revealLine, speakingMs } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
+import { useStories } from "@/play/use-stories";
 import { visualFor, type Stage } from "@/play/visuals";
+import type { Identity } from "@/profile/identity";
 import type { Profile } from "@/profile/profile";
 import { profileStore } from "@/profile/store";
 import { BigButton } from "@/ui/BigButton";
@@ -18,6 +20,7 @@ import { ProgressDots } from "@/ui/ProgressDots";
 import { RepeatButton } from "@/ui/RepeatButton";
 import { SpeechBubble } from "@/ui/SpeechBubble";
 import { TenFrame } from "@/ui/TenFrame";
+import { ThemeIcon } from "@/ui/ThemeIcon";
 import { useTimedFlag } from "@/ui/use-timed-flag";
 import { Celebration } from "./Celebration";
 
@@ -48,19 +51,23 @@ const VIEW: Readonly<
 /**
  * One Session, tap by tap: the state lives in the Play reducer, every step
  * is written to the Profile so a reload resumes it, and the celebration
- * moves the Profile on.
+ * moves the Profile on. A Unit 3 Problem is asked with its Story in the
+ * Profile's Theme, addressed by Nickname; until the Story is there it is
+ * asked with the engine's template line, so nothing waits.
  */
-export function SessionScreen({ profile }: { readonly profile: Profile }) {
+export function SessionScreen({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const router = useRouter();
   const [state, dispatch] = useReducer(playReducer, profile, (p) => beginPlay(p, Date.now()));
   const [repeats, setRepeats] = useState(0);
   const { phase, session } = state;
+  const stories = useStories(session.problems, identity);
   const problem = problemShown(state);
   const view = phase.kind === "celebration" ? undefined : VIEW[phase.kind];
   const position = session.entries.length + (view?.answering ? 1 : 0);
-  const line = problem && view ? view.line(problem, position) : "";
+  const story = problem && phase.kind === "asking" ? stories.get(problem.id) : undefined;
+  const line = story ? story.text : problem && view ? view.line(problem, position) : "";
   // Ollie talks for as long as the line takes to read, until ticket 11 plays audio.
-  const lineKey = `${problem?.id ?? "done"}:${phase.kind}:${repeats}`;
+  const lineKey = `${problem?.id ?? "done"}:${phase.kind}:${repeats}:${story ? story.source : "spoken"}`;
   const speaking = useTimedFlag(lineKey, speakingMs(line));
 
   useEffect(() => {
@@ -88,7 +95,7 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
   const pose = view.pose === "idle" && speaking ? "talking" : view.pose;
 
   return (
-    <main className="learner-stage" data-phase={phase.kind} data-problem={problem.id}>
+    <main className="learner-stage" data-phase={phase.kind} data-problem={problem.id} data-story-source={story?.source}>
       <h1 className="sr-only">Play</h1>
       <div className="pt-7">
         <ProgressDots total={session.problems.length} done={session.entries.length} />
@@ -103,7 +110,13 @@ export function SessionScreen({ profile }: { readonly profile: Profile }) {
           </div>
           <Equation equation={problem.equation} answerShown={!answering} />
           <div className="flex justify-center" key={`${problem.id}:${stage}`}>
-            {visual.kind === "ten-frame" ? <TenFrame model={visual} /> : <NumberLine model={visual} />}
+            {visual.kind === "ten-frame" && <TenFrame model={visual} />}
+            {visual.kind === "number-line" && <NumberLine model={visual} />}
+            {visual.kind === "theme-picture" && (
+              <div className="flex size-56 items-center justify-center rounded-card bg-paper-2 shadow-card" data-testid="theme-picture">
+                <ThemeIcon theme={identity.theme} size={176} />
+              </div>
+            )}
           </div>
         </section>
         <aside className="flex flex-col items-center gap-6 pt-4">

@@ -11,12 +11,12 @@ export type PathStop = {
   readonly state: "done" | "current" | "locked";
 };
 
-/** A Unit is done when it has Skills and every one is Mastered; a Unit with no Skills yet stays locked. */
+/** A Unit is done when every one of its Skills is Mastered. */
 export function pathStops(progress: ProfileState): PathStop[] {
   return ([1, 2, 3] as const).map((unit) => {
     const skills = SKILLS.filter((s) => s.unit === unit);
-    const done = skills.length > 0 && skills.every((s) => progress.skills[s.id].mastered);
-    const open = skills.length > 0 && isUnitUnlocked(unit, progress);
+    const done = skills.every((s) => progress.skills[s.id].mastered);
+    const open = isUnitUnlocked(unit, progress);
     return { unit, name: unitName(unit), state: done ? "done" : open ? "current" : "locked" };
   });
 }
