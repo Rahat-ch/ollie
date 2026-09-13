@@ -1,0 +1,100 @@
+import { expect, type Page } from "@playwright/test";
+import { localDay } from "@/rewards/rewards";
+
+export const PROFILE_KEY = "ollie.profile";
+
+/** The engine's arithmetic, done independently from the equation on screen. */
+export function solve(equation: string): number {
+  const match = equation.replace(/\s+/g, " ").match(/^(\d+|\?) ([+−]) (\d+|\?) = (\d+|\?)$/);
+  if (!match) throw new Error(`not an equation: "${equation}"`);
+  const [, left, op, right, result] = match;
+  const num = Number;
+  if (result === "?") return op === "+" ? num(left) + num(right) : num(left) - num(right);
+  if (right === "?") return op === "+" ? num(result) - num(left) : num(left) - num(result);
+  return op === "+" ? num(result) - num(right) : num(result) + num(right);
+}
+
+/** A key on the number pad. */
+export const key = (page: Page, n: number) => page.getByRole("button", { name: String(n), exact: true });
+
+/** Wait for a Problem to be asked and read it off the screen. */
+export async function asked(page: Page): Promise<{ id: string; answer: number }> {
+  const stage = page.locator('main[data-phase="asking"]');
+  await expect(stage).toBeVisible();
+  const id = (await stage.getAttribute("data-problem")) ?? "";
+  const answer = solve(await page.getByTestId("equation").innerText());
+  return { id, answer };
+}
+
+export async function readProfile(page: Page) {
+  return page.evaluate((k) => JSON.parse(localStorage.getItem(k) ?? "null"), PROFILE_KEY);
+}
+
+/** Play the Session on screen to its celebration, every Problem first-try correct. */
+export async function playSession(page: Page): Promise<void> {
+  const dots = page.getByTestId("progress-dot");
+  await expect(dots.first()).toBeVisible();
+  const problems = await dots.count();
+  for (let i = 0; i < problems; i++) {
+    const { answer } = await asked(page);
+    await key(page, answer).click();
+  }
+  await expect(page.getByTestId("celebration")).toBeVisible();
+}
+
+/**
+ * Rewrite the Profile's rewards in the browser, as though the Learner had
+ * been playing for days, and the Sessions the Loop counts with them.
+ */
+export async function seedRewards(page: Page, rewards: Record<string, unknown>, sessionsCompleted?: number): Promise<void> {
+  await page.evaluate(
+    ([k, patch, sessions]) => {
+      const profile = JSON.parse(localStorage.getItem(k as string)!);
+      profile.rewards = { ...profile.rewards, ...(patch as object) };
+      if (typeof sessions === "number") profile.progress = { ...profile.progress, sessionsCompleted: sessions };
+      localStorage.setItem(k as string, JSON.stringify(profile));
+    },
+    [PROFILE_KEY, rewards, sessionsCompleted] as const,
+  );
+}
+
+/** The local day a number of days back, by the same rule the app counts the Streak with. */
+export function daysAgo(days: number): string {
+  const day = new Date();
+  day.setDate(day.getDate() - days);
+  return localDay(day);
+}
+
+const mastered = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
+const fresh = (estimate: number) => ({ estimate, recentFirstAttempts: [], mastered: false });
+
+/** A Profile with Units 1 and 2 Mastered and one Session played, so the next Session is the Baseline's first in Unit 3. */
+export const UNIT_3_PROFILE = {
+  version: 2,
+  seed: "e2e-unit-3",
+  identity: { nickname: "Mia", avatarColor: "sky", theme: "space" },
+  progress: {
+    nextProblemNumber: 50,
+    sessionsCompleted: 1,
+    skills: {
+      "partners-to-10": mastered,
+      "teen-numbers": mastered,
+      "counting-on": mastered,
+      "make-a-ten": mastered,
+      "unknown-addend": mastered,
+      "result-unknown": fresh(0.2),
+      "change-unknown": fresh(0.15),
+    },
+  },
+  session: null,
+};
+
+/** A Problem in the Session the Profile holds, as the Session screen stores it. */
+export type StoredProblem = { id: string; skill: string; structure: string; spoken: string };
+
+/** The Problems of the Session on screen, once the screen has written it to the Profile. */
+export async function storedProblems(page: Page): Promise<StoredProblem[]> {
+  const problems = () => page.evaluate((k) => JSON.parse(localStorage.getItem(k) ?? "null")?.session?.problems ?? [], PROFILE_KEY);
+  await expect.poll(async () => (await problems()).length).toBeGreaterThan(0);
+  return problems();
+}

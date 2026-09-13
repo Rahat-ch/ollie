@@ -114,3 +114,13 @@ Confirmed by the user on 2026-09-11.
 15. **Target accuracy band is 0.7 to 0.9.** A Problem is at the right difficulty when the Simulated Learner's true chance of a first-try correct answer is between 0.7 and 0.9. The convergence eval reports the share of Problems in the band per Learner and per split (`TARGET_ACCURACY_BAND` in `src/evals/convergence.ts`).
 16. **Held-out split** as recorded under Evals above: change-unknown weakness and fast fatigue.
 17. **Simulated Learner ability is static.** A Simulated Learner does not improve with practice, so Sessions to Mastery measures how fast a planner confirms a fixed ability and the band share measures how well it picks difficulty. The band share is coarse under this model (true probability depends on Skill, tag, and position, not the Problem's numbers), so it is not a headline number in the video. A practice effect may be added to the profile later without changing the seams.
+
+---
+
+# Amendments — 2026-09-13, after ticket 14
+
+The spec says only "Two Freezes maximum, consumed automatically" and "Streak, Coins, Powers, and Mastery all live behind [the Loop]", so these three readings were settled while building the Streak, the Coins, and the Shop, and are recorded here as the decisions they are.
+
+18. **Freezes are granted at a milestone.** The Learner starts with both Freezes and a Streak milestone (3, 7, 14) hands one back, capped at two. The spec names no grant rule; tying the grant to the milestones it does name beats inventing a cadence, and it says something plain to the Learner ("A Freeze for the day you miss") on the card that celebrates the milestone.
+19. **A reset keeps the Freezes it could not spend.** One Freeze covers one missed day. When more days are missed than the Freezes in hand can cover, the Streak starts again at today and the Freezes are kept, because a Freeze that saved nothing was not spent. The Streak a screen shows is `streakToday`, a read: nothing is rewritten until the next completed Session.
+20. **The rewards live in `src/rewards`, beside the Loop rather than inside it.** The module is pure, data in and data out, with no I/O, and the Play reducer composes it with the Loop's `finishSession`; the Loop, its `ProfileState`, the Simulated Learners, and the eval command are untouched by Coins and the Streak, and stay about the math. This is a placement, not a weakening of the spec's seam: the Coins and the Streak are still a pure function of the Session and the day it was completed on.

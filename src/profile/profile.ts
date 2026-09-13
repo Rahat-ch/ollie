@@ -6,14 +6,18 @@
  */
 import { newProfile, SKILLS } from "@/loop";
 import type { ProfileState, SessionState } from "@/loop";
+import { newRewards, type Rewards } from "@/rewards/rewards";
+import { AVATAR_SLOTS, SHOP_ITEMS, shopItem, type AvatarItemId } from "@/rewards/shop";
 import { isIdentity, type Identity } from "./identity";
 
 /**
  * Version 1 had no identity; a stored version 1 Profile is carried forward
  * with none, so onboarding runs. Version 2 had no Unit 3 Skills; a stored
- * version 2 Profile gets their fresh states. Version 3 has every Skill.
+ * version 2 Profile gets their fresh states. Version 3 had no Coins, Streak,
+ * or Shop; a stored version 3 Profile gets fresh rewards, so a Learner
+ * playing before the Shop existed keeps her progress and starts earning.
  */
-export const PROFILE_VERSION = 3;
+export const PROFILE_VERSION = 4;
 
 export type Profile = {
   readonly version: typeof PROFILE_VERSION;
@@ -22,12 +26,14 @@ export type Profile = {
   /** The Nickname, Avatar colour, and Theme; null until onboarding is done. */
   readonly identity: Identity | null;
   readonly progress: ProfileState;
+  /** Coins, the Streak, the Freezes, and what the Avatar wears. */
+  readonly rewards: Rewards;
   /** The Session being played, or null between Sessions. */
   readonly session: SessionState | null;
 };
 
 export function createProfile(seed: string): Profile {
-  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), session: null };
+  return { version: PROFILE_VERSION, seed, identity: null, progress: newProfile(), rewards: newRewards(), session: null };
 }
 
 export function serializeProfile(profile: Profile): string {
@@ -64,6 +70,29 @@ function withEverySkill(skills: ProfileState["skills"]): ProfileState["skills"] 
 
 const withEverySkillState = (progress: ProfileState): ProfileState => ({ ...progress, skills: withEverySkill(progress.skills) });
 
+const isItemId = (value: unknown): value is AvatarItemId => SHOP_ITEMS.some((item) => item.id === value);
+
+/** An Item is worn only if the Learner bought it and it belongs in that slot. */
+function isWorn(worn: unknown, owned: readonly AvatarItemId[]): boolean {
+  if (!isRecord(worn)) return false;
+  return AVATAR_SLOTS.every((slot) => {
+    const id = worn[slot];
+    return id === null || (isItemId(id) && owned.includes(id) && shopItem(id).slot === slot);
+  });
+}
+
+function isRewards(value: unknown): value is Rewards {
+  if (!isRecord(value)) return false;
+  const { coins, lastSessionPaid, streak, lastSessionDay, freezes, owned, worn } = value;
+  return (
+    [coins, lastSessionPaid, streak, freezes].every((n) => typeof n === "number") &&
+    (lastSessionDay === null || typeof lastSessionDay === "string") &&
+    Array.isArray(owned) &&
+    owned.every(isItemId) &&
+    isWorn(worn, owned)
+  );
+}
+
 function isSession(value: unknown, version: number): value is SessionState {
   return (
     isRecord(value) &&
@@ -90,17 +119,21 @@ export function parseProfile(text: string | null): Profile | null {
   }
   if (!isRecord(value)) return null;
   const { version } = value;
-  if (version !== 1 && version !== 2 && version !== PROFILE_VERSION) return null;
+  if (typeof version !== "number" || !Number.isInteger(version) || version < 1 || version > PROFILE_VERSION) return null;
   const identity = version === 1 ? null : value.identity;
   if (typeof value.seed !== "string" || !isProgress(value.progress, version)) return null;
   if (identity !== null && !isIdentity(identity)) return null;
   if (value.session !== null && !isSession(value.session, version)) return null;
+  // Versions before 4 had no rewards at all; every later Profile must carry them.
+  const rewards = version < 4 ? newRewards() : value.rewards;
+  if (!isRewards(rewards)) return null;
   const session = value.session as SessionState | null;
   return {
     version: PROFILE_VERSION,
     seed: value.seed,
     identity,
     progress: withEverySkillState(value.progress),
+    rewards,
     session: session && { ...session, profile: withEverySkillState(session.profile), skills: withEverySkill(session.skills) },
   };
 }

@@ -1,45 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-
-const PROFILE_KEY = "ollie.profile";
-
-const mastered = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
-const fresh = (estimate: number) => ({ estimate, recentFirstAttempts: [], mastered: false });
-
-/** A Profile with Units 1 and 2 Mastered and one Session played, so the next Session is the Baseline's first in Unit 3. */
-const UNIT_3_PROFILE = {
-  version: 2,
-  seed: "e2e-unit-3",
-  identity: { nickname: "Mia", avatarColor: "sky", theme: "space" },
-  progress: {
-    nextProblemNumber: 50,
-    sessionsCompleted: 1,
-    skills: {
-      "partners-to-10": mastered,
-      "teen-numbers": mastered,
-      "counting-on": mastered,
-      "make-a-ten": mastered,
-      "unknown-addend": mastered,
-      "result-unknown": fresh(0.2),
-      "change-unknown": fresh(0.15),
-    },
-  },
-  session: null,
-};
-
-/** The engine's arithmetic, done independently from the equation on screen. */
-function solve(equation: string): number {
-  const match = equation.replace(/\s+/g, " ").match(/^(\d+|\?) ([+−]) (\d+|\?) = (\d+|\?)$/);
-  if (!match) throw new Error(`not an equation: "${equation}"`);
-  const [, left, op, right, result] = match;
-  const num = Number;
-  if (result === "?") return op === "+" ? num(left) + num(right) : num(left) - num(right);
-  if (right === "?") return op === "+" ? num(result) - num(left) : num(left) - num(result);
-  return op === "+" ? num(result) - num(right) : num(result) + num(right);
-}
-
-const key = (page: Page, n: number) => page.getByRole("button", { name: String(n), exact: true });
-
-type StoredProblem = { id: string; skill: string; structure: string; spoken: string };
+import { expect, test } from "@playwright/test";
+import { key, PROFILE_KEY, solve, UNIT_3_PROFILE, type StoredProblem } from "./play";
 
 test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname; with no key on the server every Story is the template and the Session still completes; no request leaves the host", async ({ page, baseURL }) => {
   const offHost: string[] = [];
