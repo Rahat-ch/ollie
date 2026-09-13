@@ -27,10 +27,6 @@ const StoryOutputSchema = z.strictObject({ text: z.string().describe("The Story:
 
 export type AnthropicGenerationOptions = { readonly apiKey: string };
 
-const notBuilt = (op: string, ticket: string) => async (): Promise<never> => {
-  throw new Error(`${op} is not built yet (ticket ${ticket})`);
-};
-
 export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
   const client = new Anthropic({ apiKey: options.apiKey });
 
@@ -98,6 +94,9 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     writeStory,
     runCoach,
     writeSummary,
-    renderSpeech: notBuilt("renderSpeech", "11"),
+    // Ollie's voice is ElevenLabs, not Claude: src/generation/elevenlabs.ts.
+    renderSpeech: async (): Promise<never> => {
+      throw new Error("renderSpeech is ElevenLabs, not Anthropic (src/generation/elevenlabs.ts)");
+    },
   };
 }

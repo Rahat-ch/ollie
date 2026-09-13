@@ -12,43 +12,13 @@ import { z } from "zod";
 import type { Generation } from "@/generation";
 import { readEnv, requireEnv } from "@/lib/env";
 import { storyFor } from "@/lib/story-service";
-import { getSkill } from "@/loop";
-import { THEMES } from "@/profile/identity";
-import type { PoolInput } from "@/story/pool";
-import { isStoryStructure, storyShape } from "@/story/shapes";
-
-const themeIds = THEMES.map((t) => t.id) as [PoolInput["theme"], ...PoolInput["theme"][]];
-const number = z.int().min(0).max(20);
+import { storyProblemIssue, storyProblemShape } from "@/story/request";
 
 const StoryRequestSchema = z
-  .strictObject({
-    theme: z.enum(themeIds),
-    skill: z.enum(["result-unknown", "change-unknown"]),
-    structure: z.string().min(1),
-    equation: z.strictObject({
-      left: number,
-      op: z.enum(["+", "-"]),
-      right: number,
-      result: number,
-      unknown: z.enum(["left", "right", "result"]),
-    }),
-    answer: number,
-    variant: z.int().min(0).optional(),
-  })
+  .strictObject({ ...storyProblemShape, variant: z.int().min(0).optional() })
   .check((ctx) => {
-    const { skill, structure, equation, answer } = ctx.value;
-    if (!isStoryStructure(structure) || !getSkill(skill).structures.includes(structure)) {
-      ctx.issues.push({ code: "custom", input: structure, path: ["structure"], message: `${skill} has no structure "${structure}"` });
-      return;
-    }
-    // Lay the whole and the part out the way the structure does and require the same equation back.
-    const whole = equation.op === "+" ? equation.result : equation.left;
-    const part = equation.op === "-" || structure === "add-to-change" ? equation.right : equation.left;
-    const laidOut = storyShape(structure).equation(whole, part);
-    const same = (["left", "op", "right", "result", "unknown"] as const).every((field) => laidOut[field] === equation[field]);
-    if (!same || part < 1 || answer !== equation[equation.unknown]) {
-      ctx.issues.push({ code: "custom", input: equation, path: ["equation"], message: "not a Problem the engine sets for this structure" });
-    }
+    const issue = storyProblemIssue(ctx.value);
+    if (issue) ctx.issues.push({ code: "custom", input: ctx.value, path: [issue.path], message: issue.message });
   });
 
 /** The Story writer, or one that fails at once when there is no key, so the template is used. */

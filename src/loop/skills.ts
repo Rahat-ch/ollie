@@ -318,6 +318,12 @@ const changeUnknown: Skill = {
 /** Every Skill, in progression order. Prerequisites are earlier in the list. */
 export const SKILLS: readonly Skill[] = [partnersTo10, teenNumbers, countingOn, makeATen, unknownAddend, resultUnknown, changeUnknown];
 
+/** Which of a Skill's two ranges a build-time script works over: the Content Pool's keys, the voice catalogue's lines. */
+export type SkillRange = "default" | "standard";
+
+export const rangeFor = (skill: Skill, range: SkillRange): NumberRange =>
+  range === "default" ? skill.defaultRange : skill.standardRange;
+
 export function getSkill(id: SkillId): Skill {
   const skill = SKILLS.find((s) => s.id === id);
   if (!skill) throw new Error(`Unknown Skill: ${id}`);

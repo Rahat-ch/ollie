@@ -29,7 +29,7 @@ The themed words the model writes around an engine-chosen word problem, addresse
 _Avoid_: prompt, narrative, question text
 
 **Nickname**:
-What Ollie calls the Learner, chosen by the Parent at setup. The only personal word sent off the device, and only to generate Stories and audio.
+What Ollie calls the Learner, chosen by the Parent at setup. The only personal word sent off the device, and only so that the lines Ollie reads aloud can be voiced with it; a Story is written with a placeholder in its place.
 _Avoid_: name, first name, username
 
 **Content Pool**:
@@ -175,6 +175,10 @@ _Avoid_: badge, achievement, trophy, unlock, ability
 **Ollie**:
 The Character: a voiced owl guide who reads every Problem aloud and reacts to answers. Not controlled by the Learner.
 _Avoid_: character, mascot, tutor, avatar, companion, the owl
+
+**Speech Chain**:
+What Ollie says a line with, and what is tried next when that is not there: the line's audio from the Content Pool, the bundled fixed line, the platform's own speech synthesis, and the line on screen. Nothing waits on a step that is not ready, so no Session is ever silent and blank. Nothing to do with the Streak, which is a chain of days.
+_Avoid_: fallback, TTS pipeline, audio cache
 
 **Shop**:
 Where Coins are exchanged for Avatar Items. Six items in three price tiers.

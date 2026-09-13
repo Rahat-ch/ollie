@@ -5,9 +5,11 @@ import { useEffect, useReducer, useState } from "react";
 import { hintFor } from "@/loop";
 import type { Problem } from "@/loop";
 import { Ollie, type OlliePose } from "@/ollie/Ollie";
-import { cheerFor, revealLine, speakingMs } from "@/play/lines";
+import { cheerFor, revealLine } from "@/play/lines";
 import { beginPlay, playReducer, problemShown, triedAnswer, type Phase } from "@/play/play";
+import { storySpeechRequest } from "@/play/speech-pool";
 import { useSessionCoach } from "@/play/use-coach";
+import { useSpeech } from "@/play/use-speech";
 import { useStories } from "@/play/use-stories";
 import { visualFor, type Stage } from "@/play/visuals";
 import type { Identity } from "@/profile/identity";
@@ -22,7 +24,6 @@ import { RepeatButton } from "@/ui/RepeatButton";
 import { SpeechBubble } from "@/ui/SpeechBubble";
 import { TenFrame } from "@/ui/TenFrame";
 import { ThemeIcon } from "@/ui/ThemeIcon";
-import { useTimedFlag } from "@/ui/use-timed-flag";
 import { Celebration } from "./Celebration";
 
 /** How long Ollie celebrates a correct answer before the next Problem. */
@@ -54,7 +55,9 @@ const VIEW: Readonly<
  * is written to the Profile so a reload resumes it, and the celebration
  * moves the Profile on. A Unit 3 Problem is asked with its Story in the
  * Profile's Theme, addressed by Nickname; until the Story is there it is
- * asked with the engine's template line, so nothing waits.
+ * asked with the engine's template line, so nothing waits. Ollie says every
+ * line through the fallback chain (src/play/use-speech) and the beak moves
+ * for as long as the audio plays.
  */
 export function SessionScreen({ profile, identity }: { readonly profile: Profile; readonly identity: Identity }) {
   const router = useRouter();
@@ -69,9 +72,12 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const position = session.entries.length + (view?.answering ? 1 : 0);
   const story = problem && phase.kind === "asking" ? stories.get(problem.id) : undefined;
   const line = story ? story.text : problem && view ? view.line(problem, position) : "";
-  // Ollie talks for as long as the line takes to read, until ticket 11 plays audio.
+  // A Story is the one line on this screen with the Nickname in it, so it is
+  // the one the server renders; every other line is bundled with the app.
+  const request = story && problem ? storySpeechRequest(problem, identity, story.text) : undefined;
+  // Repeat says the line again from what is already on the device; it never sets off a new render.
   const lineKey = `${problem?.id ?? "done"}:${phase.kind}:${repeats}:${story ? story.source : "spoken"}`;
-  const speaking = useTimedFlag(lineKey, speakingMs(line));
+  const { speaking, source: speechSource } = useSpeech({ text: line, request }, lineKey);
 
   useEffect(() => {
     if (phase.kind === "celebration") {
@@ -100,7 +106,13 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
   const pose = view.pose === "idle" && speaking ? "talking" : view.pose;
 
   return (
-    <main className="learner-stage" data-phase={phase.kind} data-problem={problem.id} data-story-source={story?.source}>
+    <main
+      className="learner-stage"
+      data-phase={phase.kind}
+      data-problem={problem.id}
+      data-story-source={story?.source}
+      data-speech-source={speechSource ?? undefined}
+    >
       <h1 className="sr-only">Play</h1>
       <div className="pt-7">
         <ProgressDots total={session.problems.length} done={session.entries.length} />
@@ -137,7 +149,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
           )}
         </aside>
       </div>
-      <Ollie pose={pose} size={200} className="absolute bottom-6 left-gutter" />
+      <Ollie pose={pose} speaking={speaking} size={200} className="absolute bottom-6 left-gutter" />
     </main>
   );
 }
