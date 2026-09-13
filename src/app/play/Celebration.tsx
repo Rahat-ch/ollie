@@ -1,12 +1,13 @@
 "use client";
 
-import { getSkill } from "@/loop";
-import type { SessionResult } from "@/loop";
+import { getSkill, powerFor } from "@/loop";
+import type { Power, SessionResult } from "@/loop";
 import { Ollie } from "@/ollie/Ollie";
-import { MASTERED_LINE, milestoneLine, SESSION_DONE, streakLine } from "@/play/lines";
+import { MASTERED_LINE, milestoneLine, powerLine, SESSION_DONE, streakLine } from "@/play/lines";
 import { useSpeech } from "@/play/use-speech";
 import type { Award } from "@/rewards/rewards";
 import { BigButton } from "@/ui/BigButton";
+import { PowerMark } from "@/ui/PowerMark";
 import { CoinIcon, StreakIcon } from "@/ui/RewardChips";
 
 const CONFETTI = [
@@ -82,31 +83,62 @@ function Milestone({ days }: { readonly days: number }) {
   );
 }
 
+/**
+ * A Power Ollie has just learned: the headline card of the Session that
+ * earned it, in plum, with the Power's mark, its name, and what Ollie will
+ * do with it from the next matching Problem on.
+ */
+function PowerCard({ power }: { readonly power: Power }) {
+  return (
+    <div
+      className="milestone flex items-center gap-4 rounded-card bg-plum px-6 py-5 shadow-[0_4px_0_var(--plum-deep)]"
+      data-testid="power-earned"
+      data-power={power.id}
+    >
+      <PowerMark power={power.id} size={56} />
+      <div className="flex flex-col">
+        <span className="font-text text-caption text-paper">Ollie learned a Power</span>
+        <span className="font-display text-display-s font-semibold text-paper">{power.name}</span>
+        <span className="font-text text-caption text-paper text-pretty">{power.does}</span>
+      </div>
+    </div>
+  );
+}
+
 type CelebrationProps = {
   readonly result: SessionResult;
   readonly award: Award;
   readonly onDone: () => void;
 };
 
-/** The end of every Session: Ollie celebrates what was earned, then Done goes home. Powers join in ticket 13. */
+/**
+ * The end of every Session: Ollie celebrates what was earned, then Done
+ * goes home. A Power earned here is the headline — Ollie takes its pose and
+ * says the Learner taught it — and the Coins and the Streak are still paid
+ * and still shown beside it. Two Powers in one Session is possible; the
+ * first is the headline and both get a card.
+ */
 export function Celebration({ result, award, onDone }: CelebrationProps) {
   const mastered = result.newlyMastered.map((id) => getSkill(id).name);
-  // The end of a Session is a fixed line, bundled with the app; Ollie is
-  // already celebrating, so only the audio is new here.
-  const { speaking, source } = useSpeech({ text: SESSION_DONE }, "session-done");
+  const powers = result.powersEarned.map(powerFor);
+  const headline = powers.length > 0 ? powerLine(powers[0].name) : SESSION_DONE;
+  // The end of a Session and each Power's line are fixed lines, bundled with
+  // the app; Ollie is already celebrating, so only the audio is new here.
+  const { speaking, source } = useSpeech({ text: headline }, headline);
   const { streak } = award.rewards;
   return (
     <main
       className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
       data-testid="celebration"
       data-speech-source={source ?? undefined}
+      data-power={powers[0]?.id}
     >
       <Confetti />
       <h1 className="celebrate-in max-w-205 text-center font-display text-display-xl font-semibold text-balance text-ink">
-        {SESSION_DONE}
+        {headline}
       </h1>
       <div className="flex items-center justify-center gap-12">
-        <Ollie pose="celebrate" speaking={speaking} size={300} />
+        <Ollie pose={powers[0]?.id ?? "celebrate"} speaking={speaking} size={300} />
         <div className="flex w-90 flex-col gap-5">
           <div className="rounded-card bg-paper-2 px-6 py-5 shadow-card">
             <div className="font-text text-caption text-ink-soft">This Session</div>
@@ -129,6 +161,9 @@ export function Celebration({ result, award, onDone }: CelebrationProps) {
               <span className="font-display text-display-m font-semibold text-ink">{streakLine(streak)}</span>
             </div>
           </div>
+          {powers.map((power) => (
+            <PowerCard key={power.id} power={power} />
+          ))}
           {mastered.map((name) => (
             <div key={name} className="rounded-card bg-leaf px-6 py-5 shadow-[0_4px_0_var(--leaf-deep)]" data-testid="mastered">
               <div className="font-text text-caption text-ink">Mastered</div>

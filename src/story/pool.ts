@@ -17,9 +17,9 @@ export type ContentPool = Readonly<Record<string, readonly string[]>>;
 /** What a Story is keyed by: the input without the Nickname. */
 export type PoolInput = Omit<StoryInput, "nickname">;
 
-/** `puppies/result-unknown/add-to/7+5=12` */
-export function poolKey({ theme, skill, structure, equation }: PoolInput): string {
-  return `${theme}/${skill}/${structure}/${equation.left}${equation.op}${equation.right}=${equation.result}`;
+/** `puppies/result-unknown/add-to/7+5=12`, and `rich/puppies/...` for the rich set. */
+export function poolKey({ theme, skill, structure, equation, rich }: PoolInput): string {
+  return `${rich ? "rich/" : ""}${theme}/${skill}/${structure}/${equation.left}${equation.op}${equation.right}=${equation.result}`;
 }
 
 export const poolVariants = (pool: ContentPool, input: PoolInput): readonly string[] => pool[poolKey(input)] ?? [];

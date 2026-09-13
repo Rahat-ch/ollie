@@ -4,7 +4,8 @@
  * components draw it and the CSS animates the marks. The engine's numbers
  * are read, never changed (ADR 0001).
  */
-import type { Problem } from "@/loop";
+import { powerUsedOn } from "@/loop";
+import type { PowerId, Problem } from "@/loop";
 
 export type Stage = "asking" | "hint" | "reveal";
 
@@ -22,7 +23,14 @@ export type Cell = { readonly counter: CounterColor | null; readonly mark: Mark 
 /** A yellow counter waiting beside the frame. */
 export type LooseCounter = { readonly mark: Mark };
 
-export type TenFrameModel = {
+/**
+ * The Power Ollie uses on this Problem, or null. It changes how the visual
+ * is drawn and never what it says: the engine's numbers, the marks, and the
+ * strategy are the same with a Power as without one.
+ */
+type Powered = { readonly power: PowerId | null };
+
+export type TenFrameModel = Powered & {
   readonly kind: "ten-frame";
   /** One or two frames of ten cells each, read left to right, top row first. */
   readonly frames: readonly (readonly Cell[])[];
@@ -30,7 +38,7 @@ export type TenFrameModel = {
   readonly loose: readonly LooseCounter[];
 };
 
-export type NumberLineModel = {
+export type NumberLineModel = Powered & {
   readonly kind: "number-line";
   readonly min: 0;
   readonly max: 20;
@@ -44,9 +52,12 @@ export type NumberLineModel = {
 };
 
 /** Unit 3's word problems show the Profile's Theme picture; the screen knows the Theme, the model does not. */
-export type ThemePictureModel = { readonly kind: "theme-picture" };
+export type ThemePictureModel = Powered & { readonly kind: "theme-picture" };
 
 export type VisualModel = TenFrameModel | NumberLineModel | ThemePictureModel;
+
+/** A model as the builders make it, before the Power it is drawn with is put on. */
+type Unpowered<M> = M extends unknown ? Omit<M, "power"> : never;
 
 const FRAME_SIZE = 10;
 
@@ -65,7 +76,7 @@ const loose = (count: number, mark: Mark = null): LooseCounter[] => Array.from({
 const filledFrom = (given: number): Cell[] =>
   frame(given, "red").map((c, i) => (i < given ? c : cell("yellow", "arrive")));
 
-function partnersTo10(problem: Problem, stage: Stage): TenFrameModel {
+function partnersTo10(problem: Problem, stage: Stage): Unpowered<TenFrameModel> {
   const { equation } = problem;
   if (problem.structure === "take-from-ten") {
     // 10 - a: a full frame; the Hint takes `a` away and counts what is left.
@@ -84,14 +95,14 @@ function partnersTo10(problem: Problem, stage: Stage): TenFrameModel {
   return { kind: "ten-frame", frames: [frame(given, "red", null, stage === "hint" ? "count" : null)], loose: [] };
 }
 
-function teenNumbers(problem: Problem, stage: Stage): TenFrameModel {
+function teenNumbers(problem: Problem, stage: Stage): Unpowered<TenFrameModel> {
   // 10 + n: one whole frame of ten and `n` extras in a second frame.
   const ones = problem.equation.right;
   const mark: Mark = stage === "asking" ? null : "count";
   return { kind: "ten-frame", frames: [frame(10, "red"), frame(ones, "yellow", mark)], loose: [] };
 }
 
-function makeATen(problem: Problem, stage: Stage): TenFrameModel {
+function makeATen(problem: Problem, stage: Stage): Unpowered<TenFrameModel> {
   // larger + smaller: the larger addend in the frame, the smaller waiting;
   // the Hint moves just enough in to fill the frame and counts the rest.
   const { left, right } = problem.equation;
@@ -104,7 +115,7 @@ function makeATen(problem: Problem, stage: Stage): TenFrameModel {
   return { kind: "ten-frame", frames: [filledFrom(larger)], loose: loose(smaller - movedIn, "count") };
 }
 
-function countingOn(problem: Problem, stage: Stage): NumberLineModel {
+function countingOn(problem: Problem, stage: Stage): Unpowered<NumberLineModel> {
   // Start at the bigger addend whichever comes first; the landing is the answer.
   const { left, right, result } = problem.equation;
   const start = Math.max(left, right);
@@ -120,7 +131,7 @@ function countingOn(problem: Problem, stage: Stage): NumberLineModel {
   };
 }
 
-function unknownAddend(problem: Problem, stage: Stage): NumberLineModel {
+function unknownAddend(problem: Problem, stage: Stage): Unpowered<NumberLineModel> {
   // Both numbers are known from the start; the hops between them are the answer.
   const { equation } = problem;
   const whole = equation.op === "-" ? equation.left : equation.result;
@@ -137,7 +148,12 @@ function unknownAddend(problem: Problem, stage: Stage): NumberLineModel {
   };
 }
 
-export function visualFor(problem: Problem, stage: Stage): VisualModel {
+/** What the visual shows for a Problem at this stage, drawn with the Power Ollie has for it. */
+export function visualFor(problem: Problem, stage: Stage, held: readonly PowerId[] = []): VisualModel {
+  return { ...plainVisual(problem, stage), power: powerUsedOn(held, problem) };
+}
+
+function plainVisual(problem: Problem, stage: Stage): Unpowered<VisualModel> {
   switch (problem.skill) {
     case "partners-to-10":
       return partnersTo10(problem, stage);

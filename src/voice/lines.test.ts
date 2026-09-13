@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { baselinePlan, DIAGNOSTIC_PLAN, hintFor, newProfile, SKILLS, startSession } from "@/loop";
 import { profileWithMastered } from "@/loop/testing";
-import { cheerFor, revealLine, SESSION_DONE } from "@/play/lines";
+import { POWERS } from "@/loop";
+import { cheerFor, powerLine, revealLine, SESSION_DONE } from "@/play/lines";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { audioKey } from "./key";
 import { fixedLines, ollieLines, PAD_ANSWERS, problemLines } from "./lines";
@@ -29,8 +30,13 @@ describe("ollieLines", () => {
     for (const skill of SKILLS) expect([...said].some((line) => line.includes(skill.name))).toBe(false);
   });
 
-  it("is 14 Hints (Make-a-ten's two structures share one), 21 Reveal lines, 84 cheers, and the end of a Session", () => {
-    expect(ollieLines()).toHaveLength(14 + 21 + 84 + 1);
+  it("has the line Ollie says on learning each of the four Powers, so the headline celebration is in Ollie's voice", () => {
+    expect(said).toContain("You taught me Count-On Flight!");
+    for (const power of POWERS) expect(said).toContain(powerLine(power.name));
+  });
+
+  it("is 14 Hints (Make-a-ten's two structures share one), 21 Reveal lines, 84 cheers, four Powers, and the end of a Session", () => {
+    expect(ollieLines()).toHaveLength(14 + 21 + 84 + 4 + 1);
   });
 
   it("has no Nickname in it, because a fixed line is rendered once for every Learner", () => {
@@ -63,9 +69,9 @@ describe("problemLines", () => {
 describe("fixedLines", () => {
   const lines = fixedLines("standard");
 
-  it("is Ollie's 120 lines and the 1,166 Problem lines of the standard ranges, each said once", () => {
+  it("is Ollie's 124 lines and the 1,166 Problem lines of the standard ranges, each said once", () => {
     expect(texts(lines).size).toBe(lines.length);
-    expect(lines.filter((l) => l.kind === "ollie")).toHaveLength(120);
+    expect(lines.filter((l) => l.kind === "ollie")).toHaveLength(124);
     expect(lines.filter((l) => l.kind === "problem")).toHaveLength(1166);
     expect(fixedLines("default").filter((l) => l.kind === "problem")).toHaveLength(671);
   });

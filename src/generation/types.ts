@@ -29,6 +29,12 @@ export type StoryInput = {
   readonly answer: number;
   readonly theme: ThemeId;
   readonly nickname: string;
+  /**
+   * The rich Story set, which the Story Solver Power opens: the same numbers
+   * told as a scene in the Theme rather than a bare count. Same rules, same
+   * limits; a separate set of Stories, kept apart in the Content Pool.
+   */
+  readonly rich?: boolean;
 };
 
 export type StoryOutput = { readonly text: string };

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { answerProblem, currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 import { awardSession, buyItem, newRewards } from "@/rewards/rewards";
 import { AVATAR_COLORS, cleanNickname, THEMES } from "./identity";
 import { createProfile, parseProfile, serializeProfile } from "./profile";
@@ -49,7 +50,7 @@ describe("the identity chosen at onboarding", () => {
 
   it("carries a version 1 Profile forward with its progress, no identity, and fresh Unit 3 states, so onboarding runs once", () => {
     const v1 = { version: 1, seed: "seed-1", progress: { ...fresh, skills: beforeUnit3 }, session: null };
-    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 4, identity: null, progress: fresh, rewards: newRewards() });
+    expect(parseProfile(JSON.stringify(v1))).toEqual({ ...v1, version: 5, identity: null, progress: fresh, rewards: newRewards(), powers: [] });
   });
 
   it("carries a version 2 Profile, stored before Unit 3 had Skills, forward with fresh states for them, so nothing is lost", () => {
@@ -129,5 +130,40 @@ describe("the rewards the Profile keeps", () => {
     const owned = { ...fresh, owned: ["party-hat"] };
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, pet: "party-hat" } }))).toBeNull();
     expect(parseProfile(stored({ ...owned, worn: { ...fresh.worn, hat: "party-hat" } }))).not.toBeNull();
+  });
+});
+
+describe("the Powers the Profile holds", () => {
+  const identity = { nickname: "Mia", avatarColor: "sky", theme: "puppies" } as const;
+  const mastered = profileWithMastered("partners-to-10", "teen-numbers", "counting-on");
+
+  it("starts a fresh Profile with none: a Power is learned in play and never bought", () => {
+    expect(createProfile("seed-1").powers).toEqual([]);
+  });
+
+  it("round-trips the Powers Ollie has learned", () => {
+    const profile = { ...createProfile("seed-1"), identity, powers: ["count-on-flight" as const] };
+    expect(parseProfile(serializeProfile(profile))).toEqual(profile);
+  });
+
+  it("gives a version 4 Profile the Powers its Mastery has already taught, so nothing is lost on deploy", () => {
+    const stored = { ...createProfile("seed-1"), version: 4, identity, progress: mastered, powers: undefined };
+    expect(parseProfile(JSON.stringify(stored))).toEqual({
+      ...createProfile("seed-1"),
+      identity,
+      progress: mastered,
+      powers: ["count-on-flight"],
+    });
+  });
+
+  it("gives a version 1 Profile with nothing Mastered no Powers", () => {
+    const stored = { version: 1, seed: "seed-1", progress: newProfile(), session: null };
+    expect(parseProfile(JSON.stringify(stored))?.powers).toEqual([]);
+  });
+
+  it("starts fresh when the Powers are not four this version knows", () => {
+    const stored = (powers: unknown) => JSON.stringify({ ...createProfile("seed-1"), identity, powers });
+    expect(parseProfile(stored(["x-ray-vision"]))).toBeNull();
+    expect(parseProfile(stored("count-on-flight"))).toBeNull();
   });
 });

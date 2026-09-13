@@ -89,6 +89,40 @@ export const UNIT_3_PROFILE = {
   session: null,
 };
 
+/**
+ * A Profile one Session away from teaching Ollie Count-On Flight: Unit 1
+ * Mastered so the Baseline plans counting on, one Session played, and four
+ * first attempts at counting on already correct, so the six Problems of the
+ * next Session carry it over the 8-of-10 rule. Stored as version 4, before
+ * Powers existed, so the browser runs the migration too.
+ */
+export const COUNTING_ON_PROFILE = {
+  version: 4,
+  seed: "e2e-counting-on",
+  identity: { nickname: "Mia", avatarColor: "sky", theme: "space" },
+  progress: {
+    nextProblemNumber: 20,
+    sessionsCompleted: 1,
+    skills: {
+      "partners-to-10": mastered,
+      "teen-numbers": mastered,
+      "counting-on": { estimate: 0.9, recentFirstAttempts: [true, true, true, true], mastered: false },
+      "make-a-ten": fresh(0.2),
+      "unknown-addend": fresh(0.2),
+      "result-unknown": fresh(0.2),
+      "change-unknown": fresh(0.15),
+    },
+  },
+  rewards: { coins: 0, lastSessionPaid: 1, streak: 1, lastSessionDay: null, freezes: 2, owned: [], worn: { hat: null, accessory: null, pet: null } },
+  session: null,
+};
+
+/** Write a Profile to the device, as though the Learner had been playing on it. */
+export async function seedProfile(page: Page, profile: unknown): Promise<void> {
+  await page.goto("/");
+  await page.evaluate(([k, value]) => localStorage.setItem(k as string, JSON.stringify(value)), [PROFILE_KEY, profile] as const);
+}
+
 /** A Problem in the Session the Profile holds, as the Session screen stores it. */
 export type StoredProblem = { id: string; skill: string; structure: string; spoken: string };
 

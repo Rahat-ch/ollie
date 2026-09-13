@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { currentProblem, DIAGNOSTIC_PLAN, newProfile, startSession } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 import { createProfile, type Profile } from "@/profile/profile";
 import { COINS_PER_SESSION, newRewards } from "@/rewards/rewards";
 import { beginPlay, playReducer, problemShown, triedAnswer, type PlayState } from "./play";
@@ -151,5 +152,53 @@ describe("the rewards a Session earns", () => {
     if (celebrated.phase.kind !== "celebration") throw new Error("unreachable");
     expect(celebrated.phase.award.rewards.lastSessionDay).toBe("2026-09-13");
     expect(celebrated.phase.award.rewards.streak).toBe(1);
+  });
+});
+
+describe("the Powers a Session earns", () => {
+  /** Play every Problem of a Session first-try, finishing at the given moment. */
+  function playThrough(profile: Profile, at = 1000): PlayState {
+    let state = beginPlay(profile, at);
+    while (state.phase.kind !== "celebration") state = next(play(state, "f"), at);
+    return state;
+  }
+
+  /**
+   * A Profile one Session away from Mastering counting on: Unit 1 behind it,
+   * so the Baseline plans six counting-on Problems, and four first attempts
+   * already correct, so those six carry the 8-of-10 rule over the line.
+   */
+  function almostFlying(): Profile {
+    const progress = profileWithMastered("partners-to-10", "teen-numbers");
+    return {
+      ...createProfile("seed-power"),
+      identity: { nickname: "Mia", avatarColor: "sky", theme: "puppies" },
+      progress: {
+        ...progress,
+        sessionsCompleted: 1,
+        skills: { ...progress.skills, "counting-on": { estimate: 0.9, recentFirstAttempts: [true, true, true, true], mastered: false } },
+      },
+    };
+  }
+
+  it("carries the Powers the Profile holds through the Session", () => {
+    const held = { ...createProfile("seed-1"), powers: ["count-on-flight" as const] };
+    expect(beginPlay(held, 0).powers).toEqual(["count-on-flight"]);
+  });
+
+  it("teaches Ollie Count-On Flight on the Session that Masters counting on, and the celebration says so", () => {
+    const state = playThrough(almostFlying());
+    if (state.phase.kind !== "celebration") throw new Error("unreachable");
+    expect(state.phase.result.newlyMastered).toContain("counting-on");
+    expect(state.phase.result.powersEarned).toEqual(["count-on-flight"]);
+    expect(state.powers).toEqual(["count-on-flight"]);
+  });
+
+  it("keeps a Power the Profile already holds and earns it no second time", () => {
+    const flying = { ...almostFlying(), powers: ["count-on-flight" as const] };
+    const state = playThrough({ ...flying, progress: profileWithMastered("partners-to-10", "teen-numbers", "counting-on") });
+    if (state.phase.kind !== "celebration") throw new Error("unreachable");
+    expect(state.phase.result.powersEarned).toEqual([]);
+    expect(state.powers).toEqual(["count-on-flight"]);
   });
 });

@@ -26,6 +26,16 @@ describe("POST /api/story", () => {
     });
   });
 
+  it("answers the rich set apart from the plain one, so Story Solver hears its own Story", async () => {
+    delete process.env.ANTHROPIC_API_KEY;
+    const response = await post({ ...body, rich: true });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({
+      text: templateStory({ ...body, nickname: NICKNAME_PLACEHOLDER, rich: true }),
+      source: "template",
+    });
+  });
+
   it("rejects a structure the Skill does not have", async () => {
     const response = await post({ ...body, structure: "compare" });
     expect(response.status).toBe(400);

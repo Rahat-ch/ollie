@@ -24,9 +24,12 @@ Return only the Story text.`;
 export const describeProblem = (input: StoryInput): string => storyShape(input.structure).describe(input.equation);
 
 export function storyUserMessage(input: StoryInput): string {
-  const { things, words } = themeVocabulary(input.theme);
+  const { things, words, where } = themeVocabulary(input.theme);
   return [
     `Theme: ${input.theme}. Count ${things.map((t) => t.many).join(" or ")}, or another thing from the Theme's words.`,
+    // The rich set is the same Problem told as a scene: the Story Solver
+    // Power opens it, and it is pooled apart from the plain set.
+    ...(input.rich ? [`Say where it happens (${where}) and what the things are doing, inside the same rules.`] : []),
     `The child's Nickname, to write exactly: ${input.nickname}`,
     "",
     "The problem:",
