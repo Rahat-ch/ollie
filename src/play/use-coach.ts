@@ -13,10 +13,7 @@ import { useEffect } from "react";
 import { applyCoachRun } from "@/coach";
 import type { Profile } from "@/profile/profile";
 import { profileStore } from "@/profile/store";
-import { routeCoaching, runCoaching } from "./coaching";
-
-/** Powers earned in the Session, by name. They arrive with ticket 13; until then none is earned. */
-const POWERS_EARNED: readonly string[] = [];
+import { powersEarnedIn, routeCoaching, runCoaching } from "./coaching";
 
 /** The Sessions a run is in flight for on this page. */
 const running = new Set<number>();
@@ -29,7 +26,9 @@ export function useSessionCoach(profile: Profile | null): void {
     if (running.has(session)) return;
     running.add(session);
     // The record the run is written onto is read when it lands, not captured here.
-    void runCoaching(routeCoaching(), profileStore.get().coach, awaiting, POWERS_EARNED, new Date())
+    // The Powers the Session earned come from the Session waiting on the
+    // record, not from a screen's state, so a reload names them all the same.
+    void runCoaching(routeCoaching(), profileStore.get().coach, awaiting, powersEarnedIn(awaiting), new Date())
       .then((run) => profileStore.update((current) => ({ ...current, coach: applyCoachRun(current.coach, run) })))
       .finally(() => running.delete(session));
   }, [awaiting]);

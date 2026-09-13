@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { applyCoachRun, awaitCoach, emptyRecord } from "@/coach";
-import { baselinePlan, DIAGNOSTIC_PLAN, newProfile, runSession, scripted, validatePlan } from "@/loop";
+import { alwaysFirstTry, baselinePlan, DIAGNOSTIC_PLAN, newProfile, runSession, scripted, validatePlan } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 import { fakeGeneration } from "@/generation/fake";
 import { ModelUnavailableError } from "@/lib/errors";
-import { runCoaching, type Coaching } from "./coaching";
+import { powersEarnedIn, runCoaching, type Coaching } from "./coaching";
 
 const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-c", scripted("ffhrfffhf"));
 const at = new Date("2026-09-13T20:00:00.000Z");
@@ -85,5 +86,28 @@ describe("runCoaching", () => {
 
     expect(record.summaries[0].powers).toEqual(["Count-On Flight"]);
     expect(record.summaries[0].practiced).toContain("Count-On Flight");
+  });
+
+  it("names the Power a Session taught Ollie, read from the Session itself and not from a screen", async () => {
+    // A Session that Masters counting on: the Loop returns Count-On Flight with it.
+    const flight = runSession(
+      { length: 10, skills: [{ skill: "counting-on", weight: 1 }], reviewShare: 0, hypothesisUnderTest: null },
+      profileWithMastered("partners-to-10", "teen-numbers"),
+      "seed-flight",
+      alwaysFirstTry,
+    );
+    expect(flight.powersEarned).toEqual(["count-on-flight"]);
+    expect(powersEarnedIn(flight)).toEqual(["Count-On Flight"]);
+
+    const waiting = awaitCoach(emptyRecord(), flight);
+    const run = await runCoaching(fakeGeneration(), waiting, waiting.awaiting!, powersEarnedIn(waiting.awaiting!), at);
+    const summary = applyCoachRun(waiting, run).summaries[0];
+
+    expect(summary.powers).toEqual(["Count-On Flight"]);
+    expect(summary.practiced).toContain("Count-On Flight");
+    // And with no model to write it, the hand-written Summary names it too.
+    const template = (await runCoaching(unreachable, waiting, waiting.awaiting!, powersEarnedIn(waiting.awaiting!), at)).summary;
+    expect(template.source).toBe("template");
+    expect(template.practiced).toContain("Ollie learned Count-On Flight.");
   });
 });
