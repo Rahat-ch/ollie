@@ -5,16 +5,16 @@ import { STORY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, fakeJudge, JUDGE_AGREEMENT_THRESHOLD, type Judge } from "./judge";
 import { runStoryEvals, storySample } from "./stories";
 
-/** A Judge that answers with the human labels, and passes anything else. */
-const labelJudge: Judge = {
+/** A Judge that answers with the Calibration Set's own verdicts, and passes anything else. */
+const agreeingJudge: Judge = {
   async judgeStory({ text }) {
-    const labelled = STORY_CALIBRATION_SET.find((s) => s.text === text);
-    return { pass: labelled?.pass ?? true, reason: "as labelled" };
+    const calibrated = STORY_CALIBRATION_SET.find((s) => s.text === text);
+    return { pass: calibrated?.pass ?? true, reason: "as the Calibration Set says" };
   },
 };
 
 describe("the Story Calibration Set", () => {
-  it("has 20 Stories, all valid to the validator, with both labels present", () => {
+  it("has 20 Stories, all valid to the validator, some passing and some failing", () => {
     expect(STORY_CALIBRATION_SET).toHaveLength(20);
     expect(new Set(STORY_CALIBRATION_SET.map((s) => s.id)).size).toBe(20);
     for (const story of STORY_CALIBRATION_SET) {
@@ -26,14 +26,14 @@ describe("the Story Calibration Set", () => {
 });
 
 describe("calibrateJudge", () => {
-  it("fails the fake Judge, which passes every valid Story and so misses every failing label", async () => {
+  it("fails the fake Judge, which passes every valid Story and so misses every failing verdict", async () => {
     const calibration = await calibrateJudge(fakeJudge, STORY_CALIBRATION_SET);
     expect(calibration).toMatchObject({ size: 20, agreements: 12, agreement: 0.6, threshold: JUDGE_AGREEMENT_THRESHOLD, passes: false });
     expect(calibration.disagreements.map((d) => d.id)).toEqual(["c13", "c14", "c15", "c16", "c17", "c18", "c19", "c20"]);
   });
 
-  it("passes a Judge that agrees with the labels", async () => {
-    expect(await calibrateJudge(labelJudge, STORY_CALIBRATION_SET)).toMatchObject({ agreement: 1, passes: true, disagreements: [] });
+  it("passes a Judge that agrees with the verdicts", async () => {
+    expect(await calibrateJudge(agreeingJudge, STORY_CALIBRATION_SET)).toMatchObject({ agreement: 1, passes: true, disagreements: [] });
   });
 });
 
@@ -63,7 +63,7 @@ describe("runStoryEvals on the fake", () => {
   });
 
   it("reports readability over the valid Stories once the Judge clears calibration", async () => {
-    const report = await runStoryEvals({ ...options, judge: labelJudge, judgeName: "labels" });
+    const report = await runStoryEvals({ ...options, judge: agreeingJudge, judgeName: "agreeing" });
     expect(report.judge.calibration.passes).toBe(true);
     expect(report.judge.readability).toEqual({ judged: 30, passed: 30, passRate: 1 });
   });

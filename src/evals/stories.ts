@@ -10,7 +10,7 @@ import { createRng, getSkill, type SkillId } from "@/loop";
 import { mapLimit } from "@/lib/map-limit";
 import { THEMES } from "@/profile/identity";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
-import { STORY_ATTEMPTS, writeValidStory, type StoryRejection } from "@/story/write";
+import { writeValidStory, type StoryRejection } from "@/story/write";
 import { STORY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, type Calibration, type Judge, type StoryJudgement } from "./judge";
 import { share } from "./stats";
@@ -81,7 +81,7 @@ export type StoryEvalOptions = {
 };
 
 /** A rejection reason without its particulars, so the same kind of failure counts together. */
-const kindOf = (reason: string): string => reason.replace(/\d+(, \d+)*/g, "n").replace(/vocabulary: .*$/, "vocabulary").replace(/the Nickname .* is missing/, "the Nickname is missing");
+const reasonKind = (reason: string): string => reason.replace(/\d+(, \d+)*/g, "n").replace(/vocabulary: .*$/, "vocabulary").replace(/the Nickname .* is missing/, "the Nickname is missing");
 
 function validity(traces: readonly StoryTrace[]): StoryValidity {
   const counts = new Map<string, number>();
@@ -90,7 +90,7 @@ function validity(traces: readonly StoryTrace[]): StoryValidity {
     attempts += trace.rejections.length + (trace.source === "story" ? 1 : 0);
     for (const rejection of trace.rejections) {
       for (const reason of rejection.reasons) {
-        const kind = kindOf(reason);
+        const kind = reasonKind(reason);
         counts.set(kind, (counts.get(kind) ?? 0) + 1);
       }
     }
@@ -110,7 +110,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
   const sample = options.sample ?? storySample();
   const concurrency = options.concurrency ?? 6;
   const written = await mapLimit(sample, concurrency, async (input): Promise<StoryTrace> => {
-    const story = await writeValidStory(generation, input, STORY_ATTEMPTS);
+    const story = await writeValidStory(generation, input);
     return { input, ...story };
   });
   const calibration = await calibrateJudge(judge, STORY_CALIBRATION_SET);

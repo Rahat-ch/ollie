@@ -26,13 +26,9 @@ export type WrittenStory = {
 
 const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-export async function writeValidStory(
-  generation: Pick<Generation, "writeStory">,
-  input: StoryInput,
-  attempts = STORY_ATTEMPTS,
-): Promise<WrittenStory> {
+export async function writeValidStory(generation: Pick<Generation, "writeStory">, input: StoryInput): Promise<WrittenStory> {
   const rejections: StoryRejection[] = [];
-  for (let attempt = 1; attempt <= attempts; attempt++) {
+  for (let attempt = 1; attempt <= STORY_ATTEMPTS; attempt++) {
     let text: string;
     try {
       ({ text } = await generation.writeStory(input));

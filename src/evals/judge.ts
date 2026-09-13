@@ -23,11 +23,11 @@ export type Judge = {
   judgeStory(story: StoryToJudge): Promise<StoryJudgement>;
 };
 
-/** A labelled Story the Judge must agree with; the label is a human's. */
+/** A hand-labelled Story the Judge must agree with; `pass` is the human's verdict. */
 export type CalibrationStory = StoryToJudge & {
   readonly id: string;
   readonly pass: boolean;
-  /** Why the label is what it is, for the reader. */
+  /** Why the verdict is what it is, for the reader. */
   readonly note: string;
 };
 
@@ -70,14 +70,14 @@ export type Calibration = {
   readonly threshold: number;
   /** Whether the Judge's scores may be reported. */
   readonly passes: boolean;
-  readonly disagreements: readonly { readonly id: string; readonly label: boolean; readonly judged: boolean; readonly reason: string }[];
+  readonly disagreements: readonly { readonly id: string; readonly expected: boolean; readonly judged: boolean; readonly reason: string }[];
 };
 
-/** Run the Judge over the Calibration Set and score its agreement with the human labels. */
+/** Run the Judge over the Calibration Set and score its agreement with the human verdicts. */
 export async function calibrateJudge(judge: Judge, set: readonly CalibrationStory[]): Promise<Calibration> {
   const judged = await Promise.all(set.map((story) => judge.judgeStory(story)));
   const disagreements = set.flatMap((story, i) =>
-    judged[i].pass === story.pass ? [] : [{ id: story.id, label: story.pass, judged: judged[i].pass, reason: judged[i].reason }],
+    judged[i].pass === story.pass ? [] : [{ id: story.id, expected: story.pass, judged: judged[i].pass, reason: judged[i].reason }],
   );
   const agreements = set.length - disagreements.length;
   const agreement = set.length === 0 ? 0 : agreements / set.length;

@@ -9,6 +9,8 @@ export { NICKNAME_PLACEHOLDER, withNickname } from "./nickname";
 export type { StoryValidation } from "./validate";
 export { knownNumbers, MAX_STORY_WORDS, STORY_SENTENCES, validateStory } from "./validate";
 export { templateStory } from "./template";
+export type { StoryShape } from "./shapes";
+export { isStoryStructure, storyShape } from "./shapes";
 export { describeProblem, STORY_SYSTEM_PROMPT, storyUserMessage } from "./prompt";
 export type { StoryRejection, WrittenStory } from "./write";
 export { STORY_ATTEMPTS, writeValidStory } from "./write";

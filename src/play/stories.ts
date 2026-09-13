@@ -6,6 +6,7 @@
 import { getSkill, type Equation, type Problem, type SkillId } from "@/loop";
 import type { ThemeId } from "@/profile/identity";
 import { poolVariants, type ContentPool, type PoolInput } from "@/story/pool";
+import { storyShape } from "@/story/shapes";
 
 /** The Pool key for a Unit 3 Problem in the Profile's Theme; null for any other Problem. */
 export function storyInputFor(problem: Problem, theme: ThemeId): PoolInput | null {
@@ -27,42 +28,25 @@ export function pooledStory(pool: ContentPool, problem: Problem, theme: ThemeId)
 
 const UNIT_3: readonly SkillId[] = ["result-unknown", "change-unknown"];
 
-/** Every whole and part the engine can draw, in the Skill's default range, mirroring its generator. */
-function equationsFor(skill: SkillId, structure: string): Equation[] {
-  const { defaultRange: range } = getSkill(skill);
+export type PoolRange = "default" | "standard";
+
+/** Every whole and part the engine can draw for a structure in the range, laid out by the structure's shape. */
+function equationsFor(skill: SkillId, structure: string, range: PoolRange): Equation[] {
+  const shape = storyShape(structure);
+  const bounds = range === "default" ? getSkill(skill).defaultRange : getSkill(skill).standardRange;
   const equations: Equation[] = [];
-  for (let whole = range.min; whole <= range.max; whole++) {
-    const maxPart = skill === "change-unknown" ? Math.min(9, whole - 1) : whole - 1;
-    for (let part = 1; part <= maxPart; part++) {
-      const other = whole - part;
-      switch (structure) {
-        case "add-to":
-        case "put-together":
-          equations.push({ left: part, op: "+", right: other, result: whole, unknown: "result" });
-          break;
-        case "take-from":
-          equations.push({ left: whole, op: "-", right: part, result: other, unknown: "result" });
-          break;
-        case "add-to-change":
-          equations.push({ left: other, op: "+", right: part, result: whole, unknown: "right" });
-          break;
-        case "take-from-change":
-          equations.push({ left: whole, op: "-", right: part, result: other, unknown: "right" });
-          break;
-        default:
-          throw new Error(`No Pool equations for ${skill} structure ${structure}`);
-      }
-    }
+  for (let whole = bounds.min; whole <= bounds.max; whole++) {
+    for (let part = 1; part <= shape.maxPart(whole); part++) equations.push(shape.equation(whole, part));
   }
   return equations;
 }
 
-/** Every Pool key `pnpm pool` fills: each Theme, each Unit 3 Skill and structure, each equation in the default range. */
-export function poolInputs(themes: readonly ThemeId[]): PoolInput[] {
+/** Every Pool key `pnpm pool` fills: each Theme, each Unit 3 Skill and structure, each equation in the Skill's default (or standard) range. */
+export function poolInputs(themes: readonly ThemeId[], range: PoolRange = "default"): PoolInput[] {
   return themes.flatMap((theme) =>
     UNIT_3.flatMap((skill) =>
       getSkill(skill).structures.flatMap((structure) =>
-        equationsFor(skill, structure).map((equation): PoolInput => ({ skill, structure, equation, answer: equation[equation.unknown], theme })),
+        equationsFor(skill, structure, range).map((equation): PoolInput => ({ skill, structure, equation, answer: equation[equation.unknown], theme })),
       ),
     ),
   );

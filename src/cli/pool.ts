@@ -8,6 +8,7 @@
  *   pnpm pool                          # every Theme, one variant per key; needs ANTHROPIC_API_KEY
  *   pnpm pool --themes puppies,space   # some Themes only
  *   pnpm pool --variants 2             # up to two variants per key
+ *   pnpm pool --range standard         # every equation in the Skills' standard ranges (2 to 20), not only the defaults
  *   pnpm pool --limit 50               # at most 50 new Stories this run
  *   pnpm pool --fake --out /tmp/p.json # the Generation fake, a dry run of the script
  *
@@ -18,7 +19,7 @@ import { parseArgs } from "node:util";
 import { mapLimit } from "@/lib/map-limit";
 import { readPoolFile, writePoolFile } from "@/lib/pool-file";
 import { THEMES, type ThemeId } from "@/profile/identity";
-import { poolInputs } from "@/play/stories";
+import { poolInputs, type PoolRange } from "@/play/stories";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { addToPool, poolKey, poolVariants, type ContentPool, type PoolInput } from "@/story/pool";
 import { writeValidStory } from "@/story/write";
@@ -30,6 +31,7 @@ const { values } = parseArgs({
   options: {
     themes: { type: "string", default: THEMES.map((t) => t.id).join(",") },
     variants: { type: "string", default: "1" },
+    range: { type: "string", default: "default" },
     limit: { type: "string" },
     concurrency: { type: "string", default: "6" },
     fake: { type: "boolean", default: false },
@@ -44,6 +46,11 @@ if (unknownTheme) {
   console.error(`--themes must be from ${themeIds.join(", ")}, got "${unknownTheme}"`);
   process.exit(1);
 }
+if (values.range !== "default" && values.range !== "standard") {
+  console.error(`--range must be default or standard, got "${values.range}"`);
+  process.exit(1);
+}
+const range: PoolRange = values.range;
 const variants = Number(values.variants);
 const limit = values.limit === undefined ? Infinity : Number(values.limit);
 const concurrency = Number(values.concurrency);
@@ -57,7 +64,7 @@ for (const [name, value] of [["variants", variants], ["limit", limit], ["concurr
 async function main(): Promise<void> {
   const { generation, storyName } = await chooseGeneration(values.fake ? "fake" : "real");
   let pool: ContentPool = await readPoolFile(values.out);
-  const wanted = poolInputs(themes);
+  const wanted = poolInputs(themes, range);
   const jobs: PoolInput[] = wanted.flatMap((input) => Array<PoolInput>(Math.max(0, variants - poolVariants(pool, input).length)).fill(input));
   const todo = jobs.slice(0, limit);
   console.log(`Stories: ${storyName}. Pool: ${values.out} (${Object.keys(pool).length} keys).`);

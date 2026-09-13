@@ -3,37 +3,53 @@
  * the Pool as it has grown on this server, else written live on Sonnet 5
  * and added, else the template sentence. The browser sends the engine's
  * numbers and never the Nickname; the Story comes back in placeholder form
- * and the Nickname is filled in on the device (ADR 0002). Without an API
- * key the route still answers, with the template, so play never blocks.
+ * and the Nickname is filled in on the device (ADR 0002). The numbers are
+ * checked to be a Problem the engine could have set (ADR 0001). Without an
+ * API key the route still answers, with the template, so play never blocks.
  */
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { Generation } from "@/generation";
 import { readEnv, requireEnv } from "@/lib/env";
-import { readPoolFile, writePoolFile } from "@/lib/pool-file";
+import { storyFor } from "@/lib/story-service";
+import { getSkill } from "@/loop";
 import { THEMES } from "@/profile/identity";
-import { BUNDLED_POOL } from "@/story/bundled";
-import { addToPool, fillStory, type PoolInput } from "@/story/pool";
-
-export const dynamic = "force-dynamic";
+import type { PoolInput } from "@/story/pool";
+import { isStoryStructure, storyShape } from "@/story/shapes";
 
 const themeIds = THEMES.map((t) => t.id) as [PoolInput["theme"], ...PoolInput["theme"][]];
 const number = z.int().min(0).max(20);
 
-const StoryRequestSchema = z.strictObject({
-  theme: z.enum(themeIds),
-  skill: z.enum(["result-unknown", "change-unknown"]),
-  structure: z.string().min(1),
-  equation: z.strictObject({
-    left: number,
-    op: z.enum(["+", "-"]),
-    right: number,
-    result: number,
-    unknown: z.enum(["left", "right", "result"]),
-  }),
-  answer: number,
-  variant: z.int().min(0).optional(),
-});
+const StoryRequestSchema = z
+  .strictObject({
+    theme: z.enum(themeIds),
+    skill: z.enum(["result-unknown", "change-unknown"]),
+    structure: z.string().min(1),
+    equation: z.strictObject({
+      left: number,
+      op: z.enum(["+", "-"]),
+      right: number,
+      result: number,
+      unknown: z.enum(["left", "right", "result"]),
+    }),
+    answer: number,
+    variant: z.int().min(0).optional(),
+  })
+  .check((ctx) => {
+    const { skill, structure, equation, answer } = ctx.value;
+    if (!isStoryStructure(structure) || !getSkill(skill).structures.includes(structure)) {
+      ctx.issues.push({ code: "custom", input: structure, path: ["structure"], message: `${skill} has no structure "${structure}"` });
+      return;
+    }
+    // Lay the whole and the part out the way the structure does and require the same equation back.
+    const whole = equation.op === "+" ? equation.result : equation.left;
+    const part = equation.op === "-" || structure === "add-to-change" ? equation.right : equation.left;
+    const laidOut = storyShape(structure).equation(whole, part);
+    const same = (["left", "op", "right", "result", "unknown"] as const).every((field) => laidOut[field] === equation[field]);
+    if (!same || part < 1 || answer !== equation[equation.unknown]) {
+      ctx.issues.push({ code: "custom", input: equation, path: ["equation"], message: "not a Problem the engine sets for this structure" });
+    }
+  });
 
 /** The Story writer, or one that fails at once when there is no key, so the template is used. */
 async function storyWriter(): Promise<Pick<Generation, "writeStory">> {
@@ -58,11 +74,5 @@ export async function POST(request: Request) {
   }
   const { variant = 0, ...input } = parsed.data;
   const { poolFile } = readEnv();
-  const grown = await readPoolFile(poolFile);
-  const filled = await fillStory({ ...BUNDLED_POOL, ...grown }, await storyWriter(), input, variant);
-  if (filled.source === "generated") {
-    // The file keeps only what grew here; the bundled Pool ships with the app.
-    await writePoolFile(poolFile, addToPool(grown, input, filled.text));
-  }
-  return NextResponse.json({ text: filled.text, source: filled.source });
+  return NextResponse.json(await storyFor({ poolFile, writer: await storyWriter() }, input, variant));
 }

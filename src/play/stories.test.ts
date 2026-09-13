@@ -53,14 +53,19 @@ describe("poolInputs", () => {
     expect(inputs.filter((i) => i.skill === "change-unknown" && i.structure === "add-to-change")).toHaveLength(84);
   });
 
-  it("covers every Problem the engine draws in the default range, so a full Pool never misses", () => {
-    const keys = new Set(poolInputs(["ocean"]).map(poolKey));
+  it.each(["default", "standard"] as const)("covers every Problem the engine draws in the %s range, so a full Pool never misses", (range) => {
+    const keys = new Set(poolInputs(["ocean"], range).map(poolKey));
     for (const skill of [getSkill("result-unknown"), getSkill("change-unknown")]) {
+      const bounds = range === "default" ? skill.defaultRange : skill.standardRange;
       for (let i = 0; i < 300; i++) {
-        const draft = skill.generate(createRng(`cover-${i}`), { range: skill.defaultRange, structures: skill.structures });
+        const draft = skill.generate(createRng(`cover-${i}`), { range: bounds, structures: skill.structures });
         expect(keys.has(poolKey({ skill: skill.id, structure: draft.structure, equation: draft.equation, answer: draft.answer, theme: "ocean" }))).toBe(true);
       }
     }
+  });
+
+  it("enumerates the standard range on request: 840 keys per Theme", () => {
+    expect(poolInputs(["puppies"], "standard")).toHaveLength(840);
   });
 
   it("covers a Baseline Session in Unit 3 for a Profile with Units 1 and 2 Mastered", () => {
