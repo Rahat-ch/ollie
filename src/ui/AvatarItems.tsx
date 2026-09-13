@@ -61,41 +61,37 @@ export const AVATAR_ITEM_ART: Readonly<Record<AvatarItemId, { readonly art: Reac
     viewBox: "10 27 60 28",
     art: (
       <>
-        <circle cx="30" cy="41" r="9.5" className="fill-paper" />
-        <circle cx="50" cy="41" r="9.5" className="fill-paper" />
-        <circle cx="30" cy="41" r="3.6" className="fill-ink" />
-        <circle cx="50" cy="41" r="3.6" className="fill-ink" />
-        <circle cx="28.4" cy="39.4" r="1.4" className="fill-paper" />
-        <circle cx="48.4" cy="39.4" r="1.4" className="fill-paper" />
+        <path d="M20.5 36.6L13 32.6L11.6 35.2L19.1 39.2ZM59.5 36.6L67 32.6L68.4 35.2L60.9 39.2Z" className="fill-teal-deep" />
+        <path d="M37.5 40.5H42.5V43.5H37.5Z" className="fill-teal-deep" />
         <path
-          d="M30 31.5a9.5 9.5 0 1 1 0 19a9.5 9.5 0 1 1 0-19M50 31.5a9.5 9.5 0 1 1 0 19a9.5 9.5 0 1 1 0-19M39.5 40.5C39.8 39.5 40.2 39.5 40.5 40.5M20.5 38L13 34M59.5 38L67 34"
-          stroke="var(--teal-deep)"
-          strokeWidth="3"
-          strokeLinecap="round"
-          fill="none"
+          d="M30 30a11 11 0 1 0 0 22a11 11 0 1 0 0-22M30 33a8 8 0 1 1 0 16a8 8 0 1 1 0-16M50 30a11 11 0 1 0 0 22a11 11 0 1 0 0-22M50 33a8 8 0 1 1 0 16a8 8 0 1 1 0-16"
+          className="fill-teal-deep"
         />
+        <circle cx="30" cy="41" r="8" className="fill-paper" />
+        <circle cx="50" cy="41" r="8" className="fill-paper" />
+        <circle cx="30" cy="41" r="3.4" className="fill-ink" />
+        <circle cx="50" cy="41" r="3.4" className="fill-ink" />
+        <circle cx="28.5" cy="39.5" r="1.3" className="fill-paper" />
+        <circle cx="48.5" cy="39.5" r="1.3" className="fill-paper" />
       </>
     ),
   },
 
   "pet-snail": {
-    viewBox: "46 44 36 36",
+    viewBox: "51 54 31 26",
     art: (
       <>
-        <path d="M52 78C50 70 58 65 67 65H78C80 69 78 76 73 78Z" className="fill-leaf-deep" />
-        <path d="M52 75C50 67 58 62 67 62H78C80 66 78 73 73 75Z" className="fill-leaf" />
-        <path d="M56 64L53 54M62 62L61 51" stroke="var(--leaf-deep)" strokeWidth="3" strokeLinecap="round" fill="none" />
-        <circle cx="53" cy="52.5" r="2.4" className="fill-ink" />
-        <circle cx="61" cy="49.5" r="2.4" className="fill-ink" />
-        <circle cx="69" cy="60" r="12" className="fill-sun-deep" />
-        <circle cx="69" cy="58" r="12" className="fill-sun" />
-        <path
-          d="M69 46C75.6 46 81 51.4 81 58C81 63.5 76.5 68 71 68C66.6 68 63 64.4 63 60C63 56.7 65.7 54 69 54C71.2 54 73 55.8 73 58"
-          stroke="var(--sun-deep)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          fill="none"
-        />
+        <path d="M54 79C52 74 59 71 66 71H78C80 74 78 78 74 79Z" className="fill-leaf-deep" />
+        <path d="M54 77C52 72 59 69 66 69H78C80 72 78 76 74 77Z" className="fill-leaf" />
+        <path d="M56.8 71.5L59.8 70.8L58.6 62.6L56.4 62.9Z" className="fill-leaf-deep" />
+        <path d="M61.8 69.8L64.8 69.2L63.6 61.4L61.4 61.7Z" className="fill-leaf-deep" />
+        <circle cx="57.4" cy="61.6" r="2.2" className="fill-ink" />
+        <circle cx="62.4" cy="60.4" r="2.2" className="fill-ink" />
+        <circle cx="69" cy="68" r="9" className="fill-sun-deep" />
+        <circle cx="69" cy="66" r="9" className="fill-sun" />
+        <circle cx="69" cy="66" r="6" className="fill-sun-deep" />
+        <circle cx="69" cy="66" r="3.4" className="fill-sun" />
+        <circle cx="69" cy="66" r="1.2" className="fill-sun-deep" />
       </>
     ),
   },

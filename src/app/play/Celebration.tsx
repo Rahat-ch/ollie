@@ -46,7 +46,7 @@ const FILL = {
 /** Flat paper confetti in the six hues — round, cut square, and cut across a corner — drifting once. */
 export function Confetti() {
   return (
-    <svg viewBox="0 0 1024 768" className="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <svg viewBox="0 0 1024 768" className="pointer-events-none absolute inset-0 -z-10 h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       {CONFETTI.map(([shape, x, y, hue, angle], i) => {
         const piece = `confetti ${FILL[hue]}`;
         const style = { animationDelay: `${(i % 5) * 120}ms` };
@@ -73,8 +73,8 @@ export function Confetti() {
  * A Streak milestone: the day count on a plum card beside a paper rosette
  * with the Streak's own flame in it, once each at 3, 7, and 14 days. The
  * rosette is ten petals cut from sun and laid round a leaf disc, so the
- * milestone belongs to the Streak and not to a second reward. One
- * overshoot, then still.
+ * milestone belongs to the Streak and not to a second thing to collect.
+ * One overshoot, then still.
  */
 export function Milestone({ days }: { readonly days: number }) {
   return (
@@ -146,7 +146,7 @@ export function Celebration({ result, award, onDone }: CelebrationProps) {
   const { streak } = award.rewards;
   return (
     <main
-      className="learner-stage flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
+      className="learner-stage isolate flex flex-col items-center gap-6 px-gutter pt-10 pb-12"
       data-testid="celebration"
       data-speech-source={source ?? undefined}
       data-power={powers[0]?.id}

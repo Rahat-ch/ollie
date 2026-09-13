@@ -101,9 +101,8 @@ export function Onboarding() {
                   aria-pressed={avatarColor === color.id}
                   className={`size-touch-learner rounded-pill ${picked(avatarColor === color.id)}`}
                 >
-                  <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
-                    <circle cx="32" cy="32" r="32" className={color.fill} />
-                  </svg>
+                  {/* The choice is the Avatar itself in that colour, not a colour chip. */}
+                  <Avatar color={color.id} size={64} label={`${color.name} Avatar`} />
                 </button>
               ))}
             </div>

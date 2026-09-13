@@ -1,4 +1,5 @@
 import type { ThemeId } from "@/profile/identity";
+import { Eye, Star } from "./art";
 import { INK_STROKE } from "./icons";
 
 /**
@@ -21,12 +22,8 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
       <path d="M76 34C84 42 86 62 80 74C74 82 64 80 62 70C60 58 64 42 76 34Z" className="fill-rust-deep" />
       <ellipse cx="48" cy="48" rx="30" ry="28" className="fill-rust" />
       <ellipse cx="48" cy="60" rx="17" ry="13" className="fill-cream" />
-      <circle cx="36" cy="42" r="7" className="fill-paper" />
-      <circle cx="36" cy="42" r="3.5" className="fill-ink" />
-      <circle cx="34" cy="40" r="1.4" className="fill-paper" />
-      <circle cx="60" cy="42" r="7" className="fill-paper" />
-      <circle cx="60" cy="42" r="3.5" className="fill-ink" />
-      <circle cx="58" cy="40" r="1.4" className="fill-paper" />
+      <Eye cx={36} cy={42} r={7} />
+      <Eye cx={60} cy={42} r={7} />
       <path d="M42 54C44 51 52 51 54 54C54 58 51 61 48 61C45 61 42 58 42 54Z" className="fill-ink" />
       <path d="M48 62V66M48 66C46 70 41 70 40 67M48 66C50 70 55 70 56 67" {...INK_STROKE} />
       <circle cx="32" cy="82.5" r="5" className="fill-sun-deep" />
@@ -52,9 +49,7 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
       <path d="M16 62C6 60 2 48 6 40C11 46 16 54 20 60Z" className="fill-leaf" />
       <path d="M50 66C50 48 56 34 68 28C72 30 76 34 78 38C68 44 64 54 64 66Z" className="fill-leaf" />
       <ellipse cx="78" cy="32" rx="14" ry="12" className="fill-leaf" />
-      <circle cx="80" cy="29" r="5.5" className="fill-paper" />
-      <circle cx="81" cy="29" r="2.8" className="fill-ink" />
-      <circle cx="79.5" cy="27.5" r="1.2" className="fill-paper" />
+      <Eye cx={80} cy={29} r={6} />
       <path d="M86 38C88 37 90 37 91 38" {...INK_STROKE} />
       <path d="M26 82C26 88 30 90 34 90C38 90 40 87 40 82ZM48 82C48 88 52 90 56 90C60 90 62 87 62 82Z" className="fill-leaf-deep" />
     </>
@@ -71,9 +66,9 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
       <path d="M35 44C26 50 22 58 22 66C28 64 32 62 36 58ZM59 44C68 50 72 58 72 66C66 64 62 62 58 58Z" className="fill-plum-deep" />
       <path d="M37 58H57C57 66 53 72 47 76C41 72 37 66 37 58Z" className="fill-sun-deep" />
       <path d="M40 58H54C54 65 51 70 47 73C43 70 40 65 40 58Z" className="fill-sun" />
-      <path d="M78 14C79.2 20 80 20.8 86 22C80 23.2 79.2 24 78 30C76.8 24 76 23.2 70 22C76 20.8 76.8 20 78 14Z" className="fill-sun" />
-      <path d="M16 30C16.8 34 17.3 34.5 21 35C17.3 35.5 16.8 36 16 40C15.2 36 14.7 35.5 11 35C14.7 34.5 15.2 34 16 30Z" className="fill-paper-3" />
-      <path d="M80 62C80.8 66 81.3 66.5 85 67C81.3 67.5 80.8 68 80 72C79.2 68 78.7 67.5 75 67C78.7 66.5 79.2 66 80 62Z" className="fill-paper-3" />
+      <Star cx={78} cy={22} r={8} className="fill-sun" />
+      <Star cx={16} cy={35} r={5} className="fill-paper-3" />
+      <Star cx={80} cy={67} r={5} className="fill-paper-3" />
     </>
   ),
 
@@ -86,9 +81,7 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
       <path d="M46 24C52 14 62 10 70 14C63 18 56 23 52 30Z" className="fill-sky-deep" />
       <path d="M48 74C54 82 62 86 69 84C62 80 56 77 52 70Z" className="fill-sky-deep" />
       <path d="M58 32C62 40 63 48 63 52C63 58 62 64 58 70C56 64 55 58 55 52C55 44 56 38 58 32ZM68 40C71 44 72 48 72 52C72 57 71 60 68 64C67 60 66 56 66 52C66 47 67 44 68 40Z" className="fill-sky-deep" />
-      <circle cx="32" cy="44" r="8" className="fill-paper" />
-      <circle cx="33" cy="44" r="4" className="fill-ink" />
-      <circle cx="31" cy="42" r="1.6" className="fill-paper" />
+      <Eye cx={32} cy={44} r={8} />
       <path d="M22 54C26 56 30 56 34 54" {...INK_STROKE} />
       <circle cx="18" cy="22" r="6" className="fill-sky-deep" />
       <circle cx="32" cy="13" r="4" className="fill-sky-deep" />
@@ -110,7 +103,7 @@ const PICTURES: Readonly<Record<ThemeId, React.ReactNode>> = {
       <circle cx="54.5" cy="23" r="2.2" className="fill-ink" />
       <path d="M46 30C48 32 52 32 54 30" {...INK_STROKE} />
       <path d="M64 58L82 46" {...INK_STROKE} />
-      <path d="M86 30C87.6 38 88.4 38.8 96 40.4C88.4 42 87.6 42.8 86 50.4C84.4 42.8 83.6 42 76 40.4C83.6 38.8 84.4 38 86 30Z" className="fill-sun" />
+      <Star cx={86} cy={40} r={10} className="fill-sun" />
     </>
   ),
 

@@ -59,7 +59,7 @@ Tablet landscape first: 1024×768 design frame, 32px page gutter, content max 96
 
 ## The illustration pass
 
-Every asset was drawn to this document in ticket 15: Ollie's nine SVGs, the six Theme pictures, the four Avatar bases and the six Avatar Items, the four Power marks, the Coin and the Streak's flame, and the celebration and milestone art. `pnpm design:review` puts each one beside the line above that asks for it, with screenshots of the real screens, in `docs/design/review-<date>.html`; `/design-review` is the same page inside the app. The size budget and what was measured are in the ticket's Comments.
+Every asset was drawn to this document in ticket 15: Ollie's nine SVGs, the six Theme pictures, the four Avatar bases and the six Avatar Items, the four Power marks, the Coin and the Streak's flame, and the celebration and milestone art. `pnpm design:review` puts each one beside the line above that asks for it, with screenshots of the real screens, in `docs/design/review-<date>.html`; `/design-review` is the same page inside the app, and answers 404 unless `DESIGN_REVIEW=1` is set. The size budget and what was measured are in the ticket's Comments.
 
 ## What we never do
 

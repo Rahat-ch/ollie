@@ -24,8 +24,11 @@ function Stop({ stop }: { readonly stop: PathStop }) {
         // The sun ring around the current stop is the canvas's own treatment (Main.dc.html), not an elevation.
         <div className="flex size-33 items-center justify-center rounded-pill bg-paper shadow-[0_0_0_6px_var(--sun)]">
           <div className="flex size-27 items-center justify-center rounded-pill bg-sun shadow-[0_4px_0_var(--sun-deep)]">
-            {/* eslint-disable-next-line @next/next/no-img-element -- the project's own SVG, no optimisation wanted */}
-            <img src="/ollie/ollie-head.svg" alt="" width="72" height="72" />
+            {/* Ollie's head is rust with an amber beak; on paper it reads, on the sun disc it does not. */}
+            <span className="flex size-19 items-center justify-center rounded-pill bg-paper">
+              {/* eslint-disable-next-line @next/next/no-img-element -- the project's own SVG, no optimisation wanted */}
+              <img src="/ollie/ollie-head.svg" alt="" width="64" height="64" />
+            </span>
           </div>
         </div>
       )}

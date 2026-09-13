@@ -7,13 +7,14 @@ import type { PowerId } from "@/loop";
  * plum, so the mark still reads at 32px on the Path.
  */
 const MARKS: Readonly<Record<PowerId, React.ReactNode>> = {
-  /* Three hops along the number line, one wing beat over each. */
+  /* Hops along the number line, flown: the wing beat the Power puts over them. */
   "count-on-flight": (
     <>
-      <path d="M3 22A4.5 4.5 0 0 1 12 22L9.8 22A2.3 2.3 0 0 0 5.2 22Z" className="fill-paper" />
-      <path d="M11.5 22A4.5 4.5 0 0 1 20.5 22L18.3 22A2.3 2.3 0 0 0 13.7 22Z" className="fill-paper" />
-      <path d="M20 22A4.5 4.5 0 0 1 29 22L26.8 22A2.3 2.3 0 0 0 22.2 22Z" className="fill-paper" />
-      <rect x="3" y="22" width="26" height="2.2" rx="1.1" className="fill-paper" />
+      <path d="M14.5 9C11.8 6.6 8.4 6.8 6.2 9.3C8.9 10.4 12.3 10.2 14.5 9Z" className="fill-paper" />
+      <path d="M15.5 9C18.2 6.6 21.6 6.8 23.8 9.3C21.1 10.4 17.7 10.2 15.5 9Z" className="fill-paper" />
+      <path d="M4 25C4 13 14 13 14 25L12 25C12 15.5 6 15.5 6 25Z" className="fill-paper" />
+      <path d="M16 25C16 13 26 13 26 25L24 25C24 15.5 18 15.5 18 25Z" className="fill-paper" />
+      <rect x="5" y="25" width="22" height="2" rx="1" className="fill-paper" />
     </>
   ),
   /* A ten-frame filled to ten: the board in paper, the lines cut back to plum. */
@@ -36,7 +37,7 @@ const MARKS: Readonly<Record<PowerId, React.ReactNode>> = {
     <>
       <path d="M4 8C8 6.5 13 6.5 15 9.5V26C13 23.5 8 23.5 4 25Z" className="fill-paper" />
       <path d="M28 8C24 6.5 19 6.5 17 9.5V26C19 23.5 24 23.5 28 25Z" className="fill-paper" />
-      <path d="M6.5 13L12.5 14.5M6.5 17L12.5 18.5M25.5 13L19.5 14.5M25.5 17L19.5 18.5" className="stroke-plum" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M6.5 12.2L12.5 13.7L12.5 15.3L6.5 13.8ZM6.5 16.2L12.5 17.7L12.5 19.3L6.5 17.8ZM25.5 12.2L19.5 13.7L19.5 15.3L25.5 13.8ZM25.5 16.2L19.5 17.7L19.5 19.3L25.5 17.8Z" className="fill-plum" />
     </>
   ),
 };
