@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test("health reports a writable audio directory", async ({ request }) => {
   const response = await request.get("/api/health");

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { asked, COUNTING_ON_PROFILE, key, openParentArea, playSession, readProfile, storedProblems, writeProfile, type StoredProblem } from "./play";
 
 // Several Sessions end to end, each Problem waiting on Ollie's beat: more than the default budget.

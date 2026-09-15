@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { setUpProfile } from "./onboarding";
 import { asked, key, readProfile } from "./play";
 

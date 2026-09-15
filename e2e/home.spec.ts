@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { setUpProfile } from "./onboarding";
 
 test("home page shows Ollie, the Avatar, the Path, and one Play button once the Profile is set up", async ({ page }) => {

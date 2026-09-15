@@ -10,6 +10,8 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL: BASE_URL,
+    // Bundled audio, once it exists, must not play out loud during a test run either.
+    launchOptions: { args: ["--mute-audio"] },
   },
   projects: [
     {
