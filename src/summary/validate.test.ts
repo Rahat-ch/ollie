@@ -38,7 +38,7 @@ describe("validateSummary", () => {
   it("accepts a Summary that names the strategies and what was Mastered, numbers in their names and all", () => {
     const mastered = { ...input, mastered: ["Partners to 10"] };
     const verdict = validateSummary(
-      summary("Partners to 10 is Mastered. Teen numbers as 10 + n had 2 first-try correct and 1 correct after a Hint."),
+      summary("Partners to 10 is Mastered. Teen numbers had 2 first-try correct and 1 correct after a Hint."),
       mastered,
     );
 

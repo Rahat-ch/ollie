@@ -81,7 +81,7 @@ const partnersTo10: Skill = {
 
 const teenNumbers: Skill = {
   id: "teen-numbers",
-  name: "Teen numbers as 10 + n",
+  name: "Teen numbers",
   unit: 1,
   standard: "1.NBT.2b",
   visual: "ten-frame",

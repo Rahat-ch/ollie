@@ -25,7 +25,7 @@ describe("formatSessionLog", () => {
 
   it("prints an Estimate and a Mastery decision per Skill", () => {
     expect(text).toMatch(/Partners to 10 +0\.\d{3} +[01]+ +no/);
-    expect(text).toMatch(/Teen numbers as 10 \+ n +0\.\d{3} +[01]+ +no/);
+    expect(text).toMatch(/Teen numbers +0\.\d{3} +[01]+ +no/);
   });
 });
 

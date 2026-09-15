@@ -151,8 +151,8 @@ describe("the other three operations", () => {
     const output = await fakeGeneration().writeSummary(summary);
     expect(output.practiced).toContain("9 Problems");
     expect(output.practiced).toContain("Partners to 10: 2 first-try correct, 0 correct after a Hint, 1 Revealed, 0 left unanswered.");
-    expect(output.practiced).toContain("Teen numbers as 10 + n: 1 first-try correct, 2 correct after a Hint, 0 Revealed, 0 left unanswered.");
-    expect(output.activity).toContain("Teen numbers as 10 + n");
+    expect(output.practiced).toContain("Teen numbers: 1 first-try correct, 2 correct after a Hint, 0 Revealed, 0 left unanswered.");
+    expect(output.activity).toContain("Teen numbers");
     expect(validateSummary(output, summary)).toEqual({ ok: true });
   });
 
