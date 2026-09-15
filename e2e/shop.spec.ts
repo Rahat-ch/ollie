@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { setUpProfile } from "./onboarding";
 import { daysAgo, key, playSession, PROFILE_KEY, readProfile, seedRewards, solve, storedProblems, UNIT_3_PROFILE } from "./play";
 

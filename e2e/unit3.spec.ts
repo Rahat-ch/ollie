@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 import { key, PROFILE_KEY, solve, UNIT_3_PROFILE, type StoredProblem } from "./play";
 
 test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname; with no key on the server every Story is the template and the Session still completes; no request leaves the host", async ({ page, baseURL }) => {
