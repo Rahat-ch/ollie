@@ -15,14 +15,14 @@ export const OLLIE_VOICE_NAME = "Ollie";
  * for: `Native [Language]. [Gender], [Age range]. [Quality]. Voice: ...
  * Emotion: ...`. The spec asks for "a kind older kid"; Voice Design refuses
  * any description of a child's voice (403, blocked generation), so the brief
- * asks for a youthful adult voice with the same warmth and pace instead
- * (decisions.md, amendment 31).
+ * asks for a cute cartoon voice for a friendly owl, youthful and bright, with
+ * the same warmth and pace instead (decisions.md, amendment 31).
  */
 export const OLLIE_VOICE_BRIEF = [
   "Native English.",
-  "Gender-neutral leaning bright, a youthful adult voice.",
+  "A cute cartoon voice for a friendly owl character.",
+  "Gender-neutral leaning bright, youthful.",
   "Warm, playful, gently energetic, with slow clear diction and every word landing separately, reading aloud to a young listener who cannot read yet.",
-  "Voice: a kind, bright companion.",
   "Emotion: encouraging and delighted, patient after a wrong answer, never flat.",
   "Not a baby voice, not a teacher voice, not a narrator.",
 ].join(" ");
