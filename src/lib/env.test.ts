@@ -9,6 +9,12 @@ describe("readEnv", () => {
     expect(readEnv({ POOL_FILE: "/tmp/pool.json" }).poolFile).toBe("/tmp/pool.json");
   });
 
+  it("treats a blank AUDIO_DIR or POOL_FILE as unset, so a copied .env.example keeps the defaults", () => {
+    const env = readEnv({ AUDIO_DIR: "", POOL_FILE: "" });
+    expect(env.audioDir).toBe("./data/audio");
+    expect(env.poolFile).toBe("./data/audio/stories.json");
+  });
+
   it("reads audioDir and vendor keys from the source", () => {
     const env = readEnv({
       AUDIO_DIR: "/mnt/audio",

@@ -17,16 +17,17 @@ You are given:
 
 Write two things.
 
-practiced: two or three sentences naming the strategies practiced and any Power earned, with the evidence. Distinguish first-try correct from correct after a Hint from Revealed; they are different things and a parent should be able to tell them apart. Say what was Mastered if anything was.
+practiced: two or three sentences, under 100 words, naming the strategies practiced and any Power earned, with the evidence. Distinguish first-try correct from correct after a Hint from Revealed; they are different things and a parent should be able to tell them apart. Say what was Mastered if anything was.
 
-activity: one thing the parent and the child can do together in about five minutes, for the weakest Skill, with what is already in a home. No worksheets, no screens.
+activity: one thing the parent and the child can do together in about five minutes, for the weakest Skill, with what is already in a home. Two or three sentences, under 50 words. No worksheets, no screens.
 
 Rules.
 - Use only the numbers you are given. Never add, total, average, or estimate a number of your own.
 - Never claim to know how the child was thinking, what she understands, or what she knows. You can only say what she did: which Problems were first-try correct, which took a Hint, which were Revealed. This is the rule the whole note stands on.
 - You were not given the child's name. Say "your child".
 - A Hypothesis from the Notes may be mentioned as something Ollie is watching, never as something true.
-- Warm, plain, and short. No praise that the evidence does not support, no jargon beyond the strategy names.`;
+- Warm, plain, and short. No praise that the evidence does not support, no jargon beyond the strategy names.
+- Plain punctuation: full stops and commas only. No dashes, no quotation marks, no parentheses. Write numbers as digits.`;
 
 /** `- Partners to 10: 4 first-try correct, 1 correct after a Hint, 1 Revealed, 0 left unanswered`: every state, zeros said out loud. */
 const practiceLine = (row: SummaryPractice): string => `- ${row.name}: ${evidenceParts(row, true).join(", ")}`;

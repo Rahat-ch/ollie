@@ -9,6 +9,7 @@
  * the Learner Notes, and never sees the Nickname (ADR 0002); the Summary
  * validator, not this adapter, decides whether a Parent reads it.
  */
+import { decodeEscapes, decodeStrings } from "./decode-escapes";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
@@ -45,7 +46,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     if (response.parsed_output === null) {
       throw new Error("Coach output rejected: the response could not be parsed as a Coach output");
     }
-    const parsed = parseCoachOutput(response.parsed_output);
+    const parsed = parseCoachOutput(decodeStrings(response.parsed_output));
     if (!parsed.ok) {
       throw new Error(`Coach output rejected: ${parsed.reasons.join("; ")}`);
     }
@@ -66,7 +67,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     if (response.parsed_output === null) {
       throw new Error("Parent Summary rejected: the response could not be parsed as a Summary");
     }
-    const parsed = parseSummaryOutput(response.parsed_output);
+    const parsed = parseSummaryOutput(decodeStrings(response.parsed_output));
     if (!parsed.ok) {
       throw new Error(`Parent Summary rejected: ${parsed.reasons.join("; ")}`);
     }
@@ -87,7 +88,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     if (response.parsed_output === null) {
       throw new Error("Story rejected: the response could not be parsed as a Story");
     }
-    return { text: response.parsed_output.text.trim() };
+    return { text: decodeEscapes(response.parsed_output.text).trim() };
   }
 
   return {
