@@ -30,10 +30,10 @@ const VARIABLE_NAME: Record<RequiredKey, string> = {
 export type EnvSource = Readonly<Record<string, string | undefined>>;
 
 export function readEnv(source: EnvSource = process.env): Env {
-  const audioDir = source.AUDIO_DIR ?? "./data/audio";
+  const audioDir = source.AUDIO_DIR || "./data/audio";
   return {
     audioDir,
-    poolFile: source.POOL_FILE ?? `${audioDir}/stories.json`,
+    poolFile: source.POOL_FILE || `${audioDir}/stories.json`,
     anthropicApiKey: source.ANTHROPIC_API_KEY,
     elevenLabsApiKey: source.ELEVENLABS_API_KEY,
     elevenLabsVoiceId: source.ELEVENLABS_VOICE_ID,
