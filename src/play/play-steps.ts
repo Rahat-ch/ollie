@@ -48,31 +48,52 @@ function playAudio(url: string, onStart: () => void): Speaking {
 }
 
 /**
+ * Whether the platform's voice has failed to start on this page. Chrome on a
+ * Mac gets stuck: `speak` sets `speaking` and never fires `start`, and every
+ * later utterance does the same. Once seen, the step is left out of the chain
+ * for the rest of the page, so a line goes straight on screen instead of
+ * waiting the deadline in silence each time.
+ */
+let synthesisStuck = false;
+
+/**
  * The platform's own voice. It is offered whenever the platform has speech at
  * all, without asking first whether a voice has loaded: on Safari and on a
  * cold Chrome the list is empty until it is not, and a platform that cannot
  * speak says so through `onerror` or by never starting, which hands over.
+ * Anything left in the platform's queue is cleared first, and a paused
+ * synthesis is resumed, which is the known way out of Chrome's stuck queue.
  */
 function speakOnPlatform(text: string, onStart: () => void): Speaking {
+  const synthesis = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = PLATFORM_RATE;
   utterance.pitch = PLATFORM_PITCH;
   const clock = timers();
+  let started = false;
   const { speaking, settle } = pending(() => {
     clock.clear();
     utterance.onstart = null;
     utterance.onend = null;
     utterance.onerror = null;
-    window.speechSynthesis.cancel();
+    synthesis.cancel();
   });
-  clock.add(setTimeout(() => settle(false), SPEECH_START_MS));
+  clock.add(
+    setTimeout(() => {
+      if (!started) synthesisStuck = true;
+      settle(false);
+    }, SPEECH_START_MS),
+  );
   utterance.onstart = () => {
+    started = true;
     clock.clear();
     onStart();
   };
   utterance.onend = () => settle(true);
   utterance.onerror = () => settle(false);
-  window.speechSynthesis.speak(utterance);
+  synthesis.cancel();
+  synthesis.speak(utterance);
+  synthesis.resume();
   return speaking;
 }
 
@@ -92,6 +113,6 @@ export const PLAYERS: Players = {
   text: showOnly,
 };
 
-/** Whether the platform has speech synthesis at all. Whether it has a voice loaded is the player's problem. */
+/** Whether the platform has speech synthesis at all and it has not got stuck on this page. Whether it has a voice loaded is the player's problem. */
 export const hasPlatformSpeech = (): boolean =>
-  typeof window !== "undefined" && typeof window.speechSynthesis !== "undefined";
+  typeof window !== "undefined" && typeof window.speechSynthesis !== "undefined" && !synthesisStuck;
