@@ -31,7 +31,7 @@ describe("summaryInput", () => {
     expect(input.problems).toBe(9);
     expect(input.practice).toEqual([
       { skill: "partners-to-10", name: "Partners to 10", firstTryCorrect: 1, hintAssisted: 1, revealed: 1, unresolved: 0 },
-      { skill: "teen-numbers", name: "Teen numbers as 10 + n", firstTryCorrect: 2, hintAssisted: 1, revealed: 0, unresolved: 0 },
+      { skill: "teen-numbers", name: "Teen numbers", firstTryCorrect: 2, hintAssisted: 1, revealed: 0, unresolved: 0 },
       { skill: "counting-on", name: "Counting on from the larger number", firstTryCorrect: 3, hintAssisted: 0, revealed: 0, unresolved: 0 },
     ]);
   });

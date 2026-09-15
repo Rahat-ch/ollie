@@ -8,7 +8,7 @@ describe("masteryRows", () => {
     const rows = masteryRows(newProfile());
     expect(rows.map((r) => [r.unit, r.name])).toEqual([
       [1, "Partners to 10"],
-      [1, "Teen numbers as 10 + n"],
+      [1, "Teen numbers"],
       [2, "Counting on from the larger number"],
       [2, "Make-a-ten within 20"],
       [2, "Subtraction as unknown addend"],
