@@ -43,6 +43,18 @@ export const profileStore = {
   },
 };
 
+// Another window on this device (a second tab, or the developer's browser
+// beside the tablet's) writes the same key. Its write must not be replaced by
+// this window's stale copy on the next save, so the cache is dropped and the
+// screens re-read whenever the key changes elsewhere.
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key !== null && event.key !== PROFILE_KEY) return;
+    cached = undefined;
+    notify();
+  });
+}
+
 const getServerSnapshot = (): Profile | null => null;
 
 /** The Profile, or null on the server and until the browser has read it. */
