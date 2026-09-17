@@ -103,9 +103,21 @@
   --stage-gap: clamp(10px, 2.4svh, 24px);
   --stage-block: clamp(10px, 2.6svh, 24px);
   --cell-min: 32px;
-  --cell-max: 60px;
+  --cell-max: clamp(44px, 7.2svh, 60px);
   --story-card: clamp(140px, 22svh, 280px);
-  --ollie-stage: clamp(200px, 30svh, 280px);
+  /* Ollie's own ground on the stage: never smaller than the design's owl, never taller than the column can hold. */
+  --ollie-stage: clamp(240px, 32svh, 280px);
+  /* The Equation and Ollie's line give up a little height on a short iPad so that Ollie keeps his. */
+  --stage-equation: clamp(44px, 7.5svh, 64px);
+  --stage-speech: clamp(18px, 2.6svh, 24px);
+  /*
+   * The number pad fills its column by opening up, not by growing keys: a key
+   * past about 72px would starve the visual at 1024. 64px is already well
+   * over Apple's 44pt floor (HIG, Buttons).
+   */
+  --pad-key: clamp(64px, 6.6svh, 72px);
+  --pad-gap: clamp(8px, 1.4svh, 16px);
+  --pad-row-gap: clamp(12px, 2.6svh, 28px);
 }
 
 @theme inline {

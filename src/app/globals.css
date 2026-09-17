@@ -92,6 +92,17 @@ h4 {
 .session-equation {
   grid-area: equation;
 }
+/*
+ * The Equation and Ollie's line are the two things on the stage that can give
+ * height back on a short iPad without costing the Learner anything she has to
+ * count; the ground they give up is Ollie's.
+ */
+.session-equation > p {
+  font-size: var(--stage-equation);
+}
+.session-speech .speech-bubble {
+  font-size: var(--stage-speech);
+}
 .session-ollie {
   grid-area: ollie;
   justify-self: start;
@@ -143,9 +154,20 @@ h4 {
       "visual visual";
     grid-template-columns: auto minmax(0, 1fr);
   }
-  /* Beside the bubble he is measured against it, not against the screen's height. */
+  /*
+   * Portrait has height to spare and width to spend, so both Ollie and the
+   * pad are measured against the width instead: beside the bubble he answers
+   * to it rather than to the screen's height, and the pad must leave room for
+   * everything stacked above it rather than opening up to fill a column of
+   * its own.
+   */
   .session-problem {
     --ollie-stage: clamp(180px, 20svh, 240px);
+  }
+  .session-pad {
+    --pad-key: clamp(64px, 8svw, 72px);
+    --pad-gap: clamp(8px, 1.4svw, 16px);
+    --pad-row-gap: clamp(12px, 2.6svw, 28px);
   }
   .session-ollie {
     align-self: center;

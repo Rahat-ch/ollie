@@ -8,11 +8,17 @@ type NumberPadProps = {
   readonly tried?: number;
 };
 
-/** The 0 to 20 pad: the only way the Learner answers. */
+/**
+ * The 0 to 20 pad: the only way the Learner answers. The key and both of the
+ * gaps are tokens that grow with the screen's height (`--pad-key`,
+ * `--pad-gap`, `--pad-row-gap` in src/app/tokens.css), so the pad opens up to
+ * take the column a tall iPad gives it rather than sitting in a band of empty
+ * paper, and its width follows from the keys instead of being fixed at 352px.
+ */
 export function NumberPad({ onTap, disabled = false, tried }: NumberPadProps) {
   return (
-    <div className="flex w-88 flex-col gap-3" role="group" aria-label="Number pad" data-testid="number-pad">
-      <div className="grid grid-cols-5 gap-2">
+    <div className="flex flex-col gap-(--pad-row-gap)" role="group" aria-label="Number pad" data-testid="number-pad">
+      <div className="grid grid-cols-5 gap-(--pad-gap)">
         {NUMBERS.slice(0, 20).map((n) => (
           <Key key={n} n={n} onTap={onTap} disabled={disabled} tried={tried === n} />
         ))}
@@ -38,7 +44,7 @@ function Key({
   return (
     <button
       type="button"
-      className={`paper-button flex size-touch-learner items-center justify-center rounded-card font-display text-numeral font-semibold text-ink [--button-shadow-color:var(--paper-3)] ${
+      className={`paper-button flex size-(--pad-key) items-center justify-center rounded-card font-display text-numeral font-semibold text-ink [--button-shadow-color:var(--paper-3)] ${
         tried ? "paper-button-pressed bg-paper-3 text-ink-soft" : "bg-cream"
       }`}
       onClick={() => onTap(n)}

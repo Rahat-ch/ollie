@@ -62,7 +62,9 @@ export function Home() {
         {line}
       </SpeechBubble>
       <Ollie pose={speaking ? "talking" : "idle"} speaking={speaking} size={220} className="absolute bottom-6 left-gutter" />
-      <div className="flex min-h-dvh items-center justify-center pt-24 pb-44 pl-72">
+      {/* The left inset keeps the Path clear of Ollie and his bubble. A portrait iPad has not the width
+          for both, and it was the Path's three stops that ran off the right edge there. */}
+      <div className="flex min-h-dvh items-center justify-center pt-24 pb-44 pl-8 lg:pl-72">
         <Path stops={pathStops(profile.progress, profile.powers)} />
       </div>
       <Link href="/play" className={`${bigButtonClasses("xl")} absolute bottom-12 left-1/2 -translate-x-1/2`}>
