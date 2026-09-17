@@ -24,6 +24,8 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium, devices, webkit } from "@playwright/test";
+import { IPADS } from "../e2e/ipads.mjs";
+import { quiet } from "../e2e/quiet.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DESIGN = path.join(ROOT, "docs", "design");
@@ -204,25 +206,6 @@ async function screens(page) {
 // The Session screen on a real iPad
 // ---------------------------------------------------------------------------
 
-/**
- * The nine CSS viewports of the current iPads, from docs/research/ipad-layout.md
- * §2: the 10.2-inch, the 11-inch, the 13-inch and the mini each way up, and
- * the current base iPad as Playwright's own registry measures it. The last
- * two figures in the research are unverified against Apple, so the shorter
- * reading of each is in the list and the layout is held to it.
- */
-const IPADS = [
-  [1080, 810],
-  [810, 1080],
-  [1180, 820],
-  [820, 1180],
-  [1366, 1024],
-  [1024, 1366],
-  [1133, 744],
-  [744, 1133],
-  [944, 656],
-];
-
 /** The three visuals a Problem is put on, and the Profile each one comes from. */
 const VISUALS = [
   ["ten-frame", FIRST_SESSION],
@@ -240,18 +223,15 @@ const IPAD_SHOTS = [];
 async function ipadScreens() {
   const browser = await webkit.launch();
   try {
-    for (const [width, height] of IPADS) {
+    for (const { width, height } of IPADS) {
       const context = await browser.newContext({
         ...devices["iPad (gen 7) landscape"],
         viewport: { width, height },
         deviceScaleFactor: 2,
         reducedMotion: "reduce",
       });
-      // The machine must not read the Problems out loud through its own voice.
-      await context.addInitScript(() => {
-        const synth = window.speechSynthesis;
-        if (synth) synth.speak = (utterance) => setTimeout(() => utterance.dispatchEvent(new Event("error")), 0);
-      });
+      // The same silence the browser tests run in: no system voice, no audio.
+      await context.addInitScript(quiet);
       const page = await context.newPage();
       for (const [visual, profile] of VISUALS) {
         await writeProfile(page, profile);

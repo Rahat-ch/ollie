@@ -113,6 +113,33 @@ export const DIAGNOSTIC_PROFILE = {
   session: null,
 };
 
+/**
+ * The Unit 3 Profile the design review screenshots from, whose first Story is
+ * the longest shape the validator allows: twenty-five words, which the bubble
+ * on the shortest iPad sets on three lines. The seed and the Problem number
+ * are what pick that Story out of the Content Pool, so both are load-bearing;
+ * e2e/layout.spec.ts asserts the three lines rather than trusting them.
+ */
+export const LONG_STORY_PROFILE = {
+  version: 2,
+  seed: "design-review-3",
+  identity: { nickname: "Mia", avatarColor: "berry", theme: "puppies" },
+  progress: {
+    nextProblemNumber: 50,
+    sessionsCompleted: 4,
+    skills: {
+      "partners-to-10": mastered,
+      "teen-numbers": mastered,
+      "counting-on": mastered,
+      "make-a-ten": mastered,
+      "unknown-addend": mastered,
+      "result-unknown": fresh(0.2),
+      "change-unknown": fresh(0.15),
+    },
+  },
+  session: null,
+};
+
 /** A Profile with Units 1 and 2 Mastered and one Session played, so the next Session is the Baseline's first in Unit 3. */
 export const UNIT_3_PROFILE = {
   version: 2,

@@ -6,7 +6,7 @@
  * in playwright.config.ts run this at the nine real iPad viewports from
  * docs/research/ipad-layout.md §2; the Chromium projects run it too.
  */
-import { COUNTING_ON_PROFILE, DIAGNOSTIC_PROFILE, UNIT_3_PROFILE, asked, key, openParentArea, playSession, seedRewards, writeProfile } from "./play";
+import { COUNTING_ON_PROFILE, DIAGNOSTIC_PROFILE, LONG_STORY_PROFILE, UNIT_3_PROFILE, asked, key, openParentArea, playSession, seedRewards, writeProfile } from "./play";
 import { expect, test, type Page } from "./test";
 
 /** The page gutter, `--gutter` in src/app/tokens.css: the least space allowed between two things. */
@@ -20,6 +20,14 @@ const KEY = { min: 64, max: 72 };
 
 /** Ollie's own ground under his bubble, from the size budget in docs/research/ipad-layout.md §3. */
 const OLLIE = { min: 240, max: 280 };
+
+/**
+ * The longest Story the bundled Content Pool answers the seeded Problem with,
+ * against a validator ceiling of 25 words (src/story/validate.ts). On the
+ * narrowest landscape column — 944x656 — the bubble sets it on three lines,
+ * which is the case the Problem column has least room for.
+ */
+const LONGEST_STORY_WORDS = 15;
 
 type Box = { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
 
@@ -95,9 +103,14 @@ async function expectStageHolds(page: Page): Promise<void> {
     expect(box.width, `key ${i} has grown past the design's key`).toBeLessThanOrEqual(KEY.max);
   }
 
-  // Nothing is hidden off the side.
-  const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-  expect(scrollWidth, "the page scrolls sideways").toBe(size.width);
+  // Nothing is hidden off any side: the stage is the screen, and the Learner
+  // never scrolls it in either direction to reach a Problem.
+  const scroll = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    height: document.documentElement.scrollHeight,
+  }));
+  expect(scroll.width, "the page scrolls sideways").toBe(size.width);
+  expect(scroll.height, "the page scrolls down").toBe(size.height);
 }
 
 /** Play the Diagnostic Session, first-try correct, until the wanted visual is the one on screen. */
@@ -130,6 +143,27 @@ test("the number line and the number pad stay apart", async ({ page }) => {
   await writeProfile(page, DIAGNOSTIC_PROFILE);
   await page.goto("/play");
   await untilVisual(page, '[data-testid="number-line"]');
+  await expectStageHolds(page);
+});
+
+/**
+ * A Story near the validator's ceiling, which the bubble sets on three lines
+ * in a landscape column. It is the case the Problem column has least room
+ * for: the bubble and the Equation take what they need, so the visual and
+ * Ollie are what have to give, and nothing may be pushed off the bottom.
+ */
+test("the longest Story still leaves Ollie his ground and the page its screen", async ({ page }) => {
+  await writeProfile(page, LONG_STORY_PROFILE);
+  await page.goto("/play");
+  await asked(page);
+  await expect(page.getByTestId("theme-picture")).toBeVisible();
+
+  // The premise, checked rather than trusted. If the Content Pool ever answers
+  // this Problem with a short Story, this fails here rather than quietly
+  // stopping being the hard case.
+  const words = (await page.getByTestId("speech-bubble").innerText()).trim().split(/\s+/).length;
+  expect(words, "the seeded Story is not near the validator's ceiling").toBeGreaterThanOrEqual(LONGEST_STORY_WORDS);
+
   await expectStageHolds(page);
 });
 
@@ -175,7 +209,7 @@ async function expectScreenHolds(page: Page, what: readonly string[]): Promise<v
 test("Home holds together", async ({ page }) => {
   await writeProfile(page, DIAGNOSTIC_PROFILE);
   await page.goto("/");
-  await expectScreenHolds(page, ['a[href="/play"]', 'a[href="/parent"]', '[data-testid="path-stop"]', "svg.ollie"]);
+  await expectScreenHolds(page, ['a[href="/play"]', 'a[href="/parent"]', '[data-testid="path-stop"]', "[data-ollie]"]);
 });
 
 test("the Shop holds together", async ({ page }) => {

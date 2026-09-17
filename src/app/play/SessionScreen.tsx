@@ -32,13 +32,6 @@ import { Celebration } from "./Celebration";
 /** How long Ollie celebrates a correct answer before the next Problem. */
 export const CORRECT_BEAT_MS = 1400;
 
-/**
- * The rig's drawn size on the Session stage. It is the ceiling rather than
- * the size: `--ollie-stage` in src/app/tokens.css scales him with the height
- * of the screen, and the attribute here is what the SVG falls back to.
- */
-const OLLIE_STAGE = 280;
-
 type ProblemPhase = Exclude<Phase, { kind: "celebration" }>;
 
 /**
@@ -189,7 +182,8 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
           </div>
           {/* Ollie stands under his own bubble, so the bubble's tail points at him. */}
           <div className="session-ollie" data-stage-ollie>
-            <Ollie pose={pose} speaking={speaking} size={OLLIE_STAGE} />
+            {/* No size: `--ollie-stage` in src/app/tokens.css scales him with the column he stands in. */}
+            <Ollie pose={pose} speaking={speaking} />
           </div>
         </section>
         <aside className="session-pad" data-stage-pad>

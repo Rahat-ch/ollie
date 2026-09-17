@@ -16,12 +16,12 @@ export function TenFrame({ model }: { readonly model: TenFrameModel }) {
   const magic = model.power === "make-ten-magic" ? " ten-frame-magic" : "";
   return (
     <div
-      className={`ten-frame-board flex items-center gap-5${magic}`}
+      className={`ten-frame-board flex items-center gap-(--frame-loose-gap)${magic}`}
       data-testid="ten-frame"
       data-frames={model.frames.length}
       data-power={model.power ?? undefined}
     >
-      <div className="flex shrink-0 gap-4 rounded-card bg-paper-2 p-5 shadow-card">
+      <div className="flex shrink-0 gap-(--frame-gap) rounded-card bg-paper-2 p-(--frame-pad) shadow-card">
         {model.frames.map((cells, f) => (
           <Frame key={f} cells={cells} />
         ))}

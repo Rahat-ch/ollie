@@ -4,8 +4,12 @@ export type { OlliePose };
 
 type OllieProps = {
   readonly pose: OlliePose;
-  /** Rendered width and height in px; the rig is square. */
-  readonly size: number;
+  /**
+   * Rendered width and height in px; the rig is square. Left out where the
+   * stylesheet sizes him instead — the Session stage scales him with the
+   * column he stands in — so there is one size and it is not in two places.
+   */
+  readonly size?: number;
   /**
    * True while a line is being said. The beak moves on its own class, not on
    * the pose, so the mouth also moves through a Hint, a cheer, and a Reveal,
@@ -29,6 +33,7 @@ export function Ollie({ pose, size, speaking = false, className = "" }: OlliePro
       width={size}
       height={size}
       role="img"
+      data-ollie=""
       aria-label={`Ollie, ${pose.replace(/-/g, " ")}`}
       data-pose={pose}
       data-speaking={speaking ? "" : undefined}

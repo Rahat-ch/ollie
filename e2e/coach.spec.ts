@@ -145,7 +145,7 @@ test("completing a Session runs the Coach once; with no key on the server the ne
   expect(offHost).toEqual([]);
 });
 
-test("a Coach run that a reload interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {
+test("a Coach run that leaving the page interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {
   let calls = 0;
   // The first Coach call never answers, and the page is left for a moment
   // rather than reloaded, so the run is interrupted in either engine. It was a

@@ -63,8 +63,12 @@ test("with no voice on the server every line falls through to the line on screen
     if (request.url() === `${baseURL}/api/speech` && request.method() === "POST") speechRequests.push(request.postData() ?? "");
   });
 
-  await page.goto("/");
-  await page.evaluate(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
+  // The Profile is on the device before the first page is drawn, rather than
+  // written into a page that is already showing: WebKit fires a `storage`
+  // event in the very window that wrote the key, so seeding from the page
+  // re-renders the home screen and Ollie asks for his greeting there, which
+  // would land in the count below. Play is the first screen either way.
+  await page.addInitScript(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
   await page.goto("/play");
 
   await expect(page.getByTestId("progress-dot")).toHaveCount(8);
@@ -109,15 +113,10 @@ test("with no voice on the server every line falls through to the line on screen
 
   // One request per Story and no more, with Repeat pressed twice along the
   // way: a Story's audio is asked for once and replayed from the device.
-  // WebKit fires a `storage` event in the very window that wrote the key, so
-  // seeding the Profile from the page re-renders the home screen and Ollie
-  // asks for the greeting once before Play is even opened. That is a fixed
-  // line of Ollie's, not a Story, and what is counted here is the Stories.
-  const asked = speechRequests.filter((body) => body.includes('"kind":"story"'));
   const stories = problems.filter((p) => p.skill === "result-unknown");
   expect(stories).toHaveLength(6);
-  expect(asked).toHaveLength(stories.length);
-  expect(new Set(asked).size).toBe(stories.length);
+  expect(speechRequests).toHaveLength(stories.length);
+  expect(new Set(speechRequests).size).toBe(stories.length);
   // The Nickname is the one word that goes off the device, and only to be voiced.
   for (const request of speechRequests) expect(request).toContain("Mia");
   expect(offHost).toEqual([]);
