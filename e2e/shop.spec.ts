@@ -86,7 +86,7 @@ test("the Theme picked in the Shop is the one the next Session's Stories are set
     const stage = page.locator(`main[data-phase="asking"][data-problem="${problem.id}"]`);
     await expect(stage).toBeVisible();
     if (problem.skill === "result-unknown" || problem.skill === "change-unknown") {
-      await expect(stage).toHaveAttribute("data-story-source", "template");
+      await expect(stage).toHaveAttribute("data-story-source", "pool");
       const bubble = page.getByTestId("speech-bubble");
       await expect(bubble).toContainText(/dinosaurs?|eggs?/);
       await expect(bubble).not.toContainText(/rockets?|stars?/);

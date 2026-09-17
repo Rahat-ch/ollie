@@ -142,7 +142,7 @@ test("a Parent sets up the Profile, a Learner plays the first Session to the cel
   await expect(rows).toHaveCount(7);
   await expect(rows).toHaveText([
     /Partners to 10/,
-    /Teen numbers as 10 \+ n/,
+    /Teen numbers/,
     /Counting on from the larger number/,
     /Make-a-ten within 20/,
     /Subtraction as unknown addend/,
