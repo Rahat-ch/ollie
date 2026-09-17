@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 No overlap on any iPad
 
-**Status:** ready-for-human (the composition is built and measured; the review page awaits the user's eye, and one acceptance point is answered differently from how it is worded — see the comment)
+**Status:** resolved
 
 - [x] Ollie's box is below the bubble's box in the same column at every landscape size, at 240 pixels or more, and his mouth, poses, and Power animations are unchanged
 - [ ] The pad's height matches its column within a gutter at every landscape size, with keys between 64 and 72 pixels
@@ -44,3 +44,5 @@
 **A judgement call left for the user.** The Story card is now the ten-frame's box, which on a 13-inch is a wide tray with one square Theme picture centred in it at 92% of its height. It is larger than it was and it matches the ten-frame it replaces, but a wide tray around a square picture is not obviously the best reading of "as big as any other Problem"; a taller `--visual-max` for the Story alone would give a squarer card at the cost of the visual row no longer being one size for all three visuals.
 
 **Counts, with port 3100 free before each run.** `pnpm typecheck`, `pnpm lint`, `pnpm build` clean. `pnpm test`: **576 in 63 files**, all passing — the story route test main fixed is green here. `pnpm test:e2e` across all eleven projects: **286 passed, 0 failed**. `e2e/layout.spec.ts`: **99 of 99**. Tightest clearance between the visual and the pad, measured at each size across all four visuals: 32.0px at 1080x810, 1180x820, 1133x744 and 944x656; 38.7px at 1133x744 for two frames; 53.7px at 810x1080; 66.4px at 744x1133; 72.5px at 820x1180; 106.6px at 1024x1366; 74.6px at 1366x1024 — never below the 32px gutter. Ollie: 240px at 944x656 and 1133x744, 259 at 1080x810, 262 at 1180x820, 280 at 1366x1024. No page scrolls in either direction at any size. The 27 screenshots and `docs/design/review-2026-09-17.html` are regenerated and committed.
+
+**2026-09-17, approved on the iPad.** The user played the deployed build on the iPad in both orientations and approved the composition ("ayy this is dope"). The one unticked box, the pad's height matching its column, stays unticked as recorded: the pad is centred in its column with 64 to 72 pixel keys, which is what the spec's own gap ceiling allows.
