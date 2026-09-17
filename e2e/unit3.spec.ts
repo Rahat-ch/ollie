@@ -1,7 +1,7 @@
 import { expect, test } from "./test";
 import { key, PROFILE_KEY, solve, UNIT_3_PROFILE, type StoredProblem } from "./play";
 
-test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname; with no key on the server every Story is the template and the Session still completes; no request leaves the host", async ({ page, baseURL }) => {
+test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname; every Story comes from the bundled Content Pool with no server call, and the Session still completes; no request leaves the host", async ({ page, baseURL }) => {
   const offHost: string[] = [];
   const storyRequests: string[] = [];
   page.on("request", (request) => {
@@ -25,8 +25,8 @@ test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname
     await expect(stage).toBeVisible();
     const answer = solve(await page.getByTestId("equation").innerText());
     if (problem.skill === "result-unknown") {
-      // The Story arrives from the server (the template, as the test server has no key), in the Theme, by Nickname.
-      await expect(stage).toHaveAttribute("data-story-source", "template");
+      // The Story comes from the bundled Content Pool, with no server call, in the Theme, by Nickname.
+      await expect(stage).toHaveAttribute("data-story-source", "pool");
       const bubble = page.getByTestId("speech-bubble");
       await expect(bubble).toContainText("Mia");
       await expect(bubble).toContainText(/rockets|stars/);
@@ -52,7 +52,7 @@ test("a Learner in Unit 3 hears each word problem in her Theme with her Nickname
 
   await expect(page.getByTestId("celebration")).toBeVisible();
   await expect(page.getByText("8 Problems")).toBeVisible();
-  expect(storyRequests).toHaveLength(6);
-  for (const body of storyRequests) expect(body).not.toContain("Mia");
+  // The bundled Pool holds every Story the Baseline's Unit 3 Session draws, so nothing is asked of the server.
+  expect(storyRequests).toHaveLength(0);
   expect(offHost).toEqual([]);
 });
