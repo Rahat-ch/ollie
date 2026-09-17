@@ -47,9 +47,9 @@ The latest committed report is [`docs/evals/2026-09-13T17-38-41Z.json`](../evals
 - Story validity **30 of 30** accepted on the first attempt, Summary validity **6 of 6**, no template fallbacks.
 - The Judge's scores were **withheld**: it agreed with the hand-labelled Calibration Set on 12 of 20 Stories and 6 of 10 Summaries, under the 0.8 threshold, which is the gate working. The Judge and the writers are both Claude models; that same-family limitation stands.
 
-## What has not run live
+## What has and has not run live
 
-No Anthropic or ElevenLabs key ever reached the machine this was built on. The real Coach, Story writer, Parent Summary, and Judge have never been called; the Content Pool file is committed empty; no voice has been designed, and `public/voice/`, the directory `pnpm voice:lines` renders into, does not exist yet. Everything that needs them is built, tested against the fake, and resumable behind one command each.
+The vendors have been exercised with real keys since 2026-09-15: the Coach and the Parent Summary have run after real Sessions, the Story writer wrote Stories live and filled the Content Pool (2,790 keys, 5,520 Stories, every one passed by the validator), the voice was designed in ElevenLabs Voice Design, and every fixed line and question line is rendered and bundled. What has not run live is the eval command with the real Coach and Judge, which is why the numbers above are from the fake; that run replaces them.
 
 ## Next steps
 

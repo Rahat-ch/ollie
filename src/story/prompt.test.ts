@@ -50,6 +50,14 @@ describe("the Story prompt", () => {
 });
 
 describe("the rich Story set's brief", () => {
+  it("says the Nickname is a placeholder to copy verbatim when the Pool is filled, so the writer does not invent a name", () => {
+    const message = storyUserMessage({ ...addTo, nickname: NICKNAME_PLACEHOLDER });
+    expect(message).toContain("not known yet");
+    expect(message).toContain(`write exactly ${NICKNAME_PLACEHOLDER}`);
+    expect(message).toContain("Do not invent a name");
+    expect(storyUserMessage({ ...addTo, nickname: "Mia" })).not.toContain("not known yet");
+  });
+
   it("asks for the scene where the Theme happens, under the same rules", () => {
     const message = storyUserMessage({ ...addTo, set: "rich" as const });
     expect(message).toContain("Say where it happens");

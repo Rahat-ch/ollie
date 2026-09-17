@@ -24,6 +24,7 @@ const split = (text: string): readonly string[] => text.trim().split(/\s+/);
 
 /** Grade 1 words every Theme shares: people, actions, places in time, and the question. */
 export const CORE_WORDS: readonly string[] = split(`
+  start until playing dancing leaving
   a an and are all along also at away back be big both but by
   can come comes came coming count counts day did do does down each
   find finds found for friend friends from fun get gets got give gives gave
