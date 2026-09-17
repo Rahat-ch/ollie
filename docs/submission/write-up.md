@@ -53,6 +53,8 @@ The vendors have been exercised with real keys since 2026-09-15: the Coach and t
 
 ## Next steps
 
-Run the commands that need keys and replace the report, the chart, and the numbers above with a live run. Then: a practice effect in the Simulated Learners, so Sessions to Mastery measures learning and not only confirmation; the rest of Grade 1 (compare problems, three addends, place value); a judge outside the Claude family; and a Coach that reads across Sessions rather than one at a time.
+How every claim above can be checked, test by test and with a live Coach trace, is in [`evidence.md`](./evidence.md).
+
+Run the commands that need keys and replace the report, the chart, and the numbers above with a live run. Then bring the cost per Session down for a paid product: the Coach runs on Opus 5 at high effort today, about $0.15 to $0.30 a Session; Sonnet 5 at medium effort with prompt caching should land near $0.05, and the eval is the instrument that says whether the cheaper Coach still finds the planted weaknesses. Then: a practice effect in the Simulated Learners, so Sessions to Mastery measures learning and not only confirmation; the rest of Grade 1 (compare problems, three addends, place value); a judge outside the Claude family; and a Coach that reads across Sessions rather than one at a time.
 
 **Ollie learns how you learn.**

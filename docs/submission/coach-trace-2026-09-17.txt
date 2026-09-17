@@ -1,0 +1,131 @@
+
+> ollie@0.1.0 coach /Users/rahat-clawd/dev/nerdy
+> tsx src/cli/coach.ts --real --sessions 3
+
+Generation: the Anthropic adapter on claude-opus-5
+Learner: Crossing-ten weakness (crossing-ten-weakness, seed sim-crossing-ten), the Diagnostic Session then 3 Coach-planned Sessions
+
+Session 1: partners-to-10 x3, teen-numbers x3, counting-on x3; first-try 8/9; no change
+
+Source: Coach
+
+Learner Notes
+
+ID  Status    Confidence  Evidence    Claim                                                                                                                                                                 Next test
+h1  proposed  0.45        p1, p3, p9  Counting-on is shakier when the larger addend comes first: the Learner needed a Hint on 9 + 3 (larger-first) but answered both smaller-first items on the first try.  Counting-on is not in the current Plan Space, so watch for any counting-on Review Problem, especially larger-first, and see whether the first attempt is correct without a Hint.
+h2  proposed  0.60        p2, p4, p6  Teen numbers are secure in both directions: the Learner answered compose and decompose items correctly on the first try with no assistance.                           Give decompose and compose items with teen numbers above those already seen (15-19) and check for first-try-correct without Hints.
+h3  proposed  0.60        p5, p7, p8  Partners to 10 are secure across both take-from-ten and missing-partner, at least for small given partners (2 and 5).                                                 Give missing-partner and take-from-ten items using larger given partners (6-9) and check whether first attempts stay correct without Hints.
+
+Strengths
+- Works steadily and finishes problems without stalling.
+- Handles ten-plus teen facts both as compose (10 + 4) and decompose (10 + ? = 17).
+- Finds a missing partner to 10 and takes from ten accurately.
+- Answered eight of nine first attempts correctly and used the Hint productively on the one that was hard.
+
+Session Plan for Session 2
+Session Plan: 8 Problems, review share 20%
+Hypothesis under test: h3
+
+Skill           Weight  Range     Structures
+partners-to-10  0.55    3 to 9    missing-partner, take-from-ten
+teen-numbers    0.45    13 to 19  compose, decompose
+
+Session 2: partners-to-10 x4, teen-numbers x4; first-try 7/8; no change
+
+Source: Coach
+
+Learner Notes
+
+ID  Status     Confidence  Evidence                        Claim                                                                                                                                                                                                                                  Next test
+h1  proposed   0.45        p1, p3, p9                      Counting-on is shakier when the larger addend comes first: the Learner needed a Hint on 9 + 3 (larger-first) but answered both smaller-first items on the first try.                                                                   Counting-on is still outside the Plan Space, so keep a small review share and watch any counting-on Review Problem, especially larger-first, for a first-try-correct with no Hint.
+h2  refuted    0.30        p2, p4, p6, p12, p13, p15, p16  Teen numbers are secure in both directions: the Learner answers compose and decompose items correctly on the first try with no assistance.                                                                                             Superseded by h4. The direct test (teen items at and above 15) showed three first-try-correct decompose items (p12, p15, p16) but a Reveal on the compose item p13, so the 'both directions' claim does not hold as stated.
+h3  supported  0.85        p5, p7, p8, p10, p11, p14, p17  Partners to 10 are secure across both take-from-ten and missing-partner, including larger given partners.                                                                                                                              Keep a light share of partners-to-10 with given partners 6-9 and take-from-ten; treat a first-try miss or any Hint use as a reason to lower confidence again.
+h4  proposed   0.50        p12, p13, p15, p16              Within teen numbers, the decompose direction (10 + ? = 16) is currently stronger than the compose direction (10 + 6 = ?): the three decompose items this Session were first-try-correct while the one compose item ended in a Reveal.  Give several compose items with teen totals from 14 to 19 alongside a couple of decompose items; if compose first attempts are correct without Hints, this is refuted, and if compose draws misses, Hints, or Reveals while decompose stays correct, it moves to supported.
+
+Strengths
+- Works steadily and finishes problems without stalling.
+- Finds the missing partner to 10 for both small and large given partners, and takes from ten accurately.
+- Reads teen numbers apart as ten and some more, including up to 19.
+- Keeps a high rate of correct first attempts across two Sessions.
+
+Session Plan for Session 3
+Session Plan: 8 Problems, review share 25%
+Hypothesis under test: h4
+
+Skill           Weight  Range     Structures
+teen-numbers    3       14 to 19  compose, decompose
+partners-to-10  1       6 to 10   missing-partner, take-from-ten
+
+Session 3: teen-numbers x6, partners-to-10 x2; first-try 8/8; Mastered partners-to-10; Mastered teen-numbers; Unit 2 unlocked
+
+Source: Coach
+
+Learner Notes
+
+ID  Status     Confidence  Evidence                                                      Claim                                                                                                                                                                                                                    Next test
+h1  proposed   0.45        p1, p3, p9                                                    Counting-on is shakier when the larger addend comes first: the Learner needed a Hint on 9 + 3 (larger-first) but answered both smaller-first items on the first try.                                                     Counting-on is now inside the Plan Space, so give it the largest share next Session with both larger-first and smaller-first items. If larger-first first attempts are correct with no Hint, this is refuted; if larger-first draws misses, Hints, or Reveals while smaller-first stays correct, it moves to supported.
+h2  supported  0.85        p2, p4, p6, p12, p13, p15, p16, p18, p19, p21, p23, p24, p25  Teen numbers are secure in both directions: the Learner answers compose and decompose items correctly on the first try with no assistance.                                                                               This claim was marked refuted after the single Reveal on the compose item p13, but this Session gave four first-try-correct compose items (p18, p19, p21, p23) and two first-try-correct decompose items (p24, p25), so it is restored to supported. Keep only a light review share of teen items; a fresh first-try miss or Hint on either direction would lower confidence again.
+h3  supported  0.90        p5, p7, p8, p10, p11, p14, p17, p20, p22                      Partners to 10 are secure across both take-from-ten and missing-partner, including larger given partners.                                                                                                                Keep a light review share of partners-to-10 with given partners 6-9 and take-from-ten; treat a first-try miss or any Hint use as a reason to lower confidence.
+h4  refuted    0.10        p12, p13, p15, p16, p18, p19, p21, p23, p24, p25              Within teen numbers, the decompose direction (10 + ? = 16) is currently stronger than the compose direction (10 + 6 = ?).                                                                                                The test was run: four compose items (p18, p19, p21, p23) were first-try-correct with no assistance, alongside two first-try-correct decompose items (p24, p25). The earlier Reveal on p13 now looks like a one-off rather than a direction gap. No further test needed unless a compose item draws assistance again.
+h5  proposed   0.45        p20, p22, p18, p19, p24, p25                                  With partners to 10 and teen numbers both answering correctly on first tries, the Learner has the pieces make-a-ten needs and will handle first make-a-ten items (like 8 + 5) with at most a Hint rather than a Reveal.  Include a couple of make-a-ten items next Session. First-try-correct or Hint-assisted success moves this toward supported; Reveals or repeated first-try misses move it toward refuted and mean make-a-ten needs its own build-up.
+
+Strengths
+- Works steadily and finishes problems without stalling.
+- Finds the missing partner to 10 for both small and large given partners, and takes from ten accurately.
+- Composes and decomposes teen numbers as ten and some more, up to 19.
+- Answered every problem correctly on the first try this Session.
+- Keeps a high rate of correct first attempts across three Sessions.
+
+Session Plan for Session 4
+Session Plan: 8 Problems, review share 20%
+Hypothesis under test: h1
+
+Skill           Weight  Range    Structures
+counting-on     4       3 to 10  larger-first, smaller-first
+make-a-ten      2       default  all
+teen-numbers    1       default  compose, decompose
+partners-to-10  1       6 to 10  missing-partner, take-from-ten
+
+Session 4: counting-on x4, make-a-ten x2, teen-numbers x1, partners-to-10 x1; first-try 6/8; no change
+
+Source: Coach
+
+Learner Notes
+
+ID  Status     Confidence  Evidence                                                           Claim                                                                                                                                                                     Next test
+h1  refuted    0.15        p1, p3, p9, p26, p29, p31, p33                                     Counting-on is shakier when the larger addend comes first than when it comes second.                                                                                      The test was run: four larger-first counting-on items this Session, and three were first-try-correct with no assistance (p26, p31, p33). Only p29 drew a Hint. Structure order does not look like the driver; the crossing-ten idea in h6 fits the same data better. No further test of this claim unless larger-first items start drawing assistance again while smaller-first stays clean.
+h2  supported  0.88        p2, p4, p6, p12, p13, p15, p16, p18, p19, p21, p23, p24, p25, p28  Teen numbers are secure in both directions: the Learner answers compose and decompose items correctly on the first try with no assistance.                                One more first-try-correct decompose item (p28) this Session with no assistance. Keep teen numbers as a light review only; a fresh first-try miss or Hint in either direction would lower confidence.
+h3  supported  0.90        p5, p7, p8, p10, p11, p14, p17, p20, p22, p30                      Partners to 10 are secure across both take-from-ten and missing-partner, including larger given partners.                                                                 p30 (8 + ? = 10) was first-try-correct with no assistance. Keep a light review share with given partners 6-9 and take-from-ten; treat a first-try miss or any Hint use as a reason to lower confidence.
+h4  refuted    0.10        p12, p13, p15, p16, p18, p19, p21, p23, p24, p25, p28              Within teen numbers, the decompose direction (10 + ? = 16) is currently stronger than the compose direction (10 + 6 = ?).                                                 Already tested and refuted; compose and decompose items are both answering first try. No further test needed unless a compose item draws assistance again.
+h5  refuted    0.20        p20, p22, p18, p19, p24, p25, p27, p32                             Because partners to 10 and teen numbers answer on first tries, the Learner will handle first make-a-ten items with at most a Hint rather than a Reveal.                   The test was run with two make-a-ten items. p27 (7 + 5) ended in a Reveal, which is exactly the outcome this claim ruled out; p32 (7 + 7) was first-try-correct. Secure parts alone do not carry make-a-ten yet. The narrower question moves to h7; no separate test of this claim is needed.
+h6  proposed   0.50        p9, p29, p26, p31, p33                                             Counting-on assistance so far has come on items whose sum crosses ten (9 + 3, 9 + 2), while items that stay at or below ten (7 + 3, 3 + 2, 5 + 2) are first-try-correct.  Next Session include counting-on items on both sides of ten: some with a larger addend of 8-12 so the sum crosses ten, some that stay at or below ten. If crossing items draw misses, Hints, or Reveals while non-crossing items stay first-try-correct, move to supported; if crossing items are first-try-correct, move toward refuted.
+h7  proposed   0.50        p27, p32                                                           Make-a-ten is not yet reliable: the one success was the double 7 + 7 (first-try-correct), while the non-double 7 + 5 needed a Reveal.                                     Next Session make make-a-ten the largest share, with several non-double items (larger addend 6-9) in both larger-first and smaller-first form. Repeated first-try-correct or Hint-assisted successes on non-doubles move this toward refuted; further Reveals or first-try misses on non-doubles move it to supported and mean make-a-ten needs a slower build-up from partners to 10.
+
+Strengths
+- Works steadily and finishes problems without stalling.
+- Finds the missing partner to 10 for both small and large given partners, and takes from ten accurately.
+- Composes and decomposes teen numbers as ten and some more, up to 19.
+- Counts on accurately from the larger number for sums that stay at or below ten.
+- Already answers some crossing-ten sums, including 7 + 7, on the first try.
+- Keeps a high rate of correct first attempts across four Sessions.
+
+Session Plan for Session 5
+Session Plan: 9 Problems, review share 25%
+Hypothesis under test: h7
+
+Skill           Weight  Range    Structures
+make-a-ten      4       6 to 9   larger-first, smaller-first
+counting-on     3       3 to 12  larger-first, smaller-first
+partners-to-10  1       6 to 9   missing-partner, take-from-ten
+teen-numbers    1       default  compose, decompose
+
+Knowledge Estimates
+
+Skill                               Estimate  Last 10 first attempts  Mastered
+Partners to 10                      1.000     1111111111              yes
+Teen numbers                        1.000     0111111111              yes
+Counting on from the larger number  0.997     1011011                 no
+Make-a-ten within 20                0.706     01                      no
+Subtraction as unknown addend       0.200     -                       no
+Result or total unknown             0.200     -                       no
+Change unknown                      0.150     -                       no
