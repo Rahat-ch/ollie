@@ -91,6 +91,18 @@ describe("POST /api/speech, with a voice configured", () => {
     if (audioDir) await rm(audioDir, { recursive: true, force: true });
   });
 
+  it("takes the Story set the browser sends with every Unit 3 request, plain or rich, rather than refusing the body", async () => {
+    audioDir = await mkdtemp(path.join(tmpdir(), "ollie-speech-route-"));
+    process.env.ELEVENLABS_API_KEY = "elevenlabs-test-key";
+    process.env.ELEVENLABS_VOICE_ID = "ollie-voice-id";
+    process.env.AUDIO_DIR = audioDir;
+    vi.stubGlobal("fetch", async () => new Response(audio, { status: 200 }));
+
+    expect((await post({ ...story, set: "plain" })).status).toBe(200);
+    expect((await post({ ...story, set: "rich" })).status).toBe(200);
+    expect((await post({ ...story, set: "fancy" })).status).toBe(400);
+  });
+
   it("renders the Story once with the Nickname in it and reads it off the volume on every repeat", async () => {
     audioDir = await mkdtemp(path.join(tmpdir(), "ollie-speech-route-"));
     process.env.ELEVENLABS_API_KEY = "elevenlabs-test-key";
