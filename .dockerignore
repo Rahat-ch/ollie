@@ -22,8 +22,11 @@ docs
 # secrets and local env files: never enter the image; set them in Coolify
 .env*
 
-# tests and their artifacts (unit tests under src/ stay, they are type-checked)
+# tests and their artifacts (unit tests under src/ stay, they are type-checked).
+# The Playwright config imports from e2e/, so it stays out with it: it is not
+# part of the app, and Next's type check would otherwise look for e2e/ in the image.
 e2e
+playwright.config.ts
 test-results
 playwright-report
 blob-report
