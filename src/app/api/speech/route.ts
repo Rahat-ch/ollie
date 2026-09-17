@@ -36,6 +36,8 @@ const SpeechRequestSchema = z.discriminatedUnion("kind", [
       nickname: nicknameField,
       text: z.string().min(1).max(MAX_SPOKEN_CHARS),
       ...storyProblemShape,
+      // Which Story set the Problem showed, plain or rich (the Story Solver Power); the browser sends it with every Story.
+      set: z.enum(["plain", "rich"]).optional(),
     })
     .check((ctx) => {
       const issue = storyProblemIssue(ctx.value);
