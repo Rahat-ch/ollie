@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="312" viewBox="0 0 720 312" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Evidence Integrity 1.00 over 2331 Problem citations, with 0 unknown Problem IDs and 0 inconsistent citations">
+<rect width="720" height="312" fill="#FFF7EC"/>
+<text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">Evidence Integrity: every citation checked against the Session Log</text>
+<text x="50" y="46" font-size="11.5" fill="#7A6660">Every Problem ID cited by every Notes the Coach wrote, rejected attempts included, checked against the Log it</text>
+<text x="50" y="61" font-size="11.5" fill="#7A6660">was shown. Coach: the Generation fake. Report 2026-09-13.</text>
+<text x="50.0" y="136.0" font-size="62" font-weight="600" fill="#2F8A5B">1.00</text>
+<text x="50.0" y="162.0" font-size="13.5" font-weight="600" fill="#3B2E2A">Evidence Integrity</text>
+<text x="50.0" y="179.0" font-size="11" fill="#7A6660">consistent citations over all citations</text>
+<rect x="266.0" y="95.0" width="10" height="10" rx="3" fill="#4CAF7A"/>
+<text x="350.0" y="104.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">2,331</text>
+<text x="362.0" y="104.0" font-size="11.5" fill="#7A6660">Problem citations checked</text>
+<rect x="266.0" y="135.0" width="10" height="10" rx="3" fill="#B23F56"/>
+<text x="350.0" y="144.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
+<text x="362.0" y="144.0" font-size="11.5" fill="#7A6660">cite a Problem ID not in the Log</text>
+<rect x="266.0" y="175.0" width="10" height="10" rx="3" fill="#B23F56"/>
+<text x="350.0" y="184.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
+<text x="362.0" y="184.0" font-size="11.5" fill="#7A6660">disagree with their own claim</text>
+<line x1="50" x2="696" y1="206" y2="206" stroke="#EED7B5" stroke-width="1"/>
+<text x="50.0" y="226.0" font-size="11.5" font-weight="600" fill="#3B2E2A">Citations checked, by split</text>
+<text x="50.0" y="254.0" font-size="11.5" fill="#3B2E2A">Tuning Learners</text>
+<rect x="196.0" y="244.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
+<rect x="196.0" y="244.0" width="320.0" height="12" rx="4" fill="#4CAF7A"/>
+<text x="526.0" y="254.0" font-size="11.5" fill="#7A6660">1,502 citations · 1.00</text>
+<text x="50.0" y="280.0" font-size="11.5" fill="#3B2E2A">Held-out Learners</text>
+<rect x="196.0" y="270.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
+<rect x="196.0" y="270.0" width="176.6" height="12" rx="4" fill="#4CAF7A"/>
+<text x="526.0" y="280.0" font-size="11.5" fill="#7A6660">829 citations · 1.00</text>
+<text x="50" y="298" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-13T17-38-41Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
+</svg>

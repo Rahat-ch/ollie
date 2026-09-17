@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="340" viewBox="0 0 720 340" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Stories validity: 30 of 30 valid on the first attempt, 0 template fallbacks, and the Judge's calibration gate">
+<rect width="720" height="340" fill="#FFF7EC"/>
+<text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">Story validity: what the validator accepted</text>
+<text x="50" y="46" font-size="11.5" fill="#7A6660">30 Stories, one per Theme and Unit 3 structure, written through the Generation fake in 30 attempts and checked</text>
+<text x="50" y="61" font-size="11.5" fill="#7A6660">by the validator. Coach: the Generation fake. Report 2026-09-13.</text>
+<text x="50.0" y="118.0" font-size="12" fill="#3B2E2A">Valid on the first attempt</text>
+<rect x="290.0" y="107.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
+<rect x="290.0" y="107.0" width="230.0" height="14" rx="4" fill="#4CAF7A"/>
+<text x="532.0" y="118.0" font-size="11.5" fill="#7A6660">30 of 30 (100%)</text>
+<text x="50.0" y="152.0" font-size="12" fill="#3B2E2A">Valid within three attempts</text>
+<rect x="290.0" y="141.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
+<rect x="290.0" y="141.0" width="230.0" height="14" rx="4" fill="#4CAF7A"/>
+<text x="532.0" y="152.0" font-size="11.5" fill="#7A6660">30 of 30 (100%)</text>
+<text x="50.0" y="186.0" font-size="12" fill="#3B2E2A">Template fallbacks</text>
+<rect x="290.0" y="175.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
+
+<text x="532.0" y="186.0" font-size="11.5" fill="#7A6660">0 of 30 (0%)</text>
+<rect x="50" y="212" width="646" height="94" rx="12" fill="#FFF7EC" stroke="#EED7B5" stroke-width="1"/>
+<text x="66.0" y="236.0" font-size="13" font-weight="600" fill="#B23F56">The Judge (the fake Judge): scores withheld</text>
+<text x="66.0" y="254.0" font-size="11" fill="#7A6660">Below the threshold, so the Judge's scores are not reported.</text>
+<text x="66.0" y="274.0" font-size="11" fill="#7A6660">Agreed with the Calibration Set on 12 of 20 Stories (60%)</text>
+<rect x="66.0" y="282.0" width="300.0" height="10" rx="4" fill="#F8E8CF"/>
+<rect x="66.0" y="282.0" width="180.0" height="10" rx="4" fill="#B23F56"/>
+<line x1="306.0" x2="306.0" y1="278" y2="296" stroke="#3B2E2A" stroke-width="2"/>
+<text x="378.0" y="291.0" font-size="10.5" fill="#7A6660">threshold 80%</text>
+<text x="50" y="326" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-13T17-38-41Z.json with pnpm eval:chart. The engine owns the numbers; the Story only dresses them.</text>
+</svg>

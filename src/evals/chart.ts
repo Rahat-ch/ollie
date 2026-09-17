@@ -1,5 +1,5 @@
-import { colors } from "@/design/tokens";
 import { SKILLS } from "@/loop";
+import { escape, FONT, GRID, INK, INK_SOFT, SERIES, SURFACE } from "./chart-kit";
 import type { LearnerConvergence } from "./convergence";
 import { baselineOf, describeDetection, pct } from "./format";
 import type { LearnerHypotheses } from "./hypotheses";
@@ -14,20 +14,10 @@ import { describeGeneration, type EvalReport } from "./report";
  * palette, validated together on the paper surface, with a legend and
  * direct end labels so identity is never colour alone.
  */
-const SURFACE = colors.paper;
-const INK = colors.ink;
-const INK_SOFT = colors.inkSoft;
-const GRID = colors.paper3;
-const SERIES = { coach: "#2a78d6", baseline: "#eb6834" } as const;
-
 const COLUMNS = 3;
 const FACET = { width: 260, height: 190 } as const;
 const PLOT = { left: 34, top: 44, right: 28, bottom: 30 } as const;
 const MARGIN = { top: 64, bottom: 36, sides: 16 } as const;
-const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-
-const escape = (text: string): string =>
-  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 /** What the facet says under its title: the planted weakness and when the Coach named it, or the first-try rates. */
 function subtitle(coach: LearnerConvergence, baseline: LearnerConvergence, hypotheses: LearnerHypotheses | undefined): string {

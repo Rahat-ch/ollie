@@ -38,7 +38,7 @@ The loop is evaluated against a **Baseline** — the same Loop with the Coach re
 
 ## What the evals say
 
-The latest committed report is [`docs/evals/2026-09-13T17-38-41Z.json`](../evals/2026-09-13T17-38-41Z.json), drawn as [`docs/evals/convergence.svg`](../evals/convergence.svg). **It is from `pnpm eval --fake`**: with no Anthropic key, the Coach in that run is the deterministic fake, which plans like a slightly smarter Baseline and never names a pattern in words. The numbers measure the seams and the gates, not Claude's judgement.
+The latest committed report is [`docs/evals/2026-09-13T17-38-41Z.json`](../evals/2026-09-13T17-38-41Z.json), drawn as [`docs/evals/convergence.svg`](../evals/convergence.svg). Every score below is also drawn as its own chart beside it, from the same report file: [evidence integrity](../evals/evidence-integrity.svg), [detection](../evals/detection.svg), [false positives](../evals/false-positives.svg), [plan sources](../evals/plan-sources.svg), [Story validity](../evals/story-validity.svg), and [Summary validity](../evals/summary-validity.svg). **It is from `pnpm eval --fake`**: with no Anthropic key, the Coach in that run is the deterministic fake, which plans like a slightly smarter Baseline and never names a pattern in words. The numbers measure the seams and the gates, not Claude's judgement.
 
 - Evidence Integrity **1.00 over 2,331 citations** (1,502 tuning, 829 held out): every Problem ID cited by every Notes written, rejected attempts included, exists and agrees with its claim.
 - Detection **0 of 2** planted weaknesses, exactly as the fake is built to score; false positives 3 of 18 supported Hypotheses in the tuning split, 0 of 8 held out.
