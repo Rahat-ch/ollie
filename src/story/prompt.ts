@@ -4,6 +4,7 @@
  * model is told the numbers and what happens to them, never the answer.
  */
 import type { StoryInput } from "@/generation/types";
+import { NICKNAME_PLACEHOLDER } from "./nickname";
 import { storyShape } from "./shapes";
 import { CORE_WORDS, themeVocabulary } from "./themes";
 import { MAX_STORY_WORDS, STORY_SENTENCES } from "./validate";
@@ -30,7 +31,11 @@ export function storyUserMessage(input: StoryInput): string {
     // The rich set is the same Problem told as a scene: the Story Solver
     // Power opens it, and it is pooled apart from the plain set.
     ...(input.set === "rich" ? [`Say where it happens (${where}) and what the things are doing, inside the same rules.`] : []),
-    `The child's Nickname, to write exactly: ${input.nickname}`,
+    ...(input.nickname === NICKNAME_PLACEHOLDER
+      ? [
+          `The child's Nickname is not known yet. Where the name goes, write exactly ${NICKNAME_PLACEHOLDER}, curly braces and all, once or more. Do not invent a name.`,
+        ]
+      : [`The child's Nickname, to write exactly: ${input.nickname}`]),
     "",
     "The problem:",
     describeProblem(input),
