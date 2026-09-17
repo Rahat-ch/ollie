@@ -20,6 +20,15 @@ export { hypothesisReport, runEvals } from "./evals";
 export type { EvalReport } from "./report";
 export { describeGeneration, evalReport, EVALS_DIR, isReportFileName, reportFileName } from "./report";
 export { renderConvergenceChart } from "./chart";
+export {
+  EVAL_CHARTS,
+  renderDetectionChart,
+  renderEvidenceIntegrityChart,
+  renderFalsePositivesChart,
+  renderPlanSourcesChart,
+  renderStoryValidityChart,
+  renderSummaryValidityChart,
+} from "./charts";
 export type { Calibrated, Calibration, CalibrationStory, CalibrationSummary, Judge, Judgement, StoryToJudge, SummaryToJudge } from "./judge";
 export {
   calibrateJudge,
