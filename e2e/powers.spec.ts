@@ -51,6 +51,9 @@ test("Mastering counting on teaches Ollie Count-On Flight: the celebration is th
     if (!flown) {
       await playSession(page);
       await page.getByRole("button", { name: "Done" }).click();
+      // Done goes home by a client navigation; wait for it to land, or the next
+      // Session's `goto` races it and WebKit cancels one of the two.
+      await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
       continue;
     }
     // Answer up to the counting-on Problem, checking that no other Problem is flown.

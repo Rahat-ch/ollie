@@ -43,6 +43,18 @@ const key = (page: Page, n: number) => page.getByRole("button", { name: String(n
 /** What is left of the chain when nothing is bundled and ElevenLabs cannot be reached. */
 const FELL_THROUGH = /^(synthesis|text)$/;
 
+/**
+ * This spec's premise, made true rather than left to the engine. The fixed
+ * lines bundled with the app are in public/voice; Chromium's autoplay policy
+ * fails to play them without a gesture, so in Chromium the chain always fell
+ * past the bundled step of its own accord, while WebKit plays them and
+ * reports `bundled`. Taking the files away is what "nothing on the device"
+ * means, and it is now the same premise in both engines.
+ */
+test.beforeEach(async ({ page }) => {
+  await page.route("**/voice/*.mp3", (route) => route.abort());
+});
+
 test("with no voice on the server every line falls through to the line on screen, Ollie talks while it is said, and the Session still finishes", async ({ page, baseURL }) => {
   const offHost: string[] = [];
   const speechRequests: string[] = [];
@@ -51,8 +63,12 @@ test("with no voice on the server every line falls through to the line on screen
     if (request.url() === `${baseURL}/api/speech` && request.method() === "POST") speechRequests.push(request.postData() ?? "");
   });
 
-  await page.goto("/");
-  await page.evaluate(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
+  // The Profile is on the device before the first page is drawn, rather than
+  // written into a page that is already showing: WebKit fires a `storage`
+  // event in the very window that wrote the key, so seeding from the page
+  // re-renders the home screen and Ollie asks for his greeting there, which
+  // would land in the count below. Play is the first screen either way.
+  await page.addInitScript(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
   await page.goto("/play");
 
   await expect(page.getByTestId("progress-dot")).toHaveCount(8);

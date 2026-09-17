@@ -1,7 +1,15 @@
 import { defineConfig, devices } from "@playwright/test";
+import { IPADS } from "./e2e/ipads.mjs";
 
 const PORT = 3100;
 const BASE_URL = `http://localhost:${PORT}`;
+
+// Bundled audio must not play out loud during a test run. `--mute-audio` is a
+// Chromium launch flag, so it covers the two Chromium projects and nothing
+// else; what actually keeps every project silent, WebKit included, is the
+// init script in e2e/quiet.mjs, which mutes each media element as it plays
+// and stubs the platform's speech synthesis.
+const MUTED = { launchOptions: { args: ["--mute-audio"] } };
 
 export default defineConfig({
   testDir: "./e2e",
@@ -10,20 +18,25 @@ export default defineConfig({
   reporter: "list",
   use: {
     baseURL: BASE_URL,
-    // Bundled audio, once it exists, must not play out loud during a test run either.
-    launchOptions: { args: ["--mute-audio"] },
   },
   projects: [
     {
       name: "desktop-chrome",
-      use: { ...devices["Desktop Chrome"] },
+      use: { ...devices["Desktop Chrome"], ...MUTED },
     },
     {
       name: "ipad-landscape",
-      // The iPad device defaults to WebKit; only Chromium is installed, so keep
-      // the tablet viewport, touch, and user agent but run it in Chromium.
-      use: { ...devices["iPad (gen 7) landscape"], browserName: "chromium" },
+      // The Chromium reference: the tablet viewport, touch, and user agent of
+      // the WebKit projects below, in the engine the suite has always run in.
+      use: { ...devices["iPad (gen 7) landscape"], browserName: "chromium", ...MUTED },
     },
+    // One real iPad each, as Safari presents it. The descriptor's own
+    // defaultBrowserType is webkit, so `browserName` is deliberately left
+    // alone — running Safari's engine is the point of these projects.
+    ...IPADS.map(({ name, width, height }) => ({
+      name,
+      use: { ...devices["iPad (gen 7) landscape"], viewport: { width, height } },
+    })),
   ],
   webServer: {
     // Run the standalone server the Dockerfile runs, not `next start`, so the

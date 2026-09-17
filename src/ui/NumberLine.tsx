@@ -44,8 +44,9 @@ export function NumberLine({ model }: { readonly model: NumberLineModel }) {
   const ticks = Array.from({ length: model.max - model.min + 1 }, (_, i) => model.min + i);
   const hops = model.showHops ? Array.from({ length: model.hops }, (_, i) => model.start + i) : [];
   return (
-    <div className="rounded-card bg-paper-2 px-2 py-3 shadow-card" data-testid="number-line" data-power={model.power ?? undefined}>
-      <svg viewBox={`0 0 ${width} 100`} width={width} height={100} role="img" aria-label={`number line from ${model.start}${model.showEnd ? ` to ${model.end}` : ""}`}>
+    <div className="number-line-card rounded-card bg-paper-2 px-2 py-3 shadow-card" data-testid="number-line" data-power={model.power ?? undefined}>
+      {/* The viewBox is the drawing; the width comes from the column it is drawn in (.number-line-card in src/app/globals.css), so the line fills the space it has and can never cross into the number pad. */}
+      <svg viewBox={`0 0 ${width} 100`} role="img" aria-label={`number line from ${model.start}${model.showEnd ? ` to ${model.end}` : ""}`}>
         <line x1={PAD - 12} y1={BASE_Y} x2={width - PAD + 12} y2={BASE_Y} className="number-line-ink" />
         {ticks.map((n) => (
           <g key={n}>

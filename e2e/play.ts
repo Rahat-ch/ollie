@@ -90,6 +90,56 @@ export function daysAgo(days: number): string {
 const mastered = { estimate: 0.99, recentFirstAttempts: Array(10).fill(true), mastered: true };
 const fresh = (estimate: number) => ({ estimate, recentFirstAttempts: [], mastered: false });
 
+/**
+ * A Profile as the Parent has just set it up: nothing played, so the next
+ * Session is the Diagnostic Session, whose Problems put both the ten-frame
+ * and the number line on screen.
+ */
+export const DIAGNOSTIC_PROFILE = {
+  version: 2,
+  seed: "e2e-diagnostic",
+  identity: { nickname: "Mia", avatarColor: "sky", theme: "space" },
+  progress: {
+    nextProblemNumber: 1,
+    sessionsCompleted: 0,
+    skills: {
+      "partners-to-10": fresh(0.3),
+      "teen-numbers": fresh(0.3),
+      "counting-on": fresh(0.3),
+      "make-a-ten": fresh(0.2),
+      "unknown-addend": fresh(0.2),
+    },
+  },
+  session: null,
+};
+
+/**
+ * The Unit 3 Profile the design review screenshots from, whose first Story is
+ * the longest shape the validator allows: twenty-five words, which the bubble
+ * on the shortest iPad sets on three lines. The seed and the Problem number
+ * are what pick that Story out of the Content Pool, so both are load-bearing;
+ * e2e/layout.spec.ts asserts the three lines rather than trusting them.
+ */
+export const LONG_STORY_PROFILE = {
+  version: 2,
+  seed: "design-review-3",
+  identity: { nickname: "Mia", avatarColor: "berry", theme: "puppies" },
+  progress: {
+    nextProblemNumber: 50,
+    sessionsCompleted: 4,
+    skills: {
+      "partners-to-10": mastered,
+      "teen-numbers": mastered,
+      "counting-on": mastered,
+      "make-a-ten": mastered,
+      "unknown-addend": mastered,
+      "result-unknown": fresh(0.2),
+      "change-unknown": fresh(0.15),
+    },
+  },
+  session: null,
+};
+
 /** A Profile with Units 1 and 2 Mastered and one Session played, so the next Session is the Baseline's first in Unit 3. */
 export const UNIT_3_PROFILE = {
   version: 2,

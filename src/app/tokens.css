@@ -91,6 +91,77 @@
   --touch-parent: 44px;
   --gutter: 32px;
   --content-max: 960px;
+
+  /*
+   * The Session stage, which is height-aware and has no fixed width in it.
+   * The rhythm shrinks on a short screen (an iPad in landscape is 656–1024
+   * CSS px tall) so the stage still holds the bubble, the Equation, the
+   * visual, Ollie and the pad; the ten-frame cell and the Story card follow
+   * the column they are drawn in, between the smallest counter a Learner can
+   * count from across a table and the 60px the design frame draws.
+   */
+  --stage-gap: clamp(10px, 2.4svh, 24px);
+  --stage-block: clamp(10px, 2.6svh, 24px);
+
+  /*
+   * The ten-frame's own paper: the board's margin, the gap between two
+   * frames, the gap from the board to the counters waiting beside it, and a
+   * counter as a fraction of its cell. Every size the visual row is drawn to
+   * is derived from these, so the board's arithmetic lives in one place.
+   */
+  --frame-pad: 20px;
+  --frame-gap: 16px;
+  /* The ruled line a frame is drawn with, which the board is wider and taller by. */
+  --frame-line: 3px;
+  --frame-loose-gap: 20px;
+  --counter-ratio: 0.73;
+  --cell-min: 32px;
+  --cell-max: 60px;
+  /* Two frames of five cells at the design's cell, and the board's own height. */
+  --frame-width: calc(10 * var(--cell-max) + 2 * var(--frame-pad) + var(--frame-gap) + 2 * var(--frame-line));
+  --frame-height: calc(2 * var(--cell-max) + 2 * var(--frame-pad) + var(--frame-line));
+  /* The visual row is the ten-frame's box, which the number line takes too. */
+  --visual-max: var(--frame-height);
+  /*
+   * A Story has no cells to fit, so its card is a square rather than a tray,
+   * and it is given a taller row of its own to be square in: the ten-frame's
+   * box would leave one small Theme picture in a very wide band.
+   */
+  --visual-max-story: 320px;
+  /* The NumberLine drawing is 568 by 100, so its width follows from the height it is given. */
+  --number-line-ratio: 5.68;
+
+  /* Ollie's own ground on the stage: the last thing on it to give height up. */
+  --ollie-min: 240px;
+  --ollie-stage: clamp(var(--ollie-min), 32svh, 280px);
+  /* Beside the bubble in portrait he answers to that row, not to the screen's height. */
+  --ollie-portrait: clamp(180px, 20svh, var(--ollie-min));
+
+  /*
+   * The Equation and Ollie's line give up a little height on a short iPad so
+   * that Ollie keeps his. A departure from the 64px display-xl the design
+   * direction sets for the Equation, and only on this screen.
+   */
+  --stage-equation: clamp(44px, 7.5svh, 64px);
+  --stage-speech: clamp(18px, 2.6svh, 24px);
+  /* A line of Ollie's is read to a six-year-old, so the bubble is measured in characters, not pixels. */
+  --speech-measure: 34em;
+  /* The Theme picture inside the Story card, as a share of the card's height. */
+  --story-picture: 80%;
+
+  /*
+   * The number pad fills its column by opening up, not by growing keys: a key
+   * past about 72px would starve the visual at 1024. 64px is already well
+   * over Apple's 44pt floor (HIG, Buttons). In portrait the same three are
+   * measured against the width, because a stacked pad has to leave room for
+   * everything above it.
+   */
+  --pad-key: clamp(64px, 6.6svh, 72px);
+  --pad-gap: clamp(8px, 1.4svh, 16px);
+  --pad-row-gap: clamp(12px, 2.6svh, 28px);
+  --pad-key-portrait: clamp(64px, 8svw, 72px);
+  --pad-gap-portrait: clamp(8px, 1.4svw, 16px);
+  --pad-row-gap-portrait: clamp(12px, 2.6svw, 28px);
 }
 
 @theme inline {

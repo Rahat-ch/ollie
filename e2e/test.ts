@@ -1,24 +1,17 @@
 /**
- * The shared `test` for every browser spec. A test run must never talk out
- * loud through the machine's own voice: Chromium on a Mac speaks through the
- * system's speech synthesis, so thirty tests reading Problems aloud fill the
- * room. Every page stubs `speechSynthesis.speak` to fail at once, which hands
- * the Speech Chain over to the on-screen step, the same path a device with
- * no voices takes.
+ * The shared `test` for every browser spec: every page is quietened before it
+ * loads, so no test run reads a Problem out loud or plays one of Ollie's
+ * lines through the speakers. What that means, and why a launch flag was not
+ * enough, is in e2e/quiet.mjs, which scripts/design-review.mjs uses too.
  */
 import { test as base } from "@playwright/test";
+import { quiet } from "./quiet.mjs";
 
 export { expect, type Page } from "@playwright/test";
 
 export const test = base.extend({
   page: async ({ page }, provide) => {
-    await page.addInitScript(() => {
-      const synth = window.speechSynthesis;
-      if (!synth) return;
-      synth.speak = (utterance: SpeechSynthesisUtterance) => {
-        setTimeout(() => utterance.dispatchEvent(new Event("error")), 0);
-      };
-    });
+    await page.addInitScript(quiet);
     await provide(page);
   },
 });

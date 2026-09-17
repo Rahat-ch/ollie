@@ -30,6 +30,228 @@ h4 {
 }
 
 /*
+ * The Session stage: two rows, the progress dots and then the body. The body
+ * is two columns in landscape — the Problem in what is left over, the number
+ * pad at its own width — and one column in portrait, where the research
+ * (docs/research/ipad-layout.md) shows two provably do not fit on any iPad.
+ * Orientation is the single rule, not a width: 944×656 is under a thousand
+ * pixels wide and still needs two columns, because stacking wants height and
+ * a landscape iPad has none to spare, while 1024×1366 is over a thousand and
+ * must stack.
+ *
+ * Nothing in here carries a pixel width. The visuals size themselves to their
+ * column, so the ten-frame and the number line can never be drawn across the
+ * keys the Learner is meant to tap, at any viewport, which is what
+ * e2e/layout.spec.ts measures at the nine real iPad sizes.
+ */
+.session-stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--stage-gap);
+  padding: var(--stage-block) var(--gutter);
+  /*
+   * svh, not dvh: the layout must not reflow under a finger as Safari's
+   * toolbar retracts. A height and not only a minimum, because the rows below
+   * can only give their slack back if there is a height to give it back to —
+   * without it the stage grows and the page scrolls down instead.
+   */
+  height: 100svh;
+  min-height: 100svh;
+}
+.session-dots {
+  display: flex;
+  justify-content: center;
+}
+/*
+ * The two columns take the whole body row, so the Problem's own rows are held
+ * to the height there is and give their slack back rather than overflowing
+ * it; the pad, which cannot be made to fill a 936px column with keys a
+ * Learner's finger can reach across, is centred in its own.
+ */
+.session-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--gutter);
+  align-items: stretch;
+  min-height: 0;
+}
+/*
+ * The Problem's own column: Ollie's bubble with Repeat beside it, the
+ * Equation, the visual, and Ollie under the bubble whose tail points at him.
+ * Every phase — asking, hint, correct, reveal — is this same grid; only the
+ * words, the marks on the visual, and Ollie's pose change.
+ *
+ * The four rows are one group, centred: the gaps are `--stage-gap`, which
+ * never opens past 24px, so on a 13-inch iPad the block stays together rather
+ * than drifting apart and leaving the bubble's tail pointing at the Equation.
+ * The first two rows take what they need, because a three-line Story is still
+ * a Problem and must be read whole; the last two are capped rather than
+ * flexible, so they give their height back when a long line takes it, and
+ * Ollie gives last — his track's minimum is his floor.
+ */
+.session-problem {
+  display: grid;
+  grid-template-areas:
+    "bubble"
+    "equation"
+    "visual"
+    "ollie";
+  --visual-row: var(--visual-max);
+  grid-template-rows: auto auto minmax(0, var(--visual-row)) minmax(var(--ollie-min), var(--ollie-stage));
+  align-content: center;
+  justify-items: center;
+  gap: var(--stage-gap);
+  min-width: 0;
+  min-height: 0;
+}
+/* A Story's card is square, so its row is the taller one. */
+.session-problem[data-visual="theme-picture"] {
+  --visual-row: var(--visual-max-story);
+}
+.session-bubble {
+  grid-area: bubble;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  justify-self: start;
+  max-width: 100%;
+  min-width: 0;
+}
+.session-bubble > button {
+  flex-shrink: 0;
+}
+.session-speech {
+  min-width: 0;
+  max-width: min(100%, var(--speech-measure));
+}
+.session-equation {
+  grid-area: equation;
+}
+/*
+ * The Equation and Ollie's line are the two things on the stage that can give
+ * height back on a short iPad without costing the Learner anything she has to
+ * count; the ground they give up is Ollie's.
+ */
+.session-equation > p {
+  font-size: var(--stage-equation);
+}
+.session-speech .speech-bubble {
+  font-size: var(--stage-speech);
+}
+/*
+ * The slot the visual is drawn in, and the container every visual measures
+ * itself against — in both axes, so a board is bounded by the height of its
+ * row as well as the width of its column. The row's cap is a token and not
+ * the content, so asking the content about the container is not circular.
+ */
+.session-visual {
+  grid-area: visual;
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
+.session-ollie {
+  grid-area: ollie;
+  justify-self: start;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  min-height: 0;
+}
+.session-ollie > svg {
+  height: 100%;
+  width: auto;
+}
+.session-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+/*
+ * Portrait: one column, and Ollie steps up beside his bubble rather than
+ * standing under it, so the Equation, the visual and the pad keep the height
+ * they need. The pad follows the visual down the page, and both Ollie and the
+ * pad are measured against the width, which portrait has to spend.
+ */
+@media (orientation: portrait) {
+  .session-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .session-problem {
+    grid-template-areas:
+      "ollie bubble"
+      "equation equation"
+      "visual visual";
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, var(--visual-row));
+    --ollie-stage: var(--ollie-portrait);
+  }
+  .session-ollie {
+    align-self: center;
+    height: var(--ollie-stage);
+  }
+  .session-pad {
+    --pad-key: var(--pad-key-portrait);
+    --pad-gap: var(--pad-gap-portrait);
+    --pad-row-gap: var(--pad-row-gap-portrait);
+  }
+}
+
+/*
+ * The ten-frame's cell, read off the box it is drawn in: the board's own
+ * margins and gaps come off first, and what is left is shared between the
+ * cells across the column and between the two rows down the visual's row.
+ * `data-frames` says how many cells have to fit across; one frame is drawn
+ * with the counters waiting beside it, which take a counter's width and the
+ * gap to reach them.
+ */
+.ten-frame-board {
+  --counter: calc(var(--cell) * var(--counter-ratio));
+  --cell-down: calc((100cqb - 2 * var(--frame-pad) - var(--frame-line)) / 2);
+}
+.ten-frame-board[data-frames="1"] {
+  --cell-across: calc((100cqi - 2 * var(--frame-pad) - var(--frame-loose-gap) - var(--frame-line)) / (5 + var(--counter-ratio)));
+  --cell: clamp(var(--cell-min), min(var(--cell-across), var(--cell-down)), var(--cell-max));
+}
+.ten-frame-board[data-frames="2"] {
+  --cell-across: calc((100cqi - 2 * var(--frame-pad) - var(--frame-gap) - 2 * var(--frame-line)) / 10);
+  --cell: clamp(var(--cell-min), min(var(--cell-across), var(--cell-down)), var(--cell-max));
+}
+
+/* The number line takes its column, down to whatever height the visual's row has. */
+.number-line-card {
+  width: min(100cqi, calc((100cqb - 2 * var(--space-3)) * var(--number-line-ratio)));
+}
+.number-line-card > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/*
+ * A Unit 3 Story's Theme picture: a square card the height of its own row,
+ * centred in the column, narrowing to the column if that is the smaller. It
+ * shrinks with the row on a short screen exactly as the ten-frame's board does.
+ */
+.story-card {
+  height: min(100cqb, 100cqi);
+  aspect-ratio: 1;
+}
+.story-card > svg {
+  height: var(--story-picture);
+  width: auto;
+}
+
+/*
  * Paper buttons and keys: a flat deep-tone shadow that drops when pressed.
  * The shadow tokens are declared again here so that --button-shadow-color
  * set on the button itself is what they resolve with; declared only on
@@ -66,13 +288,13 @@ h4 {
 
 /* The ten-frame: 3px ink at 60%, one line between cells. */
 .ten-frame {
-  --frame-line: 3px solid color-mix(in srgb, var(--ink) 60%, transparent);
-  border-left: var(--frame-line);
-  border-top: var(--frame-line);
+  --frame-rule: var(--frame-line) solid color-mix(in srgb, var(--ink) 60%, transparent);
+  border-left: var(--frame-rule);
+  border-top: var(--frame-rule);
 }
 .ten-frame-cell {
-  border-right: var(--frame-line);
-  border-bottom: var(--frame-line);
+  border-right: var(--frame-rule);
+  border-bottom: var(--frame-rule);
 }
 
 /*

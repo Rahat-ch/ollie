@@ -23,7 +23,9 @@ import { spawn } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "@playwright/test";
+import { chromium, devices, webkit } from "@playwright/test";
+import { IPADS } from "../e2e/ipads.mjs";
+import { quiet } from "../e2e/quiet.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DESIGN = path.join(ROOT, "docs", "design");
@@ -201,6 +203,60 @@ async function screens(page) {
 }
 
 // ---------------------------------------------------------------------------
+// The Session screen on a real iPad
+// ---------------------------------------------------------------------------
+
+/** The three visuals a Problem is put on, and the Profile each one comes from. */
+const VISUALS = [
+  ["ten-frame", FIRST_SESSION],
+  ["number-line", FIRST_SESSION],
+  ["theme-picture", UNIT_3],
+];
+
+const IPAD_SHOTS = [];
+
+/**
+ * The Session screen in each visual at each iPad size, in Safari's own engine
+ * rather than Chromium, because the device the game is played on is an iPad
+ * and WebKit is what draws it there.
+ */
+async function ipadScreens() {
+  const browser = await webkit.launch();
+  try {
+    for (const { width, height } of IPADS) {
+      const context = await browser.newContext({
+        ...devices["iPad (gen 7) landscape"],
+        viewport: { width, height },
+        deviceScaleFactor: 2,
+        reducedMotion: "reduce",
+      });
+      // The same silence the browser tests run in: no system voice, no audio.
+      await context.addInitScript(quiet);
+      const page = await context.newPage();
+      for (const [visual, profile] of VISUALS) {
+        await writeProfile(page, profile);
+        await page.goto(`${BASE}/play`, { waitUntil: "networkidle" });
+        // Play first-try correct until the Problem on screen is drawn on the wanted visual.
+        for (let i = 0; i < 9; i++) {
+          await page.locator('main[data-phase="asking"]').waitFor({ timeout: 20_000 });
+          if (await page.getByTestId(visual).count()) break;
+          await page.getByRole("button", { name: String(solve(await page.getByTestId("equation").innerText())), exact: true }).click();
+          await page.waitForTimeout(1600);
+        }
+        await page.waitForTimeout(600);
+        const name = `ipad-${width}x${height}-${visual === "theme-picture" ? "story" : visual}`;
+        await page.screenshot({ path: path.join(SCREENS, `${name}.png`), animations: "disabled", caret: "hide" });
+        IPAD_SHOTS.push([name, width, height]);
+        console.log(`docs/design/screens/${name}.png`);
+      }
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+  }
+}
+
+// ---------------------------------------------------------------------------
 // The page
 // ---------------------------------------------------------------------------
 
@@ -244,6 +300,9 @@ body { margin: 0; background: var(--paper); color: var(--ink);
 .review-screens { display: flex; flex-direction: column; gap: 32px; }
 .review-screens img { display: block; width: 100%; max-width: 1024px;
   border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.review-ipads { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; align-items: start; }
+.review-ipads img { display: block; width: 100%;
+  border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
 `;
 
 async function reviewPage(page) {
@@ -255,6 +314,13 @@ async function reviewPage(page) {
     (name) => `      <figure class="m-0">
         <img src="screens/${name}.png" alt="${SCREEN_CAPTIONS[name] ?? name}" width="1024" />
         <figcaption class="pt-2 font-text text-caption text-ink-soft">${SCREEN_CAPTIONS[name] ?? name}</figcaption>
+      </figure>`,
+  ).join("\n");
+
+  const ipads = IPAD_SHOTS.map(
+    ([name, width, height]) => `      <figure class="m-0">
+        <img src="screens/${name}.png" alt="${name}" width="${width}" />
+        <figcaption class="pt-2 font-text text-caption text-ink-soft">${width}×${height} ${height > width ? "portrait" : "landscape"} — ${name.split("-").slice(2).join(" ")}</figcaption>
       </figure>`,
   ).join("\n");
 
@@ -277,6 +343,21 @@ ${body.replace('src="/ollie/', 'src="../../public/ollie/')}
     </p>
     <div class="review-screens">
 ${screens}
+    </div>
+  </section>
+  <section class="mb-12 rounded-card bg-paper-2 p-8 shadow-card">
+    <h2 class="font-display text-display-m font-semibold text-ink">The Session screen on every current iPad</h2>
+    <p class="mt-2 mb-6 max-w-200 font-text text-body text-ink-soft">
+      The three visuals — the ten-frame, the number line, and a Unit 3 Story's Theme picture — at the nine
+      CSS viewports of the current iPads, each way up, taken in WebKit, which is Safari's own engine and
+      what draws the game on the device. The composition to approve against
+      <code>design/canvas/Session.dc.html</code>: the dots in the header row, the bubble with Repeat beside it,
+      the Equation under it, the visual filling its column, Ollie 240 to 280 under his own bubble, and the
+      number pad opening up to take its column. Nothing overlaps and nothing scrolls sideways at any of them;
+      <code>e2e/layout.spec.ts</code> measures it at every size on every run.
+    </p>
+    <div class="review-ipads">
+${ipads}
     </div>
   </section>
   <p class="max-w-200 font-text text-body text-ink-soft">
@@ -364,6 +445,7 @@ async function main() {
     });
     const page = await context.newPage();
     await screens(page);
+    await ipadScreens();
     await reviewPage(page);
     await context.close();
     await firstLoad(browser);
