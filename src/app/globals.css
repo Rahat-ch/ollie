@@ -96,12 +96,17 @@ h4 {
     "equation"
     "visual"
     "ollie";
-  grid-template-rows: auto auto minmax(0, var(--visual-max)) minmax(var(--ollie-min), var(--ollie-stage));
+  --visual-row: var(--visual-max);
+  grid-template-rows: auto auto minmax(0, var(--visual-row)) minmax(var(--ollie-min), var(--ollie-stage));
   align-content: center;
   justify-items: center;
   gap: var(--stage-gap);
   min-width: 0;
   min-height: 0;
+}
+/* A Story's card is square, so its row is the taller one. */
+.session-problem[data-visual="theme-picture"] {
+  --visual-row: var(--visual-max-story);
 }
 .session-bubble {
   grid-area: bubble;
@@ -187,7 +192,7 @@ h4 {
       "equation equation"
       "visual visual";
     grid-template-columns: auto minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, var(--visual-max));
+    grid-template-rows: auto auto minmax(0, var(--visual-row));
     --ollie-stage: var(--ollie-portrait);
   }
   .session-ollie {
@@ -232,10 +237,14 @@ h4 {
   height: auto;
 }
 
-/* A Unit 3 Story's Theme picture takes the box the ten-frame would have. */
+/*
+ * A Unit 3 Story's Theme picture: a square card the height of its own row,
+ * centred in the column, narrowing to the column if that is the smaller. It
+ * shrinks with the row on a short screen exactly as the ten-frame's board does.
+ */
 .story-card {
-  width: min(100cqi, var(--frame-width));
-  height: 100cqb;
+  height: min(100cqb, 100cqi);
+  aspect-ratio: 1;
 }
 .story-card > svg {
   height: var(--story-picture);

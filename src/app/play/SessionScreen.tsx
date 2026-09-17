@@ -151,7 +151,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
         <ProgressDots total={session.problems.length} done={session.entries.length} />
       </div>
       <div className="session-body" data-stage-body>
-        <section className="session-problem" aria-label="Problem">
+        <section className="session-problem" data-visual={visual.kind} aria-label="Problem">
           <div className="session-bubble" data-stage-bubble>
             <SpeechBubble key={lineKey} className="session-speech">
               {line}
