@@ -4,16 +4,23 @@ const STAGGER_MS = 220;
 
 /**
  * One or two ten-frames on a paper board, with any counters waiting beside
- * them. Two frames are drawn smaller so both fit beside the number pad.
+ * them. The cell size is not the component's: `--cell` is a clamp on
+ * `.ten-frame-board` in src/app/globals.css read off the width of the column
+ * the board is drawn in, so the board fills the space it has and can never
+ * outgrow it into the number pad. Two frames have twice the cells to fit in
+ * that width, which is what `data-frames` tells the clamp.
  */
 export function TenFrame({ model }: { readonly model: TenFrameModel }) {
-  const twoFrames = model.frames.length > 1;
-  const sizes = twoFrames ? { "--cell": "50px", "--counter": "36px" } : { "--cell": "60px", "--counter": "44px" };
   // Make-Ten Magic: the counters that fill the frame and the ones left over
   // are ringed in plum as they move, so the filling and the split are seen.
   const magic = model.power === "make-ten-magic" ? " ten-frame-magic" : "";
   return (
-    <div className={`flex items-center gap-5${magic}`} style={sizes as React.CSSProperties} data-testid="ten-frame" data-power={model.power ?? undefined}>
+    <div
+      className={`ten-frame-board flex items-center gap-5${magic}`}
+      data-testid="ten-frame"
+      data-frames={model.frames.length}
+      data-power={model.power ?? undefined}
+    >
       <div className="flex shrink-0 gap-4 rounded-card bg-paper-2 p-5 shadow-card">
         {model.frames.map((cells, f) => (
           <Frame key={f} cells={cells} />

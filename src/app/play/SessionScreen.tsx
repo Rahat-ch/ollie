@@ -32,6 +32,13 @@ import { Celebration } from "./Celebration";
 /** How long Ollie celebrates a correct answer before the next Problem. */
 export const CORRECT_BEAT_MS = 1400;
 
+/**
+ * The rig's drawn size on the Session stage. It is the ceiling rather than
+ * the size: `--ollie-stage` in src/app/tokens.css scales him with the height
+ * of the screen, and the attribute here is what the SVG falls back to.
+ */
+const OLLIE_STAGE = 280;
+
 type ProblemPhase = Exclude<Phase, { kind: "celebration" }>;
 
 /**
@@ -139,7 +146,7 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
 
   return (
     <main
-      className="learner-stage"
+      className="learner-stage session-stage"
       data-phase={phase.kind}
       data-problem={problem.id}
       data-story-source={story?.source}
@@ -147,24 +154,26 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
       data-speech-source={speechSource ?? undefined}
     >
       <h1 className="sr-only">Play</h1>
-      <div className="pt-7">
+      <div className="session-dots" data-stage-dots>
         <ProgressDots total={session.problems.length} done={session.entries.length} />
       </div>
-      <div className="mx-auto mt-4 grid max-w-content grid-cols-[minmax(0,1fr)_352px] gap-8 px-gutter">
-        <section className="flex flex-col gap-6" aria-label="Problem">
-          <div className="flex items-start gap-4">
-            <SpeechBubble key={lineKey} className="max-w-110">
+      <div className="session-body" data-stage-body>
+        <section className="session-problem" aria-label="Problem">
+          <div className="session-bubble" data-stage-bubble>
+            <SpeechBubble key={lineKey} className="session-speech">
               {line}
             </SpeechBubble>
             <RepeatButton onClick={() => setRepeats((n) => n + 1)} />
           </div>
-          <Equation equation={problem.equation} answerShown={!answering} />
-          <div className="flex justify-center" key={`${problem.id}:${stage}`}>
+          <div className="session-equation">
+            <Equation equation={problem.equation} answerShown={!answering} />
+          </div>
+          <div className="session-visual" data-stage-visual key={`${problem.id}:${stage}`}>
             {visual.kind === "ten-frame" && <TenFrame model={visual} />}
             {visual.kind === "number-line" && <NumberLine model={visual} />}
             {visual.kind === "theme-picture" && (
               <div
-                className="relative flex size-56 items-center justify-center rounded-card bg-paper-2 shadow-card"
+                className="story-card relative flex items-center justify-center rounded-card bg-paper-2 shadow-card"
                 data-testid="theme-picture"
                 data-power={visual.power ?? undefined}
               >
@@ -178,8 +187,12 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
               </div>
             )}
           </div>
+          {/* Ollie stands under his own bubble, so the bubble's tail points at him. */}
+          <div className="session-ollie" data-stage-ollie>
+            <Ollie pose={pose} speaking={speaking} size={OLLIE_STAGE} />
+          </div>
         </section>
-        <aside className="flex flex-col items-center gap-6 pt-4">
+        <aside className="session-pad" data-stage-pad>
           <NumberPad
             onTap={(answer) => dispatch({ type: "tap", answer, at: Date.now() })}
             disabled={!answering}
@@ -192,7 +205,6 @@ export function SessionScreen({ profile, identity }: { readonly profile: Profile
           )}
         </aside>
       </div>
-      <Ollie pose={pose} speaking={speaking} size={200} className="absolute bottom-6 left-gutter" />
     </main>
   );
 }

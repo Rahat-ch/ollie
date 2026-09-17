@@ -91,6 +91,21 @@
   --touch-parent: 44px;
   --gutter: 32px;
   --content-max: 960px;
+
+  /*
+   * The Session stage, which is height-aware and has no fixed width in it.
+   * The rhythm shrinks on a short screen (an iPad in landscape is 656–1024
+   * CSS px tall) so the stage still holds the bubble, the Equation, the
+   * visual, Ollie and the pad; the ten-frame cell and the Story card follow
+   * the column they are drawn in, between the smallest counter a Learner can
+   * count from across a table and the 60px the design frame draws.
+   */
+  --stage-gap: clamp(10px, 2.4svh, 24px);
+  --stage-block: clamp(10px, 2.6svh, 24px);
+  --cell-min: 32px;
+  --cell-max: 60px;
+  --story-card: clamp(140px, 22svh, 280px);
+  --ollie-stage: clamp(200px, 30svh, 280px);
 }
 
 @theme inline {

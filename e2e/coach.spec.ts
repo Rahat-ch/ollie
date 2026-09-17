@@ -147,9 +147,21 @@ test("completing a Session runs the Coach once; with no key on the server the ne
 
 test("a Coach run that a reload interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {
   let calls = 0;
-  // The first Coach call is held long enough for the reload to cancel it.
+  // The first Coach call never answers, and the page is left for a moment
+  // rather than reloaded, so the run is interrupted in either engine. It was a
+  // five-second hold and a reload, which left it to the engine whether there
+  // was still a run to interrupt: WebKit walks the steps before it more slowly
+  // than Chromium and keeps the leaving document alive across a reload, so the
+  // hold ran out, the same document finished the run, and it was never run
+  // again. Neither the waiting call nor the leaving is a weaker test of what
+  // the Learner does — Done, then away, then back.
+  let away = () => {};
+  const runIsAway = new Promise<void>((done) => (away = done));
   await page.route(`${baseURL}/api/coach`, async (route) => {
-    if (calls++ === 0) await new Promise((done) => setTimeout(done, 5000));
+    if (calls++ === 0) {
+      away();
+      return;
+    }
     await route.continue();
   });
 
@@ -161,11 +173,15 @@ test("a Coach run that a reload interrupts is run again from the home screen, an
   await expect.poll(async () => (await readProfile(page)).coach.awaiting?.log.sessionNumber).toBe(1);
   expect((await readProfile(page)).coach.lastSessionCoached).toBe(0);
 
-  // Done goes home with the run still away; the reload cancels it, and the
-  // home screen finds the Session still waiting and runs it again.
+  // Done goes home with the run still away; leaving the page cancels it, and
+  // the home screen finds the Session still waiting and runs it again.
   await page.getByRole("button", { name: "Done" }).click();
   await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
-  await page.reload();
+  // Leave only once the run is actually away, so that there is something to
+  // interrupt: which screen fires it first and how fast is the engine's business.
+  await runIsAway;
+  await page.goto("about:blank");
+  await page.goto("/");
   await expect(page.getByRole("link", { name: "Play" })).toBeVisible();
   await expect.poll(async () => (await readProfile(page)).coach.lastSessionCoached, { timeout: 15000 }).toBe(1);
   const record = (await readProfile(page)).coach;

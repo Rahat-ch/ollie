@@ -43,6 +43,18 @@ const key = (page: Page, n: number) => page.getByRole("button", { name: String(n
 /** What is left of the chain when nothing is bundled and ElevenLabs cannot be reached. */
 const FELL_THROUGH = /^(synthesis|text)$/;
 
+/**
+ * This spec's premise, made true rather than left to the engine. The fixed
+ * lines bundled with the app are in public/voice; Chromium's autoplay policy
+ * fails to play them without a gesture, so in Chromium the chain always fell
+ * past the bundled step of its own accord, while WebKit plays them and
+ * reports `bundled`. Taking the files away is what "nothing on the device"
+ * means, and it is now the same premise in both engines.
+ */
+test.beforeEach(async ({ page }) => {
+  await page.route("**/voice/*.mp3", (route) => route.abort());
+});
+
 test("with no voice on the server every line falls through to the line on screen, Ollie talks while it is said, and the Session still finishes", async ({ page, baseURL }) => {
   const offHost: string[] = [];
   const speechRequests: string[] = [];
@@ -97,10 +109,15 @@ test("with no voice on the server every line falls through to the line on screen
 
   // One request per Story and no more, with Repeat pressed twice along the
   // way: a Story's audio is asked for once and replayed from the device.
+  // WebKit fires a `storage` event in the very window that wrote the key, so
+  // seeding the Profile from the page re-renders the home screen and Ollie
+  // asks for the greeting once before Play is even opened. That is a fixed
+  // line of Ollie's, not a Story, and what is counted here is the Stories.
+  const asked = speechRequests.filter((body) => body.includes('"kind":"story"'));
   const stories = problems.filter((p) => p.skill === "result-unknown");
   expect(stories).toHaveLength(6);
-  expect(speechRequests).toHaveLength(stories.length);
-  expect(new Set(speechRequests).size).toBe(stories.length);
+  expect(asked).toHaveLength(stories.length);
+  expect(new Set(asked).size).toBe(stories.length);
   // The Nickname is the one word that goes off the device, and only to be voiced.
   for (const request of speechRequests) expect(request).toContain("Mia");
   expect(offHost).toEqual([]);
