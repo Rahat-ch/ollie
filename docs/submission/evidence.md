@@ -36,7 +36,7 @@ Run it yourself with `pnpm coach --real --sessions 3` (*live*, about $1) or `pnp
 
 `pnpm eval` plays six seeded Simulated Learners, each with a planted weakness and two held out of prompt tuning, for 20 Sessions under the Coach and under the Baseline (the same Loop with a fixed 8-of-10 gate and no Coach), and scores:
 
-- **Evidence Integrity**: every Problem ID every Hypothesis ever cited exists in the Log and agrees with its claim. This is the number that should be 1.00, and it is checked over every attempt including rejected ones.
+- **Evidence Integrity**: every Problem ID every Hypothesis ever cited exists in the Log the Coach was shown. This is the number that should be 1.00, and it is checked over every attempt including rejected ones. **Claim agreement** is reported beside it, over the citations that exist alone: the share whose Assistance State says what the claim says, where a contrastive claim ("first try when the smaller addend comes first, but a Hint when the larger does") agrees when its citations show an outcome of each kind. Fabricating a Problem and reading a hard call the other way are different failures, so they are two numbers.
 - **Detection and false positives**: whether a supported Hypothesis names the planted weakness, and how many supported Hypotheses are false.
 - **Plans accepted, retries, and Baseline fallbacks**.
 - **Sessions to Mastery** under each planner, drawn as `docs/evals/convergence.svg`.

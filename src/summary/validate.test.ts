@@ -51,6 +51,59 @@ describe("validateSummary", () => {
     });
   });
 
+  /**
+   * The numbers a live Opus 5 run was rejected for (2026-09-17), every one
+   * of them a number the engine's own tally implies: a Skill's total, and a
+   * state's total across the Skills practiced.
+   */
+  it("accepts a Skill's total and a state's total across Skills, which the tally implies", () => {
+    const session = {
+      ...input,
+      problems: 12,
+      practice: [
+        { skill: "partners-to-10" as const, name: "Partners to 10", firstTryCorrect: 6, hintAssisted: 0, revealed: 0, unresolved: 0 },
+        { skill: "teen-numbers" as const, name: "Teen numbers", firstTryCorrect: 5, hintAssisted: 0, revealed: 1, unresolved: 0 },
+      ],
+    };
+
+    const verdict = validateSummary(
+      summary(
+        "With Teen numbers, 5 Problems were correct on the first try and 1 was Revealed, 6 in all. All 6 Partners to 10 Problems were first-try correct, so 11 of the 12 Problems this Session were right first time.",
+      ),
+      session,
+    );
+
+    expect(verdict).toEqual({ ok: true });
+  });
+
+  /** The other live rejections: the Summary repeated a number from the Hypothesis it said Ollie is watching. */
+  it("accepts a number the Coach's own Hypothesis says, which the Summary may repeat as something Ollie is watching", () => {
+    const watching = {
+      ...input,
+      notes: {
+        hypotheses: [
+          {
+            id: "h1",
+            claim: "Teen numbers 11 to 19 are not yet reliable at the top of the range, 15 and 19",
+            status: "proposed" as const,
+            confidence: 0.45,
+            evidence: ["p2", "p13"],
+            nextTest: "Two more teen numbers above 15",
+          },
+        ],
+        strengths: [],
+      },
+    };
+
+    const verdict = validateSummary(
+      summary("Your child answered 9 Problems. Ollie is watching teen numbers 11 to 19, and is asking about 15 and 19 next."),
+      watching,
+    );
+
+    expect(verdict).toEqual({ ok: true });
+    expect(validateSummary(summary("The Problem she missed was p13, out of 9."), watching).ok).toBe(false);
+  });
+
   it("rejects a number taken from the Learner Notes rather than the Session: a confidence or a Problem ID", () => {
     const notes = {
       hypotheses: [

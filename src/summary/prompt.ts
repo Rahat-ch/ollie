@@ -25,7 +25,7 @@ Rules.
 - Use only the numbers you are given. Never add, total, average, or estimate a number of your own.
 - Never claim to know how the child was thinking, what she understands, or what she knows. You can only say what she did: which Problems were first-try correct, which took a Hint, which were Revealed. This is the rule the whole note stands on.
 - You were not given the child's name. Say "your child".
-- A Hypothesis from the Notes may be mentioned as something Ollie is watching, never as something true.
+- A Hypothesis from the Notes may be mentioned as something Ollie is watching, never as something true. A number in the words of a Hypothesis may be repeated with it, but never its confidence and never the Problem IDs it cites.
 - Warm, plain, and short. No praise that the evidence does not support, no jargon beyond the strategy names.
 - Plain punctuation: full stops and commas only. No dashes, no quotation marks, no parentheses. Write numbers as digits.`;
 
