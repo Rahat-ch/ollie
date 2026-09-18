@@ -10,7 +10,7 @@ Open on the app's home screen first, sound up, and let Ollie say his line: "Hi! 
 
 ## Slide 2, what it is (0:12 to 0:35)
 
-> It's a Grade 1 math game for a six-year-old who can't read the screen yet. Ollie reads every problem out loud and the child answers by tapping. The content is the Common Core strategies for adding and subtracting within twenty: counting on, make-a-ten, unknown addend, then word problems in the child's own theme. A miss gets a Hint with the strategy, never a penalty. And when a child masters a strategy, Ollie learns a Power he uses on screen from then on. Mastery changes the game, not the wallet.
+> It's a Grade 1 math game for a six-year-old who is still learning to read. Ollie reads every problem out loud and the child answers by tapping. The content is the Common Core strategies for adding and subtracting within twenty: counting on, make-a-ten, unknown addend, then word problems in the child's own theme. A miss gets a Hint with the strategy, never a penalty. And when a child masters a strategy, Ollie learns a Power he uses on screen from then on. Mastery changes the game, not the wallet.
 
 ## Slide 3, demo cue (0:35), then the live app (0:35 to 1:35)
 
