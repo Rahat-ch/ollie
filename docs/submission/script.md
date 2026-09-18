@@ -48,7 +48,7 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 6, the Coach never invents evidence (2:08 to 2:18)
 
-> Every belief in the Notebook points at the problems it rests on. Out of ninety-five thousand nine hundred and twenty-two, the Coach pointed at a problem the child never saw exactly once, and the engine threw that note out before anyone read it.
+> Every belief in the Notebook points at the problems it rests on, and the Coach rewrites the whole Notebook after every Session. Across three hundred and sixty Sessions that came to ninety-five thousand nine hundred and twenty-two pointers. One pointed at a problem the child never saw, and the engine threw that note out before anyone read it.
 
 ## Slide 7, the Coach finds the trouble spot (2:18 to 2:28)
 
