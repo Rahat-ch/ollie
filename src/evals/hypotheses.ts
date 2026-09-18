@@ -1,7 +1,10 @@
 /**
  * The Hypothesis evals, all deterministic: whether a Hypothesis names a
- * planted weakness, and whether its evidence has integrity (every cited ID
- * exists and its Assistance State is consistent with the claim).
+ * planted weakness, whether its evidence has integrity (every cited Problem
+ * ID exists in the Log the Coach was shown), and whether its citations agree
+ * with the claim they are cited for (the Assistance State says what the
+ * claim says). The two are scored and reported separately: a fabricated ID
+ * is a different failure from a hard call read the other way.
  */
 import type { CoachStep } from "@/coach";
 import type { Hypothesis, LearnerNotes, LogEntry, ProblemId } from "@/loop";
@@ -43,7 +46,7 @@ export function namesWeakness(tag: WeaknessTag, claim: string): boolean {
   return WEAKNESS_PHRASES[tag].some((phrase) => phrase.test(text));
 }
 
-export type ClaimPolarity = "difficulty" | "strength" | "neutral";
+export type ClaimPolarity = "difficulty" | "strength" | "neutral" | "contrastive";
 
 /** "no hints", "never needs a Hint", "without a miss": a difficulty word negated is a strength. */
 const NEGATED_DIFFICULTY =
@@ -52,21 +55,45 @@ const DIFFICULTY_WORDS =
   /\b(?:struggl\w*|miss(?:es|ed|ing)?|wrong|incorrect|error\w*|hint\w*|reveal\w*|unresolved|difficult\w*|hard|harder|trouble|confus\w*|not yet|needs?|weak\w*|mistak\w*|fail\w*)\b/;
 const STRENGTH_WORDS =
   /\b(?:strong|solid|secure|fluent|confident|reliabl\w*|consistent\w*|mastered|knows|correct on the first try|first[\s-]try correct|every first try)\b/;
+/** "not yet secure", "is not reliable": a strength word negated is a difficulty, the mirror of the rule above. */
+const NEGATED_STRENGTH =
+  /\b(?:not\s+yet|not|never|isn't|aren't)\s+(?:quite\s+|fully\s+|always\s+|yet\s+)?(?:strong|solid|secure|fluent|confident|reliabl\w*|consistent\w*|mastered)\b/g;
+
+/** "but", "while", "whereas": the Learner does one thing here and the other thing there. */
+const CONTRAST_WORDS = /\b(?:but|while|whereas|except|although)\b/;
+
+type ClaimReading = { readonly difficulty: boolean; readonly strength: boolean; readonly contrast: boolean };
+
+/**
+ * What the claim's words say, each of the three read independently: a
+ * negated difficulty is a strength and a negated strength is a difficulty,
+ * so "not yet secure" is one-sided rather than a claim saying both things.
+ */
+function readClaim(claim: string): ClaimReading {
+  const text = claim.toLowerCase();
+  const negatedDifficulty = text.match(NEGATED_DIFFICULTY) !== null;
+  const negatedStrength = text.match(NEGATED_STRENGTH) !== null;
+  return {
+    difficulty: negatedStrength || DIFFICULTY_WORDS.test(text.replace(NEGATED_DIFFICULTY, " ")),
+    strength: negatedDifficulty || STRENGTH_WORDS.test(text.replace(NEGATED_STRENGTH, " ")),
+    contrast: CONTRAST_WORDS.test(text),
+  };
+}
 
 /**
  * What a claim is about, read from its words: a difficulty (the Learner
  * misses, needs a Hint, struggles), a strength (solid, reliable, no Hints),
- * or neither (a response-time pattern, say). A claim with both is a
- * difficulty: the Hypothesis is the thing under test, and strengths have
- * their own list.
+ * neither (a response-time pattern, say), or contrastive — a claim that says
+ * both things at once, or sets one side against the other with a "but". The
+ * Coach's best Hypotheses are the contrastive ones ("first try when the
+ * smaller addend comes first, but a Hint when the larger does"), so they are
+ * their own kind rather than a difficulty claim with an inconvenient half.
  */
 export function claimPolarity(claim: string): ClaimPolarity {
-  const text = claim.toLowerCase();
-  const negated = text.match(NEGATED_DIFFICULTY) !== null;
-  const rest = text.replace(NEGATED_DIFFICULTY, " ");
-  if (DIFFICULTY_WORDS.test(rest)) return "difficulty";
-  if (negated || STRENGTH_WORDS.test(text)) return "strength";
-  return "neutral";
+  const { difficulty, strength, contrast } = readClaim(claim);
+  if (!difficulty && !strength) return "neutral";
+  if ((difficulty && strength) || contrast) return "contrastive";
+  return difficulty ? "difficulty" : "strength";
 }
 
 export type CitationVerdict = "consistent" | "unknown-id" | "inconsistent";
@@ -77,28 +104,43 @@ export type CitationCheck = {
   readonly verdict: CitationVerdict;
 };
 
-/** What Assistance State a citation must show, or null when either will do. */
-function expectedFirstTry(hypothesis: Hypothesis): boolean | null {
+/**
+ * What Assistance State a citation must show, or null when either will do.
+ *
+ * A claim that says both a difficulty and a strength cites either kind
+ * legitimately: each citation backs one half of it. A one-sided claim with a
+ * contrast in it ("needed a Hint on 9 + 3, but answers the smaller ones on
+ * the first try") says both outcomes happened, so its cited set is what has
+ * to show both: when it does, every citation agrees; when it shows one kind
+ * only, the claim is read one-sided again and checked as it was before.
+ */
+function expectedFirstTry(hypothesis: Hypothesis, entries: ReadonlyMap<ProblemId, LogEntry>): boolean | null {
   if (hypothesis.status === "refuted") return null;
-  const polarity = claimPolarity(hypothesis.claim);
-  if (polarity === "difficulty") return false;
-  if (polarity === "strength") return true;
-  return null;
+  const { difficulty, strength, contrast } = readClaim(hypothesis.claim);
+  if (difficulty === strength) return null;
+  const onesided = difficulty ? false : true;
+  if (!contrast) return onesided;
+  const outcomes = hypothesis.evidence.flatMap((id) => {
+    const entry = entries.get(id);
+    return entry ? [entry.assistance === "first-try-correct"] : [];
+  });
+  return outcomes.includes(true) && outcomes.includes(false) ? null : onesided;
 }
 
 /**
  * Evidence Integrity for every citation in the Notes against the Log: the
  * cited ID exists, and its Assistance State agrees with the claim. A
  * difficulty claim is backed by Problems that were not first-try correct,
- * a strength claim by ones that were; a refuted Hypothesis or a claim with
- * no polarity legitimately cites either, so only the ID is checked.
+ * a strength claim by ones that were; a refuted Hypothesis, a claim with no
+ * polarity, and a contrastive claim whose citations show both outcomes
+ * legitimately cite either, so only the ID is checked.
  */
 export function checkEvidence(
   hypotheses: readonly Hypothesis[],
   entries: ReadonlyMap<ProblemId, LogEntry>,
 ): CitationCheck[] {
   return hypotheses.flatMap((hypothesis) => {
-    const expected = expectedFirstTry(hypothesis);
+    const expected = expectedFirstTry(hypothesis, entries);
     return hypothesis.evidence.map((problem) => {
       const entry = entries.get(problem);
       const firstTry = entry?.assistance === "first-try-correct";
@@ -112,16 +154,47 @@ export function checkEvidence(
   });
 }
 
-export type EvidenceIntegrity = {
+/** The three counts every citation falls into, from which both rates are made. */
+export type CitationCounts = {
   /** Problem citations checked, over every Notes the Coach wrote, accepted or rejected. */
   readonly citations: number;
   readonly unknownIds: number;
   readonly inconsistent: number;
-  /** Consistent citations over all citations; 1 when there are none. */
+};
+
+export type EvidenceIntegrity = CitationCounts & {
+  /** Citations whose Problem ID is in the Log: the denominator of claim agreement. */
+  readonly existing: number;
+  /**
+   * Evidence Integrity, the fabrication metric: citations whose Problem ID
+   * exists in the Log the Coach was shown, over all citations; 1 when there
+   * are none. This is the number that must be 1.00.
+   */
   readonly integrity: number;
   /** What those citations support for that rate; null when there were none. */
   readonly integrityInterval: Interval | null;
+  /** Of the citations that exist, the share whose outcome agrees with the claim; 1 when there are none. */
+  readonly claimAgreement: number;
+  readonly claimAgreementInterval: Interval | null;
 };
+
+/**
+ * The two rates a citation tally supports, kept apart: whether the Coach
+ * cited Problems that exist (fabrication, which no Coach may fail) and, of
+ * those, whether each one says what its claim says (agreement, which a
+ * careful Coach can fail on a hard call). One metric hid the other.
+ */
+export function evidenceIntegrity(counts: CitationCounts): EvidenceIntegrity {
+  const existing = counts.citations - counts.unknownIds;
+  return {
+    ...counts,
+    existing,
+    integrity: integrityRate(counts.citations, counts.unknownIds),
+    integrityInterval: wilsonInterval(existing, counts.citations),
+    claimAgreement: integrityRate(existing, counts.inconsistent),
+    claimAgreementInterval: wilsonInterval(existing - counts.inconsistent, existing),
+  };
+}
 
 /** How many Sessions were planned by the Coach, by the Coach after a retry, or by the Baseline fallback. */
 export type PlanSources = Readonly<Record<CoachStep["source"], number>>;
@@ -206,11 +279,7 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
     falsePositives: falsePositives.size,
     falsePositiveRate: share(falsePositives.size, supported.size),
     falsePositiveRateInterval: wilsonInterval(falsePositives.size, supported.size),
-    evidence: {
-      ...evidence,
-      integrity: integrityRate(evidence.citations, evidence.unknownIds + evidence.inconsistent),
-      integrityInterval: wilsonInterval(evidence.citations - evidence.unknownIds - evidence.inconsistent, evidence.citations),
-    },
+    evidence: evidenceIntegrity(evidence),
     sources,
     finalNotes: last?.step.notes ?? { hypotheses: [], strengths: [] },
   };

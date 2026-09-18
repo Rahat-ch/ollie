@@ -75,8 +75,12 @@ describe("the eval charts", () => {
   it("puts the report's Evidence Integrity rate and citation counts on the integrity chart", () => {
     const svg = draw(renderEvidenceIntegrityChart);
     const { tuning, heldOut } = report.hypotheses.splits;
+    const citations = (tuning.citations + heldOut.citations).toLocaleString("en-US");
     expect(svg).toContain(">1.00<");
-    expect(svg).toContain(`>${(tuning.citations + heldOut.citations).toLocaleString("en-US")}<`);
+    expect(svg).toContain(`>${citations}<`);
+    expect(svg).toContain("citations whose Problem ID is in the Log");
+    expect(svg).toContain("Claim agreement");
+    expect(svg).toContain(`of the ${citations} citations that exist`);
     expect(svg).toContain(`${tuning.citations.toLocaleString("en-US")} citations · ${tuning.evidenceIntegrity.toFixed(2)}`);
     expect(svg).toContain(`${heldOut.citations.toLocaleString("en-US")} citations · ${heldOut.evidenceIntegrity.toFixed(2)}`);
     expect(svg).toContain(">0<");

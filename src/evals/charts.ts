@@ -53,29 +53,40 @@ const frame = (report: EvalReport, reportName: string, rest: Omit<Frame, "width"
   note: rest.note,
 });
 
-/** The Coach's citations over both splits, which is every citation the report counted. */
+/**
+ * The Coach's citations over both splits, which is every citation the report
+ * counted, and the two rates they make: whether the cited Problem exists,
+ * and whether it says what its claim says. Both are computed from the counts
+ * rather than read from the report's own fields, so a report written before
+ * the two were told apart still draws.
+ */
 function citations(report: EvalReport) {
   const learners = report.hypotheses.learners;
   const sum = (of: (l: (typeof learners)[number]) => number) => learners.reduce((total, l) => total + of(l), 0);
   const checked = sum((l) => l.evidence.citations);
   const unknownIds = sum((l) => l.evidence.unknownIds);
   const inconsistent = sum((l) => l.evidence.inconsistent);
+  const existing = checked - unknownIds;
   return {
     checked,
     unknownIds,
     inconsistent,
-    integrity: checked === 0 ? 1 : 1 - (unknownIds + inconsistent) / checked,
-    interval: wilsonInterval(checked - unknownIds - inconsistent, checked),
+    existing,
+    integrity: checked === 0 ? 1 : existing / checked,
+    interval: wilsonInterval(existing, checked),
+    agreement: existing === 0 ? 1 : (existing - inconsistent) / existing,
+    agreementInterval: wilsonInterval(existing - inconsistent, existing),
   };
 }
 
 /**
- * Evidence Integrity: the rate as the headline, then the three counts it is
- * made of, so 1.00 reads as "every citation the Coach made is a Problem the
- * engine showed it, and says what the claim says".
+ * Evidence Integrity: the fabrication rate as the headline, so 1.00 reads as
+ * "every citation the Coach made is a Problem the engine showed it", with
+ * claim agreement beneath it — of those real citations, the share whose
+ * Assistance State says what the claim says — and the counts both are made of.
  */
 export function renderEvidenceIntegrityChart(report: EvalReport, reportName: string): string {
-  const { checked, unknownIds, inconsistent, integrity, interval } = citations(report);
+  const { checked, unknownIds, inconsistent, existing, integrity, interval, agreement, agreementInterval } = citations(report);
   const { tuning, heldOut } = report.hypotheses.splits;
   const splits = [
     { name: "Tuning Learners", data: tuning },
@@ -85,10 +96,11 @@ export function renderEvidenceIntegrityChart(report: EvalReport, reportName: str
   const barX = 196;
   const barWidth = 320;
 
+  // The counts sit clear of the headline's own label, which runs under it to the left.
   const figure = (y: number, value: number, label: string, colour: string) => [
-    swatch(GUTTER + 216, y, colour),
-    text(GUTTER + 300, y, count(value), { size: 22, weight: 600, anchor: "end" }),
-    text(GUTTER + 312, y, label, { size: 11.5, fill: INK_SOFT }),
+    swatch(GUTTER + 276, y, colour),
+    text(GUTTER + 360, y, count(value), { size: 22, weight: 600, anchor: "end" }),
+    text(GUTTER + 372, y, label, { size: 11.5, fill: INK_SOFT }),
   ];
 
   const splitRow = (y: number, name: string, checkedHere: number, rate: number) => [
@@ -100,24 +112,37 @@ export function renderEvidenceIntegrityChart(report: EvalReport, reportName: str
 
   return paper(
     frame(report, reportName, {
-      height: 336,
+      height: 408,
       title: "Evidence Integrity: every citation checked against the Session Log",
       detail: "Every Problem ID cited by every Notes the Coach wrote, rejected attempts included, checked against the Log it was shown.",
-      label: `Evidence Integrity ${integrity.toFixed(2)} over ${checked} Problem citations, with ${unknownIds} unknown Problem IDs and ${inconsistent} inconsistent citations`,
+      label:
+        `Evidence Integrity ${integrity.toFixed(2)} over ${checked} Problem citations, with ${unknownIds} unknown Problem IDs; ` +
+        `claim agreement ${agreement.toFixed(2)} over the ${existing} citations that exist, with ${inconsistent} disagreeing with their claim`,
     }),
     [
       text(GUTTER, 136, integrity.toFixed(2), { size: 62, weight: 600, fill: STATUS.okInk }),
       text(GUTTER, 162, "Evidence Integrity", { size: 13.5, weight: 600 }),
-      text(GUTTER, 179, "consistent citations over all citations", { size: 11, fill: INK_SOFT }),
+      text(GUTTER, 179, "citations whose Problem ID is in the Log", { size: 11, fill: INK_SOFT }),
       interval ? rangeLine(GUTTER, 196, 120, interval.lower, interval.upper, STATUS.okInk) : "",
       text(GUTTER + 132, 200, `${ci(interval)}, on a scale of 0 to 1`, { size: 10.5, fill: INK_SOFT }),
       ...figure(104, checked, "Problem citations checked", STATUS.ok),
       ...figure(144, unknownIds, "cite a Problem ID not in the Log", STATUS.bad),
       ...figure(184, inconsistent, "disagree with their own claim", STATUS.bad),
-      `<line x1="${GUTTER}" x2="${RIGHT}" y1="220" y2="220" stroke="${GRID}" stroke-width="1"/>`,
-      text(GUTTER, 240, "Citations checked, by split", { size: 11.5, weight: 600, fill: INK }),
-      ...splitRow(268, "Tuning Learners", tuning.citations, tuning.evidenceIntegrity),
-      ...splitRow(294, "Held-out Learners", heldOut.citations, heldOut.evidenceIntegrity),
+      `<line x1="${GUTTER}" x2="${RIGHT}" y1="222" y2="222" stroke="${GRID}" stroke-width="1"/>`,
+      text(GUTTER, 254, agreement.toFixed(2), { size: 30, weight: 600, fill: STATUS.okInk }),
+      text(GUTTER + 76, 246, "Claim agreement", { size: 13.5, weight: 600 }),
+      text(GUTTER + 76, 262, `of the ${count(existing)} citations that exist, the share whose outcome says what its claim says`, {
+        size: 11,
+        fill: INK_SOFT,
+      }),
+      text(GUTTER + 76, 278, `A contrastive claim agrees when its citations show one outcome of each kind. ${ci(agreementInterval)}.`, {
+        size: 10.5,
+        fill: INK_SOFT,
+      }),
+      `<line x1="${GUTTER}" x2="${RIGHT}" y1="298" y2="298" stroke="${GRID}" stroke-width="1"/>`,
+      text(GUTTER, 320, "Citations checked, by split", { size: 11.5, weight: 600, fill: INK }),
+      ...splitRow(348, "Tuning Learners", tuning.citations, tuning.evidenceIntegrity),
+      ...splitRow(374, "Held-out Learners", heldOut.citations, heldOut.evidenceIntegrity),
     ],
   );
 }

@@ -59,6 +59,8 @@ describe("runEvals", () => {
     expect(hypotheses.splits.tuning).toMatchObject({ learners: ["strong", "average", "weak", "crossing-ten-weakness"], planted: 1 });
     expect(hypotheses.splits.heldOut).toMatchObject({ learners: ["change-unknown-weakness", "fast-fatigue"], planted: 1 });
     expect(hypotheses.splits.tuning.evidenceIntegrity).toBe(1);
+    expect(hypotheses.splits.tuning.claimAgreement).toBe(1);
+    expect(hypotheses.splits.tuning.existingCitations).toBe(hypotheses.splits.tuning.citations);
     expect(hypotheses.splits.heldOut.sources).toEqual({ coach: 40, retry: 0, baseline: 0 });
   });
 
@@ -74,7 +76,7 @@ function ratesWithIntervals(section: unknown, path = ""): { path: string; rate: 
   const entries = Object.entries(section as Record<string, unknown>);
   return entries.flatMap(([key, value]) => {
     const here = path === "" ? key : `${path}.${key}`;
-    if (typeof value === "number" && /(Rate|Integrity|integrity|agreement)$/.test(key)) {
+    if (typeof value === "number" && /(Rate|Integrity|integrity|claimAgreement|^agreement)$/.test(key)) {
       return [{ path: here, rate: value, interval: (section as Record<string, unknown>)[`${key}Interval`] }];
     }
     return ratesWithIntervals(value, here);
@@ -136,7 +138,8 @@ describe("the text report", () => {
     const text = await report();
 
     expect(text).toContain("False positives: 3 of 18 supported Hypotheses (17%, 95% CI 0.058 to 0.392)");
-    expect(text).toContain("Evidence Integrity: 100% of 1502 citations (95% CI 0.997 to 1.000)");
+    expect(text).toContain("Evidence Integrity: 100% of 1502 citations name a Problem in the Log (95% CI 0.997 to 1.000)");
+    expect(text).toContain("Claim agreement: 100% of the 1502 citations that exist agree with their claim (95% CI 0.997 to 1.000)");
     expect(text).toContain("Valid on the first attempt: 100% (95% CI 0.886 to 1.000)");
   });
 

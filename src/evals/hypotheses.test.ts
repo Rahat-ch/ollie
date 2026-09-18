@@ -23,11 +23,18 @@ describe("namesWeakness", () => {
 });
 
 describe("claimPolarity", () => {
-  it("reads a negated difficulty word as a strength, and a difficulty beside one as a difficulty", () => {
+  it("reads a negated difficulty word as a strength, and a one-sided claim as its one side", () => {
     expect(claimPolarity("Solves teen numbers with no hints")).toBe("strength");
     expect(claimPolarity("Never needs a Hint on partners to 10")).toBe("strength");
-    expect(claimPolarity("Misses make-a-ten but no hints needed on partners")).toBe("difficulty");
     expect(claimPolarity("Not yet secure on counting on")).toBe("difficulty");
+    expect(claimPolarity("Answers teen numbers faster than partners")).toBe("neutral");
+  });
+
+  it("reads a claim that says both things, or draws a contrast, as contrastive", () => {
+    expect(claimPolarity("Misses make-a-ten but no hints needed on partners")).toBe("contrastive");
+    expect(claimPolarity("Composing a teen number is not yet reliable, after a first-try correct compose item")).toBe("contrastive");
+    expect(claimPolarity("Answers on the first try when the smaller addend is written first, but needed a Hint on 9 + 3")).toBe("contrastive");
+    expect(claimPolarity("Solid on partners to 10, although the teens took a Hint")).toBe("contrastive");
   });
 });
 
@@ -71,6 +78,57 @@ describe("checkEvidence", () => {
   it("checks only that the ID exists when the claim is neither a difficulty nor a strength", () => {
     const neutral = hypothesis({ claim: "Answers teen numbers faster than partners", evidence: ["p1", "p3"] });
     expect(checkEvidence([neutral], entries).map((c) => c.verdict)).toEqual(["consistent", "consistent"]);
+  });
+
+  /**
+   * The three Hypotheses a live two-Session smoke run wrote (Opus 5 Coach,
+   * 2026-09-17), on the Assistance States this Log has. Every citation in
+   * them is right, and the polarity check used to call the first-try ones
+   * inconsistent because the claim also said "Hint" or "not yet".
+   */
+  it("accepts a contrastive claim whose citations show one outcome of each kind", () => {
+    const countingOn = hypothesis({
+      claim:
+        "On counting-on, the Learner answers on the first try when the smaller addend is written first, but needed a Hint on the one item where the larger addend came first (9 + 3).",
+      status: "proposed",
+      confidence: 0.35,
+      evidence: ["p1", "p2", "p3"],
+    });
+    const composing = hypothesis({
+      id: "h4",
+      claim:
+        "Composing a teen number (10 + 5 = ?) is not yet reliable: after a first-try correct compose item last Session, this Session's single compose item ended in a Reveal.",
+      status: "proposed",
+      confidence: 0.45,
+      evidence: ["p1", "p4"],
+    });
+
+    const verdicts = checkEvidence([countingOn, composing], entries).map((c) => c.verdict);
+
+    expect(verdicts).toEqual(["consistent", "consistent", "consistent", "consistent", "consistent"]);
+  });
+
+  it("accepts a strength claim whose structural words read as difficulty, citing first-try correct Problems", () => {
+    const partners = hypothesis({
+      id: "h2",
+      claim: "Partners to 10 is reliable in the missing-partner form as well as the take-from-ten form",
+      confidence: 0.9,
+      evidence: ["p1", "p2", "p5", "p6", "p7", "p9"],
+    });
+
+    expect(checkEvidence([partners], entries).every((c) => c.verdict === "consistent")).toBe(true);
+  });
+
+  it("still flags a one-sided difficulty claim, and a contrast whose citations show one kind only", () => {
+    const struggles = hypothesis({ id: "h5", claim: "Struggles with partners to 10", evidence: ["p1", "p2"] });
+    const contrast = hypothesis({ id: "h6", claim: "Needed a Hint on counting on, but the numbers were small", evidence: ["p1", "p2"] });
+
+    expect(checkEvidence([struggles, contrast], entries).map((c) => c.verdict)).toEqual([
+      "inconsistent",
+      "inconsistent",
+      "inconsistent",
+      "inconsistent",
+    ]);
   });
 });
 
@@ -137,7 +195,8 @@ describe("scoreHypotheses", () => {
     const score = scoreHypotheses(await runLearner(learner, coachPlanner(fakeGeneration()), 5));
 
     expect(score.evidence.citations).toBeGreaterThan(0);
-    expect(score.evidence).toMatchObject({ unknownIds: 0, inconsistent: 0, integrity: 1 });
+    expect(score.evidence).toMatchObject({ unknownIds: 0, inconsistent: 0, integrity: 1, claimAgreement: 1 });
+    expect(score.evidence.existing).toBe(score.evidence.citations);
     expect(score.sources).toEqual({ coach: 5, retry: 0, baseline: 0 });
     expect(score.finalNotes.hypotheses.length).toBeGreaterThan(0);
   });
@@ -158,5 +217,8 @@ describe("scoreHypotheses", () => {
     expect(score.sources).toEqual({ coach: 0, retry: 1, baseline: 0 });
     expect(score.evidence.unknownIds).toBe(1);
     expect(score.evidence.integrity).toBeLessThan(1);
+    // The invented ID is a fabrication, not a disagreement: it is not in the agreement's denominator at all.
+    expect(score.evidence.existing).toBe(score.evidence.citations - 1);
+    expect(score.evidence.claimAgreement).toBe(1);
   });
 });

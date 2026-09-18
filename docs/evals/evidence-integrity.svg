@@ -1,31 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="336" viewBox="0 0 720 336" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Evidence Integrity 1.00 over 2331 Problem citations, with 0 unknown Problem IDs and 0 inconsistent citations">
-<rect width="720" height="336" fill="#FFF7EC"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="408" viewBox="0 0 720 408" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Evidence Integrity 1.00 over 2331 Problem citations, with 0 unknown Problem IDs; claim agreement 1.00 over the 2331 citations that exist, with 0 disagreeing with their claim">
+<rect width="720" height="408" fill="#FFF7EC"/>
 <text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">Evidence Integrity: every citation checked against the Session Log</text>
 <text x="50" y="46" font-size="11.5" fill="#7A6660">Every Problem ID cited by every Notes the Coach wrote, rejected attempts included, checked against the Log it</text>
 <text x="50" y="61" font-size="11.5" fill="#7A6660">was shown. Coach: the Generation fake. Report 2026-09-18.</text>
 <text x="50.0" y="136.0" font-size="62" font-weight="600" fill="#2F8A5B">1.00</text>
 <text x="50.0" y="162.0" font-size="13.5" font-weight="600" fill="#3B2E2A">Evidence Integrity</text>
-<text x="50.0" y="179.0" font-size="11" fill="#7A6660">consistent citations over all citations</text>
+<text x="50.0" y="179.0" font-size="11" fill="#7A6660">citations whose Problem ID is in the Log</text>
 <line x1="50.0" x2="170.0" y1="196.0" y2="196.0" stroke="#F8E8CF" stroke-width="4" stroke-linecap="round"/><line x1="169.8" x2="171.8" y1="196.0" y2="196.0" stroke="#2F8A5B" stroke-width="4" stroke-linecap="round"/><g data-mark="interval"><line x1="169.8" x2="170.0" y1="196.0" y2="196.0" stroke="#2F8A5B" stroke-width="1.5"/><line x1="169.8" x2="169.8" y1="191.0" y2="201.0" stroke="#2F8A5B" stroke-width="1.5"/><line x1="170.0" x2="170.0" y1="191.0" y2="201.0" stroke="#2F8A5B" stroke-width="1.5"/></g>
 <text x="182.0" y="200.0" font-size="10.5" fill="#7A6660">95% CI 0.998 to 1.000, on a scale of 0 to 1</text>
-<rect x="266.0" y="95.0" width="10" height="10" rx="3" fill="#4CAF7A"/>
-<text x="350.0" y="104.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">2,331</text>
-<text x="362.0" y="104.0" font-size="11.5" fill="#7A6660">Problem citations checked</text>
-<rect x="266.0" y="135.0" width="10" height="10" rx="3" fill="#B23F56"/>
-<text x="350.0" y="144.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
-<text x="362.0" y="144.0" font-size="11.5" fill="#7A6660">cite a Problem ID not in the Log</text>
-<rect x="266.0" y="175.0" width="10" height="10" rx="3" fill="#B23F56"/>
-<text x="350.0" y="184.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
-<text x="362.0" y="184.0" font-size="11.5" fill="#7A6660">disagree with their own claim</text>
-<line x1="50" x2="696" y1="220" y2="220" stroke="#EED7B5" stroke-width="1"/>
-<text x="50.0" y="240.0" font-size="11.5" font-weight="600" fill="#3B2E2A">Citations checked, by split</text>
-<text x="50.0" y="268.0" font-size="11.5" fill="#3B2E2A">Tuning Learners</text>
-<rect x="196.0" y="258.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
-<rect x="196.0" y="258.0" width="320.0" height="12" rx="4" fill="#4CAF7A"/>
-<text x="526.0" y="268.0" font-size="11.5" fill="#7A6660">1,502 citations · 1.00</text>
-<text x="50.0" y="294.0" font-size="11.5" fill="#3B2E2A">Held-out Learners</text>
-<rect x="196.0" y="284.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
-<rect x="196.0" y="284.0" width="176.6" height="12" rx="4" fill="#4CAF7A"/>
-<text x="526.0" y="294.0" font-size="11.5" fill="#7A6660">829 citations · 1.00</text>
-<text x="50" y="322" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T00-15-08Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
+<rect x="326.0" y="95.0" width="10" height="10" rx="3" fill="#4CAF7A"/>
+<text x="410.0" y="104.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">2,331</text>
+<text x="422.0" y="104.0" font-size="11.5" fill="#7A6660">Problem citations checked</text>
+<rect x="326.0" y="135.0" width="10" height="10" rx="3" fill="#B23F56"/>
+<text x="410.0" y="144.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
+<text x="422.0" y="144.0" font-size="11.5" fill="#7A6660">cite a Problem ID not in the Log</text>
+<rect x="326.0" y="175.0" width="10" height="10" rx="3" fill="#B23F56"/>
+<text x="410.0" y="184.0" font-size="22" font-weight="600" text-anchor="end" fill="#3B2E2A">0</text>
+<text x="422.0" y="184.0" font-size="11.5" fill="#7A6660">disagree with their own claim</text>
+<line x1="50" x2="696" y1="222" y2="222" stroke="#EED7B5" stroke-width="1"/>
+<text x="50.0" y="254.0" font-size="30" font-weight="600" fill="#2F8A5B">1.00</text>
+<text x="126.0" y="246.0" font-size="13.5" font-weight="600" fill="#3B2E2A">Claim agreement</text>
+<text x="126.0" y="262.0" font-size="11" fill="#7A6660">of the 2,331 citations that exist, the share whose outcome says what its claim says</text>
+<text x="126.0" y="278.0" font-size="10.5" fill="#7A6660">A contrastive claim agrees when its citations show one outcome of each kind. 95% CI 0.998 to 1.000.</text>
+<line x1="50" x2="696" y1="298" y2="298" stroke="#EED7B5" stroke-width="1"/>
+<text x="50.0" y="320.0" font-size="11.5" font-weight="600" fill="#3B2E2A">Citations checked, by split</text>
+<text x="50.0" y="348.0" font-size="11.5" fill="#3B2E2A">Tuning Learners</text>
+<rect x="196.0" y="338.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
+<rect x="196.0" y="338.0" width="320.0" height="12" rx="4" fill="#4CAF7A"/>
+<text x="526.0" y="348.0" font-size="11.5" fill="#7A6660">1,502 citations · 1.00</text>
+<text x="50.0" y="374.0" font-size="11.5" fill="#3B2E2A">Held-out Learners</text>
+<rect x="196.0" y="364.0" width="320.0" height="12" rx="4" fill="#F8E8CF"/>
+<rect x="196.0" y="364.0" width="176.6" height="12" rx="4" fill="#4CAF7A"/>
+<text x="526.0" y="374.0" font-size="11.5" fill="#7A6660">829 citations · 1.00</text>
+<text x="50" y="394" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T02-12-15Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
 </svg>

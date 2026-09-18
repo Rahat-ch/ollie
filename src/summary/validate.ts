@@ -96,17 +96,31 @@ function numbersIn(text: string): number[] {
   return [...digits, ...spelled];
 }
 
+const STATES = ["firstTryCorrect", "hintAssisted", "revealed", "unresolved"] as const;
+
+const total = (values: readonly number[]): number => values.reduce((a, b) => a + b, 0);
+
 /**
  * Every number the tally gave the writer: the counts by Skill and Assistance
- * State, the Session number, the Problems, the lengths of its lists (which is
- * how a Summary may say "three strategies"), and the numbers inside the names
- * it may repeat ("Partners to 10", "Make-a-ten within 20"). The Learner Notes
- * are deliberately not a source: a Hypothesis's confidence and the Problem IDs
- * it cites are not numbers a Parent should read as evidence of a Session.
+ * State, the sums those counts make (a Skill's own total, and each state's
+ * total across the Skills practiced, both of which a Summary says naturally
+ * — "6 Teen number Problems", "11 first-try correct in all"), the Session
+ * number, the Problems, the lengths of its lists (which is how a Summary may
+ * say "three strategies"), and the numbers inside the names it may repeat
+ * ("Partners to 10", "Make-a-ten within 20").
+ *
+ * The Learner Notes are a source of the numbers in a Hypothesis's own words
+ * — its claim and its next test, which the prompt invites the Summary to
+ * mention as something Ollie is watching ("teen numbers 11 to 19") — and of
+ * nothing else: a Hypothesis's confidence and the Problem IDs it cites are
+ * not numbers a Parent should read as evidence of a Session.
  */
 function supportedNumbers(input: SummaryInput): Set<number> {
   const names = [...input.practice.map((row) => row.name), ...input.mastered, ...input.powers, input.weakest?.name ?? ""];
-  const counts = input.practice.flatMap((row) => [row.firstTryCorrect, row.hintAssisted, row.revealed, row.unresolved]);
+  const counts = input.practice.flatMap((row) => STATES.map((state) => row[state]));
+  const skillTotals = input.practice.map((row) => total(STATES.map((state) => row[state])));
+  const stateTotals = STATES.map((state) => total(input.practice.map((row) => row[state])));
+  const watching = input.notes.hypotheses.flatMap((h) => [h.claim, h.nextTest]);
   return new Set([
     // Zero is always supported: "0 Revealed" and "none Revealed" say the same true thing.
     0,
@@ -116,7 +130,10 @@ function supportedNumbers(input: SummaryInput): Set<number> {
     input.mastered.length,
     input.powers.length,
     ...counts,
+    ...skillTotals,
+    ...stateTotals,
     ...numbersIn(names.join(" ")),
+    ...numbersIn(watching.join(" ")),
   ]);
 }
 

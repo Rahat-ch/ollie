@@ -10,10 +10,10 @@
  */
 import type { Generation } from "@/generation";
 import { convergenceReport, TARGET_ACCURACY_BAND, type ConvergenceReport } from "./convergence";
-import { scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
+import { evidenceIntegrity, scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
 import { SIMULATED_LEARNERS, type SimulatedLearnerId } from "./learners";
 import { baselinePlanner, coachPlanner, runLearner, type LearnerRun, type SessionTrace } from "./run";
-import { integrityRate, mean, share, summariseSplits, wilsonInterval, type Interval, type Split } from "./stats";
+import { mean, share, summariseSplits, wilsonInterval, type Interval, type Split } from "./stats";
 import { runStoryEvals, type StoryEvalOptions, type StoryReport } from "./stories";
 import { runSummaryEvals, summarySample, type SummaryEvalOptions, type SummaryReport } from "./summaries";
 
@@ -33,8 +33,16 @@ export type HypothesisSplit = {
   readonly falsePositiveRate: number;
   readonly falsePositiveRateInterval: Interval | null;
   readonly citations: number;
+  readonly unknownIds: number;
+  readonly inconsistent: number;
+  /** The citations whose Problem ID is in the Log, which claim agreement is taken over. */
+  readonly existingCitations: number;
+  /** Citations naming a Problem in the Log, over all citations: the fabrication metric. */
   readonly evidenceIntegrity: number;
   readonly evidenceIntegrityInterval: Interval | null;
+  /** Of the citations that exist, the share agreeing with their claim. */
+  readonly claimAgreement: number;
+  readonly claimAgreementInterval: Interval | null;
   readonly sources: PlanSources;
 };
 
@@ -84,8 +92,11 @@ function summariseHypotheses(split: Split, learners: readonly LearnerHypotheses[
   );
   const supported = sum(learners.map((l) => l.supportedHypotheses));
   const falsePositives = sum(learners.map((l) => l.falsePositives));
-  const citations = sum(learners.map((l) => l.evidence.citations));
-  const bad = sum(learners.map((l) => l.evidence.unknownIds + l.evidence.inconsistent));
+  const evidence = evidenceIntegrity({
+    citations: sum(learners.map((l) => l.evidence.citations)),
+    unknownIds: sum(learners.map((l) => l.evidence.unknownIds)),
+    inconsistent: sum(learners.map((l) => l.evidence.inconsistent)),
+  });
   return {
     split,
     learners: learners.map((l) => l.id),
@@ -98,9 +109,14 @@ function summariseHypotheses(split: Split, learners: readonly LearnerHypotheses[
     falsePositives,
     falsePositiveRate: share(falsePositives, supported),
     falsePositiveRateInterval: wilsonInterval(falsePositives, supported),
-    citations,
-    evidenceIntegrity: integrityRate(citations, bad),
-    evidenceIntegrityInterval: wilsonInterval(citations - bad, citations),
+    citations: evidence.citations,
+    unknownIds: evidence.unknownIds,
+    inconsistent: evidence.inconsistent,
+    existingCitations: evidence.existing,
+    evidenceIntegrity: evidence.integrity,
+    evidenceIntegrityInterval: evidence.integrityInterval,
+    claimAgreement: evidence.claimAgreement,
+    claimAgreementInterval: evidence.claimAgreementInterval,
     sources: {
       coach: sum(learners.map((l) => l.sources.coach)),
       retry: sum(learners.map((l) => l.sources.retry)),

@@ -67,12 +67,13 @@ function convergenceRows(coach: readonly LearnerConvergence[], baseline: readonl
 
 function hypothesisRows(learners: readonly LearnerHypotheses[]): string[] {
   return table([
-    ["Learner", "Planted weakness: detected", "False positives", "Evidence Integrity", "Plans coach / retry / baseline"],
+    ["Learner", "Planted weakness: detected", "False positives", "Evidence Integrity", "Claim agreement", "Plans coach / retry / baseline"],
     ...learners.map((l) => [
       l.name,
       describeDetection(l) ?? "none planted",
       `${l.falsePositives} of ${l.supportedHypotheses} supported`,
       `${pct(l.evidence.integrity)} of ${l.evidence.citations} citations`,
+      `${pct(l.evidence.claimAgreement)} of ${l.evidence.existing} that exist`,
       describeSources(l.sources),
     ]),
   ]);
@@ -89,7 +90,8 @@ function summaryLines(coach: SplitSummary, baseline: SplitSummary, hypotheses: H
     `In band (mean) Coach / Baseline: ${pct(coach.meanInBandShare)} / ${pct(baseline.meanInBandShare)}`,
     `Detection: ${detection}`,
     `False positives: ${hypotheses.falsePositives} of ${hypotheses.supportedHypotheses} supported Hypotheses (${rate(hypotheses.falsePositiveRate, hypotheses.falsePositiveRateInterval)})`,
-    `Evidence Integrity: ${pct(hypotheses.evidenceIntegrity)} of ${hypotheses.citations} citations (${ci(hypotheses.evidenceIntegrityInterval)})`,
+    `Evidence Integrity: ${pct(hypotheses.evidenceIntegrity)} of ${hypotheses.citations} citations name a Problem in the Log (${ci(hypotheses.evidenceIntegrityInterval)})`,
+    `Claim agreement: ${pct(hypotheses.claimAgreement)} of the ${hypotheses.existingCitations} citations that exist agree with their claim (${ci(hypotheses.claimAgreementInterval)})`,
     `Plans coach / retry / baseline: ${describeSources(hypotheses.sources)}`,
   ];
 }
