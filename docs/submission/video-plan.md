@@ -11,7 +11,7 @@ One storyline, screen-recorded, the entrant as the Learner, 2 to 3 minutes, aime
 
 ## The seeding recipe
 
-Open <https://ollie.rahatcodes.com>, open the browser console **on that origin**, paste this, then press Enter. It writes one `ollie.profile`: a device that has played four Sessions, Mastered Unit 1 and counting on (so Ollie already has Count-On Flight), and is on make-a-ten next, with a four-day Streak that finishing today carries to five.
+Open <https://ollie.rahatcodes.com>, open the browser console **on that origin**, paste this, then press Enter. It writes one `ollie.profile`: a device that has played four Sessions, Mastered Unit 1 and counting on (so Ollie already has Count-On Flight), is four first-try answers into make-a-ten so that this Session Masters it and earns **Make-Ten Magic** even with one or two misses, holds 250 Coins, and has a four-day Streak that finishing today carries to five.
 
 ```js
 (() => {
@@ -30,13 +30,13 @@ Open <https://ollie.rahatcodes.com>, open the browser console **on that origin**
         "partners-to-10": mastered,
         "teen-numbers": mastered,
         "counting-on": mastered,
-        "make-a-ten": fresh(0.35),
+        "make-a-ten": { estimate: 0.9, recentFirstAttempts: [true, true, true, true], mastered: false },
         "unknown-addend": fresh(0.2),
         "result-unknown": fresh(0.2),
         "change-unknown": fresh(0.15),
       },
     },
-    rewards: { coins: 40, lastSessionPaid: 4, streak: 4, lastSessionDay: day, freezes: 2, owned: [], worn: { hat: null, accessory: null, pet: null } },
+    rewards: { coins: 250, lastSessionPaid: 4, streak: 4, lastSessionDay: day, freezes: 2, owned: [], worn: { hat: null, accessory: null, pet: null } },
     powers: ["count-on-flight"],
     coach: { notes: { hypotheses: [], strengths: [] }, plan: null, source: null, reasons: [], unavailable: false, lastSessionCoached: 0, cited: [], changed: [], summaries: [], awaiting: null },
     session: null,
@@ -60,7 +60,7 @@ The Nickname is the entrant's own on purpose: the terms forbid depicting an iden
 | 7 | p38 | make-a-ten | 8 + 7 = ? | **15** |
 | 8 | p39 | make-a-ten | 7 + 4 = ? | **11** |
 
-Every make-a-ten Problem crosses ten by construction, so Problems 2 and 7 are the crossing-ten misses the storyline needs, and Problem 1 is the easy non-crossing sum.
+Every make-a-ten Problem crosses ten by construction, so Problems 2 and 7 are the crossing-ten misses the storyline needs, and Problem 1 is the easy non-crossing sum. Verified against the engine: with one miss, two misses, or a Reveal among the six make-a-ten Problems, make-a-ten ends Mastered (8 or more of the last 10 first attempts, Estimate above 0.99) and the Session earns Make-Ten Magic, so the celebration is the Power celebration.
 
 ## Shot list
 
@@ -71,7 +71,7 @@ Every make-a-ten Problem crosses ten by construction, so Problems 2 and 7 are th
 | 0:28–0:38 | Tap **Play**. Problem 1 (8 + ? = 10). Let Ollie finish reading. Tap **2**. Ollie cheers. | "No typing anywhere. Ten-frame for the strategy, a number pad for the answer." |
 | 0:38–0:58 | Problem 2 (7 + 8). Tap **13** on purpose. The Hint: the ten-frame fills to ten. Wait for it. Tap **15**. | "I'll miss one that crosses ten. No red X, no penalty. Ollie shows the strategy: fill the ten, then add what's left. Right on the retry, and the engine writes that down as correct after a Hint, which is not the same as knowing it." |
 | 0:58–1:10 | Problems 3 and 4 (12, then 18). On Problem 4 pause: Ollie in the Count-On Flight pose, wing beats on the number line. | "Mastering counting on taught Ollie a Power. Count-On Flight shows up on every counting-on problem from now on. Mastery changes the game, not the wallet." |
-| 1:10–1:22 | Problems 5 to 8 quickly (14, 13, then miss Problem 7 with **14**, Hint, **15**, then 11). Celebration: Coins, Streak at 5. Tap **Done**. Wait on Home about 20 seconds while the Coach runs. | "One more crossing-ten miss, and the Session's done. Ten Coins for finishing, not for being right. Now the interesting part happens off screen: an AI Coach reads the Session Log." |
+| 1:10–1:22 | Problems 5 to 8 quickly (14, 13, then miss Problem 7 with **14**, Hint, **15**, then 11). The celebration is the Power celebration: Ollie learning **Make-Ten Magic** as the headline, then Coins and the Streak at 5. Tap **Done**. Wait on Home about 20 seconds while the Coach runs. | "One more crossing-ten miss, and the Session's done. And that was enough: make-a-ten is Mastered, and Ollie just learned Make-Ten Magic, the Power he'll use on every make-a-ten problem from now on. Ten Coins for finishing, not for being right. Now the interesting part happens off screen: an AI Coach reads the Session Log." |
 | 1:22–1:42 | **Grown-ups**, hold the Parent Gate three seconds, Parent Area. Scroll to **Ollie's Notebook**. Tap the belief's button, which reads **"Show the 2 Problems this rests on"** (the count is whatever the Coach cited), and the rows open: `p33`, `7 + 8 = ?`, **"correct after a Hint · Session 5"**, and `p38`, `8 + 7 = ?`. Point at **Testing next**. | "Behind a press-and-hold gate, the parent sees what the Coach now believes: [read the claim on screen]. Every belief carries its evidence. Tap it and you get the actual problems it rests on, each marked first-try, after a Hint, or revealed, and what Ollie will test next Session. A parent can check it." |
 | 1:42–2:05 | Full-screen `architecture.svg`. | "How it's built. Two seams. A pure engine owns the math: every problem, every answer, the hint, mastery, the rewards. Deterministic, tested, no model anywhere near it. On the other side, four generative jobs behind one interface: word problems in the child's theme, the Coach's hypotheses and next plan, the parent summary, Ollie's voice. Everything a model writes passes a deterministic check before a child or parent sees it: a story is rejected if it changes a number, a plan is rejected if it leaves the curriculum, a hypothesis is rejected if it cites a problem the Coach was never shown. **The AI can personalise the learning path. It cannot make up the math.** Built in nine days with Claude Code, and every line of that is disclosed." |
 | 2:05–2:40 | `evidence-integrity.svg`, then `detection.svg`, then `convergence.svg`, each while its sentence is spoken. | "We evaluated it before we believed it. Six simulated learners with planted weaknesses, twenty sessions each, against a fixed-gate baseline, run live three times. Ninety-five thousand nine hundred and twenty-one of ninety-five thousand nine hundred and twenty-two citations the Coach made were real problems it had seen. The one that wasn't was rejected at the door. It found the planted weaknesses in four of six chances, around session six for crossing ten, and it never had to fall back to the fixed plan. It also sees ghosts sometimes, one supported belief in six on some learners, because eight problems a day is a small sample. And it is not faster to mastery than the drill, because our simulated learners can't learn from practice. We say all of that in the write-up, with the ranges." |
