@@ -19,12 +19,17 @@ import { integrityRate, share, wilsonInterval, type Interval } from "./stats";
  * addend" is a Skill, "missing addend" is the structure the change-unknown
  * weakness is planted on. "Numbers above 10" is teen-number talk, so a sum
  * has to be the thing over ten.
+ *
+ * The crossing is allowed up to two words before its ten, because a live
+ * Coach writes the pattern with the words in the way — "the smallest
+ * crossing of ten", "crossing back over ten", "crosses the ten" — and the
+ * Skill name is still refused: "make-a-ten" holds no crossing word at all.
  */
 const WEAKNESS_PHRASES: Readonly<Record<WeaknessTag, readonly RegExp[]>> = {
   "crossing-ten": [
-    /\bcross\w*\s+(?:over\s+|the\s+)?(?:ten|10)\b/,
-    /\bbridg\w*\s+(?:through\s+|over\s+|across\s+|to\s+)?(?:ten|10)\b/,
-    /\b(?:past|through|across)\s+(?:ten|10)\b/,
+    /\bcross\w*(?:\s+\w+){0,2}\s+(?:ten|10)\b/,
+    /\bbridg\w*(?:\s+\w+){0,2}\s+(?:ten|10)\b/,
+    /\b(?:past|through|across)(?:\s+\w+){0,2}\s+(?:ten|10)\b/,
     /\b(?:sums?|totals?|adds?|adding|addition)\b[^.;]{0,40}?\b(?:over|above|beyond|more than|greater than|bigger than)\s+(?:ten|10)\b/,
     /\bregroup/,
   ],
@@ -38,7 +43,8 @@ const WEAKNESS_PHRASES: Readonly<Record<WeaknessTag, readonly RegExp[]>> = {
   ],
 };
 
-const ALL_WEAKNESS_TAGS = Object.keys(WEAKNESS_PHRASES) as WeaknessTag[];
+/** Every weakness a claim is read for: the planted ones and, for false positives, the others. */
+export const WEAKNESS_TAGS = Object.keys(WEAKNESS_PHRASES) as readonly WeaknessTag[];
 
 /** Whether a claim says the planted weakness in its own words (case-insensitive). */
 export function namesWeakness(tag: WeaknessTag, claim: string): boolean {
@@ -50,9 +56,15 @@ export type ClaimPolarity = "difficulty" | "strength" | "neutral" | "contrastive
 
 /** "no hints", "never needs a Hint", "without a miss": a difficulty word negated is a strength. */
 const NEGATED_DIFFICULTY =
-  /\b(?:no|never|without|not)\s+(?:a\s+|an\s+|any\s+|needing\s+(?:a\s+)?)?(?:hints?|reveals?|misses|missed|mistakes?|errors?|struggl\w*|trouble|needs?\s+(?:a\s+)?hints?)\b/g;
+  /\b(?:no|never|without|not)\s+(?:a\s+|an\s+|any\s+|needing\s+(?:a\s+)?)?(?:hints?|reveals?|help|misses|missed|mistakes?|errors?|struggl\w*|trouble|needs?\s+(?:a\s+)?(?:hints?|help))\b/g;
 const DIFFICULTY_WORDS =
-  /\b(?:struggl\w*|miss(?:es|ed|ing)?|wrong|incorrect|error\w*|hint\w*|reveal\w*|unresolved|difficult\w*|hard|harder|trouble|confus\w*|not yet|needs?|weak\w*|mistak\w*|fail\w*)\b/;
+  /\b(?:struggl\w*|miss(?:es|ed|ing)?|wrong|incorrect|error\w*|hint\w*|reveal\w*|help|unresolved|difficult\w*|hard|harder|trouble|confus\w*|not yet|needs?|weak\w*|mistak\w*|fail\w*)\b/;
+/**
+ * "a missing change", "the missing addend", "missing-partner form": the name
+ * of a Problem's form, which a strength claim says as readily as a
+ * difficulty one. The miss word in it is not the Learner missing anything.
+ */
+const NAMED_FORM = /\bmissing[\s-](?:addend|part|partner|number|change|piece|whole)\b/g;
 const STRENGTH_WORDS =
   /\b(?:strong|solid|secure|fluent|confident|reliabl\w*|consistent\w*|mastered|knows|correct on the first try|first[\s-]try correct|every first try)\b/;
 /** "not yet secure", "is not reliable": a strength word negated is a difficulty, the mirror of the rule above. */
@@ -68,9 +80,12 @@ type ClaimReading = { readonly difficulty: boolean; readonly strength: boolean; 
  * What the claim's words say, each of the three read independently: a
  * negated difficulty is a strength and a negated strength is a difficulty,
  * so "not yet secure" is one-sided rather than a claim saying both things.
+ * The name of a Problem's form is taken out before the difficulty words are
+ * looked for, so "a missing change ... is as secure at high wholes" reads as
+ * the strength claim it is.
  */
 function readClaim(claim: string): ClaimReading {
-  const text = claim.toLowerCase();
+  const text = claim.toLowerCase().replace(NAMED_FORM, " ");
   const negatedDifficulty = text.match(NEGATED_DIFFICULTY) !== null;
   const negatedStrength = text.match(NEGATED_STRENGTH) !== null;
   return {
@@ -94,6 +109,20 @@ export function claimPolarity(claim: string): ClaimPolarity {
   if (!difficulty && !strength) return "neutral";
   if ((difficulty && strength) || contrast) return "contrastive";
   return difficulty ? "difficulty" : "strength";
+}
+
+/**
+ * Whether a claim names a weakness the Learner has or has not got: it says
+ * the pattern in its own words **and** it is a claim about a difficulty. A
+ * strength claim and a claim with no polarity name nothing, however many
+ * Skills they mention: "change-unknown holds when the change itself is
+ * large" is the Coach saying the child can do it. A contrastive claim counts,
+ * because its difficulty half is a difficulty claim.
+ */
+export function namesWeaknessAsDifficulty(tag: WeaknessTag, claim: string): boolean {
+  if (!namesWeakness(tag, claim)) return false;
+  const polarity = claimPolarity(claim);
+  return polarity === "difficulty" || polarity === "contrastive";
 }
 
 export type CitationVerdict = "consistent" | "unknown-id" | "inconsistent";
@@ -215,6 +244,14 @@ export type LearnerHypotheses = {
   readonly falsePositiveRateInterval: Interval | null;
   readonly evidence: EvidenceIntegrity;
   readonly sources: PlanSources;
+  /**
+   * The Notes the engine kept after each Session, in order, one per Session:
+   * the Coach's when it was accepted, the Notes from before the Session when
+   * both attempts were refused. Rejected attempts are not here; they are
+   * scored for Evidence Integrity as they are written. The history is stored
+   * so a later scorer can score a written report again.
+   */
+  readonly notesBySession: readonly LearnerNotes[];
   readonly finalNotes: LearnerNotes;
 };
 
@@ -231,8 +268,10 @@ function writtenNotes(step: CoachStep): LearnerNotes[] {
 /**
  * Score one Coach run. Detection and false positives read the Notes the
  * engine kept: a planted weakness is detected in the Session a supported
- * Hypothesis first names it, and a supported Hypothesis naming a weakness
- * that was not planted is a false positive. Evidence Integrity reads every
+ * Hypothesis first names it as a difficulty, and a supported Hypothesis
+ * naming a weakness that was not planted, as a difficulty, is a false
+ * positive. Both sides pass through the same gate, so a claim about what the
+ * Learner can do is never read as a weakness. Evidence Integrity reads every
  * Notes the Coach wrote, rejected attempts included, against the Log so
  * far, so an invented Problem ID counts even though the engine refused it.
  */
@@ -252,8 +291,8 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
     for (const hypothesis of step.notes.hypotheses) {
       if (hypothesis.status !== "supported") continue;
       supported.add(hypothesis.id);
-      for (const tag of ALL_WEAKNESS_TAGS) {
-        if (!namesWeakness(tag, hypothesis.claim)) continue;
+      for (const tag of WEAKNESS_TAGS) {
+        if (!namesWeaknessAsDifficulty(tag, hypothesis.claim)) continue;
         if (planted.includes(tag)) detection[tag] ??= result.log.sessionNumber;
         else falsePositives.add(hypothesis.id);
       }
@@ -281,6 +320,7 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
     falsePositiveRateInterval: wilsonInterval(falsePositives.size, supported.size),
     evidence: evidenceIntegrity(evidence),
     sources,
+    notesBySession: run.sessions.map(({ step }) => step.notes),
     finalNotes: last?.step.notes ?? { hypotheses: [], strengths: [] },
   };
 }

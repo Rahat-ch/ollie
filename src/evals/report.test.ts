@@ -24,4 +24,14 @@ describe("eval reports", () => {
     expect(report.stories.validity.sample).toBe(30);
     expect(report.stories.judge.readability).toBeNull();
   });
+
+  it("carry each Learner's accepted Notes after every Session, so a later scorer can score the report again", async () => {
+    const results = await runEvals({ sessions: 2, coach: { generation: fakeGeneration(), name: "fake" }, stories: STORIES, summaries: SUMMARIES });
+    const report = evalReport(results, new Date("2026-09-10T19:06:01Z"));
+
+    for (const learner of report.hypotheses.learners) {
+      expect(learner.notesBySession).toHaveLength(report.sessions);
+      expect(learner.notesBySession.at(-1)).toEqual(learner.finalNotes);
+    }
+  });
 });

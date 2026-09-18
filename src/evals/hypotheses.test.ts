@@ -20,6 +20,15 @@ describe("namesWeakness", () => {
     expect(namesWeakness("change-unknown", "Finds the change unknown hard: 9 + ? = 13")).toBe(true);
     expect(namesWeakness("change-unknown", "May need more practice with Subtraction as unknown addend")).toBe(false);
   });
+
+  /** The Coach says the crossing in its own words, with a word or two in the way. */
+  it("allows up to two words between the crossing and the ten, and still refuses the Skill name", () => {
+    expect(namesWeakness("crossing-ten", "the items with the smallest crossing of ten (sum 11)")).toBe(true);
+    expect(namesWeakness("crossing-ten", "subtract items whose answer requires crossing back over ten")).toBe(true);
+    expect(namesWeakness("crossing-ten", "The Learner counts on until it crosses the ten")).toBe(true);
+    expect(namesWeakness("crossing-ten", "Sums that go a little past the ten are missed")).toBe(true);
+    expect(namesWeakness("crossing-ten", "Make-a-ten is the one unsettled Skill")).toBe(false);
+  });
 });
 
 describe("claimPolarity", () => {
@@ -35,6 +44,12 @@ describe("claimPolarity", () => {
     expect(claimPolarity("Composing a teen number is not yet reliable, after a first-try correct compose item")).toBe("contrastive");
     expect(claimPolarity("Answers on the first try when the smaller addend is written first, but needed a Hint on 9 + 3")).toBe("contrastive");
     expect(claimPolarity("Solid on partners to 10, although the teens took a Hint")).toBe("contrastive");
+  });
+
+  it("reads the help the Coach names as a difficulty, and a named Problem form as neither side", () => {
+    expect(claimPolarity("Items whose sum is 11 have drawn help every time they have appeared")).toBe("difficulty");
+    expect(claimPolarity("Partners to 10 are answered with no help at all")).toBe("strength");
+    expect(claimPolarity("Change-unknown in add-to-change form (a missing change added on to reach a total) is as secure at high wholes")).toBe("strength");
   });
 });
 
@@ -220,5 +235,90 @@ describe("scoreHypotheses", () => {
     // The invented ID is a fabrication, not a disagreement: it is not in the agreement's denominator at all.
     expect(score.evidence.existing).toBe(score.evidence.citations - 1);
     expect(score.evidence.claimAgreement).toBe(1);
+  });
+
+  it("keeps the Notes the engine accepted after every Session, so a stored report can be scored again", async () => {
+    const run = await runLearner(learner, coachPlanner(fakeGeneration()), 3);
+    const score = scoreHypotheses(run);
+
+    expect(score.notesBySession).toHaveLength(3);
+    expect(score.notesBySession[2]).toEqual(score.finalNotes);
+  });
+});
+
+/**
+ * The claims here are the real ones from the first live Eval Run
+ * (`docs/evals/2026-09-18T13-49-20Z.json`, Opus 5 Coach, 20 Sessions), which
+ * the phrase list alone read wrongly: the Strong child's Hypotheses were
+ * counted as false positives for saying a Skill's name in a claim about what
+ * it can do, and the crossing-ten child's own words for the pattern were
+ * never matched at all.
+ */
+describe("scoreHypotheses, the polarity gate", () => {
+  /** A Coach that supports the given claims every Session, citing the Problems it was shown. */
+  const claimingCoach = (claims: readonly string[]) =>
+    fakeGeneration({
+      async runCoach(input) {
+        const { plan } = await fakeGeneration().runCoach(input);
+        const evidence = input.evidence.map((e) => e.id);
+        const hypotheses: Hypothesis[] = claims.map((claim, index) => ({
+          id: `h${index + 1}`,
+          claim,
+          status: "supported",
+          confidence: 0.6,
+          evidence,
+          nextTest: "More Problems of the same kind",
+        }));
+        return { notes: { hypotheses, strengths: [] }, plan: { ...plan, hypothesisUnderTest: null } };
+      },
+    });
+
+  const score = async (id: Parameters<typeof getSimulatedLearner>[0], claims: readonly string[]) =>
+    scoreHypotheses(await runLearner(getSimulatedLearner(id), coachPlanner(claimingCoach(claims)), 2));
+
+  const STRONG = [
+    "The Learner's fluency with equations carries over to the new Unit 3 Skills: result-unknown (add-to, take-from, put-together) and change-unknown (add-to-change, take-from-change).",
+    "Change-unknown holds when the change itself is large (6 to 9) and the whole is in the teens, not only when the change is small.",
+    "Change-unknown in add-to-change form (a missing change added on to reach a total) is as secure at high wholes as take-from-change, which has carried the recent clean evidence.",
+    "The two pieces make-a-ten depends on — completing a partner to 10 and naming 10 + n as a teen number — combine successfully on single problems that cross ten.",
+  ];
+
+  it("counts no false positive for a strength or neutral claim that only mentions the Skill", async () => {
+    const strong = await score("strong", STRONG);
+
+    expect(strong.supportedHypotheses).toBe(4);
+    expect(strong.falsePositives).toBe(0);
+    expect(strong.falsePositiveRate).toBe(0);
+  });
+
+  it("names crossing ten from a contrastive claim and from a difficulty claim in the Coach's own words", async () => {
+    const contrastive = await score("crossing-ten-weakness", [
+      "On make-a-ten, the items that needed help were the ones with the smallest crossing of ten (larger addend 6, sum 11, in both orders), while larger addends of 7, 8 and 9 were first-try correct.",
+    ]);
+    const difficulty = await score("crossing-ten-weakness", [
+      "On unknown-addend, subtract items whose answer requires crossing back over ten draw help.",
+    ]);
+
+    expect(contrastive.sessionsToDetection).toEqual({ "crossing-ten": 1 });
+    expect(difficulty.sessionsToDetection).toEqual({ "crossing-ten": 1 });
+  });
+
+  it("names nothing when a supported claim only names the Skill", async () => {
+    const skillOnly = await score("crossing-ten-weakness", [
+      "Make-a-ten is the one unsettled Skill, and first-try success on it is intermittent rather than sorted by structure or by the size of the larger addend.",
+    ]);
+
+    expect(skillOnly.sessionsToDetection).toEqual({ "crossing-ten": null });
+    expect(skillOnly.detected).toBe(0);
+  });
+
+  it("names change unknown from the difficulty claims of the child with that weakness", async () => {
+    const changeUnknown = await score("change-unknown-weakness", [
+      "The support needed on change-unknown is not explained by the size of the numbers: small and large wholes both show clean first tries and both show misses.",
+      "Change-unknown misses are intermittent rather than tied to the structure, the size of the whole, or the size of the change.",
+    ]);
+
+    expect(changeUnknown.sessionsToDetection).toEqual({ "change-unknown": 1 });
+    expect(changeUnknown.falsePositives).toBe(0);
   });
 });
