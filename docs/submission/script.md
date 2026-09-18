@@ -40,36 +40,32 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 4, architecture (1:35 to 1:55)
 
-> How it's built. The math is never left to the AI. A plain program owns every problem, every answer, every Hint, and what counts as mastered, the same way every time. The AI does four jobs around it: it writes the word problems in the child's theme, it coaches by reading the evidence and planning the next Session, it writes the parent's note, and it gives Ollie his voice. The AI can personalise the learning path. It cannot make up the math.
+> How it's built. The math is never left to the AI. A plain program owns every problem, every answer, every Hint, and what counts as mastered, the same way every time. The AI does four jobs around it: it writes the word problems in the child's theme, it coaches by reading the evidence and planning the next Session, it writes the parent's note, and it gives Ollie his voice. The AI can personalise the learning path. It cannot make up the math. We built it in nine days with Claude Code.
 
-## Slide 5, two seams (1:55 to 2:10)
+## Slide 5, how we know it works (1:55 to 2:08)
 
-> And everything the AI writes is checked before a child or a parent sees it. A word problem that changes a number is thrown out. A plan that leaves the curriculum is thrown out. A belief that points at a problem the child never saw is thrown out, and a plain plan takes over, so play never stops. We built it in nine days with Claude Code.
+> How do we know the Coach works? We wrote six pretend learners in software. Each answers like a child at a known level, and two of them have a specific weak spot we set on purpose. Each played twenty Sessions with the Coach and twenty with a plain drill, and we ran the whole thing three times. Here is what held every time.
 
-## Slide 6, the eval (2:10 to 2:22)
-
-> How do we know the Coach works? We built six simulated children, each with a known ability, and for two of them we hid a specific trouble spot. Each played twenty Sessions with the Coach and twenty with a plain drill, three times over. Here is what held across all three.
-
-## Slide 7, finding 1 (2:22 to 2:32)
+## Slide 6, the Coach never invents evidence (2:08 to 2:18)
 
 > Every belief in the Notebook points at the problems it rests on. Out of ninety-five thousand nine hundred and twenty-two, the Coach pointed at a problem the child never saw exactly once, and the engine threw that note out before anyone read it.
 
-## Slide 8, finding 2 (2:32 to 2:42)
+## Slide 7, the Coach finds the trouble spot (2:18 to 2:28)
 
 > It found the hidden trouble spots in four of six chances, from the evidence alone, around Session six for sums that cross ten. And every one of its three hundred and sixty Session plans stayed inside the curriculum.
 
-## Slide 9, finding 3 (2:42 to 2:52)
+## Slide 8, what we are still improving (2:28 to 2:40)
 
-> Two things we're honest about. Sometimes the Coach sees a pattern that isn't there, because eight problems a day is a small sample. And a plain drill reaches "mastered" a little sooner, because our simulated children can't learn from practice. Real children do. Both are fixable, and both are next.
+> Two things we're honest about. Sometimes the Coach sees a pattern that isn't there, because eight problems a day is a small sample. And a plain drill reaches "mastered" a little sooner, because our pretend learners can't improve with practice. Real children do. Both are fixable, and both are next.
 
-## Slide 10, after the hackathon (2:52 to 3:02)
+## Slide 9, after the hackathon (2:40 to 2:52)
 
-> What's next. The Coach will only say it's sure when the numbers back it up, so fewer false alarms. Simulated children who learn from practice, so we can measure teaching, not just spotting. Then a mobile app. A Session costs about twenty cents today and about five with a smaller model, so a seven-dollar-a-month subscription pays for a child who plays every day.
+> What's next. The Coach will only say it's sure when the numbers back it up, so fewer false alarms. Pretend learners that improve with practice, so we can measure teaching, not just spotting. Then a mobile app. A Session costs about twenty cents today and about five with a smaller model, so a seven-dollar-a-month subscription pays for a child who plays every day.
 
-## Slide 11, close (3:02)
+## Slide 10, close (2:52)
 
 > Ollie learns how you learn.
 
 ## If you are over three minutes
 
-Cut in this order: the last sentence of slide 2 ("Mastery changes the game..."), the Count-On Flight line in the demo, the "We built it in nine days" sentence on slide 5. Never cut the two taglines, the architecture line, or the two honest points on slide 9.
+Cut in this order: the last sentence of slide 2 ("Mastery changes the game..."), the Count-On Flight line in the demo, nothing else. Never cut the two taglines, the architecture line, or the two honest points on slide 8.
