@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ollie</title>
+<style>
+  @font-face { font-family: "Fredoka"; src: url("../../src/app/fonts/fredoka-latin-wght.woff2") format("woff2"); font-weight: 300 700; font-display: swap; }
+  @font-face { font-family: "Andika"; src: url("../../src/app/fonts/andika-latin-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Andika"; src: url("../../src/app/fonts/andika-latin-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+  :root {
+    --paper: #FFF7EC; --card: #F7E7CF; --ink: #3B2E2A; --ink-soft: #7A6660;
+    --rust: #C9713F; --sun: #F2B134; --sun-deep: #D0901E; --leaf: #4CAF7A; --leaf-deep: #2F8A5B;
+    --sky: #6FB7D6; --berry-deep: #B23F56; --plum: #6B4E9C; --teal: #2E5E6B;
+  }
+  html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); font-family: Andika, "Segoe UI", system-ui, sans-serif; }
+  .deck { height: 100vh; overflow: hidden; }
+  .slide { box-sizing: border-box; height: 100vh; padding: 6vh 8vw; display: none; flex-direction: column; justify-content: center; gap: 2.4vh; }
+  .slide.active { display: flex; }
+  h1 { font-family: Fredoka, Andika, sans-serif; font-weight: 600; font-size: 6.2vh; line-height: 1.1; margin: 0; }
+  h2 { font-family: Fredoka, Andika, sans-serif; font-weight: 600; font-size: 4.6vh; line-height: 1.15; margin: 0; }
+  p, li { font-size: 2.9vh; line-height: 1.45; margin: 0; }
+  ul { margin: 0; padding-left: 1.1em; display: grid; gap: 1.2vh; }
+  .kicker { color: var(--ink-soft); font-size: 2.4vh; letter-spacing: 0.02em; }
+  .tag { font-family: Fredoka, Andika, sans-serif; font-weight: 600; font-size: 4.2vh; color: var(--rust); }
+  .big { font-family: Fredoka, Andika, sans-serif; font-weight: 600; font-size: 12vh; line-height: 1; color: var(--leaf-deep); }
+  .row { display: flex; gap: 4vw; align-items: center; }
+  .row > * { flex: 1; min-width: 0; }
+  .card { background: var(--card); border-radius: 2.4vh; padding: 3vh 3.2vw; box-shadow: 0 0.6vh 0 rgba(59,46,42,0.08); }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; }
+  .cards h2 { font-size: 3.2vh; margin-bottom: 1vh; }
+  .cards p { font-size: 2.3vh; }
+  img.chart { width: 100%; height: auto; max-height: 62vh; object-fit: contain; border-radius: 1.6vh; background: var(--paper); }
+  img.arch { width: 100%; height: auto; max-height: 66vh; object-fit: contain; }
+  .foot { position: fixed; right: 2vw; bottom: 1.6vh; font-size: 1.8vh; color: var(--ink-soft); }
+  .center { align-items: center; text-align: center; }
+  .owl { width: 22vh; height: auto; }
+  .dim { color: var(--ink-soft); }
+  .good { color: var(--leaf-deep); } .warn { color: var(--berry-deep); }
+  @media (prefers-reduced-motion: no-preference) { .slide.active { animation: fade 240ms ease-out; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="deck">
+
+<section class="slide center active">
+  <img class="owl" src="../../public/ollie/ollie-idle.svg" alt="Ollie">
+  <h1>Ollie</h1>
+  <p class="tag">Most math apps adapt difficulty.<br>Ollie adapts to how the learner is learning.</p>
+  <p class="dim">A Grade 1 math game with an AI Coach that can be checked.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">What it is</p>
+  <h2>A math game for a six-year-old who can't read the screen yet</h2>
+  <ul>
+    <li>Ollie reads every problem aloud. The child answers by tapping. No typing, no timers, no lives.</li>
+    <li>Seven Skills in three Units: partners to 10, teen numbers, counting on, make-a-ten, unknown addend, then word problems in the child's theme. Common Core 1.OA and 1.NBT.</li>
+    <li>A miss gets a Hint with the strategy on the ten-frame or number line. A second miss gets the answer. Nothing is deducted.</li>
+    <li>Mastering a strategy teaches Ollie a Power he uses on screen from then on. Mastery changes the game, not the wallet.</li>
+    <li>After every Session an AI Coach writes what it believes about the child, with the evidence, and plans the next Session. The parent reads it in Ollie's Notebook.</li>
+  </ul>
+</section>
+
+<section class="slide center">
+  <p class="kicker">Demo</p>
+  <h1>Let's play a Session</h1>
+  <p class="dim">One easy sum, one that crosses ten, a Hint, a Power, and what the Coach makes of it.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">How it's built</p>
+  <img class="arch" src="architecture.svg" alt="Session, engine, evidence, Coach, validator, next Session">
+  <p class="tag">The AI can personalise the learning path. It cannot make up the math.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">Two seams</p>
+  <div class="cards">
+    <div class="card">
+      <h2>The engine owns the math</h2>
+      <p>Every problem, every answer, every Hint, Mastery, Powers, Coins, Streak. A pure function, deterministic, 623 tests. No model near it.</p>
+    </div>
+    <div class="card">
+      <h2>Four generative jobs</h2>
+      <p>Word problems in the child's theme. The Coach's beliefs and next plan. The parent summary. Ollie's voice. One interface, one fake for every test.</p>
+    </div>
+    <div class="card">
+      <h2>Every output is checked</h2>
+      <p>A story that changes a number is rejected. A plan outside the curriculum is rejected. A belief citing a problem the Coach never saw is rejected. Then the Baseline plan, so play never stops.</p>
+    </div>
+  </div>
+  <p class="dim">Built in nine days with Claude Code. Every line of that is disclosed.</p>
+</section>
+
+<section class="slide">
+  <p class="kicker">Before we believed it</p>
+  <h2>The eval</h2>
+  <ul>
+    <li>Six simulated children, designed by us, so the truth about each is known. Two carry a planted weakness. Two are held out of all tuning.</li>
+    <li>Twenty Sessions each, under the Coach and under a fixed-gate Baseline on the same seeds. Only the Coach varies.</li>
+    <li>Run live three times, back to back. Every number is a range across the three.</li>
+    <li>Every rate carries a confidence interval. The Judge that grades stories had to pass its own exam first.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <p class="kicker">Finding 1</p>
+  <div class="row">
+    <div>
+      <p class="big">95,921</p>
+      <h2>of 95,922 citations were real</h2>
+      <p>Every belief points at the problems it rests on. Across 360 Sessions the Coach cited a problem it had never seen once, and the engine rejected that attempt at the door.</p>
+    </div>
+    <img class="chart" src="../evals/evidence-integrity.svg" alt="Evidence Integrity chart">
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">Finding 2</p>
+  <div class="row">
+    <div>
+      <h2>It finds the planted weakness, slowly, most of the time</h2>
+      <p class="good">Four of six chances. Crossing ten around Session 6; change unknown at 13 and 16.</p>
+      <p>The miss was instructive: the Coach found "half the make-a-ten items draw help", the exact planted rate, at the Skill level, and our rule only credits the pattern.</p>
+      <p>358 of 360 plans accepted first time. Zero fell to the fixed plan.</p>
+    </div>
+    <img class="chart" src="../evals/detection.svg" alt="Detection chart">
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">Finding 3: the honest part</p>
+  <div class="row">
+    <div>
+      <h2>It sees ghosts, and it isn't faster to Mastery</h2>
+      <p class="warn">One supported belief in six on some children names a weakness that isn't there. Eight problems a day is a small sample.</p>
+      <p class="warn">The drill Baseline reaches Mastery a little sooner. Our simulated children can't learn from practice, so a Session spent investigating is a Session not spent at the gate.</p>
+      <p>Both are in the write-up, with the ranges.</p>
+    </div>
+    <img class="chart" src="../evals/convergence.svg" alt="Convergence chart">
+  </div>
+</section>
+
+<section class="slide">
+  <p class="kicker">After the hackathon</p>
+  <div class="cards">
+    <div class="card">
+      <h2>Engine-owned statistics</h2>
+      <p>The engine counts the slices and tests them. The Coach can only call a belief supported when the counts back it. Fewer ghosts.</p>
+    </div>
+    <div class="card">
+      <h2>Children who learn</h2>
+      <p>A practice effect in the simulated learners, so the speed comparison measures teaching. A second judge from another model family.</p>
+    </div>
+    <div class="card">
+      <h2>A mobile app</h2>
+      <p>Measured: about $0.21 a Session on Opus, about $0.05 on Sonnet. A $6.99 subscription pays for a child who plays every day.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide center">
+  <img class="owl" src="../../public/ollie/ollie-celebrate.svg" alt="Ollie celebrating">
+  <h1>Ollie learns how you learn.</h1>
+  <p class="dim">ollie.rahatcodes.com · github.com/Rahat-ch/ollie</p>
+</section>
+
+</div>
+<div class="foot" id="foot"></div>
+<script>
+  const slides = [...document.querySelectorAll(".slide")];
+  let i = Math.max(0, Math.min(slides.length - 1, Number(location.hash.slice(1)) || 0));
+  const show = () => {
+    slides.forEach((s, n) => s.classList.toggle("active", n === i));
+    document.getElementById("foot").textContent = `${i + 1} / ${slides.length}`;
+    history.replaceState(null, "", `#${i}`);
+  };
+  const go = (d) => { i = Math.max(0, Math.min(slides.length - 1, i + d)); show(); };
+  addEventListener("keydown", (e) => {
+    if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); go(1); }
+    if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); go(-1); }
+    if (e.key === "f") document.documentElement.requestFullscreen?.();
+  });
+  addEventListener("click", (e) => { if (!e.target.closest("a")) go(1); });
+  show();
+</script>
+</body>
+</html>
