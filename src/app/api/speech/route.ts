@@ -1,15 +1,16 @@
 /**
- * Ollie saying one line that has the Nickname in it: a Story, or the home
- * greeting. Every other line is the same for every Learner and is bundled
- * with the app, so it never comes here. The line is rendered once on
- * ElevenLabs and added to the Content Pool on the persistent volume, so a
- * repeat costs nothing. The Nickname is the one personal word sent off the
- * device, and onboarding says so; the file it lands in is named after a
- * non-cryptographic hash of the whole line, which is not a hiding place —
- * the line has the Nickname in it and the audio says it out loud (ADR 0002).
+ * Ollie saying the one line that has the Nickname in it: a Story. Every other
+ * line is the same for every Learner and is bundled with the app, the home
+ * greeting included — its bubble names the Learner and the line Ollie says
+ * only says hi (decisions.md, amendment 32) — so nothing else comes here. The
+ * line is rendered once on ElevenLabs and added to the Content Pool on the
+ * persistent volume, so a repeat costs nothing. The Nickname is the one
+ * personal word sent off the device, and onboarding says so; the file it
+ * lands in is named after a non-cryptographic hash of the whole line, which
+ * is not a hiding place — the line has the Nickname in it and the audio says
+ * it out loud (ADR 0002).
  *
- * Nothing here is free text: a greeting is built from the Nickname by the
- * app's own line, and a Story must be one the deterministic validator
+ * Nothing here is free text: a Story must be one the deterministic validator
  * accepts for the engine's numbers in the Learner's Theme (ADR 0001). With
  * no key, no voice ID, or no answer from ElevenLabs the route says so and
  * the browser falls through the Speech Chain, so no Session ever blocks.
@@ -20,7 +21,6 @@ import type { Generation } from "@/generation";
 import { readEnv } from "@/lib/env";
 import { speechFor } from "@/lib/speech-service";
 import { voiceRenderer } from "@/lib/voice-renderer";
-import { greeting } from "@/play/lines";
 import { nicknameField, storyProblemIssue, storyProblemShape } from "@/story/request";
 import { validateStory } from "@/story/validate";
 import { AUDIO_MIME } from "@/voice/key";
@@ -28,34 +28,31 @@ import { AUDIO_MIME } from "@/voice/key";
 /** A Story is under 25 words; this is the outside of that, so nothing long is ever sent to be voiced. */
 const MAX_SPOKEN_CHARS = 400;
 
-const SpeechRequestSchema = z.discriminatedUnion("kind", [
-  z.strictObject({ kind: z.literal("greeting"), nickname: nicknameField }),
-  z
-    .strictObject({
-      kind: z.literal("story"),
-      nickname: nicknameField,
-      text: z.string().min(1).max(MAX_SPOKEN_CHARS),
-      ...storyProblemShape,
-      // Which Story set the Problem showed, plain or rich (the Story Solver Power); the browser sends it with every Story.
-      set: z.enum(["plain", "rich"]).optional(),
-    })
-    .check((ctx) => {
-      const issue = storyProblemIssue(ctx.value);
-      if (issue) ctx.issues.push({ code: "custom", input: ctx.value, path: [issue.path], message: issue.message });
-    }),
-]);
+/** A Story and nothing else: `kind` stays, so a body of any other kind is refused rather than read as a Story. */
+const SpeechRequestSchema = z
+  .strictObject({
+    kind: z.literal("story"),
+    nickname: nicknameField,
+    text: z.string().min(1).max(MAX_SPOKEN_CHARS),
+    ...storyProblemShape,
+    // Which Story set the Problem showed, plain or rich (the Story Solver Power); the browser sends it with every Story.
+    set: z.enum(["plain", "rich"]).optional(),
+  })
+  .check((ctx) => {
+    const issue = storyProblemIssue(ctx.value);
+    if (issue) ctx.issues.push({ code: "custom", input: ctx.value, path: [issue.path], message: issue.message });
+  });
 
 type SpeechRequest = z.infer<typeof SpeechRequestSchema>;
 
 type Line = { readonly ok: true; readonly text: string } | { readonly ok: false; readonly reasons: readonly string[] };
 
 /**
- * The line itself, built here: the browser says which line, never what Ollie
- * says. A Story is the one thing whose words it sends, and the deterministic
- * validator that let a Learner see it has to let Ollie say it too.
+ * The line itself, checked here: the Story is the one thing whose words the
+ * browser sends, and the deterministic validator that let a Learner see it
+ * has to let Ollie say it too.
  */
 function lineFor(request: SpeechRequest): Line {
-  if (request.kind === "greeting") return { ok: true, text: greeting(request.nickname) };
   const { text, nickname, skill, structure, equation, answer, theme } = request;
   const verdict = validateStory(text, { skill, structure, equation, answer, theme, nickname });
   return verdict.ok ? { ok: true, text } : { ok: false, reasons: verdict.reasons };

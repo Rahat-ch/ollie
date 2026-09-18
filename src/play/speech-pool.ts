@@ -1,32 +1,26 @@
 /**
- * The device's side of the Content Pool's audio: the lines with the Nickname
- * in them, asked of the server once each. A line is rendered on ElevenLabs
- * the first time any device asks for it and added to the Pool on the volume,
- * so this is asked as soon as a Story is known and is usually answered
- * before the Problem comes up. What comes back is held for the life of the
- * page, so the Repeat button replays the same audio and never sets off a new
- * render.
+ * The device's side of the Content Pool's audio: a Story, the one line with
+ * the Nickname in it, asked of the server once each. A Story is rendered on
+ * ElevenLabs the first time any device asks for it and added to the Pool on
+ * the volume, so this is asked as soon as a Story is known and is usually
+ * answered before the Problem comes up. What comes back is held for the life
+ * of the page, so the Repeat button replays the same audio and never sets off
+ * a new render. Every other line Ollie says, the home greeting included, is
+ * the same for every Learner and is bundled with the app.
  */
 import type { Problem } from "@/loop";
 import type { Identity } from "@/profile/identity";
 import type { PoolInput } from "@/story/pool";
 import { audioKey } from "@/voice/key";
-import { greeting } from "./lines";
 import { storyInputFor } from "./stories";
 
-export type SpeechRequest =
-  | { readonly kind: "greeting"; readonly nickname: string }
-  | ({ readonly kind: "story"; readonly nickname: string; readonly text: string } & PoolInput);
+export type SpeechRequest = { readonly kind: "story"; readonly nickname: string; readonly text: string } & PoolInput;
 
 /** A first render takes a few seconds; after that the server reads the file. */
 export const SPEECH_TIMEOUT_MS = 15_000;
 
 /** How long a line that could not be rendered is left alone before it is asked for again. */
 export const SPEECH_RETRY_MS = 30_000;
-
-/** What Ollie says for a request: the app's own line for a greeting, the Story itself otherwise. */
-export const spokenText = (request: SpeechRequest): string =>
-  request.kind === "greeting" ? greeting(request.nickname) : request.text;
 
 /** The request for a Unit 3 Problem's Story, or nothing for a Problem that has none. */
 export function storySpeechRequest(problem: Problem, identity: Identity, text: string): SpeechRequest | undefined {
@@ -61,7 +55,7 @@ async function fetchSpeech(request: SpeechRequest): Promise<string | null> {
  * of the page. Nothing waits on this: the Speech Chain falls through meanwhile.
  */
 export function requestSpeech(request: SpeechRequest, now: number = Date.now()): Promise<string | null> {
-  const key = audioKey(spokenText(request));
+  const key = audioKey(request.text);
   const already = held.get(key);
   if (already) return already;
   const refusedAt = refused.get(key);

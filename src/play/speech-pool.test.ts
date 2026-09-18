@@ -1,10 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { requestSpeech, SPEECH_RETRY_MS, spokenText, type SpeechRequest } from "./speech-pool";
-import { greeting } from "./lines";
+import { requestSpeech, SPEECH_RETRY_MS, type SpeechRequest } from "./speech-pool";
 
-type StorySpeech = Extract<SpeechRequest, { kind: "story" }>;
-
-const story = (text: string): StorySpeech => ({
+const story = (text: string): SpeechRequest => ({
   kind: "story",
   nickname: "Mia",
   text,
@@ -26,13 +23,6 @@ function server(answer: () => Response) {
 }
 
 afterEach(() => vi.unstubAllGlobals());
-
-describe("spokenText", () => {
-  it("is the app's own greeting for a greeting, and the Story itself for a Story", () => {
-    expect(spokenText({ kind: "greeting", nickname: "Mia" })).toBe(greeting("Mia"));
-    expect(spokenText(story("Mia has 7 puppies."))).toBe("Mia has 7 puppies.");
-  });
-});
 
 // An answer is held for the life of the page, so each test asks about its own line.
 describe("requestSpeech", () => {

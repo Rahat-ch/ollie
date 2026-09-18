@@ -30,7 +30,7 @@ export const OLLIE_VOICE_BRIEF = [
 /** What ElevenLabs accepts as preview text, in characters. Its own bounds; a shorter preview is refused. */
 export const PREVIEW_LIMITS = { min: 100, max: 1000 } as const;
 
-/** Ollie's own lines, one per line of text: a greeting is left out because the preview must fit every Learner. */
+/** Ollie's own lines, one per line of text: the Hints, a cheer, a Reveal, and the end of a Session, which is what a Learner hears most of. */
 export const OLLIE_VOICE_PREVIEW = [
   hintFor({ skill: "counting-on", structure: "larger-first" }),
   cheerFor(1, 12),

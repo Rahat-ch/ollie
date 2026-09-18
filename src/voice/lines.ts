@@ -2,11 +2,13 @@
  * Every line Ollie can say that is the same for every Learner: the catalogue
  * the build-time render script works through, and the set the app looks a
  * line up in before it falls back to the platform's own speech. A line with
- * the Nickname in it is not here — those are rendered per Nickname at
- * creation time into the Content Pool on the volume (see the speech API route).
+ * the Nickname in it is not here — a Story is the only one, rendered per
+ * Nickname at creation time into the Content Pool on the volume (see the
+ * speech API route). The home greeting is here: its bubble names the Learner,
+ * but the line Ollie says only says hi (decisions.md, amendment 32).
  */
 import { hintFor, POWERS, rangeFor, SKILLS, type SkillRange } from "@/loop";
-import { CHEER_COUNT, cheerFor, powerLine, revealLine, SESSION_DONE } from "@/play/lines";
+import { CHEER_COUNT, cheerFor, HOME_GREETING, powerLine, revealLine, SESSION_DONE } from "@/play/lines";
 import { everyDraft } from "./drafts";
 
 /**
@@ -40,10 +42,12 @@ function dedupe(lines: readonly OllieLine[]): OllieLine[] {
  * Ollie's hand-written lines, each once. Never model-written (ADR 0001).
  * Only what something on screen actually says: the Mastered line on the
  * celebration card is read, not spoken, so it is not here until it is; the
- * Power line is, because Ollie says it on the celebration it is earned on.
+ * Power line is, because Ollie says it on the celebration it is earned on,
+ * and the home greeting is, because Ollie says it on the home screen.
  */
 export function ollieLines(): OllieLine[] {
   const texts = [
+    HOME_GREETING,
     SESSION_DONE,
     ...POWERS.map((power) => powerLine(power.name)),
     ...SKILLS.flatMap((skill) => skill.structures.map((structure) => hintFor({ skill: skill.id, structure }))),

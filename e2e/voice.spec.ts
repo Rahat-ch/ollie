@@ -1,3 +1,5 @@
+import { HOME_GREETING } from "@/play/lines";
+import { audioFileName } from "@/voice/key";
 import { expect, test, type Page } from "./test";
 import { setUpProfile } from "./onboarding";
 
@@ -65,9 +67,8 @@ test("with no voice on the server every line falls through to the line on screen
 
   // The Profile is on the device before the first page is drawn, rather than
   // written into a page that is already showing: WebKit fires a `storage`
-  // event in the very window that wrote the key, so seeding from the page
-  // re-renders the home screen and Ollie asks for his greeting there, which
-  // would land in the count below. Play is the first screen either way.
+  // event in the very window that wrote the key, which would draw the home
+  // screen under the test. Play is the first screen either way.
   await page.addInitScript(([k, profile]) => localStorage.setItem(k, JSON.stringify(profile)), [PROFILE_KEY, UNIT_3_PROFILE] as const);
   await page.goto("/play");
 
@@ -122,12 +123,43 @@ test("with no voice on the server every line falls through to the line on screen
   expect(offHost).toEqual([]);
 });
 
-test("the server says Ollie has no voice rather than failing, so the home greeting falls through too", async ({ page, request, baseURL }) => {
+test("the home greeting asks the server for nothing: the bubble names the Learner and Ollie reaches for the bundled line", async ({ page, request, baseURL }) => {
+  const speechRequests: string[] = [];
+  const wanted: string[] = [];
+  page.on("request", (asked) => {
+    if (asked.url() === `${baseURL}/api/speech` && asked.method() === "POST") speechRequests.push(asked.postData() ?? "");
+    if (asked.url().startsWith(`${baseURL}/voice/`)) wanted.push(asked.url());
+  });
+
   await setUpProfile(page, "Mia");
+  await expect(page.getByText("Hi, Mia! Ready to play?")).toBeVisible();
+  // The bundled step is what Home plays: the one file for "Hi! Ready to
+  // play?", the same for every Learner. This spec takes the files away, so
+  // the chain falls through from there, and Ollie talks either way.
   await expect(page.locator("main.learner-stage")).toHaveAttribute("data-speech-source", FELL_THROUGH);
   await expect(page.locator("svg.ollie")).toHaveAttribute("data-pose", "talking");
+  expect(wanted).toContain(`${baseURL}/voice/${audioFileName(HOME_GREETING)}`);
+  // Nothing is asked of the server for the greeting, so the Nickname is not sent for it (ADR 0002).
+  expect(speechRequests).toEqual([]);
 
+  // And the route no longer voices one at all: a Story is the only line it takes.
   const answer = await request.post(`${baseURL}/api/speech`, { data: { kind: "greeting", nickname: "Mia" } });
+  expect(answer.status()).toBe(400);
+});
+
+test("the server says Ollie has no voice rather than failing, so a Story falls through too", async ({ request, baseURL }) => {
+  const answer = await request.post(`${baseURL}/api/speech`, {
+    data: {
+      kind: "story",
+      nickname: "Mia",
+      theme: "space",
+      skill: "result-unknown",
+      structure: "add-to",
+      equation: { left: 7, op: "+", right: 5, result: 12, unknown: "result" },
+      answer: 12,
+      text: "Mia sees 7 stars. 5 more stars come out, so how many stars are there now?",
+    },
+  });
   expect(answer.status()).toBe(503);
   expect(await answer.json()).toEqual({ error: ["ELEVENLABS_API_KEY is not set"] });
 });
