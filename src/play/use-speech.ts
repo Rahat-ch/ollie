@@ -23,8 +23,10 @@ import { cuesFor, sayChain, type SpeechState, type Walk } from "./speak";
 export const SPEECH_WAIT_MS = 1500;
 
 export type SpokenLine = {
-  /** What is on screen, and what Ollie says. */
+  /** What is on screen. */
   readonly text: string;
+  /** What Ollie says, when that is not what is on screen: the home bubble names the Learner and Ollie says hi. */
+  readonly spoken?: string;
   /** Set only for a line with the Nickname in it, which the server renders (see the speech API route). */
   readonly request?: SpeechRequest;
 };
@@ -46,7 +48,10 @@ const wait = (ms: number): Promise<undefined> => new Promise((resolve) => setTim
 export function useSpeech(line: SpokenLine, key: string): Speech {
   const [spoken, setSpoken] = useState<Spoken>({ ...SILENT, line: "" });
   const { text } = line;
-  const saying = `${key}\n${text}`;
+  // What Ollie says is the line on screen unless the line says otherwise
+  // (src/play/lines): every step of the chain says the same words.
+  const said = line.spoken ?? text;
+  const saying = `${key}\n${said}`;
   // A request is data, so its own text is its identity: a new object of the
   // same request on the next render must not start the line again.
   const asked = line.request ? JSON.stringify(line.request) : "";
@@ -61,7 +66,7 @@ export function useSpeech(line: SpokenLine, key: string): Speech {
       // moment to arrive before falling through, but never more than that.
       const poolUrl = request ? ((await Promise.race([requestSpeech(request), wait(SPEECH_WAIT_MS)])) ?? undefined) : undefined;
       if (!live) return;
-      const chain = speechChain(text, { poolUrl, bundledUrl: bundledLineUrl(text), synthesis: hasPlatformSpeech() });
+      const chain = speechChain(said, { poolUrl, bundledUrl: bundledLineUrl(said), synthesis: hasPlatformSpeech() });
       walk = sayChain(cuesFor(chain, PLAYERS), (state) => {
         if (live) setSpoken({ ...state, line: saying });
       });
@@ -71,7 +76,7 @@ export function useSpeech(line: SpokenLine, key: string): Speech {
       live = false;
       walk?.stop();
     };
-  }, [saying, text, request]);
+  }, [saying, said, request]);
 
   return spoken.line === saying ? { speaking: spoken.speaking, source: spoken.source } : SILENT;
 }

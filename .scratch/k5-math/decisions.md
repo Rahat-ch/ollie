@@ -160,3 +160,11 @@ The spec names the four Powers, what each one does on screen, and that they are 
 # Amendments — 2026-09-15, first live runs
 
 31. **Ollie's voice brief describes a youthful adult, not a child.** The spec's brief says "a kind older kid". ElevenLabs Voice Design refuses any description of a child's voice (a 403 with `blocked_generation`, seen on 2026-09-15 with the brief as written), so `OLLIE_VOICE_BRIEF` asks for a cute cartoon voice for a friendly owl character, youthful and bright, gender-neutral, with the same warmth, pace, and diction. The user listened to two sets of three previews on 2026-09-15 and chose one from this brief, saved as the voice "Ollie"; its ID lives in `ELEVENLABS_VOICE_ID`. The character sheet and the copy still call Ollie a kind older friend; only the vendor-facing description changed.
+
+---
+
+# Amendments — 2026-09-18, before submission
+
+Confirmed by the user on 2026-09-18, on hearing the home screen.
+
+32. **Ollie greets the Learner by name on screen and says hi out loud.** The home speech bubble still reads "Hi, <Nickname>! Ready to play?", but what Ollie says is the fixed line "Hi! Ready to play?" (`HOME_GREETING` in `src/play/lines.ts`), bundled like every other fixed line. The greeting was the one line rendered per Nickname at run time, which cost a server render and a POST of the Nickname on every fresh home screen before a Learner had even tapped Play; the name is shown, which is what the handover from onboarding is for, and nothing is sent to show it. So the `greeting` kind is gone from `POST /api/speech` and from the pool client — a Story is the only line the route takes and the only thing the Nickname is ever sent for — and `ollieLines()` is 125 lines and 3,209 characters, which supersedes the count in amendment 21. A line may now say something other than what is on screen: `SpokenLine.spoken` in `src/play/use-speech.ts` is what Ollie says when that is not `text`, and the home greeting is the only line that sets it. Stories are unchanged: they keep the Nickname in their words and in their audio.

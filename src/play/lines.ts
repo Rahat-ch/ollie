@@ -1,9 +1,12 @@
 /**
  * Ollie's fixed lines: hand-written, never model-written. Every one of them
- * is rendered once in Ollie's voice and bundled (src/voice); the greeting is
- * the one line with a Nickname in it, so it is rendered per Nickname instead.
+ * is the same for every Learner, so every one is rendered once in Ollie's
+ * voice and bundled (src/voice). The home greeting is the one line whose
+ * words on screen are not the words Ollie says: the bubble names the Learner
+ * and the line Ollie says only says hi, so the home screen renders nothing
+ * per Nickname and sends nothing for it (decisions.md, amendment 32).
  */
-/** The home greeting, by Nickname: the handover from onboarding is Ollie saying it. */
+/** The home greeting on screen, by Nickname: the handover from onboarding is Ollie greeting the Learner. */
 export const greeting = (nickname: string): string => `Hi, ${nickname}! Ready to play?`;
 
 const CHEERS = ["Yes!", "You got it!", "That's it!", "Nice one!"] as const;
@@ -19,6 +22,9 @@ export function cheerFor(position: number, answer: number): string {
 export const revealLine = (answer: number): string => `It's ${answer}. Look, let's see why.`;
 
 export const SESSION_DONE = "You did it!";
+
+/** What Ollie says on the home screen while the bubble names the Learner: a fixed line like every other. */
+export const HOME_GREETING = "Hi! Ready to play?";
 
 export const MASTERED_LINE = (skillName: string): string => `You know ${skillName} now!`;
 

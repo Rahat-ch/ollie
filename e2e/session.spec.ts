@@ -16,7 +16,7 @@ test("a Parent sets up the Profile, a Learner plays the first Session to the cel
     if (!request.url().startsWith(baseURL!)) offHost.push(request.url());
   });
 
-  // Onboarding: four screens for the Parent, the disclosure verbatim, then Ollie says the Nickname.
+  // Onboarding: four screens for the Parent, the disclosure verbatim, then the home screen greets the Learner by name.
   await page.goto("/");
   await expect(page.getByTestId("onboarding")).toHaveAttribute("data-step", "nickname");
   await expect(page.getByRole("link", { name: "Play" })).toHaveCount(0);
@@ -33,7 +33,7 @@ test("a Parent sets up the Profile, a Learner plays the first Session to the cel
   await page.getByRole("button", { name: "Next" }).click();
   await expect(page.getByTestId("onboarding")).toHaveAttribute("data-step", "note");
   await expect(page.getByTestId("disclosure")).toHaveText(
-    "The Nickname is sent to voice the lines Ollie reads aloud. Nothing else leaves this device. No account, no recording.",
+    "The Nickname is sent to voice the Stories Ollie reads aloud, and nothing else leaves this device. No account, no recording.",
   );
   await page.getByRole("button", { name: "Start playing" }).click();
 

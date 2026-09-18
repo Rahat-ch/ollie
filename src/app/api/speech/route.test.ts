@@ -2,7 +2,6 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { greeting } from "@/play/lines";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { templateStory } from "@/story/template";
 import type { StoryInput } from "@/generation/types";
@@ -63,8 +62,12 @@ describe("POST /api/speech", () => {
   it("refuses a body that is not JSON, an unknown kind, and a Nickname the app would not set", async () => {
     expect((await POST(new Request("http://localhost/api/speech", { method: "POST", body: "nope" }))).status).toBe(400);
     expect((await post({ kind: "song", nickname: "Mia" })).status).toBe(400);
-    expect((await post({ kind: "greeting", nickname: "  Mia  " })).status).toBe(400);
-    expect((await post({ kind: "greeting", nickname: "" })).status).toBe(400);
+    expect((await post({ ...story, nickname: "  Mia  " })).status).toBe(400);
+    expect((await post({ ...story, nickname: "" })).status).toBe(400);
+  });
+
+  it("no longer voices the home greeting: it is a fixed line, bundled, and the Nickname is not sent for it", async () => {
+    expect((await post({ kind: "greeting", nickname: "Mia" })).status).toBe(400);
   });
 
   it("looks for a voice before it checks the line: with no key even a bad Story is answered 503, not argued with", async () => {
@@ -72,12 +75,6 @@ describe("POST /api/speech", () => {
     const response = await post({ ...story, text: "Mia, this is not a Story at all and nobody checked it." });
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({ error: ["ELEVENLABS_API_KEY is not set"] });
-  });
-
-  it("takes the greeting by Nickname and builds the line itself, so no line of Ollie's is ever sent in", async () => {
-    delete process.env.ELEVENLABS_API_KEY;
-    const response = await post({ kind: "greeting", nickname: "Mia", text: greeting("Mia") });
-    expect(response.status).toBe(400);
   });
 });
 

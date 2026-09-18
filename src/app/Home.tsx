@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Ollie } from "@/ollie/Ollie";
-import { greeting } from "@/play/lines";
+import { greeting, HOME_GREETING } from "@/play/lines";
 import { pathStops } from "@/play/path";
 import { useSessionCoach } from "@/play/use-coach";
 import { useSpeech } from "@/play/use-speech";
@@ -36,12 +36,10 @@ export function Home() {
   useSessionCoach(profile);
   const identity = profile?.identity ?? null;
   const line = identity ? greeting(identity.nickname) : "";
-  // The greeting is the one fixed line with the Nickname in it, so it is
-  // rendered per Nickname into the Pool; the chain falls through until it is there.
-  const { speaking, source } = useSpeech(
-    { text: line, request: identity ? { kind: "greeting", nickname: identity.nickname } : undefined },
-    line,
-  );
+  // The bubble names the Learner and Ollie says hi: what he says is a fixed
+  // line, bundled like every other, so the greeting is rendered nowhere at
+  // run time and the Nickname is not sent for it (decisions.md, amendment 32).
+  const { speaking, source } = useSpeech({ text: line, spoken: identity ? HOME_GREETING : "" }, line);
 
   if (!profile) return <BlankStage />;
   if (!identity) return <Onboarding />;

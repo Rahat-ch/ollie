@@ -29,7 +29,7 @@ The themed words the model writes around an engine-chosen word problem, addresse
 _Avoid_: prompt, narrative, question text
 
 **Nickname**:
-What Ollie calls the Learner, chosen by the Parent at setup. The only personal word sent off the device, and only so that the lines Ollie reads aloud can be voiced with it; a Story is written with a placeholder in its place.
+What Ollie calls the Learner, chosen by the Parent at setup. The only personal word sent off the device, and only so that a Story can be voiced with it; a Story is written with a placeholder in its place, and the home greeting shows the Nickname without saying it.
 _Avoid_: name, first name, username
 
 **Content Pool**:
