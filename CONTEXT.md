@@ -143,7 +143,7 @@ Opus 5 reading against a written rubric, used only where a deterministic check c
 _Avoid_: grader, evaluator, LLM-as-judge
 
 **Calibration Set**:
-The hand-labelled 20 Stories and 10 Parent Summaries the Judge must agree with above a threshold before its scores count.
+The hand-labelled 20 Stories and 10 Parent Summaries the Judge must agree with above a threshold, and beyond chance above a kappa floor, before its scores count.
 _Avoid_: golden set, ground truth, labels
 
 ### Rewards

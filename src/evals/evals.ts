@@ -13,7 +13,7 @@ import { convergenceReport, TARGET_ACCURACY_BAND, type ConvergenceReport } from 
 import { scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
 import { SIMULATED_LEARNERS, type SimulatedLearnerId } from "./learners";
 import { baselinePlanner, coachPlanner, runLearner, type LearnerRun, type SessionTrace } from "./run";
-import { integrityRate, mean, share, summariseSplits, type Split } from "./stats";
+import { integrityRate, mean, share, summariseSplits, wilsonInterval, type Interval, type Split } from "./stats";
 import { runStoryEvals, type StoryEvalOptions, type StoryReport } from "./stories";
 import { runSummaryEvals, summarySample, type SummaryEvalOptions, type SummaryReport } from "./summaries";
 
@@ -24,13 +24,17 @@ export type HypothesisSplit = {
   readonly planted: number;
   readonly detected: number;
   readonly detectionRate: number;
+  /** What the planted weaknesses support for that share; null when none was planted. */
+  readonly detectionRateInterval: Interval | null;
   /** Over the detected weaknesses; null when none was. */
   readonly meanSessionsToDetection: number | null;
   readonly supportedHypotheses: number;
   readonly falsePositives: number;
   readonly falsePositiveRate: number;
+  readonly falsePositiveRateInterval: Interval | null;
   readonly citations: number;
   readonly evidenceIntegrity: number;
+  readonly evidenceIntegrityInterval: Interval | null;
   readonly sources: PlanSources;
 };
 
@@ -88,12 +92,15 @@ function summariseHypotheses(split: Split, learners: readonly LearnerHypotheses[
     planted,
     detected,
     detectionRate: share(detected, planted),
+    detectionRateInterval: wilsonInterval(detected, planted),
     meanSessionsToDetection: detections.length === 0 ? null : mean(detections),
     supportedHypotheses: supported,
     falsePositives,
     falsePositiveRate: share(falsePositives, supported),
+    falsePositiveRateInterval: wilsonInterval(falsePositives, supported),
     citations,
     evidenceIntegrity: integrityRate(citations, bad),
+    evidenceIntegrityInterval: wilsonInterval(citations - bad, citations),
     sources: {
       coach: sum(learners.map((l) => l.sources.coach)),
       retry: sum(learners.map((l) => l.sources.retry)),

@@ -18,7 +18,7 @@ import {
 } from "@/evals/charts";
 import { readReport } from "@/evals/files";
 
-const REPORT_FILE = "docs/evals/2026-09-13T17-38-41Z.json";
+const REPORT_FILE = "docs/evals/2026-09-18T00-15-08Z.json";
 const REPORT_NAME = path.basename(REPORT_FILE);
 const report = readReport(REPORT_FILE);
 const draw = (render: (r: typeof report, name: string) => string) => render(report, REPORT_NAME);
@@ -67,7 +67,7 @@ describe("the eval charts", () => {
     for (const chart of EVAL_CHARTS) {
       const svg = chart.render(report, REPORT_NAME);
       expect(svg, chart.file).toContain("Coach: the Generation fake.");
-      expect(svg, chart.file).toContain("Report 2026-09-13.");
+      expect(svg, chart.file).toContain("Report 2026-09-18.");
       expect(svg, chart.file).toContain(REPORT_NAME);
     }
   });
@@ -103,7 +103,7 @@ describe("the eval charts", () => {
       expect(svg).toContain(learner.name);
       expect(svg).toContain(`${learner.falsePositives} of ${learner.supportedHypotheses}`);
     }
-    expect(svg).toContain("Tuning 3 of 18 false (17%) · held out 0 of 8 (0%)");
+    expect(svg).toContain("Tuning 3 of 18 false (17%, 95% CI 0.058 to 0.392) · held out 0 of 8 (0%, 95% CI 0.000 to 0.324)");
   });
 
   it("splits every Session Plan between the Coach, a retry, and the Baseline fallback", () => {
@@ -117,6 +117,27 @@ describe("the eval charts", () => {
     expect(svg).toContain(`>0 of ${total}<`);
   });
 
+  it("shows what every rate on it is worth: an interval beside the rate, drawn as a mark where there is a bar", () => {
+    for (const chart of EVAL_CHARTS) {
+      expect(chart.render(report, REPORT_NAME), chart.file).toContain("95% CI");
+    }
+    expect(draw(renderEvidenceIntegrityChart)).toContain("95% CI 0.998 to 1.000");
+    expect(draw(renderDetectionChart)).toContain("Tuning 0 of 1 named (95% CI 0.000 to 0.793)");
+    expect(draw(renderPlanSourcesChart)).toContain("100% · 95% CI 0.969 to 1.000");
+    // Three validity bars and the calibration meter, each with the interval drawn over it.
+    expect(draw(renderStoryValidityChart).match(/data-mark="interval"/g)).toHaveLength(4);
+    expect(draw(renderSummaryValidityChart).match(/data-mark="interval"/g)).toHaveLength(4);
+  });
+
+  it("puts the Judge's kappa and the condition that withheld its scores on both validity charts", () => {
+    for (const render of [renderStoryValidityChart, renderSummaryValidityChart]) {
+      const svg = draw(render);
+      expect(svg).toContain("kappa 0.00, floor 0.60");
+      expect(svg).toContain("an always-pass Judge would score 60%");
+      expect(svg).toContain("agreement 0.60 is below the threshold 0.80, and kappa 0.00 is below the floor 0.60");
+    }
+  });
+
   it("puts Story validity and the Judge's withheld gate on the Story chart", () => {
     const svg = draw(renderStoryValidityChart);
     const { validity, judge } = report.stories;
@@ -124,8 +145,9 @@ describe("the eval charts", () => {
     expect(svg).toContain(`${validity.sample} of ${validity.sample} (100%)`);
     expect(svg).toContain(`${validity.templates} of ${validity.sample} (0%)`);
     expect(svg).toContain("scores withheld");
-    expect(svg).toContain(`${judge.calibration.agreements} of ${judge.calibration.size} Stories (60%)`);
+    expect(svg).toContain(`${judge.calibration.agreements} of ${judge.calibration.size} Stories (60%, 95% CI 0.387 to 0.781)`);
     expect(svg).toContain("threshold 80%");
+    expect(svg).toContain("95% CI 0.886 to 1.000");
   });
 
   it("puts Parent Summary validity and the Judge's withheld gate on the Summary chart", () => {
@@ -134,6 +156,7 @@ describe("the eval charts", () => {
     expect(judge.faithfulness).toBeNull();
     expect(svg).toContain(`${validity.sample} of ${validity.sample} (100%)`);
     expect(svg).toContain("scores withheld");
-    expect(svg).toContain(`${judge.calibration.agreements} of ${judge.calibration.size} Summaries (60%)`);
+    expect(svg).toContain(`${judge.calibration.agreements} of ${judge.calibration.size} Summaries (60%, 95% CI 0.313 to 0.832)`);
+    expect(svg).toContain("95% CI 0.610 to 1.000");
   });
 });

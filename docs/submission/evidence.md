@@ -40,9 +40,9 @@ Run it yourself with `pnpm coach --real --sessions 3` (*live*, about $1) or `pnp
 - **Detection and false positives**: whether a supported Hypothesis names the planted weakness, and how many supported Hypotheses are false.
 - **Plans accepted, retries, and Baseline fallbacks**.
 - **Sessions to Mastery** under each planner, drawn as `docs/evals/convergence.svg`.
-- **Story validity and Parent Summary validity**, and a Judge whose scores are reported only when it agrees with a hand-labelled Calibration Set on at least 80 percent.
+- **Story validity and Parent Summary validity**, and a Judge whose scores are reported only when it agrees with a hand-labelled Calibration Set on at least 80 percent *and* scores a Cohen's kappa of at least 0.60 against its verdicts; a withheld report names the condition that failed.
 
-The report is a dated JSON under `docs/evals/`, cited by path in the write-up with its headline numbers. A `--fake` run uses the deterministic fake Generation and measures the seams and the gates; a live run measures the Coach.
+Every rate carries its 95 percent Wilson interval beside it, in the JSON, on the same line in the text report, and as a bracket or a range line on the charts, so a small sample is never read as precise. The report is a dated JSON under `docs/evals/`, cited by path in the write-up with its headline numbers. A `--fake` run uses the deterministic fake Generation and measures the seams and the gates; a live run measures the Coach.
 
 ## What a sceptic can do in five minutes
 
