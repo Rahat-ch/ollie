@@ -48,19 +48,19 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 6, the eval (2:10 to 2:22)
 
-> We evaluated it before we believed it. Six simulated children we designed ourselves, so the truth about each is known, two with a planted weakness, two held out of all tuning. Twenty Sessions each, against a fixed-gate baseline on the same seeds, run live three times. Every number is a range across the three runs.
+> How do we know the Coach works? We built six simulated children, each with a known ability, and for two of them we hid a specific trouble spot. Each played twenty Sessions with the Coach and twenty with a plain drill, three times over. Here is what held across all three.
 
 ## Slide 7, finding 1 (2:22 to 2:32)
 
-> Ninety-five thousand nine hundred and twenty-one of ninety-five thousand nine hundred and twenty-two citations the Coach made pointed at real problems it had seen. The one that didn't was rejected at the door.
+> Every belief in the Notebook points at the problems it rests on. Out of ninety-five thousand nine hundred and twenty-two, the Coach pointed at a problem the child never saw exactly once, and the engine threw that note out before anyone read it.
 
 ## Slide 8, finding 2 (2:32 to 2:42)
 
-> It found the planted weaknesses in four of six chances, around Session six for crossing ten, and it never once fell back to the fixed plan.
+> It found the hidden trouble spots in four of six chances, from the evidence alone, around Session six for sums that cross ten. And every one of its three hundred and sixty Session plans stayed inside the curriculum.
 
 ## Slide 9, finding 3 (2:42 to 2:52)
 
-> It also sees ghosts sometimes, one supported belief in six on some children, because eight problems a day is a small sample. And it isn't faster to mastery than the drill, because our simulated children can't learn from practice. We say both in the write-up.
+> Two things we're honest about. Sometimes the Coach sees a pattern that isn't there, because eight problems a day is a small sample. And a plain drill reaches "mastered" a little sooner, because our simulated children can't learn from practice. Real children do. Both are fixable, and both are next.
 
 ## Slide 10, after the hackathon (2:52 to 3:02)
 
