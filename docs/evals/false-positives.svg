@@ -3,6 +3,7 @@
 <text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">False positives: Hypotheses naming a weakness the Learner does not have</text>
 <text x="50" y="46" font-size="11.5" fill="#7A6660">Each bar is one Simulated Learner's distinct supported Hypotheses over the run; the marked end is the false</text>
 <text x="50" y="61" font-size="11.5" fill="#7A6660">ones. Coach: the Anthropic adapter on claude-opus-5. Report 2026-09-18.</text>
+
 <rect x="340.0" y="75.0" width="10" height="10" rx="3" fill="#4CAF7A"/>
 <text x="356.0" y="84.0" font-size="11.5" fill="#3B2E2A">supported Hypotheses</text>
 <rect x="500.0" y="75.0" width="10" height="10" rx="3" fill="#B23F56"/>
@@ -55,5 +56,6 @@
 <text x="520.0" y="310.0" font-size="10" text-anchor="middle" fill="#7A6660">14</text>
 <text x="536.0" y="310.0" font-size="10.5" fill="#7A6660">supported Hypotheses</text>
 <text x="50.0" y="330.0" font-size="11.5" fill="#7A6660">Tuning 10 of 45 false (22%, 95% CI 0.125 to 0.363) · held out 2 of 20 (10%, 95% CI 0.028 to 0.301)</text>
+
 <text x="50" y="348" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T19-09-56Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
 </svg>

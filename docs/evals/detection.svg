@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="264" viewBox="0 0 720 264" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="The Session each planted weakness was first named, over 20 Sessions, for the 2 Simulated Learners with a weakness planted">
-<rect width="720" height="264" fill="#FFF7EC"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="279" viewBox="0 0 720 279" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="The Session each planted weakness was first named, over 20 Sessions, for the 2 Simulated Learners with a weakness planted">
+<rect width="720" height="279" fill="#FFF7EC"/>
 <text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">Detection: the Session a planted weakness was first named</text>
 <text x="50" y="46" font-size="11.5" fill="#7A6660">20 Sessions per Simulated Learner. A weakness counts as named only when a supported Hypothesis says the pattern</text>
 <text x="50" y="61" font-size="11.5" fill="#7A6660">in its own words, never when it only names the Skill. Coach: the Anthropic adapter on claude-opus-5. Report</text>
 <text x="50" y="76" font-size="11.5" fill="#7A6660">2026-09-18.</text>
+<g transform="translate(0 15)">
 <text x="50.0" y="80.0" font-size="10.5" fill="#7A6660">Simulated Learner</text>
 <text x="696.0" y="80.0" font-size="10.5" text-anchor="end" fill="#7A6660">first named</text>
 <line x1="240.0" x2="240.0" y1="98" y2="198" stroke="#EED7B5" stroke-width="1"/>
@@ -28,5 +29,6 @@
 <text x="590.0" y="212.0" font-size="10" text-anchor="middle" fill="#7A6660">20</text>
 <text x="606.0" y="212.0" font-size="10.5" fill="#7A6660">Session</text>
 <text x="50.0" y="232.0" font-size="11.5" fill="#7A6660">Tuning 1 of 1 named (95% CI 0.207 to 1.000) · held out 0 of 1 (95% CI 0.000 to 0.793)</text>
-<text x="50" y="250" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T19-09-56Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
+</g>
+<text x="50" y="265" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T19-09-56Z.json with pnpm eval:chart. Simulated Learners only; never a real child's data.</text>
 </svg>
