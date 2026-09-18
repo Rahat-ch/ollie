@@ -5,6 +5,7 @@
  * both Claude models) is stated in the write-up, not hidden here.
  */
 import Anthropic from "@anthropic-ai/sdk";
+import { recordApiCall, type Telemetry } from "@/generation/telemetry";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { z } from "zod";
 import {
@@ -23,17 +24,17 @@ const JudgementSchema = z.strictObject({
   reason: z.string().min(1).describe("One sentence"),
 });
 
-export function anthropicJudge(options: { readonly apiKey: string }): Judge {
+export function anthropicJudge(options: { readonly apiKey: string; readonly telemetry?: Telemetry }): Judge {
   const client = new Anthropic({ apiKey: options.apiKey });
 
   async function judge(system: string, message: string): Promise<Judgement> {
-    const response = await client.messages.parse({
+    const response = await recordApiCall(options.telemetry, "judge", JUDGE_MODEL, () => client.messages.parse({
       model: JUDGE_MODEL,
       max_tokens: 4000,
       system,
       messages: [{ role: "user", content: message }],
       output_config: { effort: "medium", format: zodOutputFormat(JudgementSchema) },
-    });
+    }));
     if (response.parsed_output === null) {
       throw new Error(`Judge output rejected: the model stopped with ${response.stop_reason}`);
     }

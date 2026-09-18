@@ -1,6 +1,7 @@
 import { getSkill } from "@/loop";
 import { evidenceParts } from "@/summary/assistance";
 import { templateStory } from "@/story/template";
+import { zeroCall, type Telemetry, type TelemetryOperation } from "./telemetry";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
 import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
@@ -126,8 +127,25 @@ async function renderSpeech({ text }: SpeechInput): Promise<SpeechOutput> {
 /**
  * The Generation fake: deterministic, valid, no I/O. Every test and the CLI
  * run on it. `overrides` swap one operation and keep the rest, so a test of
- * the engine can hand it a Coach that misbehaves.
+ * the engine can hand it a Coach that misbehaves. A `telemetry` reports each
+ * of the three model operations as a call of no tokens and no milliseconds,
+ * through the same recorder the real adapter uses, so a fake run exercises
+ * the path and its report carries a telemetry section costing nothing.
  */
-export function fakeGeneration(overrides: Partial<Generation> = {}): Generation {
-  return { writeStory, runCoach, writeSummary, renderSpeech, ...overrides };
+export function fakeGeneration(overrides: Partial<Generation> = {}, telemetry?: Telemetry): Generation {
+  const generation: Generation = { writeStory, runCoach, writeSummary, renderSpeech, ...overrides };
+  if (!telemetry) return generation;
+  const reported =
+    <I, O>(operation: TelemetryOperation, run: (input: I) => Promise<O>) =>
+    async (input: I): Promise<O> => {
+      const output = await run(input);
+      telemetry.record(zeroCall(operation));
+      return output;
+    };
+  return {
+    ...generation,
+    writeStory: reported("story", generation.writeStory),
+    runCoach: reported("coach", generation.runCoach),
+    writeSummary: reported("summary", generation.writeSummary),
+  };
 }

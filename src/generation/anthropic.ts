@@ -18,6 +18,7 @@ import { SUMMARY_SYSTEM_PROMPT, summaryUserMessage } from "@/summary/prompt";
 import { COACH_SYSTEM_PROMPT, coachUserMessage } from "./coach-prompt";
 import { CoachOutputSchema, parseCoachOutput } from "./coach-schema";
 import { SummaryOutputSchema, parseSummaryOutput } from "./summary-schema";
+import { recordApiCall, type Telemetry } from "./telemetry";
 import type { CoachInput, CoachOutput, Generation, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
 export const COACH_MODEL = "claude-opus-5";
@@ -26,20 +27,25 @@ export const SUMMARY_MODEL = "claude-opus-5";
 
 const StoryOutputSchema = z.strictObject({ text: z.string().describe("The Story: two sentences, nothing else") });
 
-export type AnthropicGenerationOptions = { readonly apiKey: string };
+export type AnthropicGenerationOptions = {
+  readonly apiKey: string;
+  /** Where each call reports its tokens and its wall time. The app's routes pass none and record nothing; the eval CLI installs one. */
+  readonly telemetry?: Telemetry;
+};
 
 export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
   const client = new Anthropic({ apiKey: options.apiKey });
+  const { telemetry } = options;
 
   async function runCoach(input: CoachInput): Promise<CoachOutput> {
     const messages: Anthropic.MessageParam[] = [{ role: "user", content: coachUserMessage(input) }];
-    const response = await client.messages.parse({
+    const response = await recordApiCall(telemetry, "coach", COACH_MODEL, () => client.messages.parse({
       model: COACH_MODEL,
       max_tokens: 16000,
       system: COACH_SYSTEM_PROMPT,
       messages,
       output_config: { effort: "high", format: zodOutputFormat(CoachOutputSchema) },
-    });
+    }));
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
       throw new Error(`Coach output rejected: the model stopped with ${response.stop_reason}`);
     }
@@ -54,13 +60,13 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
   }
 
   async function writeSummary(input: SummaryInput): Promise<SummaryOutput> {
-    const response = await client.messages.parse({
+    const response = await recordApiCall(telemetry, "summary", SUMMARY_MODEL, () => client.messages.parse({
       model: SUMMARY_MODEL,
       max_tokens: 4000,
       system: SUMMARY_SYSTEM_PROMPT,
       messages: [{ role: "user", content: summaryUserMessage(input) }],
       output_config: { effort: "medium", format: zodOutputFormat(SummaryOutputSchema) },
-    });
+    }));
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
       throw new Error(`Parent Summary rejected: the model stopped with ${response.stop_reason}`);
     }
@@ -75,13 +81,13 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
   }
 
   async function writeStory(input: StoryInput): Promise<StoryOutput> {
-    const response = await client.messages.parse({
+    const response = await recordApiCall(telemetry, "story", STORY_MODEL, () => client.messages.parse({
       model: STORY_MODEL,
       max_tokens: 4000,
       system: STORY_SYSTEM_PROMPT,
       messages: [{ role: "user", content: storyUserMessage(input) }],
       output_config: { effort: "low", format: zodOutputFormat(StoryOutputSchema) },
-    });
+    }));
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
       throw new Error(`Story rejected: the model stopped with ${response.stop_reason}`);
     }

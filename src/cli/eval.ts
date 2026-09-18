@@ -22,6 +22,7 @@ import { runEvals } from "@/evals/evals";
 import { writeCharts, writeReport } from "@/evals/files";
 import { formatEvalResults } from "@/evals/format";
 import { describeGeneration, evalReport } from "@/evals/report";
+import { createRecorder } from "@/generation/telemetry";
 import { formatSessionLine } from "@/loop/format";
 import { chooseGeneration, chooseJudge } from "./generation";
 
@@ -40,8 +41,11 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 
 async function main(): Promise<void> {
   const mode = values.fake ? "fake" : "real";
-  const coach = await chooseGeneration(mode);
-  const judge = await chooseJudge(mode);
+  // One recorder for the run: the Coach, the Story writer, the Summary
+  // writer and the Judge all report to it, and the report reads it at the end.
+  const recorder = createRecorder();
+  const coach = await chooseGeneration(mode, recorder);
+  const judge = await chooseJudge(mode, recorder);
   console.log(`Coach: ${describeGeneration(coach.name)}${values.fake ? " (no network)" : ""}`);
   console.log(`Stories: ${describeGeneration(coach.storyName)}; Parent Summaries: ${describeGeneration(coach.name)}; Judge: ${describeGeneration(judge.name)}`);
   if (values.fake) {
@@ -53,6 +57,7 @@ async function main(): Promise<void> {
   const results = await runEvals({
     sessions,
     coach,
+    recorder,
     stories: { generation: coach.generation, name: coach.storyName, judge: judge.judge, judgeName: judge.name },
     summaries: { generation: coach.generation, name: coach.name, judge: judge.judge, judgeName: judge.name },
     onSession: values.fake
