@@ -60,7 +60,7 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 9, after the hackathon (2:40 to 2:52)
 
-> What's next. The Coach will only say it's sure when the numbers back it up, so fewer false alarms. Pretend learners that improve with practice, so we can measure teaching, not just spotting. Then a mobile app. A Session costs about twenty cents today and about five with a smaller model, so a seven-dollar-a-month subscription pays for a child who plays every day.
+> What's next, in the same order. Fewer false alarms: the engine does the counting, and the Coach only says it's sure when the numbers back it. A fair speed test: pretend learners that improve with practice, the way real children do, so the comparison with the drill measures teaching and not just spotting. Then a mobile app. A Session costs about twenty cents today and about five with a smaller model, so a seven-dollar-a-month subscription pays for a child who plays every day.
 
 ## Slide 10, close (2:52)
 
