@@ -1,3 +1,4 @@
+import { TELEMETRY_OPERATIONS, type TelemetrySection } from "@/generation/telemetry";
 import { getSkill, SKILLS } from "@/loop";
 import { table } from "@/loop/format";
 import type { LearnerConvergence, SplitSummary } from "./convergence";
@@ -166,6 +167,41 @@ export function formatSummaries(summaries: SummaryReport): string {
   ].join("\n");
 }
 
+/** `$0.1234`, or undefined for a model the price table has no rate for. */
+export const money = (dollars: number | null): string => (dollars === null ? "undefined" : `$${dollars.toFixed(4)}`);
+
+const count = (value: number): string => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const seconds = (ms: number): string => `${(ms / 1000).toFixed(1)} s`;
+
+/**
+ * The Cost block: per operation and in total, the calls made, the tokens
+ * moved, the time they took, and what the published rate table says that
+ * cost; then what one Session of the Coach cost. The dollars are an
+ * estimate from the rates on the day, never the invoice, and a model with
+ * no published rate is said to be undefined rather than guessed at.
+ */
+export function formatTelemetry(telemetry: TelemetrySection): string {
+  const row = (name: string, totals: TelemetrySection["total"]): string[] => [
+    name,
+    totals.models.join(", ") || "-",
+    count(totals.calls),
+    count(totals.tokens),
+    seconds(totals.ms),
+    money(totals.dollars),
+  ];
+  const { perSession } = telemetry;
+  return [
+    "Cost (estimated from the published rates on the day, not the invoice)",
+    ...table([
+      ["Operation", "Model", "Calls", "Tokens", "Time", "Estimated"],
+      ...TELEMETRY_OPERATIONS.map((operation) => row(operation, telemetry.byOperation[operation])),
+      row("Total", telemetry.total),
+    ]),
+    `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
+      `${money(perSession.dollarsPerSession)} per Session over ${perSession.sessions} Sessions`,
+  ].join("\n");
+}
+
 /**
  * The Eval Run as text: the tuning Learners, then the held-out Learners in
  * their own section, each with convergence under the Coach and the Baseline
@@ -185,5 +221,7 @@ export function formatEvalResults(results: EvalResults): string {
     formatStories(results.stories),
     "",
     formatSummaries(results.summaries),
+    "",
+    formatTelemetry(results.telemetry),
   ].join("\n");
 }

@@ -7,8 +7,9 @@
  */
 import { existsSync } from "node:fs";
 import type { CoachGeneration } from "@/evals/evals";
-import { fakeJudge, type Judge } from "@/evals/judge";
+import { fakeJudge, recordedFakeJudge, type Judge } from "@/evals/judge";
 import { fakeGeneration } from "@/generation";
+import type { Telemetry } from "@/generation/telemetry";
 import { readEnv, requireEnv, type Env } from "@/lib/env";
 import { voiceRenderer, type VoiceRenderer } from "@/lib/voice-renderer";
 
@@ -30,12 +31,16 @@ export function elevenLabsApiKey(): string {
   return requireEnv(localEnv(), "elevenLabsApiKey");
 }
 
-/** The fake, or the real adapter, with the names a report records for the Coach and the Story writer. */
-export async function chooseGeneration(mode: Mode): Promise<CoachGeneration & { readonly storyName: string }> {
-  if (mode === "fake") return { generation: fakeGeneration(), name: "fake", storyName: "fake" };
+/**
+ * The fake, or the real adapter, with the names a report records for the
+ * Coach and the Story writer. A `telemetry` is reported to by both, so the
+ * caller that installed it sees the same call shape either way.
+ */
+export async function chooseGeneration(mode: Mode, telemetry?: Telemetry): Promise<CoachGeneration & { readonly storyName: string }> {
+  if (mode === "fake") return { generation: fakeGeneration({}, telemetry), name: "fake", storyName: "fake" };
   const apiKey = anthropicApiKey();
   const { anthropicGeneration, COACH_MODEL, STORY_MODEL } = await import("@/generation/anthropic");
-  return { generation: anthropicGeneration({ apiKey }), name: COACH_MODEL, storyName: STORY_MODEL };
+  return { generation: anthropicGeneration({ apiKey, telemetry }), name: COACH_MODEL, storyName: STORY_MODEL };
 }
 
 /** The fake renderer, or the same ElevenLabs renderer the speech route uses, with the name a run records. */
@@ -45,9 +50,9 @@ export async function chooseRenderer(mode: Mode): Promise<VoiceRenderer> {
 }
 
 /** The fake Judge (the validator's opinion, which fails calibration by design), or Opus 5 with the rubric. */
-export async function chooseJudge(mode: Mode): Promise<{ readonly judge: Judge; readonly name: string }> {
-  if (mode === "fake") return { judge: fakeJudge, name: "fake" };
+export async function chooseJudge(mode: Mode, telemetry?: Telemetry): Promise<{ readonly judge: Judge; readonly name: string }> {
+  if (mode === "fake") return { judge: telemetry ? recordedFakeJudge(telemetry) : fakeJudge, name: "fake" };
   const apiKey = anthropicApiKey();
   const { anthropicJudge, JUDGE_MODEL } = await import("@/evals/judge-anthropic");
-  return { judge: anthropicJudge({ apiKey }), name: JUDGE_MODEL };
+  return { judge: anthropicJudge({ apiKey, telemetry }), name: JUDGE_MODEL };
 }

@@ -8,6 +8,7 @@
  * scored in their own split and are never used to tune the Coach prompt.
  * Pure over its inputs: on the fake the same options give the same results.
  */
+import { telemetrySection, type Recorder, type TelemetrySection } from "@/generation/telemetry";
 import type { Generation } from "@/generation";
 import { convergenceReport, TARGET_ACCURACY_BAND, type ConvergenceReport } from "./convergence";
 import { evidenceIntegrity, scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
@@ -62,6 +63,8 @@ export type EvalResults = {
   readonly hypotheses: HypothesisReport;
   readonly stories: StoryReport;
   readonly summaries: SummaryReport;
+  /** What the run's model calls used and are estimated to have cost. Zero throughout on the fake. */
+  readonly telemetry: TelemetrySection;
 };
 
 /** The Generation the Coach runs on and the name the report records for it. */
@@ -78,6 +81,12 @@ export type EvalOptions = {
   readonly stories: Omit<StoryEvalOptions, "sample" | "concurrency">;
   /** The Parent Summary writer and the Judge; the sample is the Coach run's own Sessions. */
   readonly summaries: Omit<SummaryEvalOptions, "sample" | "concurrency">;
+  /**
+   * Where the adapters report every model call. The run reads it once at the
+   * end for the report's telemetry section; without one that section is
+   * empty rather than absent.
+   */
+  readonly recorder?: Recorder;
   /** Called after every Session of every Coach run, so a long run can show progress. */
   readonly onSession?: (learner: SimulatedLearnerId, trace: SessionTrace) => void;
 };
@@ -159,5 +168,7 @@ export async function runEvals(options: EvalOptions): Promise<EvalResults> {
     hypotheses: hypothesisReport(coached),
     stories,
     summaries,
+    // Read last, so every call the run made is in it.
+    telemetry: telemetrySection(options.recorder?.calls() ?? [], sessions * SIMULATED_LEARNERS.length),
   };
 }

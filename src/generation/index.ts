@@ -9,3 +9,5 @@ export { CoachInputSchema, CoachOutputSchema, parseCoachOutput } from "./coach-s
 export type { SummaryOutputParse } from "./summary-schema";
 export { parseSummaryOutput, SummaryInputSchema, SummaryOutputSchema } from "./summary-schema";
 export { fakeGeneration } from "./fake";
+export type { CostTotals, ModelCall, Recorder, Telemetry, TelemetryOperation, TelemetrySection } from "./telemetry";
+export { callDollars, createRecorder, MODEL_PRICES, telemetrySection, TELEMETRY_OPERATIONS } from "./telemetry";

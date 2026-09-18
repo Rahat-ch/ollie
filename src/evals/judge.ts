@@ -10,6 +10,7 @@
  * opinions, which by design fail calibration, so a fake Eval Run shows the
  * gate and withholds.
  */
+import { zeroCall, type Telemetry } from "@/generation/telemetry";
 import type { StoryInput, SummaryInput, SummaryOutput } from "@/generation/types";
 import { describeProblem } from "@/story/prompt";
 import { validateStory } from "@/story/validate";
@@ -125,6 +126,24 @@ export const fakeJudge: Judge = {
       : { pass: false, reason: verdict.reasons.join("; ") };
   },
 };
+
+/**
+ * The fake Judge reporting every verdict through the recorder as a call of
+ * no tokens and no milliseconds, so a fake run's telemetry names the Judge
+ * alongside the three Generation operations.
+ */
+export const recordedFakeJudge = (telemetry: Telemetry): Judge => ({
+  judgeStory: async (story) => {
+    const verdict = await fakeJudge.judgeStory(story);
+    telemetry.record(zeroCall("judge"));
+    return verdict;
+  },
+  judgeSummary: async (summary) => {
+    const verdict = await fakeJudge.judgeSummary(summary);
+    telemetry.record(zeroCall("judge"));
+    return verdict;
+  },
+});
 
 /** The Judge's verdicts against the human's, item by item: the human's label first. */
 export type Confusion = {
