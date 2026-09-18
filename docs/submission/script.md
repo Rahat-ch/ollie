@@ -30,9 +30,9 @@ Switch to the app. Tap Play.
 
 > This child already mastered counting on, so Ollie has Count-On Flight, and he uses it on every counting-on problem.
 
-**Problems 5 to 8.** Tap 14, 13, then miss 8 + 7 with 14, Hint, 15, then 11. Celebration.
+**Problems 5 to 8.** Tap 14, 13, then miss 8 + 7 with 14, Hint, 15, then 11. The Power celebration: Ollie learning Make-Ten Magic.
 
-> One more crossing-ten miss and the Session's done. Ten Coins for finishing, not for being right. Now the interesting part happens off screen: an AI Coach reads the Session Log.
+> One more crossing-ten miss and the Session's done. And that was enough: make-a-ten is Mastered, and Ollie just learned Make-Ten Magic, the Power he'll use on every make-a-ten problem from now on. Ten Coins for finishing, not for being right. Now the interesting part happens off screen: an AI Coach reads the Session Log.
 
 Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds, Parent Area, scroll to Ollie's Notebook. Tap "Show the 2 Problems this rests on".
 
