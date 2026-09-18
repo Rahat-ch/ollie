@@ -30,7 +30,7 @@ Run it yourself with `pnpm coach --real --sessions 3` (*live*, about $1) or `pnp
 | A Story never alters or omits the engine's numbers and stays in its Theme's words | The Story validator, three attempts then the template | eight good and eleven bad hand-written Stories; every Story in the bundled Pool is validated under its key | `pnpm vitest run src/story` |
 | The whole loop is deterministic and fast | The Loop is a pure function | "produces an identical Log and Profile for the same seed and policy"; "runs hundreds of Sessions in well under a second" | `pnpm vitest run src/loop/loop.test.ts` |
 
-`pnpm test` runs all of it: 576 tests. `pnpm test:e2e` runs the browser suites against the built app in Chromium and in WebKit at nine iPad sizes.
+`pnpm test` runs all of it: 623 tests. `pnpm test:e2e` runs the browser suites against the built app in Chromium and in WebKit at nine iPad sizes.
 
 ## The eval
 
@@ -44,9 +44,11 @@ Run it yourself with `pnpm coach --real --sessions 3` (*live*, about $1) or `pnp
 
 Every rate carries its 95 percent Wilson interval beside it, in the JSON, on the same line in the text report, and as a bracket or a range line on the charts, so a small sample is never read as precise. The report is a dated JSON under `docs/evals/`, cited by path in the write-up with its headline numbers. A `--fake` run uses the deterministic fake Generation and measures the seams and the gates; a live run measures the Coach.
 
+**The three live runs.** `pnpm eval` was run live three times on 2026-09-18, back to back, on the real Opus 5 Coach, Sonnet 5 Story writer, Opus 5 Parent Summary writer and Opus 5 Judge: [`docs/evals/2026-09-18T18-12-41Z.json`](../evals/2026-09-18T18-12-41Z.json), [`docs/evals/2026-09-18T18-41-44Z.json`](../evals/2026-09-18T18-41-44Z.json), and [`docs/evals/2026-09-18T19-09-56Z.json`](../evals/2026-09-18T19-09-56Z.json). The seven charts are drawn from the third. The three share their seeds, their Learners, their Baseline and every threshold — `convergence.baseline` is identical in all three files, byte for byte — so the difference between them is the Coach's own variability and nothing else, which is why the write-up quotes every headline as a range across the three: Evidence Integrity 100 percent in each (95,922 citations in all), claim agreement 92 to 95 percent, each planted weakness named in 2 of the 3 runs, false positives 4 of 39 to 10 of 45 on the tuning split, 358 of 360 Plans accepted first time with no Baseline fallback, Stories 87 to 93 percent valid first try, Summaries 6 of 6 valid and 6 of 6 faithful in every run, $26.27 to $27.12 a run. `pnpm eval:rescore --report docs/evals/<file>.json` re-scores any of the three with the current scorer and prints the new detection and false positives beside the stored ones, without rewriting the file; `pnpm eval:chart --report docs/evals/<file>.json` redraws the charts from any of them. `docs/evals/README.md` explains what a three-run spread is and what each number is made of.
+
 ## What a sceptic can do in five minutes
 
-1. `pnpm test`: 576 tests, including every validator above.
+1. `pnpm test`: 623 tests, including every validator above.
 2. `pnpm coach --sessions 3`: the fake, which plans like a Baseline. Then `pnpm coach --real --sessions 3` (*live*): the Coach. Compare the Notes.
 3. Open the deployed app, play one Session, hold "Grown-ups", and open Ollie's Notebook: every Hypothesis shows its evidence as the actual Problems, tappable, and the next Session's Plan is the one the Coach wrote.
 4. Read `docs/adr/0001-engine-owns-math-model-owns-words.md` and `0003-coach-plans-within-bounded-space-engine-executes.md` for why it is built this way.

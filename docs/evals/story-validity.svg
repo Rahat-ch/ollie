@@ -1,35 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="362" viewBox="0 0 720 362" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Stories validity: 30 of 30 valid on the first attempt, 0 template fallbacks, and the Judge's calibration gate">
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="362" viewBox="0 0 720 362" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" role="img" aria-label="Stories validity: 28 of 30 valid on the first attempt, 1 template fallbacks, and the Judge's calibration gate">
 <rect width="720" height="362" fill="#FFF7EC"/>
 <text x="50" y="28" font-size="17" font-weight="600" fill="#3B2E2A">Story validity: what the validator accepted</text>
-<text x="50" y="46" font-size="11.5" fill="#7A6660">30 Stories, one per Theme and Unit 3 structure, written through the Generation fake in 30 attempts and checked</text>
-<text x="50" y="61" font-size="11.5" fill="#7A6660">by the validator. Coach: the Generation fake. Report 2026-09-18.</text>
+<text x="50" y="46" font-size="11.5" fill="#7A6660">30 Stories, one per Theme and Unit 3 structure, written through the Anthropic adapter on claude-sonnet-5 in 33</text>
+<text x="50" y="61" font-size="11.5" fill="#7A6660">attempts and checked by the validator. Coach: the Anthropic adapter on claude-opus-5. Report 2026-09-18.</text>
 <text x="50.0" y="118.0" font-size="12" fill="#3B2E2A">Valid on the first attempt</text>
 <rect x="290.0" y="107.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
-<rect x="290.0" y="107.0" width="230.0" height="14" rx="4" fill="#4CAF7A"/>
-<g data-mark="interval"><line x1="493.9" x2="520.0" y1="114.0" y2="114.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="493.9" x2="493.9" y1="109.0" y2="119.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="520.0" x2="520.0" y1="109.0" y2="119.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
-<text x="532.0" y="116.0" font-size="11.5" fill="#7A6660">30 of 30 (100%)</text>
-<text x="532.0" y="129.0" font-size="10" fill="#7A6660">95% CI 0.886 to 1.000</text>
+<rect x="290.0" y="107.0" width="214.7" height="14" rx="4" fill="#4CAF7A"/>
+<g data-mark="interval"><line x1="471.0" x2="515.8" y1="114.0" y2="114.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="471.0" x2="471.0" y1="109.0" y2="119.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="515.8" x2="515.8" y1="109.0" y2="119.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
+<text x="532.0" y="116.0" font-size="11.5" fill="#7A6660">28 of 30 (93%)</text>
+<text x="532.0" y="129.0" font-size="10" fill="#7A6660">95% CI 0.787 to 0.982</text>
 <text x="50.0" y="152.0" font-size="12" fill="#3B2E2A">Valid within three attempts</text>
 <rect x="290.0" y="141.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
-<rect x="290.0" y="141.0" width="230.0" height="14" rx="4" fill="#4CAF7A"/>
-<g data-mark="interval"><line x1="493.9" x2="520.0" y1="148.0" y2="148.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="493.9" x2="493.9" y1="143.0" y2="153.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="520.0" x2="520.0" y1="143.0" y2="153.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
-<text x="532.0" y="150.0" font-size="11.5" fill="#7A6660">30 of 30 (100%)</text>
-<text x="532.0" y="163.0" font-size="10" fill="#7A6660">95% CI 0.886 to 1.000</text>
+<rect x="290.0" y="141.0" width="222.3" height="14" rx="4" fill="#4CAF7A"/>
+<g data-mark="interval"><line x1="481.7" x2="518.6" y1="148.0" y2="148.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="481.7" x2="481.7" y1="143.0" y2="153.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="518.6" x2="518.6" y1="143.0" y2="153.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
+<text x="532.0" y="150.0" font-size="11.5" fill="#7A6660">29 of 30 (97%)</text>
+<text x="532.0" y="163.0" font-size="10" fill="#7A6660">95% CI 0.833 to 0.994</text>
 <text x="50.0" y="186.0" font-size="12" fill="#3B2E2A">Template fallbacks</text>
 <rect x="290.0" y="175.0" width="230.0" height="14" rx="4" fill="#F8E8CF"/>
-
-<g data-mark="interval"><line x1="290.0" x2="316.1" y1="182.0" y2="182.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="290.0" x2="290.0" y1="177.0" y2="187.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="316.1" x2="316.1" y1="177.0" y2="187.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
-<text x="532.0" y="184.0" font-size="11.5" fill="#7A6660">0 of 30 (0%)</text>
-<text x="532.0" y="197.0" font-size="10" fill="#7A6660">95% CI 0.000 to 0.114</text>
+<rect x="290.0" y="175.0" width="7.7" height="14" rx="4" fill="#B23F56"/>
+<g data-mark="interval"><line x1="291.4" x2="328.3" y1="182.0" y2="182.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="291.4" x2="291.4" y1="177.0" y2="187.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="328.3" x2="328.3" y1="177.0" y2="187.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
+<text x="532.0" y="184.0" font-size="11.5" fill="#7A6660">1 of 30 (3%)</text>
+<text x="532.0" y="197.0" font-size="10" fill="#7A6660">95% CI 0.006 to 0.167</text>
 <rect x="50" y="212" width="646" height="112" rx="12" fill="#FFF7EC" stroke="#EED7B5" stroke-width="1"/>
-<text x="66.0" y="236.0" font-size="13" font-weight="600" fill="#B23F56">The Judge (the fake Judge): scores withheld</text>
-<text x="66.0" y="254.0" font-size="11" fill="#7A6660">Withheld: agreement 0.60 is below the threshold 0.80, and kappa 0.00 is below the floor 0.60.</text>
-<text x="66.0" y="272.0" font-size="11" fill="#7A6660">Agreed with the Calibration Set on 12 of 20 Stories (60%, 95% CI 0.387 to 0.781)</text>
-<text x="66.0" y="290.0" font-size="11" fill="#7A6660">kappa 0.00, floor 0.60; an always-pass Judge would score 60%, an always-fail Judge 40%</text>
+<text x="66.0" y="236.0" font-size="13" font-weight="600" fill="#2F8A5B">The Judge (the Anthropic adapter on claude-opus-5): readability reported</text>
+<text x="66.0" y="254.0" font-size="11" fill="#7A6660">19 of 29 pass (66%); the Judge cleared calibration first.</text>
+<text x="66.0" y="272.0" font-size="11" fill="#7A6660">Agreed with the Calibration Set on 20 of 20 Stories (100%, 95% CI 0.839 to 1.000)</text>
+<text x="66.0" y="290.0" font-size="11" fill="#7A6660">kappa 1.00, floor 0.60; an always-pass Judge would score 60%, an always-fail Judge 40%</text>
 <rect x="66.0" y="304.0" width="300.0" height="10" rx="4" fill="#F8E8CF"/>
-<rect x="66.0" y="304.0" width="180.0" height="10" rx="4" fill="#B23F56"/>
-<g data-mark="interval"><line x1="182.0" x2="300.4" y1="309.0" y2="309.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="182.0" x2="182.0" y1="304.0" y2="314.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="300.4" x2="300.4" y1="304.0" y2="314.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
+<rect x="66.0" y="304.0" width="300.0" height="10" rx="4" fill="#4CAF7A"/>
+<g data-mark="interval"><line x1="317.7" x2="366.0" y1="309.0" y2="309.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="317.7" x2="317.7" y1="304.0" y2="314.0" stroke="#3B2E2A" stroke-width="1.5"/><line x1="366.0" x2="366.0" y1="304.0" y2="314.0" stroke="#3B2E2A" stroke-width="1.5"/></g>
 <line x1="306.0" x2="306.0" y1="300" y2="318" stroke="#3B2E2A" stroke-width="2"/>
 <text x="378.0" y="313.0" font-size="10.5" fill="#7A6660">threshold 80%</text>
-<text x="50" y="348" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T17-41-33Z.json with pnpm eval:chart. The engine owns the numbers; the Story only dresses them.</text>
+<text x="50" y="348" font-size="10.5" fill="#7A6660">Regenerated from 2026-09-18T19-09-56Z.json with pnpm eval:chart. The engine owns the numbers; the Story only dresses them.</text>
 </svg>
