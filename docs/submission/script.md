@@ -40,11 +40,11 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 4, architecture (1:35 to 1:55)
 
-> How it's built. A pure engine owns the math: every problem, every answer, the Hint, mastery, the rewards. Deterministic, tested, no model anywhere near it. On the other side, four generative jobs: word problems in the child's theme, the Coach's beliefs and next plan, the parent summary, and Ollie's voice. The AI can personalise the learning path. It cannot make up the math.
+> How it's built. The math is never left to the AI. A plain program owns every problem, every answer, every Hint, and what counts as mastered, the same way every time. The AI does four jobs around it: it writes the word problems in the child's theme, it coaches by reading the evidence and planning the next Session, it writes the parent's note, and it gives Ollie his voice. The AI can personalise the learning path. It cannot make up the math.
 
 ## Slide 5, two seams (1:55 to 2:10)
 
-> Everything a model writes passes a deterministic check before a child or a parent sees it. A story that changes a number is rejected. A plan that leaves the curriculum is rejected. A belief that cites a problem the Coach was never shown is rejected, and the fixed plan takes over, so play never stops. Built in nine days with Claude Code, and every line of that is disclosed.
+> And everything the AI writes is checked before a child or a parent sees it. A word problem that changes a number is thrown out. A plan that leaves the curriculum is thrown out. A belief that points at a problem the child never saw is thrown out, and a plain plan takes over, so play never stops. We built it in nine days with Claude Code.
 
 ## Slide 6, the eval (2:10 to 2:22)
 
@@ -64,7 +64,7 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## Slide 10, after the hackathon (2:52 to 3:02)
 
-> Next: the engine takes over the statistics, so the Coach can only call a belief supported when the counts back it. Children who learn, so the speed comparison means something. Then a mobile app: a Session costs about twenty cents on Opus today and five on Sonnet, so a seven-dollar subscription works.
+> What's next. The Coach will only say it's sure when the numbers back it up, so fewer false alarms. Simulated children who learn from practice, so we can measure teaching, not just spotting. Then a mobile app. A Session costs about twenty cents today and about five with a smaller model, so a seven-dollar-a-month subscription pays for a child who plays every day.
 
 ## Slide 11, close (3:02)
 
@@ -72,4 +72,4 @@ Tap Done. Wait about twenty seconds on Home. Then Grown-ups, hold three seconds,
 
 ## If you are over three minutes
 
-Cut in this order: the last sentence of slide 2 ("Mastery changes the game..."), the Count-On Flight line in the demo, the "Built in nine days" sentence on slide 5. Never cut the two taglines, the architecture line, or the two weaknesses on slide 9.
+Cut in this order: the last sentence of slide 2 ("Mastery changes the game..."), the Count-On Flight line in the demo, the "We built it in nine days" sentence on slide 5. Never cut the two taglines, the architecture line, or the two honest points on slide 9.
