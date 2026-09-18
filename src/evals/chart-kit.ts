@@ -73,17 +73,25 @@ export function wrap(body: string, limit = SUBTITLE_LINE): string[] {
 
 /** A chart: the paper, the title block, the body, and the line saying where the numbers came from. */
 export function paper(frame: Frame, body: readonly string[]): string {
-  const { width, height } = frame;
+  const { width } = frame;
+  const subtitle = wrap(frame.subtitle);
+  // The bodies are laid out for a two-line subtitle. A live model id can push
+  // it to a third line, so the body moves down by that line and the paper
+  // grows with it, rather than the subtitle running into the first row.
+  const extra = Math.max(0, subtitle.length - 2) * 15;
+  const height = frame.height + extra;
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" font-family="${FONT}" role="img" aria-label="${escape(frame.label)}">`,
     `<rect width="${width}" height="${height}" fill="${SURFACE}"/>`,
     `<text x="${GUTTER}" y="28" font-size="17" font-weight="600" fill="${INK}">${escape(frame.title)}</text>`,
-    ...wrap(frame.subtitle).map((line, index) => `<text x="${GUTTER}" y="${46 + index * 15}" font-size="11.5" fill="${INK_SOFT}">${escape(line)}</text>`),
+    ...subtitle.map((line, index) => `<text x="${GUTTER}" y="${46 + index * 15}" font-size="11.5" fill="${INK_SOFT}">${escape(line)}</text>`),
+    extra > 0 ? `<g transform="translate(0 ${extra})">` : "",
     ...body,
+    extra > 0 ? `</g>` : "",
     `<text x="${GUTTER}" y="${height - 14}" font-size="10.5" fill="${INK_SOFT}">Regenerated from ${escape(frame.reportName)} with pnpm eval:chart. ${escape(frame.note ?? DEFAULT_NOTE)}</text>`,
     `</svg>`,
     "",
-  ].join("\n");
+  ].filter((line) => line !== "" || true).join("\n");
 }
 
 export const text = (
