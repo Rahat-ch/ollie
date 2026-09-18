@@ -4,10 +4,10 @@
 
 **Blocked by:** 02 Design direction, 13 Ollie's Powers, 14 Streak, Coins, and Shop
 
-**Status:** ready-for-human — the side-by-side review at `docs/design/review-2026-09-13.html` awaits the user's approval; the second box is theirs to tick.
+**Status:** resolved
 
 - [x] No placeholder art remains anywhere in the Learner or Parent flows
-- [ ] All art matches the character sheet and tokens; a side-by-side review against the canvas is recorded as approved by the user
+- [x] All art matches the character sheet and tokens; a side-by-side review against the canvas is recorded as approved by the user
 - [x] Assets are SVG where possible and total under a stated size budget so first load stays fast on a tablet
 - [x] THIRD_PARTY lists every asset source and any generative-AI involvement
 
@@ -34,3 +34,5 @@ Standards: the glasses rims, bridge and arms, the snail's eyestalks, and its she
 **The numbers, remeasured.** The first-load figure in the paragraph above was read on a warm cache and was wrong. `pnpm design:review` now ends by printing a cold load of the Home screen, taken in a context whose `storageState` carries the Profile so nothing is fetched before the measured load: **27 requests, 399,503 bytes encoded**. Of that, 56,152 bytes are the three self-hosted woff2 and about 268,000 bytes are the React and Next runtime chunks every route shares; the only SVG file fetched is `ollie-head.svg` at 616 bytes encoded, and the rest of the art rides inside the route's JS. The art budget is unchanged and still the one the ticket asks for: all hand-authored SVG under 120 KB uncompressed, measured at **73,842 bytes** (the nine pose files 29,663, `src/app/icon.svg` 1,454, and the twelve inline art modules 42,725 — `Avatar`, `AvatarItems`, `ThemeIcon`, `PowerMark`, `RewardChips`, `LockIcon`, `icons`, `art`, `Path`, `NumberLine`, `TenFrame`, and `Celebration`, the set THIRD_PARTY discloses), 62% of it. The first-load budget is restated honestly against what a cold tablet actually fetches: under 450 KB encoded, of which the art is under 25 KB; 399,503 bytes measured.
 
 Verified with `pnpm typecheck`, `pnpm lint`, `pnpm test` (568 in 62 files), `pnpm build`, `pnpm test:e2e` (34), `pnpm licenses:check`, and `pnpm design:review`; `/design-review` answers 404 on the production build without the variable and 200 with it, while `/` answers 200 either way.
+
+**2026-09-18, approved.** The user reviewed the art on the deployed iPad build and the review page and signed it off ("design is good consider that signed off on"); the ticket is resolved.
