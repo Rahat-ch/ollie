@@ -4,12 +4,24 @@ import type { LearnerConvergence, SplitSummary } from "./convergence";
 import type { EvalResults, HypothesisSplit } from "./evals";
 import type { LearnerHypotheses, PlanSources } from "./hypotheses";
 import { describeWeakness, type SimulatedLearnerId } from "./learners";
+import type { Calibration } from "./judge";
 import { describeGeneration } from "./report";
-import type { SplitKey } from "./stats";
+import type { Interval, SplitKey, Validity } from "./stats";
 import type { StoryReport } from "./stories";
 import type { SummaryReport } from "./summaries";
 
 export const pct = (share: number): string => `${Math.round(share * 100)}%`;
+
+/**
+ * `95% CI 0.058 to 0.392`: how much of the range a rate's sample really
+ * supports, printed to three places because at the ends of the scale two
+ * would round the width away. Said as undefined when nothing was counted.
+ */
+export const ci = (interval: Interval | null): string =>
+  interval === null ? "95% CI undefined" : `95% CI ${interval.lower.toFixed(3)} to ${interval.upper.toFixed(3)}`;
+
+/** `17%, 95% CI 0.058 to 0.392`: a rate never printed without what it is worth. */
+export const rate = (share: number, interval: Interval | null): string => `${pct(share)}, ${ci(interval)}`;
 
 /** `C / B`: the Coach's number then the Baseline's, so the two planners read side by side. */
 const pair = (coach: string, baseline: string): string => `${coach} / ${baseline}`;
@@ -69,15 +81,15 @@ function hypothesisRows(learners: readonly LearnerHypotheses[]): string[] {
 function summaryLines(coach: SplitSummary, baseline: SplitSummary, hypotheses: HypothesisSplit): string[] {
   const detection = hypotheses.planted === 0
     ? "no weakness planted"
-    : `${hypotheses.detected} of ${hypotheses.planted} planted weaknesses named (${pct(hypotheses.detectionRate)})` +
+    : `${hypotheses.detected} of ${hypotheses.planted} planted weaknesses named (${rate(hypotheses.detectionRate, hypotheses.detectionRateInterval)})` +
       (hypotheses.meanSessionsToDetection === null ? "" : `, mean ${hypotheses.meanSessionsToDetection.toFixed(1)} Sessions to detection`);
   return [
     `Skills Mastered (mean) Coach / Baseline: ${coach.meanSkillsMastered.toFixed(2)} / ${baseline.meanSkillsMastered.toFixed(2)}`,
     `First-try (mean) Coach / Baseline: ${pct(coach.meanFirstTryRate)} / ${pct(baseline.meanFirstTryRate)}`,
     `In band (mean) Coach / Baseline: ${pct(coach.meanInBandShare)} / ${pct(baseline.meanInBandShare)}`,
     `Detection: ${detection}`,
-    `False positives: ${hypotheses.falsePositives} of ${hypotheses.supportedHypotheses} supported Hypotheses (${pct(hypotheses.falsePositiveRate)})`,
-    `Evidence Integrity: ${pct(hypotheses.evidenceIntegrity)} of ${hypotheses.citations} citations`,
+    `False positives: ${hypotheses.falsePositives} of ${hypotheses.supportedHypotheses} supported Hypotheses (${rate(hypotheses.falsePositiveRate, hypotheses.falsePositiveRateInterval)})`,
+    `Evidence Integrity: ${pct(hypotheses.evidenceIntegrity)} of ${hypotheses.citations} citations (${ci(hypotheses.evidenceIntegrityInterval)})`,
     `Plans coach / retry / baseline: ${describeSources(hypotheses.sources)}`,
   ];
 }
@@ -99,35 +111,56 @@ function formatSplit(results: EvalResults, key: SplitKey): string {
   ].join("\n");
 }
 
+/** The validity lines both writers share: the sample, then each rate with the interval it is worth. */
+function validityLines(validity: Validity): string[] {
+  const reasons = validity.rejectionReasons.map((r) => `${r.reason} (${r.count})`).join("; ");
+  return [
+    `Valid on the first attempt: ${pct(validity.firstAttemptRate)} (${ci(validity.firstAttemptRateInterval)}); ` +
+      `valid within the bounded attempts: ${pct(validity.validRate)} (${ci(validity.validRateInterval)}); template fallbacks: ${validity.templates}`,
+    `Rejection reasons: ${reasons || "none"}`,
+  ];
+}
+
+/**
+ * The Judge's gate: what it agreed on and what that is worth, then how much
+ * of the agreement is skill (kappa against the two trivial Judges), then the
+ * score it earned or the condition that withheld it.
+ */
+function judgeLines(
+  judge: { readonly name: string; readonly calibration: Calibration },
+  noun: string,
+  scoreName: string,
+  score: { readonly judged: number; readonly passed: number; readonly passRate: number; readonly passRateInterval: Interval | null } | null,
+): string[] {
+  const { calibration } = judge;
+  return [
+    `Judge (${judge.name === "fake" ? "the fake Judge" : describeGeneration(judge.name)}): agreed with the Calibration Set on ` +
+      `${calibration.agreements} of ${calibration.size} ${noun} (${rate(calibration.agreement, calibration.agreementInterval)}), threshold ${pct(calibration.threshold)}`,
+    `Agreement beyond chance: kappa ${calibration.kappa.toFixed(2)}, floor ${calibration.kappaFloor.toFixed(2)} ` +
+      `(an always-pass Judge would score ${pct(calibration.alwaysPassAgreement)}, an always-fail Judge ${pct(calibration.alwaysFailAgreement)})`,
+    score
+      ? `${scoreName}: ${score.passed} of ${score.judged} ${noun} pass (${rate(score.passRate, score.passRateInterval)})`
+      : `${scoreName}: scores withheld — ${calibration.withheld}`,
+  ];
+}
+
 /** The Story evals: validity over the sample, then the Judge, whose readability score is shown only when it cleared calibration. */
 export function formatStories(stories: StoryReport): string {
   const { validity, judge } = stories;
-  const { calibration, readability } = judge;
-  const reasons = validity.rejectionReasons.map((r) => `${r.reason} (${r.count})`).join("; ");
   return [
     `Stories (${describeGeneration(stories.generation)}): ${validity.sample} written, one per Theme and Unit 3 structure, ${validity.attempts} attempts`,
-    `Valid on the first attempt: ${pct(validity.firstAttemptRate)}; valid within the bounded attempts: ${pct(validity.validRate)}; template fallbacks: ${validity.templates}`,
-    `Rejection reasons: ${reasons || "none"}`,
-    `Judge (${judge.name === "fake" ? "the fake Judge" : describeGeneration(judge.name)}): agreed with the Calibration Set on ${calibration.agreements} of ${calibration.size} Stories (${pct(calibration.agreement)}), threshold ${pct(calibration.threshold)}: ` +
-      (readability
-        ? `readability ${readability.passed} of ${readability.judged} valid Stories pass (${pct(readability.passRate)})`
-        : "scores withheld"),
+    ...validityLines(validity),
+    ...judgeLines(judge, "Stories", "Readability", judge.readability),
   ].join("\n");
 }
 
 /** The Parent Summary evals: validity, then the Judge, whose faithfulness score is shown only when it cleared calibration. */
 export function formatSummaries(summaries: SummaryReport): string {
   const { validity, judge } = summaries;
-  const { calibration, faithfulness } = judge;
-  const reasons = validity.rejectionReasons.map((r) => `${r.reason} (${r.count})`).join("; ");
   return [
     `Parent Summaries (${describeGeneration(summaries.generation)}): ${validity.sample} written, one for each Simulated Learner's last Session, ${validity.attempts} attempts`,
-    `Valid on the first attempt: ${pct(validity.firstAttemptRate)}; valid within the bounded attempts: ${pct(validity.validRate)}; template fallbacks: ${validity.templates}`,
-    `Rejection reasons: ${reasons || "none"}`,
-    `Judge (${judge.name === "fake" ? "the fake Judge" : describeGeneration(judge.name)}): agreed with the Calibration Set on ${calibration.agreements} of ${calibration.size} Summaries (${pct(calibration.agreement)}), threshold ${pct(calibration.threshold)}: ` +
-      (faithfulness
-        ? `faithfulness ${faithfulness.passed} of ${faithfulness.judged} Summaries pass (${pct(faithfulness.passRate)})`
-        : "scores withheld"),
+    ...validityLines(validity),
+    ...judgeLines(judge, "Summaries", "Faithfulness", judge.faithfulness),
   ].join("\n");
 }
 

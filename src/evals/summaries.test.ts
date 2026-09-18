@@ -81,6 +81,7 @@ describe("runSummaryEvals", () => {
       judged: SIMULATED_LEARNERS.length,
       passed: SIMULATED_LEARNERS.length,
       passRate: 1,
+      passRateInterval: { lower: expect.closeTo(0.61, 2), upper: 1 },
     });
   });
 

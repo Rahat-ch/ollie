@@ -13,7 +13,7 @@ import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { writeValidStory, type StoryRejection } from "@/story/write";
 import { STORY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, type Calibration, type Judge, type Judgement } from "./judge";
-import { share, writtenValidity, type Validity } from "./stats";
+import { share, wilsonInterval, writtenValidity, type Interval, type Validity } from "./stats";
 
 const UNIT_3: readonly SkillId[] = ["result-unknown", "change-unknown"];
 
@@ -46,6 +46,7 @@ export type StoryReadability = {
   readonly judged: number;
   readonly passed: number;
   readonly passRate: number;
+  readonly passRateInterval: Interval | null;
 };
 
 export type StoryReport = {
@@ -91,7 +92,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
     );
     const judged = stories.filter((t) => t.judged !== undefined);
     const passed = judged.filter((t) => t.judged?.pass).length;
-    readability = { judged: judged.length, passed, passRate: share(passed, judged.length) };
+    readability = { judged: judged.length, passed, passRate: share(passed, judged.length), passRateInterval: wilsonInterval(passed, judged.length) };
   }
   return {
     generation: options.name,

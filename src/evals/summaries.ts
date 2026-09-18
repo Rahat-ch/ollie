@@ -15,7 +15,7 @@ import { writeValidSummary, type SummaryRejection } from "@/summary/write";
 import { SUMMARY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, type Calibration, type Judge, type Judgement } from "./judge";
 import type { LearnerRun } from "./run";
-import { share, writtenValidity, type Validity } from "./stats";
+import { share, wilsonInterval, writtenValidity, type Interval, type Validity } from "./stats";
 
 /**
  * One Summary per Learner, from the last Session of its Coach run: the
@@ -42,6 +42,7 @@ export type SummaryFaithfulness = {
   readonly judged: number;
   readonly passed: number;
   readonly passRate: number;
+  readonly passRateInterval: Interval | null;
 };
 
 export type SummaryReport = {
@@ -87,7 +88,7 @@ export async function runSummaryEvals(options: SummaryEvalOptions): Promise<Summ
     );
     const judged = summaries.filter((trace) => trace.judged !== undefined);
     const passed = judged.filter((trace) => trace.judged?.pass).length;
-    faithfulness = { judged: judged.length, passed, passRate: share(passed, judged.length) };
+    faithfulness = { judged: judged.length, passed, passRate: share(passed, judged.length), passRateInterval: wilsonInterval(passed, judged.length) };
   }
   return {
     generation: options.name,

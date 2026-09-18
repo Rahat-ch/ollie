@@ -105,6 +105,34 @@ export const bar = (x: number, y: number, width: number, height: number, fill: s
 export const track = (x: number, y: number, width: number, height: number): string =>
   `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${width.toFixed(1)}" height="${height}" rx="4" fill="${TRACK}"/>`;
 
+/**
+ * A rate's 95 percent interval, drawn over the bar it qualifies: a thin line
+ * from the lower bound to the upper with a tick at each end, so the bar is
+ * read against what its sample supports. `x0` and `x1` are the bounds on the
+ * bar's own scale, `y` the middle of the bar.
+ */
+export function bracket(x0: number, x1: number, y: number, colour: string = INK): string {
+  const rule = (a: number, b: number, c: number, d: number) =>
+    `<line x1="${a.toFixed(1)}" x2="${b.toFixed(1)}" y1="${c.toFixed(1)}" y2="${d.toFixed(1)}" stroke="${colour}" stroke-width="1.5"/>`;
+  return (
+    `<g data-mark="interval">` +
+    rule(x0, x1, y, y) +
+    rule(x0, x0, y - 5, y + 5) +
+    rule(x1, x1, y - 5, y + 5) +
+    `</g>`
+  );
+}
+
+/** The same interval where there is no bar to draw it on: a 0-to-1 rule with the interval marked on it. */
+export function rangeLine(x: number, y: number, width: number, lower: number, upper: number, colour: string): string {
+  const at = (bound: number) => x + bound * width;
+  return (
+    `<line x1="${x.toFixed(1)}" x2="${(x + width).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${TRACK}" stroke-width="4" stroke-linecap="round"/>` +
+    `<line x1="${at(lower).toFixed(1)}" x2="${Math.max(at(upper), at(lower) + 2).toFixed(1)}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${colour}" stroke-width="4" stroke-linecap="round"/>` +
+    bracket(at(lower), at(upper), y, colour)
+  );
+}
+
 /** A small filled square beside a label, so a legend row is read by its label and its colour. */
 export const swatch = (x: number, y: number, fill: string): string =>
   `<rect x="${x.toFixed(1)}" y="${(y - 9).toFixed(1)}" width="10" height="10" rx="3" fill="${fill}"/>`;

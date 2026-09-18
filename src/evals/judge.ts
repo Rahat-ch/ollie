@@ -15,6 +15,7 @@ import { describeProblem } from "@/story/prompt";
 import { validateStory } from "@/story/validate";
 import { evidenceParts } from "@/summary/assistance";
 import { validateSummary } from "@/summary/validate";
+import { share, wilsonInterval, type Interval } from "./stats";
 
 export type StoryToJudge = { readonly input: StoryInput; readonly text: string };
 
@@ -46,6 +47,15 @@ export type CalibrationSummary = SummaryToJudge & Calibrated;
 
 /** The Judge's scores are reported only when it agrees with this share of the Calibration Set or more. */
 export const JUDGE_AGREEMENT_THRESHOLD = 0.8;
+
+/**
+ * And only when its agreement beyond chance is this high. Raw agreement
+ * flatters a lopsided set: the Story set is 12 pass and 8 fail, so a Judge
+ * that says pass to everything scores 0.60 on no skill at all. Cohen's kappa
+ * takes that floor out, and 0.60 is the line below which agreement is
+ * usually called inadequate.
+ */
+export const JUDGE_KAPPA_FLOOR = 0.6;
 
 export const STORY_JUDGE_SYSTEM_PROMPT = `You judge one word problem written for a Grade 1 child, age 6 or 7, who hears it read aloud once and then answers by tapping a number.
 
@@ -116,15 +126,51 @@ export const fakeJudge: Judge = {
   },
 };
 
+/** The Judge's verdicts against the human's, item by item: the human's label first. */
+export type Confusion = {
+  readonly humanPassJudgePass: number;
+  readonly humanPassJudgeFail: number;
+  readonly humanFailJudgePass: number;
+  readonly humanFailJudgeFail: number;
+};
+
 export type Calibration = {
   readonly size: number;
   readonly agreements: number;
   readonly agreement: number;
+  /** What the Calibration Set supports for the agreement; null on an empty set. */
+  readonly agreementInterval: Interval | null;
   readonly threshold: number;
-  /** Whether the Judge's scores may be reported. */
+  /** Cohen's kappa against the human verdicts: agreement beyond what the marginals give for free. */
+  readonly kappa: number;
+  readonly kappaFloor: number;
+  readonly confusion: Confusion;
+  /** What a Judge that passed everything would agree on: the set's pass share. */
+  readonly alwaysPassAgreement: number;
+  /** And one that failed everything: the set's fail share. */
+  readonly alwaysFailAgreement: number;
+  /** Whether the Judge's scores may be reported: the threshold and the floor, both. */
   readonly passes: boolean;
+  /** Which condition failed, in one phrase, or null when the Judge cleared the gate. */
+  readonly withheld: string | null;
   readonly disagreements: readonly { readonly id: string; readonly expected: boolean; readonly judged: boolean; readonly reason: string }[];
 };
+
+/**
+ * Cohen's kappa from the confusion matrix: the agreement observed, less the
+ * agreement the two raters' own habits would produce by chance, over the room
+ * that leaves. Zero when chance already explains everything, which is what an
+ * always-pass Judge scores.
+ */
+function cohensKappa(confusion: Confusion, size: number): number {
+  if (size === 0) return 0;
+  const { humanPassJudgePass, humanPassJudgeFail, humanFailJudgePass, humanFailJudgeFail } = confusion;
+  const observed = (humanPassJudgePass + humanFailJudgeFail) / size;
+  const humanPass = (humanPassJudgePass + humanPassJudgeFail) / size;
+  const judgePass = (humanPassJudgePass + humanFailJudgePass) / size;
+  const chance = humanPass * judgePass + (1 - humanPass) * (1 - judgePass);
+  return chance >= 1 ? 0 : (observed - chance) / (1 - chance);
+}
 
 /** Run the Judge over a Calibration Set and score its agreement with the human verdicts. */
 export async function calibrateJudge<T extends Calibrated>(
@@ -135,7 +181,33 @@ export async function calibrateJudge<T extends Calibrated>(
   const disagreements = set.flatMap((item, i) =>
     judged[i].pass === item.pass ? [] : [{ id: item.id, expected: item.pass, judged: judged[i].pass, reason: judged[i].reason }],
   );
+  const count = (human: boolean, verdict: boolean) => set.filter((item, i) => item.pass === human && judged[i].pass === verdict).length;
+  const confusion: Confusion = {
+    humanPassJudgePass: count(true, true),
+    humanPassJudgeFail: count(true, false),
+    humanFailJudgePass: count(false, true),
+    humanFailJudgeFail: count(false, false),
+  };
   const agreements = set.length - disagreements.length;
-  const agreement = set.length === 0 ? 0 : agreements / set.length;
-  return { size: set.length, agreements, agreement, threshold: JUDGE_AGREEMENT_THRESHOLD, passes: agreement >= JUDGE_AGREEMENT_THRESHOLD, disagreements };
+  const agreement = share(agreements, set.length);
+  const kappa = cohensKappa(confusion, set.length);
+  const failures = [
+    agreement >= JUDGE_AGREEMENT_THRESHOLD ? null : `agreement ${agreement.toFixed(2)} is below the threshold ${JUDGE_AGREEMENT_THRESHOLD.toFixed(2)}`,
+    kappa >= JUDGE_KAPPA_FLOOR ? null : `kappa ${kappa.toFixed(2)} is below the floor ${JUDGE_KAPPA_FLOOR.toFixed(2)}`,
+  ].filter((failure): failure is string => failure !== null);
+  return {
+    size: set.length,
+    agreements,
+    agreement,
+    agreementInterval: wilsonInterval(agreements, set.length),
+    threshold: JUDGE_AGREEMENT_THRESHOLD,
+    kappa,
+    kappaFloor: JUDGE_KAPPA_FLOOR,
+    confusion,
+    alwaysPassAgreement: share(set.filter((item) => item.pass).length, set.length),
+    alwaysFailAgreement: share(set.filter((item) => !item.pass).length, set.length),
+    passes: failures.length === 0,
+    withheld: failures.length === 0 ? null : failures.join(", and "),
+    disagreements,
+  };
 }

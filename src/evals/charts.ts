@@ -7,15 +7,17 @@
  * report's date, labelled marks — and every number on it is a number the
  * report holds or a share of two of them.
  */
-import { pct } from "./format";
+import { ci, pct } from "./format";
 import {
   bar,
+  bracket,
   count,
   GUTTER,
   GRID,
   INK,
   INK_SOFT,
   paper,
+  rangeLine,
   rightEdge,
   SERIES,
   splitTag,
@@ -28,7 +30,7 @@ import {
 } from "./chart-kit";
 import { describeWeakness, type WeaknessTag } from "./learners";
 import { describeGeneration, type EvalReport } from "./report";
-import type { Validity } from "./stats";
+import { wilsonInterval, type Validity } from "./stats";
 import type { Calibration } from "./judge";
 
 const WIDTH = 720;
@@ -58,7 +60,13 @@ function citations(report: EvalReport) {
   const checked = sum((l) => l.evidence.citations);
   const unknownIds = sum((l) => l.evidence.unknownIds);
   const inconsistent = sum((l) => l.evidence.inconsistent);
-  return { checked, unknownIds, inconsistent, integrity: checked === 0 ? 1 : 1 - (unknownIds + inconsistent) / checked };
+  return {
+    checked,
+    unknownIds,
+    inconsistent,
+    integrity: checked === 0 ? 1 : 1 - (unknownIds + inconsistent) / checked,
+    interval: wilsonInterval(checked - unknownIds - inconsistent, checked),
+  };
 }
 
 /**
@@ -67,7 +75,7 @@ function citations(report: EvalReport) {
  * engine showed it, and says what the claim says".
  */
 export function renderEvidenceIntegrityChart(report: EvalReport, reportName: string): string {
-  const { checked, unknownIds, inconsistent, integrity } = citations(report);
+  const { checked, unknownIds, inconsistent, integrity, interval } = citations(report);
   const { tuning, heldOut } = report.hypotheses.splits;
   const splits = [
     { name: "Tuning Learners", data: tuning },
@@ -92,7 +100,7 @@ export function renderEvidenceIntegrityChart(report: EvalReport, reportName: str
 
   return paper(
     frame(report, reportName, {
-      height: 312,
+      height: 336,
       title: "Evidence Integrity: every citation checked against the Session Log",
       detail: "Every Problem ID cited by every Notes the Coach wrote, rejected attempts included, checked against the Log it was shown.",
       label: `Evidence Integrity ${integrity.toFixed(2)} over ${checked} Problem citations, with ${unknownIds} unknown Problem IDs and ${inconsistent} inconsistent citations`,
@@ -101,13 +109,15 @@ export function renderEvidenceIntegrityChart(report: EvalReport, reportName: str
       text(GUTTER, 136, integrity.toFixed(2), { size: 62, weight: 600, fill: STATUS.okInk }),
       text(GUTTER, 162, "Evidence Integrity", { size: 13.5, weight: 600 }),
       text(GUTTER, 179, "consistent citations over all citations", { size: 11, fill: INK_SOFT }),
+      interval ? rangeLine(GUTTER, 196, 120, interval.lower, interval.upper, STATUS.okInk) : "",
+      text(GUTTER + 132, 200, `${ci(interval)}, on a scale of 0 to 1`, { size: 10.5, fill: INK_SOFT }),
       ...figure(104, checked, "Problem citations checked", STATUS.ok),
       ...figure(144, unknownIds, "cite a Problem ID not in the Log", STATUS.bad),
       ...figure(184, inconsistent, "disagree with their own claim", STATUS.bad),
-      `<line x1="${GUTTER}" x2="${RIGHT}" y1="206" y2="206" stroke="${GRID}" stroke-width="1"/>`,
-      text(GUTTER, 226, "Citations checked, by split", { size: 11.5, weight: 600, fill: INK }),
-      ...splitRow(254, "Tuning Learners", tuning.citations, tuning.evidenceIntegrity),
-      ...splitRow(280, "Held-out Learners", heldOut.citations, heldOut.evidenceIntegrity),
+      `<line x1="${GUTTER}" x2="${RIGHT}" y1="220" y2="220" stroke="${GRID}" stroke-width="1"/>`,
+      text(GUTTER, 240, "Citations checked, by split", { size: 11.5, weight: 600, fill: INK }),
+      ...splitRow(268, "Tuning Learners", tuning.citations, tuning.evidenceIntegrity),
+      ...splitRow(294, "Held-out Learners", heldOut.citations, heldOut.evidenceIntegrity),
     ],
   );
 }
@@ -169,7 +179,8 @@ export function renderDetectionChart(report: EvalReport, reportName: string): st
       text(
         GUTTER,
         axisY + 34,
-        `Tuning ${tuning.detected} of ${tuning.planted} named · held out ${heldOut.detected} of ${heldOut.planted}`,
+        `Tuning ${tuning.detected} of ${tuning.planted} named (${ci(wilsonInterval(tuning.detected, tuning.planted))}) · ` +
+          `held out ${heldOut.detected} of ${heldOut.planted} (${ci(wilsonInterval(heldOut.detected, heldOut.planted))})`,
         { size: 11.5, fill: INK_SOFT },
       ),
     ],
@@ -227,7 +238,8 @@ export function renderFalsePositivesChart(report: EvalReport, reportName: string
       text(
         GUTTER,
         axisY + 34,
-        `Tuning ${tuning.falsePositives} of ${tuning.supportedHypotheses} false (${pct(tuning.falsePositiveRate)}) · held out ${heldOut.falsePositives} of ${heldOut.supportedHypotheses} (${pct(heldOut.falsePositiveRate)})`,
+        `Tuning ${tuning.falsePositives} of ${tuning.supportedHypotheses} false (${pct(tuning.falsePositiveRate)}, ${ci(wilsonInterval(tuning.falsePositives, tuning.supportedHypotheses))}) · ` +
+          `held out ${heldOut.falsePositives} of ${heldOut.supportedHypotheses} (${pct(heldOut.falsePositiveRate)}, ${ci(wilsonInterval(heldOut.falsePositives, heldOut.supportedHypotheses))})`,
         { size: 11.5, fill: INK_SOFT },
       ),
     ],
@@ -266,7 +278,7 @@ export function renderPlanSourcesChart(report: EvalReport, reportName: string): 
       text(GUTTER + 18, y, name, { size: 12.5, weight: 600 }),
       text(GUTTER + 18, y + 15, note, { size: 10.5, fill: INK_SOFT }),
       text(RIGHT, y, `${count(value)} of ${count(total)}`, { size: 13, weight: 600, anchor: "end" }),
-      text(RIGHT, y + 15, pct(value / Math.max(1, total)), { size: 10.5, fill: INK_SOFT, anchor: "end" }),
+      text(RIGHT, y + 15, `${pct(value / Math.max(1, total))} · ${ci(wilsonInterval(value, total))}`, { size: 10.5, fill: INK_SOFT, anchor: "end" }),
     ];
   };
 
@@ -296,7 +308,22 @@ type ValidityChart = {
   readonly note?: string;
 };
 
-/** The validity chart both writers share: three labelled bars, then the Judge's gate. */
+/**
+ * How much of the Judge's agreement is skill: kappa against the floor, and
+ * what the two trivial Judges would score on the same Calibration Set. A
+ * report written before the gate gained its floor carries no kappa, and says
+ * nothing rather than guessing.
+ */
+const chanceLine = (calibration: Calibration): string =>
+  Number.isFinite(calibration.kappa)
+    ? `kappa ${calibration.kappa.toFixed(2)}, floor ${calibration.kappaFloor.toFixed(2)}; an always-pass Judge would score ${pct(calibration.alwaysPassAgreement)}, an always-fail Judge ${pct(calibration.alwaysFailAgreement)}`
+    : "";
+
+/** Which of the gate's conditions withheld the Judge's scores, as the report records it. */
+const withheldReason = (calibration: Calibration): string =>
+  calibration.withheld ? `Withheld: ${calibration.withheld}.` : "Below the threshold, so the Judge's scores are not reported.";
+
+/** The validity chart both writers share: three labelled bars with their intervals, then the Judge's gate. */
 function renderValidityChart(
   report: EvalReport,
   reportName: string,
@@ -319,21 +346,26 @@ function renderValidityChart(
   const panelY = 212;
   const meterX = GUTTER + 16;
   const meterWidth = 300;
-  const meterY = panelY + 70;
+  const meterY = panelY + 92;
+  const agreement = wilsonInterval(calibration.agreements, calibration.size);
 
   const row = (index: number, label: string, value: number, colour: string) => {
     const y = 104 + index * 34;
+    const interval = wilsonInterval(value, sample);
+    const at = (bound: number) => barX + bound * barWidth;
     return [
       text(GUTTER, y + 14, label, { size: 12 }),
       track(barX, y + 3, barWidth, 14),
       bar(barX, y + 3, (value / Math.max(1, sample)) * barWidth, 14, colour),
-      text(barX + barWidth + 12, y + 14, `${value} of ${sample} (${pct(value / Math.max(1, sample))})`, { size: 11.5, fill: INK_SOFT }),
+      interval ? bracket(at(interval.lower), at(interval.upper), y + 10) : "",
+      text(barX + barWidth + 12, y + 12, `${value} of ${sample} (${pct(value / Math.max(1, sample))})`, { size: 11.5, fill: INK_SOFT }),
+      text(barX + barWidth + 12, y + 25, ci(interval), { size: 10, fill: INK_SOFT }),
     ];
   };
 
   return paper(
     frame(report, reportName, {
-      height: 340,
+      height: 362,
       title: chart.title,
       detail: chart.detail,
       label: `${chart.noun} validity: ${firstAttempt} of ${sample} valid on the first attempt, ${validity.templates} template fallbacks, and the Judge's calibration gate`,
@@ -341,7 +373,7 @@ function renderValidityChart(
     }),
     [
       ...rows.flatMap((r, index) => row(index, r.label, r.value, r.colour)),
-      `<rect x="${GUTTER}" y="${panelY}" width="${RIGHT - GUTTER}" height="94" rx="12" fill="${SURFACE}" stroke="${GRID}" stroke-width="1"/>`,
+      `<rect x="${GUTTER}" y="${panelY}" width="${RIGHT - GUTTER}" height="112" rx="12" fill="${SURFACE}" stroke="${GRID}" stroke-width="1"/>`,
       text(GUTTER + 16, panelY + 24, `The Judge (${judgeName}): ${score ? chart.judgeScore : "scores withheld"}`, {
         size: 13,
         weight: 600,
@@ -352,15 +384,19 @@ function renderValidityChart(
         panelY + 42,
         score
           ? `${score.passed} of ${score.judged} pass (${pct(score.passRate)}); the Judge cleared calibration first.`
-          : `Below the threshold, so the Judge's scores are not reported.`,
+          : withheldReason(calibration),
         { size: 11, fill: INK_SOFT },
       ),
-      text(GUTTER + 16, meterY - 8, `Agreed with the Calibration Set on ${calibration.agreements} of ${calibration.size} ${chart.noun} (${pct(calibration.agreement)})`, {
-        size: 11,
-        fill: INK_SOFT,
-      }),
+      text(
+        GUTTER + 16,
+        panelY + 60,
+        `Agreed with the Calibration Set on ${calibration.agreements} of ${calibration.size} ${chart.noun} (${pct(calibration.agreement)}, ${ci(agreement)})`,
+        { size: 11, fill: INK_SOFT },
+      ),
+      text(GUTTER + 16, panelY + 78, chanceLine(calibration), { size: 11, fill: INK_SOFT }),
       track(meterX, meterY, meterWidth, 10),
       bar(meterX, meterY, calibration.agreement * meterWidth, 10, calibration.passes ? STATUS.ok : STATUS.bad),
+      agreement ? bracket(meterX + agreement.lower * meterWidth, meterX + agreement.upper * meterWidth, meterY + 5) : "",
       `<line x1="${(meterX + calibration.threshold * meterWidth).toFixed(1)}" x2="${(meterX + calibration.threshold * meterWidth).toFixed(1)}" y1="${meterY - 4}" y2="${meterY + 14}" stroke="${INK}" stroke-width="2"/>`,
       text(meterX + meterWidth + 12, meterY + 9, `threshold ${pct(calibration.threshold)}`, { size: 10.5, fill: INK_SOFT }),
     ],

@@ -15,7 +15,8 @@ export { convergenceReport, scoreConvergence, TARGET_ACCURACY_BAND } from "./con
 export type { CitationCheck, CitationVerdict, ClaimPolarity, EvidenceIntegrity, LearnerHypotheses, PlanSources } from "./hypotheses";
 export { checkEvidence, claimPolarity, namesWeakness, scoreHypotheses } from "./hypotheses";
 export type { CoachGeneration, EvalOptions, EvalResults, HypothesisReport, HypothesisSplit } from "./evals";
-export type { Split, SplitKey, Validity, WrittenTrace } from "./stats";
+export type { Interval, Split, SplitKey, Validity, WrittenTrace } from "./stats";
+export { wilsonInterval, Z_95 } from "./stats";
 export { hypothesisReport, runEvals } from "./evals";
 export type { EvalReport } from "./report";
 export { describeGeneration, evalReport, EVALS_DIR, isReportFileName, reportFileName } from "./report";
@@ -29,11 +30,12 @@ export {
   renderStoryValidityChart,
   renderSummaryValidityChart,
 } from "./charts";
-export type { Calibrated, Calibration, CalibrationStory, CalibrationSummary, Judge, Judgement, StoryToJudge, SummaryToJudge } from "./judge";
+export type { Calibrated, Calibration, CalibrationStory, CalibrationSummary, Confusion, Judge, Judgement, StoryToJudge, SummaryToJudge } from "./judge";
 export {
   calibrateJudge,
   fakeJudge,
   JUDGE_AGREEMENT_THRESHOLD,
+  JUDGE_KAPPA_FLOOR,
   STORY_JUDGE_SYSTEM_PROMPT,
   storyJudgeUserMessage,
   SUMMARY_JUDGE_SYSTEM_PROMPT,

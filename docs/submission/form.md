@@ -52,7 +52,7 @@ Paste the whole of **`docs/submission/write-up.md`** here, as plain text. If the
 
 - the architecture image line (`![...](./architecture.svg)`) — delete it and attach `docs/submission/architecture.svg` (or a PNG of it) as a supporting file instead, if the form allows one;
 - the two links in the first line — write them out as bare URLs;
-- the eval report links — write them out as `docs/evals/2026-09-13T17-38-41Z.json` and `docs/evals/convergence.svg` in the repository.
+- the eval report links — write them out as `docs/evals/2026-09-18T00-15-08Z.json` and `docs/evals/convergence.svg` in the repository.
 
 If the field has a hard character limit that the write-up exceeds, cut in this order: "Next steps" to one sentence, then the last three eval bullets, then the "How it was built" paragraph on Stories and the Speech Chain. Never cut "What is generative and what is not", the curriculum sentence, or "What has not run live".
 

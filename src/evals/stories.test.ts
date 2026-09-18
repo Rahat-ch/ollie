@@ -48,7 +48,9 @@ describe("runStoryEvals on the fake", () => {
       sample: 30,
       attempts: 30,
       firstAttemptRate: 1,
+      firstAttemptRateInterval: { lower: expect.closeTo(0.886, 3), upper: 1 },
       validRate: 1,
+      validRateInterval: { lower: expect.closeTo(0.886, 3), upper: 1 },
       templates: 0,
       rejectionReasons: [],
     });
@@ -66,7 +68,7 @@ describe("runStoryEvals on the fake", () => {
   it("reports readability over the valid Stories once the Judge clears calibration", async () => {
     const report = await runStoryEvals({ ...options, judge: agreeingJudge, judgeName: "agreeing" });
     expect(report.judge.calibration.passes).toBe(true);
-    expect(report.judge.readability).toEqual({ judged: 30, passed: 30, passRate: 1 });
+    expect(report.judge.readability).toEqual({ judged: 30, passed: 30, passRate: 1, passRateInterval: { lower: expect.closeTo(0.886, 3), upper: 1 } });
   });
 
   it("counts retries and template fallbacks when the writer misbehaves", async () => {

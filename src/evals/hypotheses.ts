@@ -7,7 +7,7 @@ import type { CoachStep } from "@/coach";
 import type { Hypothesis, LearnerNotes, LogEntry, ProblemId } from "@/loop";
 import type { SimulatedLearnerId, WeaknessTag } from "./learners";
 import type { LearnerRun } from "./run";
-import { integrityRate, share } from "./stats";
+import { integrityRate, share, wilsonInterval, type Interval } from "./stats";
 
 /**
  * How each planted weakness is said in plain English. A Hypothesis names a
@@ -119,6 +119,8 @@ export type EvidenceIntegrity = {
   readonly inconsistent: number;
   /** Consistent citations over all citations; 1 when there are none. */
   readonly integrity: number;
+  /** What those citations support for that rate; null when there were none. */
+  readonly integrityInterval: Interval | null;
 };
 
 /** How many Sessions were planned by the Coach, by the Coach after a retry, or by the Baseline fallback. */
@@ -137,6 +139,7 @@ export type LearnerHypotheses = {
   /** Of those, the ones that named a weakness the Learner does not have. */
   readonly falsePositives: number;
   readonly falsePositiveRate: number;
+  readonly falsePositiveRateInterval: Interval | null;
   readonly evidence: EvidenceIntegrity;
   readonly sources: PlanSources;
   readonly finalNotes: LearnerNotes;
@@ -202,7 +205,12 @@ export function scoreHypotheses(run: LearnerRun): LearnerHypotheses {
     supportedHypotheses: supported.size,
     falsePositives: falsePositives.size,
     falsePositiveRate: share(falsePositives.size, supported.size),
-    evidence: { ...evidence, integrity: integrityRate(evidence.citations, evidence.unknownIds + evidence.inconsistent) },
+    falsePositiveRateInterval: wilsonInterval(falsePositives.size, supported.size),
+    evidence: {
+      ...evidence,
+      integrity: integrityRate(evidence.citations, evidence.unknownIds + evidence.inconsistent),
+      integrityInterval: wilsonInterval(evidence.citations - evidence.unknownIds - evidence.inconsistent, evidence.citations),
+    },
     sources,
     finalNotes: last?.step.notes ?? { hypotheses: [], strengths: [] },
   };
