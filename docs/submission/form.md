@@ -52,7 +52,7 @@ Paste the whole of **`docs/submission/write-up.md`** here, as plain text. If the
 
 - the architecture image line (`![...](./architecture.svg)`) — delete it and attach `docs/submission/architecture.svg` (or a PNG of it) as a supporting file instead, if the form allows one;
 - the two links in the first line — write them out as bare URLs;
-- the eval report links — write them out as `docs/evals/2026-09-18T00-15-08Z.json` and `docs/evals/convergence.svg` in the repository.
+- the eval report links — write them out as `docs/evals/2026-09-18T18-12-41Z.json`, `docs/evals/2026-09-18T18-41-44Z.json`, `docs/evals/2026-09-18T19-09-56Z.json` and `docs/evals/convergence.svg` in the repository.
 
 If the field has a hard character limit that the write-up exceeds, cut in this order: "Next steps" to one sentence, then the last three eval bullets, then the "How it was built" paragraph on Stories and the Speech Chain. Never cut "What is generative and what is not", the curriculum sentence, or "What has not run live".
 
@@ -71,7 +71,7 @@ Re-run `node scripts/third-party.mjs --write` and `pnpm licenses:check` before s
 ## Anything else / notes to the judges (if the form offers a field)
 
 ```
-Two things the write-up says and I would rather say twice. First, the arithmetic is never the model's: the engine owns every Problem's type, numbers, answer, and Hint, and every piece of model output — a Story, a Hypothesis, a Session Plan, a Parent Summary — passes a deterministic validator before anyone sees it. Second, the committed eval report is from the deterministic stand-in Generation, not the live models: there was no API key on the machine this was built on, so the real Coach, Story writer, Parent Summary, and Judge have not been exercised. Both facts are stated in the write-up and the README rather than papered over.
+Two things the write-up says and I would rather say twice. First, the arithmetic is never the model's: the engine owns every Problem's type, numbers, answer, and Hint, and every piece of model output — a Story, a Hypothesis, a Session Plan, a Parent Summary — passes a deterministic validator before anyone sees it. Second, the eval numbers are three live runs of the real models (Opus 5 Coach, Judge and Parent Summary writer, Sonnet 5 Story writer) on identical seeds, on 2026-09-18, and every headline is quoted as the range across those three runs rather than as the best of them — because on six hand-designed Simulated Learners with one planted weakness per split, a single run is one draw. Where the Coach's judgement is what is being scored the spread is wide (each planted weakness was named in 2 of the 3 runs; false positives ran 4 of 39, 7 of 44 and 10 of 45), and the write-up says so, including that the Coach is not faster to Mastery than the fixed Baseline gate. Both facts are stated in the write-up and the README rather than papered over.
 ```
 
 ## Before you press submit
