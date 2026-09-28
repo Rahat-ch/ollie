@@ -130,10 +130,18 @@ export type SpeechOutput = {
   readonly mimeType: string;
 };
 
+/**
+ * How a caller may stop a model call it no longer wants: the route passes
+ * the request's own signal, joined to its deadline, so a call the device
+ * gave up on, or one past the route's deadline, is cancelled rather than
+ * run on and paid for with nobody waiting.
+ */
+export type CallOptions = { readonly signal?: AbortSignal };
+
 /** Exactly four operations. Adding a fifth is a spec change. */
 export type Generation = {
   writeStory(input: StoryInput): Promise<StoryOutput>;
-  runCoach(input: CoachInput): Promise<CoachOutput>;
-  writeSummary(input: SummaryInput): Promise<SummaryOutput>;
+  runCoach(input: CoachInput, options?: CallOptions): Promise<CoachOutput>;
+  writeSummary(input: SummaryInput, options?: CallOptions): Promise<SummaryOutput>;
   renderSpeech(input: SpeechInput): Promise<SpeechOutput>;
 };
