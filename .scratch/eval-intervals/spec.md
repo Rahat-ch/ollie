@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Created: 2026-09-17
-Deadline: before the live eval run; the entry closes 2026-09-18 11:59 PM CDT
+Deadline: before the live eval run; the deadline is 2026-09-18 11:59 PM CDT
 Inputs: `docs/research/evals-comparison.md` (sections 3, 6, and 7), `src/evals/stats.ts`, `src/evals/judge.ts`, `src/evals/format.ts`, `src/evals/charts.ts`, `docs/evals/README.md`, `CONTEXT.md`
 
 Vocabulary in this spec is the glossary in `CONTEXT.md`. Capitalised terms are defined there.
@@ -26,10 +26,10 @@ Every rate in the eval report carries a 95 percent interval beside it, in the JS
 7. As a reviewer, I want the Judge gate to require both the agreement threshold and a kappa floor, so that a Judge cannot pass by agreeing with a lopsided set.
 8. As a reviewer, I want the text report to print intervals in the same line as the rate, so that nothing needs a second table.
 9. As a reviewer, I want the charts to show the interval as a mark or a bracket beside the bar, so that the picture does not overclaim what the number does not.
-10. As the entrant, I want the write-up to quote ranges where the sample is small, so that a judge cannot catch a bare number that the interval contradicts.
-11. As the entrant, I want the evals README to explain the interval and kappa in a paragraph, so that a reader who does not know them is not lost.
-12. As the entrant, I want the JSON report to keep every existing field and add the intervals beside them, so that earlier reports and the charts still read.
-13. As the entrant, I want the fake run to exercise every interval and the kappa, so that the live run shows nothing untested.
+10. As the builder, I want the write-up to quote ranges where the sample is small, so that a reviewer cannot catch a bare number that the interval contradicts.
+11. As the builder, I want the evals README to explain the interval and kappa in a paragraph, so that a reader who does not know them is not lost.
+12. As the builder, I want the JSON report to keep every existing field and add the intervals beside them, so that earlier reports and the charts still read.
+13. As the builder, I want the fake run to exercise every interval and the kappa, so that the live run shows nothing untested.
 14. As a developer, I want one interval function at the stats module's chokepoint, so that no rate can be printed without one.
 15. As a developer, I want the interval function checked against known values, so that an off-by-a-constant error cannot hide behind a report that merely has the field.
 16. As a developer, I want kappa and the trivial baselines computed in the Judge's calibration module from the same verdicts, so that they cannot drift from the agreement they qualify.

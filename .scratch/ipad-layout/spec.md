@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Created: 2026-09-17
-Deadline: before the submission video; the entry closes 2026-09-18 11:59 PM CDT
+Deadline: before the demo video; the deadline is 2026-09-18 11:59 PM CDT
 Inputs: `docs/research/ipad-layout.md`, `docs/design/direction.md`, `design/canvas/Session.dc.html`, `docs/design/screens/session-*.png`, `CONTEXT.md`
 
 Vocabulary in this spec is the glossary in `CONTEXT.md`. Capitalised terms are defined there. This spec is styling and layout only: no reducer, Loop, Generation, route, or Profile behaviour changes.
@@ -41,10 +41,10 @@ The Session stage becomes a height-aware, fluid two-column composition that fits
 20. As a Learner with reduced motion on, I want the same layout with the same stillness, so that nothing changes but the animation.
 21. As a Parent handing over the tablet, I want the Session screen to look finished and deliberate, so that I trust the app with my child.
 22. As a Parent, I want the celebration, Home, the Shop, and the Parent Area to have nothing overlapping at the same iPad sizes, so that the whole app reads as one piece on the device.
-23. As the entrant, I want the layout verified in Safari's engine at the real iPad sizes, so that a screenshot in the review page is what the judges will see.
-24. As the entrant, I want a screenshot of the Session screen in each visual at each iPad size in the design review, so that I can approve the composition side by side.
-25. As the entrant, I want the existing browser tests to keep passing in WebKit as well as Chromium, so that the change proves it broke nothing.
-26. As the entrant, I want the fix to be CSS and layout only, so that the Play reducer, the Loop, and every eval stay exactly as they are the day before the deadline.
+23. As the builder, I want the layout verified in Safari's engine at the real iPad sizes, so that a screenshot in the review page is what an iPad user will see.
+24. As the builder, I want a screenshot of the Session screen in each visual at each iPad size in the design review, so that I can approve the composition side by side.
+25. As the builder, I want the existing browser tests to keep passing in WebKit as well as Chromium, so that the change proves it broke nothing.
+26. As the builder, I want the fix to be CSS and layout only, so that the Play reducer, the Loop, and every eval stay exactly as they are the day before the deadline.
 27. As a developer, I want the stage's sizes to come from tokens and a few clamps rather than fixed pixels, so that a new visual fits without a new breakpoint.
 28. As a developer, I want the two-column and one-column layouts to be one grid with one rule, so that there is one place a layout bug can be.
 

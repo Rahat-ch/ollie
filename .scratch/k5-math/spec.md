@@ -2,7 +2,7 @@
 
 Status: ready-for-agent
 Created: 2026-09-10 · Revised: 2026-09-10 after external review (see decisions.md, Amendments)
-Deadline: Nerdy AI Hackathon Prompt 01, submissions close 2026-09-18 11:59 PM CDT
+Deadline: 2026-09-18 11:59 PM CDT
 Inputs: `.scratch/k5-math/decisions.md`, `CONTEXT.md`, `docs/adr/0001–0003`, `docs/research/k5-math-game/`
 
 Vocabulary in this spec is the glossary in `CONTEXT.md`. Capitalised terms are defined there.
@@ -11,7 +11,7 @@ Vocabulary in this spec is the glossary in `CONTEXT.md`. Capitalised terms are d
 
 ## Problem Statement
 
-A six-year-old who cannot yet read the screen needs to practice Grade 1 arithmetic in short, fun sittings, and her Parent needs to know what she actually practiced and what to do next. Existing apps adapt difficulty at best; none builds a legible model of how the child is learning, and most bury the math under a reward store. Nerdy has tutoring and AI tools for older students but nothing for this age that progresses, adapts to the individual, and explains itself to a parent.
+A six-year-old who cannot yet read the screen needs to practice Grade 1 arithmetic in short, fun sittings, and her Parent needs to know what she actually practiced and what to do next. Existing apps adapt difficulty at best; none builds a legible model of how the child is learning, and most bury the math under a reward store. Nothing for this age progresses, adapts to the individual, and explains itself to a parent.
 
 ## Solution
 
@@ -102,14 +102,14 @@ Ollie is a tablet web game in which a voiced owl reads every Problem aloud and t
 67. As the developer, I want a convergence chart generated from the reports, so that the video has evidence.
 68. As the developer, I want two Simulated Learners held out of prompt tuning, so that the chart is evidence and not tuning.
 
-### Submission
+### Release
 
-69. As the entrant, I want ollie.rahatcodes.com to work on a tablet and a laptop, so that judges can click it.
+69. As the builder, I want ollie.rahatcodes.com to work on a tablet and a laptop, so that anyone can click it.
 69a. As a Learner and a Parent, I want the app to look warm, calm, and hand-made rather than generic or machine-generated, so that it feels like something made for a child.
-70. As the entrant, I want a THIRD_PARTY file listing every API, model, font, image, audio source, open-source component with licence, and the generative-AI assistance used, so that the disclosure requirement is met.
-71. As the entrant, I want only permissive licences in the repo, so that the copyleft prohibition is met.
-72. As the entrant, I want a 2–3 minute screen-recorded video with me as the Learner and no other identifiable person, so that the entry meets the terms.
-73. As the entrant, I want every Skill mapped to its CCSS standard in the README, so that the pedagogy claim is precise.
+70. As the builder, I want a THIRD_PARTY file listing every API, model, font, image, audio source, open-source component with licence, and the generative-AI assistance used, so that everything third-party and AI-assisted is disclosed.
+71. As the builder, I want only permissive licences in the repo, so that no copyleft code or assets are present.
+72. As the builder, I want a 2–3 minute screen-recorded video with me as the Learner and no other identifiable person, so that no child appears in it.
+73. As the builder, I want every Skill mapped to its CCSS standard in the README, so that the pedagogy claim is precise.
 
 ## Implementation Decisions
 
@@ -167,7 +167,7 @@ Ollie is a tablet web game in which a voiced owl reads every Problem aloud and t
 
 - Ollie is an owl. Voice designed in ElevenLabs Voice Design on the Starter tier: warm, playful, gently energetic, a kind older kid, gender-neutral leaning bright, slow clear diction. Fixed lines rendered once at build time.
 - Animation is layered SVG with CSS in four base states (idle, talking, celebrate, encourage) plus one animation per Power.
-- Design comes first: a design direction (palette, type, spacing, Ollie's character sheet, an illustration style that is flat, warm, and hand-tuned, and the core screens) is settled before the Session screen is built, and every screen is built to it. The look must be pleasant and must not read as AI-generated: SVG-first illustrations tuned by hand in one consistent style; image-model output is used for reference and ideation only, and any generated pixels that ship are disclosed. Kenney CC0 for small icons only. No copyleft code or assets. A THIRD_PARTY file at the repo root lists every dependency, asset source, model, API, and the generative-AI assistance used; its contents are pasted into the submission form.
+- Design comes first: a design direction (palette, type, spacing, Ollie's character sheet, an illustration style that is flat, warm, and hand-tuned, and the core screens) is settled before the Session screen is built, and every screen is built to it. The look must be pleasant and must not read as AI-generated: SVG-first illustrations tuned by hand in one consistent style; image-model output is used for reference and ideation only, and any generated pixels that ship are disclosed. Kenney CC0 for small icons only. No copyleft code or assets. A THIRD_PARTY file at the repo root lists every dependency, asset source, model, API, and the generative-AI assistance used; it is the project's public disclosure.
 
 ### Evals
 
@@ -187,19 +187,19 @@ Ollie is a tablet web game in which a voiced owl reads every Problem aloud and t
 
 ## Out of Scope
 
-- Voice input of any kind (ADR 0002 and the contest terms).
+- Voice input of any kind (ADR 0002).
 - Accounts, email, multi-device sync, multiple Profiles per device.
 - Compare-type word problems, Kindergarten fallback content, Grade 2 content, place value beyond teens, measurement, geometry, equality and three-addend problems.
 - Model-written Hints or Ollie banter; the Coach choosing Hints or Theme emphasis.
 - Badges, leaderboards, lives, timers, XP, purchasable currency, a native app, App Store listing.
 - Fine-tuning any model. A second judge model.
 - CI-gated evals.
-- Any footage or mention of an identifiable person other than the entrant.
+- Any footage or mention of an identifiable person other than the builder.
 
 ## Further Notes
 
 - **Cut order if days run short**, agreed after review: Shop depth (six to four items); Freeze and streak edge cases; Themes (six to three); cosmetic polish; extra Story variants. **Protected at all costs:** Ollie's voice and the child UI; ten-frame and number line; the Coach Hypothesis loop with evidence IDs; the bounded planner; Ollie's Notebook; simulation versus Baseline; the convergence chart; Ollie's Powers.
 - **Build order:** the Loop with a fake Generation and the simulation harness first, then the real Coach and Story adapters plus evals, then the design direction, then the UI, Ollie, and the first Power, then audio, Content Pool, and fallbacks, then the Parent Area and Notebook, then the Shop. A working convergence chart by day four is the checkpoint.
-- **The video tells one story**, screen-recorded with the entrant as the Learner. 0:00 problem: "Most math apps adapt difficulty. Ollie adapts to how the learner is learning." 0:15 play: an easy non-crossing sum correct, a crossing-ten sum wrong, the ten-frame Hint, correct on retry, one more miss, celebration. 1:20 the Notebook: a new Hypothesis, "may struggle when addition crosses ten", with its evidence as the actual Problems, and the next test. 2:00 one graphic of Session → engine → evidence → Coach → validator → next Session, with the nine-word line. 2:25 the convergence chart and the headline numbers from the eval report. 2:50 "Ollie learns how you learn."
+- **The video tells one story**, screen-recorded with the builder as the Learner. 0:00 problem: "Most math apps adapt difficulty. Ollie adapts to how the learner is learning." 0:15 play: an easy non-crossing sum correct, a crossing-ten sum wrong, the ten-frame Hint, correct on retry, one more miss, celebration. 1:20 the Notebook: a new Hypothesis, "may struggle when addition crosses ten", with its evidence as the actual Problems, and the next test. 2:00 one graphic of Session → engine → evidence → Coach → validator → next Session, with the nine-word line. 2:25 the convergence chart and the headline numbers from the eval report. 2:50 "Ollie learns how you learn."
 - The write-up says precisely what is generative (Stories in Theme and Nickname; the Coach's Hypotheses and Plans) and what is not (the arithmetic), maps every Skill to its standard, and cites the research folder.
 - Open items: GitHub repo name and visibility; ElevenLabs Creator tier only if higher-bitrate audio is wanted.
