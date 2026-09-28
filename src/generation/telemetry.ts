@@ -4,6 +4,8 @@
  * adapter: never a global, so the app's routes record nothing and only the
  * eval CLI installs one for its run. The fake reports the same call shape
  * with no tokens and no milliseconds, so a fake run exercises the path.
+ * Each call is kept with its own wall time and tokens, not only summed, so
+ * a report can say how slow the slow calls were (p50 and p95 per operation).
  *
  * The dollars are an estimate from the published first-party rates below,
  * as they stood on the day, and never the invoice. A model with no rate
@@ -134,22 +136,56 @@ export type CoachPerSession = {
   readonly dollarsPerSession: number | null;
 };
 
+/**
+ * How long one operation's calls took, call by call rather than in total:
+ * the middle call and the slow tail. A mean of 71 s says nothing about how
+ * many calls ran past a deadline; the 95th percentile does. Null when the
+ * operation made no calls.
+ */
+export type Latency = {
+  readonly calls: number;
+  readonly p50Ms: number | null;
+  readonly p95Ms: number | null;
+};
+
+/**
+ * The value at or below which `share` of the values fall, by nearest rank:
+ * always one of the values themselves, never an interpolation between two,
+ * so a p95 is the wall time of a call that happened.
+ */
+export function percentile(values: readonly number[], share: number): number | null {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[Math.max(0, Math.ceil(share * sorted.length) - 1)];
+}
+
+export function latency(calls: readonly ModelCall[]): Latency {
+  const ms = calls.map((c) => c.ms);
+  return { calls: calls.length, p50Ms: percentile(ms, 0.5), p95Ms: percentile(ms, 0.95) };
+}
+
 /** The telemetry one run leaves in its report. */
 export type TelemetrySection = {
   readonly byOperation: Readonly<Record<TelemetryOperation, CostTotals>>;
   readonly byModel: readonly ({ readonly model: string } & CostTotals)[];
   readonly total: CostTotals;
   readonly perSession: CoachPerSession;
+  /** p50 and p95 wall time per operation. */
+  readonly latency: Readonly<Record<TelemetryOperation, Latency>>;
+  /** Every call as it was recorded, its wall time and tokens, so a later reader can ask what the totals cannot answer. */
+  readonly calls: readonly ModelCall[];
 };
 
 const per = (total: number | null, count: number): number | null =>
   total === null ? null : count === 0 ? 0 : dollars(total / count);
 
-/** Every call a run reported, added up per operation, per model, and in all. */
+/** Every call a run reported, added up per operation, per model, and in all, with each operation's latency and the calls themselves. */
 export function telemetrySection(calls: readonly ModelCall[], sessions: number): TelemetrySection {
-  const byOperation = Object.fromEntries(
-    TELEMETRY_OPERATIONS.map((operation) => [operation, costTotals(calls.filter((c) => c.operation === operation))]),
-  ) as Record<TelemetryOperation, CostTotals>;
+  const perOperation = <T>(summarise: (calls: readonly ModelCall[]) => T): Record<TelemetryOperation, T> =>
+    Object.fromEntries(
+      TELEMETRY_OPERATIONS.map((operation) => [operation, summarise(calls.filter((c) => c.operation === operation))]),
+    ) as Record<TelemetryOperation, T>;
+  const byOperation = perOperation(costTotals);
   const models = [...new Set(calls.map((c) => c.model))];
   const coach = byOperation.coach;
   return {
@@ -162,6 +198,8 @@ export function telemetrySection(calls: readonly ModelCall[], sessions: number):
       dollarsPerCoachCall: per(coach.dollars, coach.calls),
       dollarsPerSession: per(coach.dollars, sessions),
     },
+    latency: perOperation(latency),
+    calls,
   };
 }
 

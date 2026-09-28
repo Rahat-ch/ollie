@@ -1,4 +1,4 @@
-import { TELEMETRY_OPERATIONS, type TelemetrySection } from "@/generation/telemetry";
+import { TELEMETRY_OPERATIONS, type Latency, type TelemetrySection } from "@/generation/telemetry";
 import { getSkill, SKILLS } from "@/loop";
 import { table } from "@/loop/format";
 import type { LearnerConvergence, SplitSummary } from "./convergence";
@@ -175,26 +175,31 @@ const seconds = (ms: number): string => `${(ms / 1000).toFixed(1)} s`;
 
 /**
  * The Cost block: per operation and in total, the calls made, the tokens
- * moved, the time they took, and what the published rate table says that
- * cost; then what one Session of the Coach cost. The dollars are an
+ * moved, the time they took in all, how long the middle call and the 95th
+ * percentile call took (a total hides a slow tail that runs past a
+ * deadline), and what the published rate table says that cost; then what
+ * one Session of the Coach cost. The dollars are an
  * estimate from the rates on the day, never the invoice, and a model with
  * no published rate is said to be undefined rather than guessed at.
  */
 export function formatTelemetry(telemetry: TelemetrySection): string {
-  const row = (name: string, totals: TelemetrySection["total"]): string[] => [
+  const latency = (ms: number | null | undefined): string => (ms == null ? "-" : seconds(ms));
+  const row = (name: string, totals: TelemetrySection["total"], each?: Latency): string[] => [
     name,
     totals.models.join(", ") || "-",
     count(totals.calls),
     count(totals.tokens),
     seconds(totals.ms),
+    latency(each?.p50Ms),
+    latency(each?.p95Ms),
     money(totals.dollars),
   ];
   const { perSession } = telemetry;
   return [
-    "Cost (estimated from the published rates on the day, not the invoice)",
+    "Cost (estimated from the published rates on the day, not the invoice); p50 and p95 are per call",
     ...table([
-      ["Operation", "Model", "Calls", "Tokens", "Time", "Estimated"],
-      ...TELEMETRY_OPERATIONS.map((operation) => row(operation, telemetry.byOperation[operation])),
+      ["Operation", "Model", "Calls", "Tokens", "Time", "p50", "p95", "Estimated"],
+      ...TELEMETRY_OPERATIONS.map((operation) => row(operation, telemetry.byOperation[operation], telemetry.latency[operation])),
       row("Total", telemetry.total),
     ]),
     `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
