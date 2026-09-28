@@ -1,6 +1,6 @@
-# Nerdy K–5 Math
+# Ollie
 
-A Grade 1 math game that learns how the Learner learns, built for Prompt 01 of the Nerdy AI Hackathon. Ollie the owl reads every Problem aloud; a deterministic engine owns the math; a Coach forms evidence-backed Hypotheses after every Session and plans the next one inside a bounded space; the Parent reads why. Ollie learns how you learn.
+A Grade 1 math game that learns how the Learner learns. Ollie the owl reads every Problem aloud; a deterministic engine owns the math; a Coach forms evidence-backed Hypotheses after every Session and plans the next one inside a bounded space; the Parent reads why. Ollie learns how you learn.
 
 ## Language
 
@@ -101,8 +101,20 @@ The structured document of what the Coach currently believes about the Learner: 
 _Avoid_: profile, model, memory, learner model
 
 **Hypothesis**:
-One belief in the Learner Notes: a claim, a status (proposed, supported, refuted), a confidence, evidence given only as Problem IDs from the Session Log (this Session's, or already cited in the Notes), and a next test. The engine rejects any Hypothesis citing a Problem it was not shown.
+One belief in the Learner Notes: a claim, a Skill, a Polarity, an optional Feature, a status (proposed, supported, refuted), a confidence, evidence given only as Problem IDs from the Session Log (this Session's, or already cited in the Notes), and a next test. The engine rejects any Hypothesis citing a Problem it was not shown, and any Hypothesis marked supported that does not name a Feature and pass the Minimum-Evidence Rule.
 _Avoid_: insight, finding, observation
+
+**Polarity**:
+What a Hypothesis declares it is about: a difficulty, a strength, or a contrast between the two. It is declared, not read from the claim's words, and the Assistance States of the cited Problems must agree with it.
+_Avoid_: sentiment, direction, sign
+
+**Feature**:
+A property of a Problem that the engine's generator knows, such as a sum that crosses ten or the larger addend coming first. The engine publishes the full list, and a supported Hypothesis must name one.
+_Avoid_: pattern, tag, trait, weakness
+
+**Minimum-Evidence Rule**:
+The engine's test a Hypothesis must pass before it may be marked supported: enough first attempts on its Feature, and a first-try rate on that Feature that separates from the rest of the Skill.
+_Avoid_: threshold, significance test, confidence gate
 
 **Session Plan**:
 The Coach's instructions for the next Session, chosen only from the Plan Space: Skills, number ranges, structures, review share, length, and the Hypothesis under test.
@@ -121,8 +133,12 @@ The Parent Area view of the Learner Notes in plain English: what Ollie believes,
 _Avoid_: dashboard, insights, AI report
 
 **Simulated Learner**:
-One of six hand-designed synthetic Learners with a seeded per-Skill ability, weakness tags, and a fatigue curve, used to evaluate the loop over 20 Sessions each. Never a real child's data.
+One of six hand-designed synthetic Learners with seeded per-Skill starting ability, weakness tags, and a fatigue curve, used to evaluate the loop over 20 Sessions each. Never a real child's data.
 _Avoid_: bot, test user, persona
+
+**Simulator Family**:
+One model of how a Simulated Learner answers and learns from practice. Every result about learning is reported under at least two families, so no result holds only in a world built on the engine's own assumptions.
+_Avoid_: simulator, learner model, persona type
 
 ### Evals
 
@@ -135,16 +151,32 @@ The loop with the Coach replaced by the plain 8-of-10 gate and fixed session com
 _Avoid_: control, v0, default
 
 **Evidence Integrity**:
-The deterministic eval that every Problem ID a Hypothesis cites exists in the Log and has an Assistance State consistent with the claim.
+The deterministic eval that every Problem ID a Hypothesis cites exists in the Log the Coach was shown. It measures fabrication only.
 _Avoid_: hallucination check, grounding score
 
+**Claim Agreement**:
+The eval that the Assistance States of the Problems a Hypothesis cites say what the Hypothesis says. It measures reading, not fabrication, and is kept apart from Evidence Integrity.
+_Avoid_: consistency, faithfulness, grounding
+
+**Declaration Fidelity**:
+The eval that a Hypothesis's words say what its declared Polarity and Feature say, read by a model from outside the Coach's family and calibrated against hand labels.
+_Avoid_: prose check, consistency
+
 **Judge**:
-Opus 5 reading against a written rubric, used only where a deterministic check cannot apply: Story readability and theme fit, Parent Summary faithfulness to the Session Log.
+A model reading against a written rubric, used only where a deterministic check cannot apply: Story readability and theme fit, Parent Summary faithfulness to the Session Log.
 _Avoid_: grader, evaluator, LLM-as-judge
 
 **Calibration Set**:
 The hand-labelled 20 Stories and 10 Parent Summaries the Judge must agree with above a threshold, and beyond chance above a kappa floor, before its scores count.
 _Avoid_: golden set, ground truth, labels
+
+**Pre-registration**:
+The committed statement, written before an Eval Run, of each hypothesis the run tests, its metric, its threshold, and the result that would count as failing. The run's results are published against it whether they pass or fail.
+_Avoid_: plan, spec, targets
+
+**Arm**:
+One configuration of the loop under evaluation (a model, an effort level, a Coach variant, or the Baseline) run on the same Simulated Learners and seeds as every other Arm it is compared with.
+_Avoid_: variant, condition, config
 
 ### Rewards
 
