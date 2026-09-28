@@ -6,7 +6,7 @@
  */
 export const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/** The model could not be reached at all: no key on the server, or the route said so. Never retried. */
+/** The model could not be reached at all: no key on the server, the route said so, or no answer came in time. Never retried. */
 export class ModelUnavailableError extends Error {
   constructor(message: string) {
     super(message);

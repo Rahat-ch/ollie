@@ -8,7 +8,7 @@
  * the template. Either way the record comes back written, so play goes on
  * and the Parent gets a note.
  */
-import { coachSession, type CoachRecord, type CoachRun } from "@/coach";
+import { coachSession, isServerBaseline, type CoachRecord, type CoachRun } from "@/coach";
 import { powerFor } from "@/loop";
 import type { SessionResult } from "@/loop";
 import { parseCoachOutput } from "@/generation/coach-schema";
@@ -21,25 +21,47 @@ import { writeValidSummary } from "@/summary/write";
 /** The two operations that run after a Session. The other two are the Story writer's and the voice's. */
 export type Coaching = Pick<Generation, "runCoach" | "writeSummary">;
 
-/** The Coach thinks for a while on Opus 5; the Summary is shorter. Past this the Baseline and the template take over. */
-export const COACH_TIMEOUT_MS = 60_000;
+/**
+ * How long the device waits before the Baseline and the template take over.
+ * The Coach thinks for a while on Opus 5 (about 71 s a call in the live
+ * Eval Runs), so the device waits longer than the route's own deadline
+ * (`COACH_SERVER_DEADLINE_MS`, 75 s): the route decides, stops the model
+ * call, and says so, and this clock only matters when the route cannot be
+ * heard at all. The Summary is shorter.
+ */
+export const COACH_TIMEOUT_MS = 90_000;
 export const SUMMARY_TIMEOUT_MS = 30_000;
 
+/** What `AbortSignal.timeout` rejects a fetch with when its time runs out. */
+const isTimeout = (error: unknown): boolean =>
+  typeof error === "object" && error !== null && "name" in error && error.name === "TimeoutError";
+
+/**
+ * One POST to a model route. A route that did not answer in time is a model
+ * that could not be reached, not a rejected output: nothing came back to
+ * fix, and a second wait as long as the first is no likelier to be heard.
+ */
 async function post(path: string, body: unknown, timeoutMs: number): Promise<unknown> {
-  const response = await fetch(path, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(timeoutMs),
-  });
-  if (!response.ok) {
-    const detail: unknown = await response.json().catch(() => null);
-    const error = detail && typeof detail === "object" && "error" in detail ? String(detail.error) : response.statusText;
-    const message = `${path} answered ${response.status}: ${error}`;
-    // 503 is the server saying it has no key: there is nothing to try again.
-    throw response.status === 503 ? new ModelUnavailableError(message) : new Error(message);
+  try {
+    const response = await fetch(path, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!response.ok) {
+      const detail: unknown = await response.json().catch(() => null);
+      const error = detail && typeof detail === "object" && "error" in detail ? String(detail.error) : response.statusText;
+      const message = `${path} answered ${response.status}: ${error}`;
+      // 503 is the server saying it has no key: there is nothing to try again.
+      throw response.status === 503 ? new ModelUnavailableError(message) : new Error(message);
+    }
+    return await response.json();
+  } catch (error) {
+    // The time can run out while the answer is still arriving, as well as before it starts.
+    if (isTimeout(error)) throw new ModelUnavailableError(`${path} did not answer within ${Math.round(timeoutMs / 1000)} s`);
+    throw error;
   }
-  return response.json();
 }
 
 /**
@@ -47,12 +69,18 @@ async function post(path: string, body: unknown, timeoutMs: number): Promise<unk
  * carrying the Session's evidence, the Learner Notes, the Knowledge
  * Estimates, and the Plan Space, and never the Nickname, the Avatar, or the
  * Theme (ADR 0002). A malformed answer throws, which the engine records as
- * a rejection like any other.
+ * a rejection like any other. A route that did not answer in time, and a
+ * Coach route that answered with its own Baseline Plan at its deadline,
+ * throw as unreachable, so the engine uses the Baseline at once and does not
+ * pay for the same wait twice.
  */
 export function routeCoaching(): Coaching {
   return {
     async runCoach(input: CoachInput): Promise<CoachOutput> {
-      const parsed = parseCoachOutput(await post("/api/coach", input, COACH_TIMEOUT_MS));
+      const answer = await post("/api/coach", input, COACH_TIMEOUT_MS);
+      // The route stopped a Coach past its deadline and planned the Baseline itself: a Coach that could not be reached.
+      if (isServerBaseline(answer)) throw new ModelUnavailableError(`/api/coach used the Baseline Plan: ${answer.reason}`);
+      const parsed = parseCoachOutput(answer);
       if (!parsed.ok) throw new Error(`Coach output rejected: ${parsed.reasons.join("; ")}`);
       return parsed.output;
     },

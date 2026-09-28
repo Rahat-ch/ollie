@@ -8,12 +8,13 @@
  * Anthropic adapter's name, on fake timers. Nothing reaches a model.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { applyCoachRun, awaitCoach, coachInput, emptyRecord } from "@/coach";
-import { baselinePlan, DIAGNOSTIC_PLAN, newProfile, runSession, scripted } from "@/loop";
+import { applyCoachRun, awaitCoach, COACH_SERVER_DEADLINE_MS, coachInput, emptyRecord, serverBaseline } from "@/coach";
+import { alwaysFirstTry, baselinePlan, DIAGNOSTIC_PLAN, newProfile, runSession, scripted } from "@/loop";
+import { profileWithMastered } from "@/loop/testing";
 import type { CoachInput, CoachOutput } from "@/generation/types";
 import { POST as coachRoute } from "@/app/api/coach/route";
 import { POST as summaryRoute } from "@/app/api/summary/route";
-import { routeCoaching, runCoaching } from "./coaching";
+import { COACH_TIMEOUT_MS, routeCoaching, runCoaching } from "./coaching";
 
 /** The slow Coach: how long each call takes, and every call it was asked for, with what it was told to listen to. */
 const slow = vi.hoisted(() => ({
@@ -65,16 +66,19 @@ function fetchTheRoutes(path: string, init: RequestInit): Promise<Response> {
 }
 
 /**
- * Let time pass a second at a time, with a real turn of the event loop in
- * each, so a request body read or a response written between two timers is
- * not skipped over.
+ * Let time pass a second at a time, with real turns of the event loop in
+ * each, so a request body read or a response written between two timers
+ * lands at the second it happened in and is not skipped over.
  */
 async function elapse(seconds: number): Promise<void> {
   for (let second = 0; second < seconds; second++) {
+    for (let turn = 0; turn < 20; turn++) await new Promise((settle) => setImmediate(settle));
     await vi.advanceTimersByTimeAsync(1000);
-    await new Promise((settle) => setImmediate(settle));
   }
 }
+
+// The route imports the adapter when it first runs; imported here, that costs no fake seconds.
+await import("@/generation/anthropic");
 
 const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-t", scripted("ffhrfffhf"));
 const at = new Date("2026-09-28T20:00:00.000Z");
@@ -113,6 +117,7 @@ describe("a slow Coach", () => {
     const record = await coachRunTaking(71_000);
 
     expect(slow.calls).toHaveLength(1);
+    expect(record.reasons).toEqual([]);
     expect(record.source).toBe("coach");
     expect(record.unavailable).toBe(false);
   });
@@ -166,5 +171,46 @@ describe("POST /api/coach with a slow Coach", () => {
     expect(body).toMatchObject({ source: "baseline", plan: baselinePlan(result.profile), notes: emptyRecord().notes });
     expect(body.reason).toContain("75 s");
     expect(slow.calls[0].settled).toBe("aborted");
+  });
+});
+
+describe("the two clocks", () => {
+  it("let the route decide: its deadline comes before the device stops listening", () => {
+    expect(COACH_SERVER_DEADLINE_MS).toBe(75_000);
+    expect(COACH_TIMEOUT_MS).toBe(90_000);
+    expect(COACH_SERVER_DEADLINE_MS).toBeLessThan(COACH_TIMEOUT_MS);
+  });
+
+  it("give the device the route's Baseline Plan: built from the body, it is the Plan the device builds from its Profile", () => {
+    const later = runSession(
+      { length: 8, skills: [{ skill: "counting-on", weight: 1 }], reviewShare: 0, hypothesisUnderTest: null },
+      { ...profileWithMastered("partners-to-10", "teen-numbers"), sessionsCompleted: 4 },
+      "seed-later",
+      alwaysFirstTry,
+    );
+    for (const session of [result, later]) {
+      expect(serverBaseline(coachInput(session, emptyRecord().notes), "late").plan).toEqual(baselinePlan(session.profile));
+    }
+  });
+
+  it("when the route cannot be heard at all, the device stops at its own and does not ask again", async () => {
+    const asked: string[] = [];
+    vi.stubGlobal("fetch", (path: string, init: RequestInit) => {
+      asked.push(path);
+      // A route that never answers: only the device's own clock ends the wait.
+      return new Promise((_, reject) => init.signal?.addEventListener("abort", () => reject(init.signal!.reason)));
+    });
+    const record = awaitCoach(emptyRecord(), result);
+    const run = runCoaching(routeCoaching(), record, result, [], at);
+    await elapse(200);
+    const written = applyCoachRun(record, await run);
+
+    expect(asked.filter((path) => path === "/api/coach")).toHaveLength(1);
+    expect(written.source).toBe("baseline");
+    expect(written.unavailable).toBe(true);
+    expect(written.reasons).toEqual(["/api/coach did not answer within 90 s"]);
+    // The Summary timed out the same way and was not asked twice either: the template stands in.
+    expect(asked.filter((path) => path === "/api/summary")).toHaveLength(1);
+    expect(written.summaries[0].source).toBe("template");
   });
 });

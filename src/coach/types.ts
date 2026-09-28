@@ -14,7 +14,8 @@ export type CoachRejection = {
 /**
  * What the engine settled on after a Session: the Notes and the next Plan,
  * where they came from, and every rejection on the way. `baseline` means the
- * Coach was rejected twice, or could not be reached at all; the Baseline Plan
+ * Coach was rejected twice, or could not be reached at all (no key, or no
+ * answer before the route's deadline or the device's); the Baseline Plan
  * is used and the Notes are the ones from before the Session, so play never
  * stops.
  */
