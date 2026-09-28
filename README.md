@@ -1,5 +1,7 @@
 # Ollie
 
+[![CI](https://github.com/Rahat-ch/ollie/actions/workflows/ci.yml/badge.svg)](https://github.com/Rahat-ch/ollie/actions/workflows/ci.yml)
+
 A Grade 1 math game that learns how you learn. Built for Prompt 01 of the Nerdy AI Hackathon.
 
 Ollie the owl reads every Problem aloud; a deterministic engine owns the math; a Coach forms evidence-backed Hypotheses after every Session and plans the next one inside a bounded space; the Parent reads why.
