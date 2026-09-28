@@ -1,12 +1,23 @@
 # Ollie
 
-A Grade 1 math game that learns how you learn. Built for Prompt 01 of the Nerdy AI Hackathon.
+A Grade 1 math game that learns how you learn. Free and open source under the [MIT licence](#license): no ads, no accounts, nothing for sale.
 
 Ollie the owl reads every Problem aloud; a deterministic engine owns the math; a Coach forms evidence-backed Hypotheses after every Session and plans the next one inside a bounded space; the Parent reads why.
 
 **The AI can personalise the learning path. It cannot make up the math.**
 
 Live at [ollie.rahatcodes.com](https://ollie.rahatcodes.com).
+
+## How it works
+
+![One Session, end to end: Session, engine, evidence, Coach, validator, next Session. The AI can personalise the learning path; it cannot make up the math.](docs/architecture.svg)
+
+Two seams carry the whole app. **The Loop** is a pure function: given a Session Plan, the Profile, a seed, and an answer policy it returns the Session Log, the updated Knowledge Estimates, the Powers earned, and the next Profile, so the same function runs the browser, the CLIs, the Baseline, and the simulation. **Generation** is one interface with four operations (write Story, run Coach, write Parent Summary, render speech) and a fake that every test runs on. Between them, the Coach is handed the Session's evidence and the **Plan Space** the engine bounds, and the engine checks what comes back: a Hypothesis citing a Problem the Coach was never shown is rejected, and so is any Plan outside the space. One retry carries every reason back; a second failure falls through to the Baseline Plan, and Ollie's Notebook tells the Parent that it did.
+
+- **Generative:** the Stories (two-sentence word problems in the Learner's Theme around the engine's numbers), the Coach's Hypotheses and Session Plans, the words of the Parent Summary, and Ollie's voice audio.
+- **Deterministic:** the arithmetic, the answers, the Hints, Plan validation, the evidence checks, Mastery, Powers, Coins, and the Streak.
+
+Nothing in the second list is ever produced or altered by a model, and everything in the first passes a deterministic check before a child or a parent sees it. The decisions behind this are in [docs/adr/](docs/adr/), and the research the pedagogy rests on is in [docs/research/k5-math-game/](docs/research/k5-math-game/).
 
 ## Curriculum
 
@@ -68,7 +79,7 @@ Ollie reads every Problem aloud, because the Learner cannot read. The voice is d
 
 **Nothing waits on ElevenLabs.** The Speech Chain is `src/voice/chain.ts`, in the spec's order: the line's audio from the Pool, the bundled fixed line, the platform's own speech synthesis, and the line on screen, which is always there. A step that is not ready is simply not in the chain, and a step that does not begin to speak within two seconds is stopped and hands over to the next, so a late start can never speak over the step that replaced it. Walking the chain is `src/play/speak.ts`, pure and tested with stand-in players; the browser's own players are `src/play/play-steps.ts`. Ollie's beak moves for as long as the step is actually speaking, driven by the playback's own events rather than a guessed clip length, and on its own class rather than the pose, so the mouth moves through a Hint and a cheer too; only the last step, the line on screen with no audio at all, falls back to reading pace. `e2e/voice.spec.ts` plays a whole Session on the built app with no key on the server and no bundled audio: every Problem is spoken or shown, Repeat costs no render, and the Session reaches the celebration.
 
-**Still to run with a key.** `src/voice/lines.generated.json` is `[]` in this commit and `public/voice/`, the directory `pnpm voice:lines` renders into and creates, is not in the tree at all: there was no ElevenLabs key on the machine that built the app, so no voice has been designed and no line rendered. With a key on a **Starter or higher** subscription (the cheapest tier with a commercial licence; see THIRD_PARTY.md), run `pnpm voice:design`, listen, `pnpm voice:design --save <id>`, put the voice ID in `.env.local` and Coolify, then `pnpm voice:lines` for the fixed lines and `pnpm voice:lines --kinds ollie,problem` as the budget allows, and commit `public/voice/` with the manifest.
+**Rendered and bundled.** `public/voice/` holds all 1,291 lines in the catalogue, listed in the manifest `src/voice/lines.generated.json`: Ollie's 125 fixed lines and the spoken line of every Problem in the standard ranges, rendered on the designed voice. To re-render (a new voice, a changed line), use an ElevenLabs key on a **Starter or higher** subscription (the cheapest tier with a commercial licence; see THIRD_PARTY.md): `pnpm voice:design`, listen, `pnpm voice:design --save <id>`, put the voice ID in `.env.local` and Coolify, then `pnpm voice:lines --range standard --kinds ollie,problem`, and commit `public/voice/` with the manifest.
 
 ## Ollie's Powers
 
@@ -78,11 +89,11 @@ On a matching Problem Ollie takes the Power's pose from the character sheet and 
 
 The Session that earns a Power is celebrated with it: the headline is the Power, Ollie takes its pose and says "You taught me Count-On Flight!", and the Session's ten Coins and its Streak are paid and shown beside it as always. Powers appear by name on the Path at the Unit that taught them, in the Parent Area beside Mastery per Skill with what Ollie does with each one, and in the Parent Summary, which is handed the Powers the Session earned along with the engine's tally and names them in its prose. The Session waiting for its Coach run keeps the Powers it earned, so a reload before the run lands names them all the same.
 
-## Submission
+## Evals
 
-Everything the Nerdy AI Hackathon entry needs is in [docs/submission/](docs/submission/): the [write-up](docs/submission/write-up.md) (what Ollie does, how it was built, what is generative and what is not, the eval numbers, next steps), the [form text](docs/submission/form.md) field by field, the [video plan](docs/submission/video-plan.md) with its shot list and the console recipe that seeds a Profile for it, and the [architecture graphic](docs/submission/architecture.svg). The disclosure pasted into the form is [THIRD_PARTY.md](THIRD_PARTY.md); the reports the write-up cites are the three live runs of 2026-09-18 — [18-12-41Z](docs/evals/2026-09-18T18-12-41Z.json), [18-41-44Z](docs/evals/2026-09-18T18-41-44Z.json) and [19-09-56Z](docs/evals/2026-09-18T19-09-56Z.json) — with [the charts](docs/evals/convergence.svg) drawn from the third.
+`pnpm eval` has run live three times, back to back on 2026-09-18, on the real Opus 5 Coach, Sonnet 5 Story writer, Opus 5 Parent Summary writer and Opus 5 Judge: [18-12-41Z](docs/evals/2026-09-18T18-12-41Z.json), [18-41-44Z](docs/evals/2026-09-18T18-41-44Z.json) and [19-09-56Z](docs/evals/2026-09-18T19-09-56Z.json), with [the charts](docs/evals/convergence.svg) drawn from the third. The three share every seed, so every Coach-scored number is quoted as a range across them with its 95 percent interval. In short: Evidence Integrity 100 percent in every run (one invented Problem ID in 95,922 citations, in an attempt the engine rejected); each planted weakness named in 2 of the 3 runs; false positives 4 of 39 to 10 of 45 on the tuning split; 358 of 360 Plans accepted first time and no Baseline fallback; and the Coach is **not** faster to Mastery than the fixed Baseline gate, because the Simulated Learners cannot learn from practice. [docs/evals/README.md](docs/evals/README.md#what-the-three-live-runs-say) has the full results and what each number is made of, and [docs/evals/evidence.md](docs/evals/evidence.md) maps every claim about the loop to the test that enforces it and the command that shows it.
 
-**What has and has not run live.** Everything has. Since 2026-09-15 the vendors have been exercised on a developer's machine with keys in `.env.local`: the Opus 5 Coach and Parent Summary have run after real Sessions, the Sonnet 5 Story writer has written Stories live and filled the bundled Content Pool (`src/story/pool.generated.json`: 2,790 keys, 5,520 Stories, two variants for 2,730 keys, every one passed by the validator), Ollie's voice was designed in ElevenLabs Voice Design and saved, and `pnpm voice:lines` rendered all 124 fixed lines and all 671 question lines into `public/voice/` with the manifest in `src/voice/lines.generated.json`. The last thing that had not run live was `pnpm eval` with the real Coach and Judge; on 2026-09-18 it ran three times back to back on identical seeds, and those three reports are what the write-up cites and what every chart here is drawn from. Nothing needing a key is now unrun. What those numbers are is still six hand-designed Simulated Learners who cannot learn from practice, one planted weakness per split, and three runs, which is why every Coach-scored headline is quoted as a range across the three with its 95 percent interval rather than as a score. Everything else (the Loop, the Plan Space and its validation, the evidence checks, the validators, the Speech Chain, every screen, and the simulation against the Baseline) runs under `pnpm test`, `pnpm test:e2e`, and `pnpm eval --fake`.
+**What has and has not run live.** Everything has. Since 2026-09-15 the vendors have been exercised on a developer's machine with keys in `.env.local`: the Opus 5 Coach and Parent Summary have run after real Sessions, the Sonnet 5 Story writer has written Stories live and filled the bundled Content Pool (`src/story/pool.generated.json`: 2,790 keys, 5,520 Stories, two variants for 2,730 keys, every one passed by the validator), Ollie's voice was designed in ElevenLabs Voice Design and saved, and `pnpm voice:lines` rendered the fixed lines and the Problem lines into `public/voice/` with the manifest in `src/voice/lines.generated.json`. The last thing that had not run live was `pnpm eval` with the real Coach and Judge, and the three runs above are it. What those numbers are is still six hand-designed Simulated Learners who cannot learn from practice, one planted weakness per split, and three runs, which is why every Coach-scored headline is a range with its interval rather than a score. Everything else (the Loop, the Plan Space and its validation, the evidence checks, the validators, the Speech Chain, every screen, and the simulation against the Baseline) runs under `pnpm test`, `pnpm test:e2e`, and `pnpm eval --fake`.
 
 ## Deploy
 
@@ -104,8 +115,13 @@ A Docker container built by Coolify on a Hetzner host, behind Cloudflare, with a
 - `src/parent/`: the Parent Gate's hold logic, Mastery per Skill, the four Powers with what each one takes and does, and Ollie's Notebook (the Learner Notes as beliefs with the Problems they rest on), all pure.
 - `src/ollie/`: Ollie's rig as an inline SVG component with CSS motion; `poses.generated.ts` is rendered from `public/ollie/` by `pnpm ollie:poses`.
 - `src/ui/`: the paper components: speech bubble, big button, number pad, ten-frame, number line, progress dots, Path, Avatar and its Items, the Coin and Streak chips, the Power marks, Theme pictures.
-- `src/evals/`: the Simulated Learners (answer policies fed into the Loop), the convergence runner, the Hypothesis evals, the Story and Parent Summary evals with the Judge, its two rubrics, its fake, and the Calibration Set, the dated report, and the chart renderer. `docs/evals/` holds every Eval Run's report and the chart regenerated from the latest one.
-- `docs/adr/`: the three architectural decisions (engine owns the math; no accounts; the Coach plans inside a bounded space).
+- `src/evals/`: the Simulated Learners (answer policies fed into the Loop), the convergence runner, the Hypothesis evals, the Story and Parent Summary evals with the Judge, its two rubrics, its fake, and the Calibration Set, the dated report, and the chart renderer. `docs/evals/` holds every Eval Run's report, the charts regenerated from the latest one, the methods and results (`README.md`), and the claim-to-test evidence map (`evidence.md`).
+- `docs/adr/`: the architectural decisions (engine owns the math; no accounts; the Coach plans inside a bounded space; and the ones that follow).
 - `docs/research/k5-math-game/`: the research the design rests on.
-- `.scratch/k5-math/`: the spec and implementation tickets.
+- `.scratch/`: the specs, decisions, and implementation tickets, one folder per feature.
+- `docs/architecture.svg`: the diagram under "How it works".
 - `THIRD_PARTY.md`: every dependency, API, model, asset source, and the generative-AI assistance used.
+
+## License
+
+The code is MIT-licensed, © 2026 Rahat Chowdhury; see [LICENSE](LICENSE). Third-party components, fonts, models, and the generative-AI assistance used are listed with their licences in [THIRD_PARTY.md](THIRD_PARTY.md).

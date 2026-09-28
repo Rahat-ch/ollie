@@ -2,7 +2,7 @@
  * The Judge on Opus 5 with its written rubrics and structured output. Only
  * the eval command imports this, so nothing that runs on the fake loads
  * the SDK. The same-family limitation (the Judge and the Story writer are
- * both Claude models) is stated in the write-up, not hidden here.
+ * both Claude models) is stated in docs/evals/README.md, not hidden here.
  */
 import Anthropic from "@anthropic-ai/sdk";
 import { recordApiCall, type Telemetry } from "@/generation/telemetry";

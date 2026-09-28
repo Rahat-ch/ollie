@@ -1,6 +1,6 @@
 # Ollie's evals against pi's: two harnesses built on the same instinct
 
-Researched 2026-09-18, against a local fork of the pi coding agent at `/Users/rahat-clawd/dev/pi` (branch `main`, HEAD `853a80d2`, "Add [Unreleased] section for next cycle", 2026-08-28, v0.84.4, remote `earendil-works/pi`), against the current upstream `packages/evals` on GitHub, and against Ollie's own `src/evals/*.ts`, `docs/evals/README.md`, `docs/research/evals-comparison.md` and `docs/submission/evidence.md`.
+Researched 2026-09-18, against a local fork of the pi coding agent at `/Users/rahat-clawd/dev/pi` (branch `main`, HEAD `853a80d2`, "Add [Unreleased] section for next cycle", 2026-08-28, v0.84.4, remote `earendil-works/pi`), against the current upstream `packages/evals` on GitHub, and against Ollie's own `src/evals/*.ts`, `docs/evals/README.md`, `docs/research/evals-comparison.md` and `docs/evals/evidence.md`.
 
 ## Summary
 
@@ -70,6 +70,6 @@ pi is straightforwardly better at: repetitions with a stability story, per-arm c
 
 **pi, upstream `main`** (fetched 2026-09-18): [`packages/evals/README.md`](https://raw.githubusercontent.com/earendil-works/pi/main/packages/evals/README.md), [`packages/evals/src`](https://github.com/earendil-works/pi/tree/main/packages/evals/src), [`packages/evals/evals`](https://github.com/earendil-works/pi/tree/main/packages/evals/evals), [`packages/evals/package.json`](https://raw.githubusercontent.com/earendil-works/pi/main/packages/evals/package.json), [commit history for `packages/evals`](https://github.com/earendil-works/pi/commits/main/packages/evals).
 
-**Ollie**: `docs/evals/README.md`, `docs/evals/*.json` (8 reports), `src/evals/{evals,judge,calibration,stats,learners,rescore,stories,summaries,hypotheses}.ts`, `src/cli/eval.ts`, `package.json` scripts, `docs/research/evals-comparison.md` §§1, 5–7, `docs/submission/evidence.md`.
+**Ollie**: `docs/evals/README.md`, `docs/evals/*.json` (8 reports), `src/evals/{evals,judge,calibration,stats,learners,rescore,stories,summaries,hypotheses}.ts`, `src/cli/eval.ts`, `package.json` scripts, `docs/research/evals-comparison.md` §§1, 5–7, `docs/evals/evidence.md`.
 
 **Unverified**: no eval was executed for this note, in either repo. Statements about what pi's upstream runner does at run time come from its README and file listing, not from a run; the fork's behaviour was read from source. No LLM judge appears in any pi eval I read, but upstream depends on `autoevals`, so one may exist in a file I did not fetch.

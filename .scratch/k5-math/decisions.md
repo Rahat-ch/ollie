@@ -2,7 +2,7 @@
 
 Every decision from the `/grill-with-docs` session, in the order settled. Vocabulary is canonical in `CONTEXT.md`; rationale for the three hard-to-reverse ones is in `docs/adr/`. This file feeds `/to-spec`.
 
-**Deadline:** Nerdy AI Hackathon Prompt 01, submissions close 2026-09-18 11:59 PM CDT. Judged on pedagogical rigor, AI product engineering, demo quality. Individual entry, no copyleft, IP assigns to Nerdy, no under-13 testing without parental consent, no biometrics. Full detail: `docs/research/k5-math-game/05-nerdy-hackathon-alignment.md`.
+**Deadline:** 2026-09-18 11:59 PM CDT. The bar is pedagogical rigor, AI product engineering, and demo quality. One builder, no copyleft, no under-13 testing without parental consent, no biometrics.
 
 ## Surface and stack
 
@@ -44,7 +44,7 @@ Units and Skills, in progression order (7 Skills):
 - Ollie, an owl. Voice designed with ElevenLabs Voice Design on the Starter tier ($6/mo, commercial rights; see research note 06). Brief: warm, playful, gently energetic, sounds like a kind older kid, gender-neutral leaning bright, slow clear diction. Not a baby voice, not a teacher voice.
 - Fixed lines pre-rendered once. Each generated Story rendered in the same voice at creation time and cached with it. Model: eleven_v3 for expressive tags.
 - Animation: layered SVG with CSS, four states: idle, talking (mouth while audio plays), celebrate, encourage.
-- Art: AI-generated images in one consistent style, disclosed in the submission, plus Kenney CC0 icons.
+- Art: AI-generated images in one consistent style, disclosed in THIRD_PARTY.md, plus Kenney CC0 icons.
 
 ## Rewards
 
@@ -88,7 +88,7 @@ Units and Skills, in progression order (7 Skills):
 
 # Amendments — 2026-09-10, after external review
 
-The user shared a review of the spec from another model and accepted the following. Each replaces the earlier decision where they conflict. Contest clause confirmed from the terms page: "the Entry does not mention or depict any identifiable person other than you."
+The user shared a review of the spec from another model and accepted the following. Each replaces the earlier decision where they conflict. Rule adopted for the demo video: it does not mention or depict any identifiable person other than the builder.
 
 1. **Ollie's Powers are the signature mastery mechanic.** Four Powers tied to Mastery: Count-On Flight (counting on), Make-Ten Magic (make-a-ten), Missing Number Detective (unknown addend), Story Solver (Unit 3). Each visibly changes how Ollie solves on every matching Problem. Powers replace Badges. Shop shrinks from 12 to 6 items. Taglines: "Ollie learns how you learn" and "The AI can personalise the learning path. It cannot make up the math."
 2. **Content Pool replaces pre-generated Sessions.** Only the Diagnostic Session is fully bundled. Sessions 2+ are always Coach-planned. Build time generates Story variants and audio per Theme × Skill × structure × number range; run time fills Plans from the Pool, generates misses live and adds them, and falls back to a template sentence. The earlier "first three Sessions per Theme" was contradictory with the loop and with a Nickname that does not exist at build time.
@@ -96,8 +96,8 @@ The user shared a review of the spec from another model and accepted the followi
 4. **Hypothesis evidence is machine-addressable.** Each Hypothesis: claim, status, confidence, evidence as Problem IDs, next test. The engine rejects unknown IDs. New eval: Evidence Integrity (deterministic).
 5. **Precise curriculum claim.** "A focused Grade 1 arithmetic progression aligned to key CCSS 1.OA and 1.NBT concepts." README maps each Skill to its standard. Never "the Common Core Grade 1 progression".
 6. **Nickname, not first name.** Onboarding asks "What should Ollie call you?" The Nickname is sent to Story generation and TTS; onboarding says so plainly. Nothing else leaves the device.
-7. **No child in the video.** Screen-recorded, the entrant taps as the Learner. Real sessions with the user's daughter may inform the build under the user's own parental consent, but never appear in the Entry.
-8. **THIRD_PARTY.md at repo root** listing APIs, models, fonts, images, audio, OSS with licences, and generative-AI assistance; pasted into the submission form.
+7. **No child in the video.** Screen-recorded, the builder taps as the Learner. Real sessions with the user's daughter may inform the build under the user's own parental consent, but never appear in the video or the repo.
+8. **THIRD_PARTY.md at repo root** listing APIs, models, fonts, images, audio, OSS with licences, and generative-AI assistance; it is the project's public disclosure.
 9. **No Session ever blocks on TTS.** Fallback chain: cached audio, bundled fixed line, platform speech synthesis, on-screen template.
 10. **Judge stays Opus 5**, gated by the human-labelled Calibration Set; the same-family limitation is stated in the write-up. A second judge model was declined.
 11. **Cut order reordered.** If days run short: Shop depth (6→4), Freeze and streak edge cases, Themes (6→3), cosmetic polish, extra Story variants. Protected: Ollie's voice and child UI, ten-frame and number line, the Coach loop with evidence IDs, the bounded planner, the Notebook, simulation vs Baseline, the convergence chart, Powers.
@@ -163,7 +163,7 @@ The spec names the four Powers, what each one does on screen, and that they are 
 
 ---
 
-# Amendments — 2026-09-18, before submission
+# Amendments — 2026-09-18, before the deadline
 
 Confirmed by the user on 2026-09-18, on hearing the home screen.
 
