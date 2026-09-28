@@ -1,3 +1,4 @@
+import { serverBaseline } from "@/coach/deadline";
 import { expect, test } from "./test";
 import { setUpProfile } from "./onboarding";
 import { asked, key, openParentArea, playSession, readProfile, seedProfile } from "./play";
@@ -143,6 +144,32 @@ test("completing a Session runs the Coach once; with no key on the server the ne
   await page.goto("/play");
   await expect(page.getByTestId("progress-dot")).toHaveCount(6);
   expect(offHost).toEqual([]);
+});
+
+test("a Coach the route stopped at its own deadline is not asked again: the route's Baseline Plan is used, and the Notebook says the Coach could not be reached", async ({ page, baseURL }) => {
+  const coachRequests: string[] = [];
+  // The route as it answers once the Coach passes its deadline: the Baseline Plan, built from the body, and the reason.
+  await page.route(`${baseURL}/api/coach`, async (route) => {
+    coachRequests.push(route.request().postData() ?? "");
+    await route.fulfill({ json: serverBaseline(JSON.parse(route.request().postData()!), "the model did not answer within the server's deadline of 75 s") });
+  });
+
+  await setUpProfile(page);
+  await page.goto("/play");
+  await playSession(page);
+
+  await expect.poll(async () => (await readProfile(page)).coach.lastSessionCoached).toBe(1);
+  await page.waitForTimeout(500);
+  expect(coachRequests).toHaveLength(1);
+  const record = (await readProfile(page)).coach;
+  expect(record.source).toBe("baseline");
+  expect(record.unavailable).toBe(true);
+  expect(record.reasons).toEqual(["/api/coach used the Baseline Plan: the model did not answer within the server's deadline of 75 s"]);
+  expect(record.summaries).toHaveLength(1);
+
+  await openParentArea(page);
+  await expect(page.getByTestId("notebook-baseline")).toContainText("Ollie could not reach the Coach after the last Session");
+  await expect(page.getByTestId("notebook-baseline")).not.toContainText("deadline");
 });
 
 test("a Coach run that leaving the page interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {

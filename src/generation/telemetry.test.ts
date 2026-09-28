@@ -3,6 +3,8 @@ import {
   callDollars,
   costTotals,
   createRecorder,
+  latency,
+  percentile,
   telemetrySection,
   zeroCall,
   type ModelCall,
@@ -72,5 +74,38 @@ describe("the recorder", () => {
     expect(Object.keys(telemetry.byOperation)).toEqual(["coach", "summary", "story", "judge"]);
     expect(telemetry.total).toMatchObject({ calls: 0, tokens: 0, ms: 0, dollars: 0, models: [] });
     expect(telemetry.perSession.dollarsPerSession).toBe(0);
+  });
+});
+
+describe("per-call latency", () => {
+  it("takes the percentile by nearest rank, so a p95 is the wall time of a call that happened", () => {
+    const twenty = Array.from({ length: 20 }, (_, i) => (i + 1) * 1000);
+    expect(percentile(twenty, 0.5)).toBe(10_000);
+    expect(percentile(twenty, 0.95)).toBe(19_000);
+    expect(percentile([71_000], 0.95)).toBe(71_000);
+    expect(percentile([3, 1, 2], 0.5)).toBe(2);
+    expect(percentile([], 0.5)).toBeNull();
+  });
+
+  it("shows the slow tail a mean hides: most Coach calls well inside the deadline, one far past it", () => {
+    const calls = [60_000, 62_000, 64_000, 66_000, 68_000, 70_000, 72_000, 74_000, 76_000, 140_000].map((ms) => call({ ms }));
+    // The mean is 73.2 s, which says nothing about the call that ran for 140.
+    expect(latency(calls)).toEqual({ calls: 10, p50Ms: 68_000, p95Ms: 140_000 });
+    expect(latency([])).toEqual({ calls: 0, p50Ms: null, p95Ms: null });
+  });
+
+  it("carries every call with its wall time and tokens, and p50 and p95 per operation, in the report's section", () => {
+    const calls = [
+      call({ operation: "coach", ms: 71_000, outputTokens: 9_000 }),
+      call({ operation: "coach", ms: 80_000, outputTokens: 11_000 }),
+      call({ operation: "summary", ms: 12_000 }),
+    ];
+    const telemetry = telemetrySection(calls, 2);
+
+    expect(telemetry.calls).toEqual(calls);
+    expect(telemetry.latency.coach).toEqual({ calls: 2, p50Ms: 71_000, p95Ms: 80_000 });
+    expect(telemetry.latency.summary).toEqual({ calls: 1, p50Ms: 12_000, p95Ms: 12_000 });
+    expect(telemetry.latency.story).toEqual({ calls: 0, p50Ms: null, p95Ms: null });
+    expect(Object.keys(telemetry.latency)).toEqual(["coach", "summary", "story", "judge"]);
   });
 });

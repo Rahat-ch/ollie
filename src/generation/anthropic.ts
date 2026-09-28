@@ -7,7 +7,9 @@
  * returns is checked by the Story validator, not here. The Parent Summary
  * (ticket 12) runs on Opus 5 over the engine's tally of the Session Log and
  * the Learner Notes, and never sees the Nickname (ADR 0002); the Summary
- * validator, not this adapter, decides whether a Parent reads it.
+ * validator, not this adapter, decides whether a Parent reads it. The Coach
+ * and the Summary hand the caller's abort signal to the SDK call, so the
+ * route can cancel a call the device gave up on or that passed its deadline.
  */
 import { decodeEscapes, decodeStrings } from "./decode-escapes";
 import Anthropic from "@anthropic-ai/sdk";
@@ -19,7 +21,7 @@ import { COACH_SYSTEM_PROMPT, coachUserMessage } from "./coach-prompt";
 import { CoachOutputSchema, parseCoachOutput } from "./coach-schema";
 import { SummaryOutputSchema, parseSummaryOutput } from "./summary-schema";
 import { recordApiCall, type Telemetry } from "./telemetry";
-import type { CoachInput, CoachOutput, Generation, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
+import type { CallOptions, CoachInput, CoachOutput, Generation, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
 export const COACH_MODEL = "claude-opus-5";
 export const STORY_MODEL = "claude-sonnet-5";
@@ -37,7 +39,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
   const client = new Anthropic({ apiKey: options.apiKey });
   const { telemetry } = options;
 
-  async function runCoach(input: CoachInput): Promise<CoachOutput> {
+  async function runCoach(input: CoachInput, options: CallOptions = {}): Promise<CoachOutput> {
     const messages: Anthropic.MessageParam[] = [{ role: "user", content: coachUserMessage(input) }];
     const response = await recordApiCall(telemetry, "coach", COACH_MODEL, () => client.messages.parse({
       model: COACH_MODEL,
@@ -45,7 +47,7 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
       system: COACH_SYSTEM_PROMPT,
       messages,
       output_config: { effort: "high", format: zodOutputFormat(CoachOutputSchema) },
-    }));
+    }, { signal: options.signal }));
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
       throw new Error(`Coach output rejected: the model stopped with ${response.stop_reason}`);
     }
@@ -59,14 +61,14 @@ export function anthropicGeneration(options: AnthropicGenerationOptions): Genera
     return parsed.output;
   }
 
-  async function writeSummary(input: SummaryInput): Promise<SummaryOutput> {
+  async function writeSummary(input: SummaryInput, options: CallOptions = {}): Promise<SummaryOutput> {
     const response = await recordApiCall(telemetry, "summary", SUMMARY_MODEL, () => client.messages.parse({
       model: SUMMARY_MODEL,
       max_tokens: 4000,
       system: SUMMARY_SYSTEM_PROMPT,
       messages: [{ role: "user", content: summaryUserMessage(input) }],
       output_config: { effort: "medium", format: zodOutputFormat(SummaryOutputSchema) },
-    }));
+    }, { signal: options.signal }));
     if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") {
       throw new Error(`Parent Summary rejected: the model stopped with ${response.stop_reason}`);
     }

@@ -12,8 +12,9 @@ import { modelRoute } from "@/lib/model-route";
 
 export const POST = modelRoute({
   schema: SummaryInputSchema,
-  run: async (input, apiKey) => {
+  run: async (input, apiKey, signal) => {
     const { anthropicGeneration } = await import("@/generation/anthropic");
-    return anthropicGeneration({ apiKey }).writeSummary(input);
+    // The signal cancels the call when the browser gives up on it.
+    return anthropicGeneration({ apiKey }).writeSummary(input, { signal });
   },
 });

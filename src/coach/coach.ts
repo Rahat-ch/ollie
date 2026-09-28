@@ -103,7 +103,9 @@ function baselineStep(result: SessionResult, notes: LearnerNotes, rejections: re
  * Baseline Plan, keeps the Notes from before the Session, and records both
  * rejections, so play never stops. A Coach that could not be reached at all
  * is not retried: there is no output to fix and no reason to think a second
- * call would arrive, so the Baseline Plan is used at once.
+ * call would arrive, so the Baseline Plan is used at once. A Coach that took
+ * too long counts as one that could not be reached (`routeCoaching` says so),
+ * so a slow Coach is waited for once, never twice.
  */
 export async function coachSession(
   generation: Pick<Generation, "runCoach">,
