@@ -49,6 +49,12 @@ export async function chooseRenderer(mode: Mode): Promise<VoiceRenderer> {
   return voiceRenderer(localEnv());
 }
 
+/** The configured voice model and voice ID, read without a key, so a dry run can say what is stale. */
+export function configuredVoice(): { readonly modelId: string; readonly voiceId: string | undefined } {
+  const env = localEnv();
+  return { modelId: env.elevenLabsModelId, voiceId: env.elevenLabsVoiceId || undefined };
+}
+
 /** The fake Judge (the validator's opinion, which fails calibration by design), or Opus 5 with the rubric. */
 export async function chooseJudge(mode: Mode, telemetry?: Telemetry): Promise<{ readonly judge: Judge; readonly name: string }> {
   if (mode === "fake") return { judge: telemetry ? recordedFakeJudge(telemetry) : fakeJudge, name: "fake" };

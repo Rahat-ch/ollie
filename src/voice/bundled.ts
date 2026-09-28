@@ -5,19 +5,23 @@
  * fetches one once (next.config sets a year's cache-control on /voice). The
  * manifest holds the audio key of each line that has a file, so a line whose
  * wording has changed since it was rendered falls through the Speech Chain
- * instead of playing the old audio.
+ * instead of playing the old audio; and what each was rendered on, which the
+ * URL carries, so a line re-rendered on a new voice is fetched again.
  */
 import { audioFileName, audioKey } from "./key";
-import keys from "./lines.generated.json";
+import manifest from "./lines.generated.json";
+import { bundledRenditions, type VoiceManifest } from "./manifest";
 
 /** Where the bundled audio is served from, under public/. */
 export const VOICE_PATH = "/voice";
 
-export const BUNDLED_LINE_KEYS: ReadonlySet<string> = new Set(keys as string[]);
+/** Each bundled line's audio key, with the tag of the model and voice it was rendered on. */
+export const BUNDLED_LINES: ReadonlyMap<string, string> = bundledRenditions(manifest as VoiceManifest);
 
 export const voiceUrl = (text: string): string => `${VOICE_PATH}/${audioFileName(text)}`;
 
 /** The bundled audio for a line, or nothing when it was never rendered. */
-export function bundledLineUrl(text: string, bundled: ReadonlySet<string> = BUNDLED_LINE_KEYS): string | undefined {
-  return bundled.has(audioKey(text)) ? voiceUrl(text) : undefined;
+export function bundledLineUrl(text: string, bundled: ReadonlyMap<string, string> = BUNDLED_LINES): string | undefined {
+  const rendition = bundled.get(audioKey(text));
+  return rendition === undefined ? undefined : `${voiceUrl(text)}?r=${rendition}`;
 }

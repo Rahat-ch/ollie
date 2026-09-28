@@ -78,11 +78,17 @@ const decodeBase64 = (text: string): Uint8Array => Uint8Array.from(Buffer.from(t
 export function elevenLabsVoiceDesign(options: VoiceDesignOptions) {
   const call = options.fetch ?? globalThis.fetch;
 
-  async function design({ brief, previewText }: { readonly brief: string; readonly previewText: string }): Promise<VoicePreview[]> {
+  /**
+   * `modelId` is the design model: `eleven_multilingual_ttv_v2` (the API's
+   * default when none is sent) or `eleven_ttv_v3`. There is no v4 design
+   * model; a designed voice is rendered on whatever text-to-speech model is
+   * configured, `eleven_v4` included.
+   */
+  async function design({ brief, previewText, modelId }: { readonly brief: string; readonly previewText: string; readonly modelId?: string }): Promise<VoicePreview[]> {
     const response = await call(`${VOICE_API}/text-to-voice/design`, {
       method: "POST",
       headers: headers(options.apiKey, "application/json"),
-      body: JSON.stringify({ voice_description: brief, text: previewText }),
+      body: JSON.stringify({ voice_description: brief, text: previewText, ...(modelId ? { model_id: modelId } : {}) }),
     });
     if (!response.ok) await refuse("design a voice", response);
     const answer: unknown = await response.json();

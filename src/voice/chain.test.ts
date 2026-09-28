@@ -2,18 +2,27 @@ import { describe, expect, it } from "vitest";
 import { audioKey } from "./key";
 import { bundledLineUrl, voiceUrl } from "./bundled";
 import { speechChain } from "./chain";
+import { renditionTag } from "./manifest";
 
 const LINE = "You did it!";
-const bundled = new Set([audioKey(LINE)]);
+const V3 = renditionTag({ modelId: "eleven_v3", voiceId: "old-voice" });
+const V4 = renditionTag({ modelId: "eleven_v4", voiceId: "new-voice" });
+const bundled = new Map([[audioKey(LINE), V3]]);
 
 describe("bundledLineUrl", () => {
   it("finds a line's own audio under public/voice and nothing for a line that was never rendered", () => {
-    expect(bundledLineUrl(LINE, bundled)).toBe(voiceUrl(LINE));
+    expect(bundledLineUrl(LINE, bundled)).toBe(`${voiceUrl(LINE)}?r=${V3}`);
     expect(bundledLineUrl("Yes! 7!", bundled)).toBeUndefined();
   });
 
+  it("gives the same line a new URL once it is rendered on a new model and voice, so a year's cache never keeps the old Ollie", () => {
+    const rerendered = bundledLineUrl(LINE, new Map([[audioKey(LINE), V4]]));
+    expect(rerendered).not.toBe(bundledLineUrl(LINE, bundled));
+    expect(rerendered?.startsWith(voiceUrl(LINE))).toBe(true);
+  });
+
   it("finds nothing at all while no line has been rendered, which is how the app ships without a key", () => {
-    expect(bundledLineUrl(LINE, new Set())).toBeUndefined();
+    expect(bundledLineUrl(LINE, new Map())).toBeUndefined();
   });
 });
 
