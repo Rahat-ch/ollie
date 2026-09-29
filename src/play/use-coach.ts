@@ -3,7 +3,7 @@
  * A completed Session waits on the record until a run writes it, so the run
  * survives a reload: whichever screen is open starts it, the Session screen
  * or the home screen, and a reload mid-run runs it again. That is still one
- * run of the engine's rule per Session — its own one retry included — and a
+ * run of the engine's rule per Session — its one retry, which the route runs, included — and a
  * Session already coached never waits again. Nothing on screen waits for
  * it: the Learner is at the celebration and then gone, and the record is
  * written when the run lands. If it fails, the record keeps the Baseline

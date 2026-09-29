@@ -1,9 +1,31 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession, scripted } from "@/loop";
 import { SummaryInputSchema } from "@/generation/summary-schema";
+import { fakeGeneration } from "@/generation/fake";
+import type { SummaryInput, SummaryOutput } from "@/generation/types";
 import { modelRoute } from "@/lib/model-route";
 import { summaryInput } from "@/summary/summary";
+import { templateSummary } from "@/summary/template";
 import { POST } from "./route";
+
+/**
+ * The Summary writer behind the Anthropic adapter's name: the Generation
+ * fake, whose answer a test may replace. Every call is counted.
+ */
+const writer = vi.hoisted(() => ({
+  answer: null as ((input: SummaryInput, call: number) => Promise<SummaryOutput>) | null,
+  calls: 0,
+}));
+
+vi.mock("@/generation/anthropic", async () => {
+  const { fakeGeneration } = await import("@/generation/fake");
+  const fake = fakeGeneration();
+  const writeSummary = (input: SummaryInput): Promise<SummaryOutput> => {
+    writer.calls += 1;
+    return writer.answer ? writer.answer(input, writer.calls) : fake.writeSummary(input);
+  };
+  return { anthropicGeneration: () => fakeGeneration({ writeSummary }) };
+});
 
 const input = summaryInput(runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-r", scripted("ffhrfffhf")), emptyNotes(), []);
 
@@ -19,6 +41,11 @@ function fakeSummaryRoute() {
     handler: modelRoute({ schema: SummaryInputSchema, run: async (given) => { calls.push(given); return { practiced: "p", activity: "a" }; } }),
   };
 }
+
+beforeEach(() => {
+  writer.answer = null;
+  writer.calls = 0;
+});
 
 afterEach(() => {
   delete process.env.ANTHROPIC_API_KEY;
@@ -58,5 +85,48 @@ describe("POST /api/summary", () => {
     expect((await post(handler, { ...input, notes: { hypotheses: "none" } })).status).toBe(400);
     expect((await post(handler, null)).status).toBe(400);
     expect(calls).toEqual([]);
+  });
+});
+
+describe("POST /api/summary runs the Summary validator and answers only a checked Summary", () => {
+  /** A Summary counting 12 Problems in a Session of 9: a number the engine did not give. */
+  const INVENTED = "Your child answered 12 Problems today, with 1 Revealed and 1 correct after a Hint.";
+  const inventing = async (given: SummaryInput): Promise<SummaryOutput> => ({ ...(await fakeGeneration().writeSummary(given)), practiced: INVENTED });
+
+  beforeEach(() => {
+    process.env.ANTHROPIC_API_KEY = "test-key";
+  });
+
+  it("answers a Summary the validator allows, and says it was the writer's", async () => {
+    const response = await post(POST, input);
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ...(await fakeGeneration().writeSummary(input)), source: "summary", rejections: [] });
+    expect(writer.calls).toBe(1);
+  });
+
+  it("never answers a Summary with a number the engine did not give: the second attempt, when that is allowed", async () => {
+    writer.answer = (given, call) => (call === 1 ? inventing(given) : fakeGeneration().writeSummary(given));
+
+    const body = await (await post(POST, input)).json();
+
+    expect(body.source).toBe("summary");
+    expect(body.practiced).toBe((await fakeGeneration().writeSummary(input)).practiced);
+    expect(body.rejections).toHaveLength(1);
+    expect(body.rejections[0].attempt).toBe(1);
+    expect(body.rejections[0].reasons.join("; ")).toContain("12");
+    // The rejection says why, and does not carry the rejected Summary back to the device.
+    expect(JSON.stringify(body)).not.toContain(INVENTED);
+    expect(writer.calls).toBe(2);
+  });
+
+  it("never answers a Summary with a number the engine did not give: the template, when every attempt has one", async () => {
+    writer.answer = inventing;
+
+    const body = await (await post(POST, input)).json();
+
+    expect(body).toMatchObject({ ...templateSummary(input), source: "template" });
+    expect(body.rejections.map((rejection: { attempt: number }) => rejection.attempt)).toEqual([1, 2]);
+    expect(JSON.stringify(body)).not.toContain(INVENTED);
   });
 });

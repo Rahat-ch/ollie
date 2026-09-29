@@ -169,7 +169,7 @@ describe("POST /api/coach with a slow Coach", () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body).toMatchObject({ source: "baseline", plan: baselinePlan(result.profile), notes: emptyRecord().notes });
-    expect(body.reason).toContain("75 s");
+    expect(body.rejections).toEqual([{ attempt: 1, reasons: [expect.stringContaining("75 s")], unavailable: true }]);
     expect(slow.calls[0].settled).toBe("aborted");
   });
 });

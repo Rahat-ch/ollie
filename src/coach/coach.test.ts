@@ -4,7 +4,7 @@ import { getSimulatedLearner, simulatedLearner } from "@/evals/learners";
 import { fakeGeneration } from "@/generation/fake";
 import type { CoachInput, CoachOutput, Generation } from "@/generation/types";
 import type { CoachStep } from "./types";
-import { checkCoachOutput, coachInput, coachSession } from "./coach";
+import { checkCoachOutput, coachInput, coachSession, sessionBounds } from "./coach";
 
 /** A Diagnostic Session with p3 Hint-assisted, p4 Revealed, and p8 Hint-assisted. */
 const result = runSession(DIAGNOSTIC_PLAN, newProfile(), "seed-c", scripted("ffhrfffhf"));
@@ -175,11 +175,11 @@ describe("coachSession after a failed retry", () => {
 describe("the Coach never produces a Problem", () => {
   it("accepts only Notes and a Plan, and the Plan carries no answer", async () => {
     const output = await validOutput(coachInput(result, notes));
-    const check = checkCoachOutput(output, result, notes);
+    const check = checkCoachOutput(output, sessionBounds(result, notes));
     const withProblems = { ...output, problems: [{ id: "p10", answer: 7 }] };
 
     expect(check.ok && Object.keys(check.output)).toEqual(["notes", "plan"]);
-    expect(checkCoachOutput(withProblems, result, notes)).toEqual({
+    expect(checkCoachOutput(withProblems, sessionBounds(result, notes))).toEqual({
       ok: false,
       reasons: ['output: Unrecognized key: "problems"'],
     });

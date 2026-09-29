@@ -4,8 +4,8 @@
  * The schema is the whole of what may be sent, so nothing personal can
  * reach a model by being added to a body (ADR 0002). Without a key the
  * route answers 503 at once and the browser falls back — the Baseline Plan
- * for the Coach, the template for the Summary — so play never stops; a
- * failed call is a 502 the browser may retry.
+ * for the Coach, the template for the Summary — so play never stops; an
+ * operation that throws is a 502, and the browser uses its own fallback.
  *
  * The operation is handed the request's abort signal, so a model call the
  * browser gave up on is cancelled rather than paid for with nobody waiting.

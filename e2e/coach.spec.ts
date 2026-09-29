@@ -164,12 +164,40 @@ test("a Coach the route stopped at its own deadline is not asked again: the rout
   const record = (await readProfile(page)).coach;
   expect(record.source).toBe("baseline");
   expect(record.unavailable).toBe(true);
-  expect(record.reasons).toEqual(["/api/coach used the Baseline Plan: the model did not answer within the server's deadline of 75 s"]);
+  expect(record.reasons).toEqual(["the model did not answer within the server's deadline of 75 s"]);
   expect(record.summaries).toHaveLength(1);
 
   await openParentArea(page);
   await expect(page.getByTestId("notebook-baseline")).toContainText("Ollie could not reach the Coach after the last Session");
   await expect(page.getByTestId("notebook-baseline")).not.toContainText("deadline");
+});
+
+test("a Coach the route rejected twice is not asked again: the device plans its own Baseline, and the Notebook says the plan could not be used", async ({ page, baseURL }) => {
+  const coachRequests: string[] = [];
+  const reason = 'h9 cites "p99", which is not a Problem the Coach was shown';
+  // The route as it answers once the Coach's output and its retry were both rejected: the Baseline Plan and both reasons.
+  await page.route(`${baseURL}/api/coach`, async (route) => {
+    coachRequests.push(route.request().postData() ?? "");
+    const { notes, plan } = serverBaseline(JSON.parse(route.request().postData()!), reason);
+    const rejections = [{ attempt: 1, reasons: [reason] }, { attempt: 2, reasons: [reason] }];
+    await route.fulfill({ json: { notes, plan, source: "baseline", rejections } });
+  });
+
+  await setUpProfile(page);
+  await page.goto("/play");
+  await playSession(page);
+
+  await expect.poll(async () => (await readProfile(page)).coach.lastSessionCoached).toBe(1);
+  await page.waitForTimeout(500);
+  expect(coachRequests).toHaveLength(1);
+  const record = (await readProfile(page)).coach;
+  expect(record.source).toBe("baseline");
+  expect(record.unavailable).toBe(false);
+  expect(record.reasons).toEqual([reason, reason]);
+
+  await openParentArea(page);
+  await expect(page.getByTestId("notebook-baseline")).toContainText("Ollie's plan for the next Session could not be used");
+  await expect(page.getByTestId("notebook-baseline")).not.toContainText("p99");
 });
 
 test("a Coach run that leaving the page interrupts is run again from the home screen, and the Notebook and the Summary arrive", async ({ page, baseURL }) => {
