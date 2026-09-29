@@ -17,7 +17,8 @@ import { profileWithMastered } from "@/loop/testing";
 import { fakeGeneration } from "@/generation/fake";
 import type { CoachInput, CoachOutput } from "@/generation/types";
 import { boundsFromInput, coachInput } from "./coach";
-import { acceptServerStep, serverCoachStep } from "./server";
+import { serverCoachStep } from "./graph";
+import { acceptServerStep } from "./server";
 
 const practise = (skill: SkillId, length = 10): SessionPlan => ({ length, skills: [{ skill, weight: 1 }], reviewShare: 0, hypothesisUnderTest: null });
 
@@ -91,7 +92,7 @@ describe("serverCoachStep", () => {
     expect(step).toMatchObject({ source: "baseline", rejections: [{ attempt: 1, reasons: ["Request was aborted."] }] });
   });
 
-  it("passes its signal into the model call", async () => {
+  it("passes its signal into the model call, so the call is cancelled when the caller goes", async () => {
     const signals: (AbortSignal | undefined)[] = [];
     const generation = fakeGeneration({
       runCoach: async (given, options) => {
@@ -99,11 +100,14 @@ describe("serverCoachStep", () => {
         return valid(given);
       },
     });
-    const signal = new AbortController().signal;
+    const caller = new AbortController();
 
-    await serverCoachStep(generation, input, signal);
+    await serverCoachStep(generation, input, caller.signal);
 
-    expect(signals).toEqual([signal]);
+    expect(signals).toHaveLength(1);
+    expect(signals[0]?.aborted).toBe(false);
+    caller.abort();
+    expect(signals[0]?.aborted).toBe(true);
   });
 });
 

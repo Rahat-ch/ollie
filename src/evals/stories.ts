@@ -11,8 +11,8 @@ import { mapLimit } from "@/lib/map-limit";
 import { THEMES } from "@/profile/identity";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { writeValidStory, type StoryRejection } from "@/story/write";
-import { STORY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, type Calibration, type Judge, type Judgement } from "./judge";
+import { storyCalibrationSet, type Access } from "./sealed";
 import { share, wilsonInterval, writtenValidity, type Interval, type Validity } from "./stats";
 
 const UNIT_3: readonly SkillId[] = ["result-unknown", "change-unknown"];
@@ -70,6 +70,8 @@ export type StoryEvalOptions = {
   readonly sample?: readonly StoryInput[];
   /** How many model calls run at once. */
   readonly concurrency?: number;
+  /** Which half of the Calibration Set the gate reads: the open half unless a final run asks for both. */
+  readonly calibrationAccess?: Access;
 };
 
 /** A rejection reason without its particulars, so the same kind of failure counts together. */
@@ -83,7 +85,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
     const story = await writeValidStory(generation, input);
     return { input, ...story };
   });
-  const calibration = await calibrateJudge(STORY_CALIBRATION_SET, (story) => judge.judgeStory(story));
+  const calibration = await calibrateJudge(storyCalibrationSet(options.calibrationAccess ?? "tuning"), (story) => judge.judgeStory(story));
   let stories = written;
   let readability: StoryReadability | null = null;
   if (calibration.passes) {

@@ -119,3 +119,14 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - `LICENSE` is at the root and `package.json` has `"license": "MIT"`.
     - `"private": true` stays, so the package is never published to npm.
     - Ticket 01 adds a License line to the README.
+35. **Pre-registration 1 thresholds tightened by the owner before sign-off (2026-09-28).**
+    - Detection: at least 3 of 6, up from 2 of 6.
+    - False positives: no worse than the worst Opus run. That is at most 0.222 on the tuning split, up from 0.32, and at most 0.100 held out, up from 0.20.
+    - p95 Coach latency: under 30 s, down from under the 75 s route deadline.
+36. **Order.**
+    - Phase 2 does not wait for Phase 1's evidence.
+    - Tickets 11 and 13 start now.
+    - Ticket 12 starts now and adds the Opus-against-Sonnet comparison once ticket 07's reports exist.
+    - Ticket 07's live runs may run at any time before Phase 3 changes the Coach prompt. Ticket 16 is blocked by 07.
+    - The Phase 1 post waits for ticket 10.
+

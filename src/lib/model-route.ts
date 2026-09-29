@@ -46,6 +46,9 @@ export type ModelRoute<T> = {
   readonly spend?: () => DailyAllowance;
 };
 
+/** Why a call past the route's deadline was stopped, as the route's own answer says it. */
+export const deadlineReason = (ms: number): string => `the model did not answer within the server's deadline of ${Math.round(ms / 1000)} s`;
+
 /** Marks the deadline winning the race against the operation. */
 const PASSED = Symbol("deadline passed");
 
@@ -73,7 +76,7 @@ export function modelRoute<T>({ schema, run, deadline, spend = modelSpend }: Mod
     try {
       const outcome = await Promise.race([run(parsed.data, apiKey, signal, spendTelemetry(today)), passed]);
       if (outcome !== PASSED) return NextResponse.json(outcome);
-      const reason = `the model did not answer within the server's deadline of ${Math.round(deadline!.ms / 1000)} s`;
+      const reason = deadlineReason(deadline!.ms);
       stop.abort(new Error(reason));
       return NextResponse.json(deadline!.answer(parsed.data, reason));
     } catch (error) {

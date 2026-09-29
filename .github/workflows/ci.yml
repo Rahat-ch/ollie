@@ -1,5 +1,6 @@
 # Every push and pull request: typecheck, lint, the unit tests, the fake
-# eval, and the production build. No secret is read here, so the fake eval
+# eval, the production build, and a check that the browser's bundle
+# carries no LangGraph code. No secret is read here, so the fake eval
 # runs with no key and makes no network call.
 name: CI
 
@@ -31,3 +32,4 @@ jobs:
       - run: pnpm test
       - run: pnpm eval --fake
       - run: pnpm build
+      - run: pnpm bundle:check # no LangGraph code in the browser's bundle

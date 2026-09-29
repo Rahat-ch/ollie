@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation/fake";
 import { validateStory } from "@/story/validate";
-import { STORY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, fakeJudge, JUDGE_AGREEMENT_THRESHOLD, type Judge } from "./judge";
+import { finalRun, storyCalibrationSet } from "./sealed";
 import { runStoryEvals, storySample } from "./stories";
+
+/** Both halves: these tests check the set itself, and tune nothing. */
+const STORY_CALIBRATION_SET = storyCalibrationSet(finalRun("the Story Calibration Set's own tests"));
 
 /** A Judge that answers with the Calibration Set's own verdicts, and passes anything else. */
 const agreeingJudge: Judge = {

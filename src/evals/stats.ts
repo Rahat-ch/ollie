@@ -33,6 +33,29 @@ export function wilsonInterval(hits: number, total: number): Interval | null {
   };
 }
 
+/**
+ * Cohen's kappa for two raters over the same items, any number of
+ * categories: the agreement observed, less what each rater's own habits
+ * would produce by chance, over the room that leaves. Null when there is
+ * nothing to score or chance already explains everything (both raters used
+ * one and the same category throughout), because the ratio is then 0 over 0.
+ */
+export function cohensKappa(pairs: readonly (readonly [string, string])[]): number | null {
+  if (pairs.length === 0) return null;
+  const n = pairs.length;
+  const countA = new Map<string, number>();
+  const countB = new Map<string, number>();
+  let agreed = 0;
+  for (const [a, b] of pairs) {
+    countA.set(a, (countA.get(a) ?? 0) + 1);
+    countB.set(b, (countB.get(b) ?? 0) + 1);
+    if (a === b) agreed += 1;
+  }
+  const observed = agreed / n;
+  const chance = [...countA].reduce((total, [category, count]) => total + (count / n) * ((countB.get(category) ?? 0) / n), 0);
+  return chance >= 1 ? null : (observed - chance) / (1 - chance);
+}
+
 export const mean = (values: readonly number[]): number =>
   values.length === 0 ? 0 : values.reduce((a, b) => a + b, 0) / values.length;
 

@@ -1,7 +1,8 @@
 /**
  * The Coach step on the server, and the device's check of what it answers.
  * The server is authoritative: the Coach route runs the whole step — the
- * check, the one retry with every reason, the Baseline Plan — and only an
+ * check, the one retry with every reason, the Baseline Plan — as a graph
+ * (`serverCoachStep` in `./graph.ts`, server only), and only an
  * output the engine allowed leaves it. It checks against what it rebuilds
  * from the body, never against what the body claims: the Problem IDs from
  * the evidence and the Notes, the Plan Space from the Knowledge Estimates.
@@ -14,11 +15,10 @@
  */
 import { z } from "zod";
 import { LearnerNotesSchema, SessionPlanSchema } from "@/generation/coach-schema";
-import type { CallOptions, CoachInput, Generation } from "@/generation/types";
-import { planSpace } from "@/loop";
+import type { CoachInput } from "@/generation/types";
 import type { LearnerNotes, SessionResult } from "@/loop";
 import { errorMessage, isUnavailable } from "@/lib/errors";
-import { baselineStep, boundsFromInput, checkCoachOutput, coachInput, coachStep, sessionBounds } from "./coach";
+import { baselineStep, checkCoachOutput, coachInput, sessionBounds } from "./coach";
 import type { CoachRejection, CoachStep } from "./types";
 
 /** A rejection as the route answers it: why, and whether the Coach was reached, without the rejected output. */
@@ -28,24 +28,8 @@ export type ServerRejection = Omit<CoachRejection, "output">;
 export type ServerCoachStep = Omit<CoachStep, "rejections"> & { readonly rejections: readonly ServerRejection[] };
 
 /** The rejection without the output it rejected, which stays on the server. */
-const withoutOutput = ({ attempt, reasons, unavailable }: CoachRejection): ServerRejection =>
+export const withoutOutput = ({ attempt, reasons, unavailable }: CoachRejection): ServerRejection =>
   unavailable ? { attempt, reasons, unavailable } : { attempt, reasons };
-
-/**
- * The Coach step as the route runs it: on bounds rebuilt from the body, with
- * the Coach shown the Plan Space the server rebuilt rather than the one the
- * body carried, and the signal passed into every model call.
- */
-export async function serverCoachStep(
-  generation: Pick<Generation, "runCoach">,
-  input: CoachInput,
-  signal?: AbortSignal,
-): Promise<ServerCoachStep> {
-  const bounds = boundsFromInput(input);
-  const options: CallOptions = signal ? { signal } : {};
-  const step = await coachStep(generation, { ...input, planSpace: planSpace(bounds.profile) }, bounds, options);
-  return { ...step, rejections: step.rejections.map(withoutOutput) };
-}
 
 const ServerCoachStepSchema = z.object({
   notes: LearnerNotesSchema,

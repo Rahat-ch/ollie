@@ -1,0 +1,56 @@
+{
+  "set": "summaries",
+  "labeller": "owner",
+  "labels": [
+    {
+      "id": "s01",
+      "pass": true,
+      "note": "Every count is the engine's and the three states are kept apart."
+    },
+    {
+      "id": "s02",
+      "pass": true,
+      "note": "Two strategies, each with its own evidence, and no claim beyond it."
+    },
+    {
+      "id": "s03",
+      "pass": true,
+      "note": "Names what was Mastered, which the evidence says."
+    },
+    {
+      "id": "s04",
+      "pass": true,
+      "note": "Says the Revealed Problem plainly, without softening it into a success."
+    },
+    {
+      "id": "s05",
+      "pass": true,
+      "note": "Short and plain, and everything in it is in the evidence."
+    },
+    {
+      "id": "s06",
+      "pass": true,
+      "note": "Mentions the Hypothesis as something Ollie is watching, not as fact."
+    },
+    {
+      "id": "s07",
+      "pass": false,
+      "note": "Runs a Hint-assisted success and a Revealed answer together as a little help, so the evidence cannot be told apart."
+    },
+    {
+      "id": "s08",
+      "pass": false,
+      "note": "Claims why she missed, in words no list of phrases catches: the Log says nothing about rushing."
+    },
+    {
+      "id": "s09",
+      "pass": false,
+      "note": "Claims a Mastery and a Power the evidence does not have."
+    },
+    {
+      "id": "s10",
+      "pass": false,
+      "note": "Praise the evidence does not support, and an activity for a Skill that was not the weakest."
+    }
+  ]
+}

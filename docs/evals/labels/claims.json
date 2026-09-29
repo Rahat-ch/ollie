@@ -1,0 +1,7446 @@
+{
+  "seed": "claim-set-2026-09-28",
+  "drawnFrom": [
+    "2026-09-18T18-12-41Z.json",
+    "2026-09-18T18-41-44Z.json",
+    "2026-09-18T19-09-56Z.json"
+  ],
+  "items": [
+    {
+      "id": "k001",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "fast-fatigue",
+      "session": 19,
+      "hypothesis": "h8",
+      "claim": "On counting-on, items written larger-first (big number stated first, 1-3 added) draw support more often than items written smaller-first, where the Learner must start from the larger addend given second.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p79",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p90",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k002",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 16,
+      "hypothesis": "h3",
+      "claim": "The closing Problem of a Session is where performance drops. Still refuted: the final item, take-from-ten 10 - 2 at position 9, was first-try correct, and the last helped item fell at position 8.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "3 + 13 = ?",
+          "answer": 16,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "3 + 7 = ?",
+          "answer": 10,
+          "assistance": "revealed"
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p73",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k003",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 8,
+      "hypothesis": "h14",
+      "claim": "Within make-a-ten, the items needing help have a larger addend of 7: this Session 5 + 7 ended in a Hint-assisted success (p67) and 4 + 7 in a Reveal (p68), and 7 + 6 ended in a Reveal in Session 7 (p57), while items with larger addend 8 or 9 were first-try correct (9 + 3 p64, 5 + 8 p65, 8 + 4 p66, 9 + 8 p55). Counter-cases exist: 7 + 6 was first-try correct in Session 6 (p50) and 4 + 7 in Session 7 (p54).",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k004",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 8,
+      "hypothesis": "h1",
+      "claim": "Teen-number decompose items (10 + ? = teen) are less secure than compose items. Still refuted: both decompose review items this Session, 10 + ? = 19 and 10 + ? = 14, were first-try correct with no help.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 13",
+          "answer": 3,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 16",
+          "answer": 6,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p28",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k005",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h1",
+      "claim": "Teen decompose items with a larger ones part (e.g. 10 + ? = 15 or 16) draw support, while ones parts of 1-3 come on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p70",
+          "recorded": false
+        },
+        {
+          "problem": "p78",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p93",
+          "recorded": false
+        },
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p100",
+          "recorded": false
+        },
+        {
+          "problem": "p110",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k006",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "strong",
+      "session": 18,
+      "hypothesis": "h10",
+      "claim": "The top of the unlocked ranges is now tested rather than assumed: wholes of 17-20 in Units 1-2, Unit 3 wholes of 15-20, counting-on with a teen larger addend in both orders, and teen compose and decompose at the top of 11-19.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p100",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p125",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k007",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "weak",
+      "session": 7,
+      "hypothesis": "h9",
+      "claim": "Counting-on is reliable on the first attempt when the total stays at or below ten, and breaks down when the count runs past ten.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p41",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "1 + 12 = ?",
+          "answer": 13,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p42",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k008",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h11",
+      "claim": "In unknown-addend subtraction with a teen whole, assistance appears when the answer requires going back across ten (the part taken is bigger than the ones digit), not when it stays above ten.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p84",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p89",
+          "recorded": false
+        },
+        {
+          "problem": "p90",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k009",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 7,
+      "hypothesis": "h2",
+      "claim": "Partners to 10 are answered correctly on the first try in both missing-partner and take-from-ten form across the whole range of given partners, including the small-part take-from-ten direction.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p5",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 5 = ?",
+          "answer": 5,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 2 = ?",
+          "answer": 8,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "missing-partner",
+          "equation": "2 + ? = 10",
+          "answer": 8,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p10",
+          "recorded": false
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p14",
+          "recorded": false
+        },
+        {
+          "problem": "p17",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p29",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k010",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 2,
+      "hypothesis": "h4",
+      "claim": "Decomposing a teen number as ten plus some ones is secure: three of three first attempts correct, across 12, 14 and 19.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 12",
+          "answer": 2,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 19",
+          "answer": 9,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 14",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        }
+      ]
+    },
+    {
+      "id": "k011",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 17,
+      "hypothesis": "h1",
+      "claim": "Teen-number decompose items (10 + ? = teen) are less secure than compose items. Refuted again: all three teen items this Session were first-try correct with no help, including two decompose items (10 + ? = 12 and 10 + ? = 16) spanning low and mid teens.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 13",
+          "answer": 3,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p28",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p108",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k012",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "average",
+      "session": 5,
+      "hypothesis": "h9",
+      "claim": "The Hints on counting-on are not tied to which addend is stated first; counting-on itself is the unfinished Skill, and success on it is currently about even regardless of the numbers.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p41",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k013",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 13,
+      "hypothesis": "h12",
+      "claim": "On missed items the Learner goes to a Reveal rather than working through a Hint. Untested this Session: no item was missed on the first try, so neither Hints nor Reveals occurred.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k014",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 1,
+      "hypothesis": "h2",
+      "claim": "Composing a ten and a small number (10 + n) is mostly secure; the one Reveal on 10 + 2 (p8) sits between two first-try correct compose Problems (p1, p9), so it looks isolated rather than a consistent gap.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 2 = ?",
+          "answer": 12,
+          "assistance": "revealed"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 1 = ?",
+          "answer": 11,
+          "assistance": "first-try-correct"
+        }
+      ]
+    },
+    {
+      "id": "k015",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 19,
+      "hypothesis": "h25",
+      "claim": "Within make-a-ten, the largest sums draw help while smaller crossings stay clean. Refuted: 9 + 9 was first-try correct this Session after being revealed last Session, and 7 + 8 and 7 + 7 were also clean.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k016",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h6",
+      "claim": "Because partners-to-10 and ten-plus-some-more are both first-try secure, the Learner will handle make-a-ten within 20 on first attempts without needing Hints.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p18",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p29",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p32",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p41",
+          "recorded": false
+        },
+        {
+          "problem": "p42",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p89",
+          "recorded": false
+        },
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p125",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k017",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 3,
+      "hypothesis": "h2",
+      "claim": "Within teen numbers, composing (10 + n = ?) is less secure than decomposing (10 + ? = teen): decompose items have been first-try correct every time they have appeared, while compose items keep drawing an occasional hint before a correct answer (two more this Session, p21 and p25).",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 14",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p5",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 6 = ?",
+          "answer": 16,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p14",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p19",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k018",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h14",
+      "claim": "Help on make-a-ten appears only at the very top of the range, where both addends are 9 (sum 18), and not on other make-a-ten items.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p95",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k019",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h4",
+      "claim": "Success on counting-on does not depend on the size of the total: past-ten items can be first-try correct while under-ten items need help.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "1 + 12 = ?",
+          "answer": 13,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p41",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p73",
+          "recorded": false
+        },
+        {
+          "problem": "p76",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p93",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k020",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h31",
+      "claim": "Among middle-unknown items, the lapses fall on those where the first stated number is already ten or more, while middle-unknown items starting below ten are answered on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k021",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 4,
+      "hypothesis": "h1",
+      "claim": "Counting-on is unreliable for this Learner except when the count is very short and the larger number comes first (like 9 + 1); it broke down when the larger addend came second and when the start number was already a teen.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p2",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "9 + 1 = ?",
+          "answer": 10,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "3 + 8 = ?",
+          "answer": 11,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "15 + 3 = ?",
+          "answer": 18,
+          "assistance": "revealed"
+        }
+      ]
+    },
+    {
+      "id": "k022",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h19",
+      "claim": "Across all result-unknown structures, first tries land cleanly at wholes or totals up to about 15, and help comes at 19 and above.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k023",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 10,
+      "hypothesis": "h15",
+      "claim": "Unknown-addend first attempts now hold up across the range of wholes sampled, from small wholes to high teens, in both the subtract and the missing-addend form.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p70",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p76",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k024",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "average",
+      "session": 7,
+      "hypothesis": "h13",
+      "claim": "Make-a-ten lapses are not tied to which addend is stated first or to the size of the larger addend; two near-identical smaller-first items with 9 split into a Reveal and a first-try correct.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k025",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 9,
+      "hypothesis": "h1",
+      "claim": "Teen-number decompose items (10 + ? = teen) are less secure than compose items. Still refuted and untested this Session, since no teen-number items were given.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 13",
+          "answer": 3,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 16",
+          "answer": 6,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p28",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k026",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 8,
+      "hypothesis": "h2",
+      "claim": "Subtraction from ten in the take-from-ten structure is mostly reliable but not perfect: eight of nine first attempts correct with no Hints, with one first-try miss (10 - 4) that ended in a Reveal.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 3 = ?",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 5 = ?",
+          "answer": 5,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p5",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 6 = ?",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k027",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 8,
+      "hypothesis": "h3",
+      "claim": "Teen numbers in decompose form are answered correctly on the first try, including the top of the range (10 + ? = 19 first-try correct this Session, p70; 10 + ? = 17 last Session, p61).",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p2",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 14",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 4 = ?",
+          "answer": 14,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 17",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p42",
+          "recorded": false
+        },
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p70",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k028",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h7",
+      "claim": "Unknown-addend work is first-try correct on both the subtract structure and the missing-addend structure, across wholes all the way up to 20.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p42",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p89",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p110",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k029",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h15",
+      "claim": "In partners-to-10, assistance appears when the partner the Learner must supply is small (1-3), while a missing partner of 4 or more is answered on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k030",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 12,
+      "hypothesis": "h19",
+      "claim": "Unknown-addend items whose missing part is 1 or 2 are less secure than those whose missing part is 3 to 5: 13 + ? = 14 ended in a Reveal this Session (p109), while 15 - 12 (p103) and 10 + ? = 13 (p106), both missing 3, were first-try correct. The same item with a missing part of 1 was first-try correct in the previous Session (p100), so the pattern is not clean.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p93",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p100",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k031",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 19,
+      "hypothesis": "h15",
+      "claim": "Unknown-addend first attempts mostly hold up across the range of wholes sampled, from small wholes to high teens, in both the subtract and the missing-addend form.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k032",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 17,
+      "hypothesis": "h3",
+      "claim": "The closing Problem of a Session is where performance drops. Still refuted, but one data point returned: the final item this Session, take-from-ten 10 - 9 at position 9, was a first-try miss ending in a Reveal, while the previous Session's final item was clean.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "3 + 13 = ?",
+          "answer": 16,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "3 + 7 = ?",
+          "answer": 10,
+          "assistance": "revealed"
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p73",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k033",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h2",
+      "claim": "Teen-numbers compose (10 + a small number) is reliable on first tries.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 1 = ?",
+          "answer": 11,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p14",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p17",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p70",
+          "recorded": false
+        },
+        {
+          "problem": "p75",
+          "recorded": false
+        },
+        {
+          "problem": "p85",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k034",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 2,
+      "hypothesis": "h4",
+      "claim": "Teen-number decompose (10 + ? = teen) is handled as well as compose; the reverse direction is not a barrier.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p10",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k035",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 19,
+      "hypothesis": "h28",
+      "claim": "Help this Session fell on items where the unknown or the amount joined was only 1 or 2 (10 + ? = 11, 9 + ? = 10, 15 + 2), while items with larger missing parts were clean; the subtract item 16 - 15, whose missing part is also 1, is a counter-example.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k036",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 8,
+      "hypothesis": "h10",
+      "claim": "Unknown-addend items miss on the first try when the part given is below ten and the whole is above ten: 8 + ? = 12 was a first-try miss ending in a Reveal (p47) and 8 + ? = 11 was a first-try miss ending in a Hint-assisted success (p59), while 12 + ? = 13 (p60) and 11 - 10 = ? (p69), whose given parts are ten or more, were first-try correct.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p59",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k037",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 10,
+      "hypothesis": "h16",
+      "claim": "The Unit 3 word-problem skills (result or total unknown, change unknown) will run about as cleanly as the Unit 2 skills, since no Unit 3 item had been attempted before this Session.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p75",
+          "recorded": false
+        },
+        {
+          "problem": "p76",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k038",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h2",
+      "claim": "Within teen numbers, composing (10 + n = ?) is less secure than decomposing (10 + ? = teen).",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 14",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k039",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 9,
+      "hypothesis": "h9",
+      "claim": "Make-a-ten across ten is now mostly reliable on first attempts, at least in the larger-first structure.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p30",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k040",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h26",
+      "claim": "Result-unknown has settled: after the first-exposure dip the items are first-try correct whatever the parts and whatever the form.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p185",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k041",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 7,
+      "hypothesis": "h11",
+      "claim": "Within make-a-ten, the first-try misses have fallen on larger-first items while smaller-first items have been first-try correct: this Session 6 + 5 (Hint-assisted success after a first-try miss, p53) and 7 + 6 (Reveal, p57) were both larger-first, while smaller-first 4 + 7 (p54) and 6 + 6 (p58) were first-try correct, matching smaller-first 8 + 8 (p36) and 6 + 6 (p35) earlier. Larger-first 9 + 8 (p55) and 7 + 6 (p50) were also first-try correct, so the line is a tendency and not clean.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p36",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k042",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "fast-fatigue",
+      "session": 7,
+      "hypothesis": "h11",
+      "claim": "This Session's support appeared on items the Learner had answered cleanly in earlier Sessions (10 + 6, 7 + 1, 5 + 8), so the whole-Session dip may be day-to-day variation rather than a new gap in those Skills.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k043",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 16,
+      "hypothesis": "h18",
+      "claim": "At the current mix of number sizes the Learner works without help across every unlocked Skill. Still refuted: three of nine items this Session needed a Hint before a correct answer.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p107",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k044",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h6",
+      "claim": "Help on teen-number items is intermittent and not tied to any feature identified so far; which structure and which numbers it lands on changes from Session to Session.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k045",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h10",
+      "claim": "Result-unknown transfers from the Unit 2 work: the Learner is first-try correct on add-to, take-from and put-together without Hints, including at wholes up to 20.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        },
+        {
+          "problem": "p73",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p107",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k046",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 4,
+      "hypothesis": "h6",
+      "claim": "Partners to 10 and teen numbers being answered without help carried over to make-a-ten: first make-a-ten items were mostly first-try correct.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p18",
+          "recorded": false
+        },
+        {
+          "problem": "p19",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p30",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k047",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h2",
+      "claim": "Help tends to land in the closing stretch of a Session, in the last third of the Problems.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k048",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h4",
+      "claim": "The compose form of teen numbers (10 + 5 = ?) is the weakest spot in ten-anchored work.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p18",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p111",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p178",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k049",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 3,
+      "hypothesis": "h3",
+      "claim": "Partners to 10 is secure across both structures: four more first-try correct items this Session (10 - 7, 10 - 2, 5 + ? = 10, 10 - 9) with no help needed.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p2",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "missing-partner",
+          "equation": "1 + ? = 10",
+          "answer": 9,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 5 = ?",
+          "answer": 5,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 3 = ?",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p14",
+          "recorded": false
+        },
+        {
+          "problem": "p17",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k050",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 14,
+      "hypothesis": "h1",
+      "claim": "Counting-on misses were tied to larger-first items whose sum crosses ten. Still refuted, and now contradicted from the other direction: this Session's only counting-on item was 8 + 1 (p121), a sum well below ten, and it ended in a Reveal.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "2 + 5 = ?",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "9 + 3 = ?",
+          "answer": 12,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "2 + 13 = ?",
+          "answer": 15,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p30",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p112",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k051",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 17,
+      "hypothesis": "h25",
+      "claim": "Assistance now comes at one or two items per Session and lands on Unit 2 Skills (make-a-ten, counting-on) while Unit 3 items are first-try correct.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p125",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k052",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 11,
+      "hypothesis": "h11",
+      "claim": "Counting-on help is not tied to the size of the larger addend or to the order of the addends; it appears across configurations. Weakened: the only counting-on item this Session, larger-first 15 + 3 with a teen larger addend, drew a Hint, which is also the pattern h7 now predicts.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p79",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k053",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h4",
+      "claim": "Accuracy holds steady through the end of a Session rather than dropping at the late positions.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p125",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k054",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 6,
+      "hypothesis": "h8",
+      "claim": "Subtraction written as a take-away (whole minus a part) is handled on the first try when the whole is under 10.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k055",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h8",
+      "claim": "Misses are not tied to one Skill or one structure. Held again this Session: the three help events fell on three different Skills (Reveal on change-unknown 11 - ? = 7, p183; Hint on unknown-addend 13 + ? = 18, p184; Hint on make-a-ten 4 + 7, p186) while same-structure neighbours 9 - ? = 1 (p179) and 6 - ? = 5 (p181) were first-try correct. Confidence lowered because all three help items share the crossing-ten feature now under test as h27.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p110",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p177",
+          "recorded": false
+        },
+        {
+          "problem": "p178",
+          "recorded": false
+        },
+        {
+          "problem": "p179",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        },
+        {
+          "problem": "p181",
+          "recorded": false
+        },
+        {
+          "problem": "p182",
+          "recorded": false
+        },
+        {
+          "problem": "p183",
+          "recorded": false
+        },
+        {
+          "problem": "p184",
+          "recorded": false
+        },
+        {
+          "problem": "p185",
+          "recorded": false
+        },
+        {
+          "problem": "p186",
+          "recorded": false
+        },
+        {
+          "problem": "p187",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k056",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 6,
+      "hypothesis": "h3",
+      "claim": "Counting-on addition is reliable on the first try whether or not the larger number comes first.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "5 + 3 = ?",
+          "answer": 8,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "9 + 3 = ?",
+          "answer": 12,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p5",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "2 + 12 = ?",
+          "answer": 14,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p29",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k057",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h30",
+      "claim": "Review Problems draw help more often than planned Problems of the same Skills.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p177",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k058",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h9",
+      "claim": "Unknown-addend items draw support even when the numbers match facts the Learner answers cleanly in other Skills, so the difficulty is with the unknown-addend format rather than the arithmetic.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p95",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k059",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h26",
+      "claim": "Make-a-ten is now the skill carrying the residual difficulty: its first attempts draw misses and Reveals while the other skills come back first-try-correct.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p182",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k060",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 1,
+      "hypothesis": "h3",
+      "claim": "All teen-number evidence so far is composing (10 + n = ?); decomposing a teen number into 10 and some ones has not been seen at all.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 2 = ?",
+          "answer": 12,
+          "assistance": "revealed"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 1 = ?",
+          "answer": 11,
+          "assistance": "first-try-correct"
+        }
+      ]
+    },
+    {
+      "id": "k061",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 1,
+      "hypothesis": "h3",
+      "claim": "Partners to 10 is secure in both the missing-partner and take-from-ten structures: three first-try correct items with no assistance.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p2",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "missing-partner",
+          "equation": "1 + ? = 10",
+          "answer": 9,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 5 = ?",
+          "answer": 5,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 3 = ?",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        }
+      ]
+    },
+    {
+      "id": "k062",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h23",
+      "claim": "Within result-unknown, the items drawing help are the ones whose total crosses ten by combining two single-digit parts; totals at ten or below, and items that start from a ten, are answered on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k063",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 19,
+      "hypothesis": "h12",
+      "claim": "On missed items the Learner goes to a Reveal rather than working through a Hint. Refuted: of four helped items this Session, three ended in Hint-assisted successes (10 + ? = 11, 9 + ? = 10, 15 + 2) and only one was a Reveal (3 + 4).",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k064",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "fast-fatigue",
+      "session": 3,
+      "hypothesis": "h6",
+      "claim": "With partners to 10 and teen numbers both answered without help across a full Session, the Learner has the pieces the make-a-ten Skill is built on, so first make-a-ten items should mostly be first-try correct.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p18",
+          "recorded": false
+        },
+        {
+          "problem": "p19",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k065",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h29",
+      "claim": "Inside make-a-ten, the items written with the smaller addend first draw help while larger-first crossing-ten items are answered on the first try.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k066",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h18",
+      "claim": "Take-from-change runs about as cleanly as take-from in result-unknown.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p93",
+          "recorded": false
+        },
+        {
+          "problem": "p108",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p179",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k067",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 17,
+      "hypothesis": "h12",
+      "claim": "On missed items the Learner goes to a Reveal rather than working through a Hint. Partly reopened: this Session two of three helped items ended in a Reveal (7 + 4 and 10 - 9) and one was a Hint-assisted success (8 + 7), reversing the previous Session's all-Hint pattern.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p119",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k068",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 11,
+      "hypothesis": "h5",
+      "claim": "Within partners to 10, items with a large given number or a large amount taken away are less settled. Reopened as proposed: the one partners item this Session had a given number of 7 and went to a Reveal after a first-try miss.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p17",
+          "recorded": false
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p29",
+          "recorded": false
+        },
+        {
+          "problem": "p30",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p32",
+          "recorded": false
+        },
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p70",
+          "recorded": false
+        },
+        {
+          "problem": "p78",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k069",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 12,
+      "hypothesis": "h5",
+      "claim": "The ten-based building blocks are largely in place and make-a-ten within 20 is still the growth edge, but this Session the help was spread wider: make-a-ten gave two first-try correct (p105, p110) and two Hint-assisted successes (p107, p108), while a teen decompose item needed a Hint (p102) and an unknown-addend item ended in a Reveal (p109); partners (p104) and counting-on (p101) stayed first-try correct.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p32",
+          "recorded": false
+        },
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p36",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p75",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p84",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p89",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p95",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p107",
+          "recorded": false
+        },
+        {
+          "problem": "p108",
+          "recorded": false
+        },
+        {
+          "problem": "p110",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k070",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h3",
+      "claim": "Decomposing a teen number into 10 and some ones (10 + ? = teen) is as secure on first attempts as composing was.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p19",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p23",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p75",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p108",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k071",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "weak",
+      "session": 9,
+      "hypothesis": "h14",
+      "claim": "Partners-to-10 is less stable than the Mastered estimate suggests: in Session 7 three of four partners-to-10 items needed help on the first attempt (Hint on p54, Reveals on p58 and p60) with only p57 first-try correct.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        },
+        {
+          "problem": "p70",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p73",
+          "recorded": false
+        },
+        {
+          "problem": "p75",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k072",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h25",
+      "claim": "Make-a-ten and counting-on outcomes do not track how the addends are ordered on the page; the same structure comes out clean in one Session and non-clean in the next on both skills.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p100",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p110",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p114",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p122",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p127",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p139",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k073",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h27",
+      "claim": "The items still not reached on the first try now fall mostly on the two Unit 3 Skills (result-unknown, change-unknown) rather than on the Mastered Unit 1 and Unit 2 Skills.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p178",
+          "recorded": false
+        },
+        {
+          "problem": "p186",
+          "recorded": false
+        },
+        {
+          "problem": "p187",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k074",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h26",
+      "claim": "Within make-a-ten, items written smaller-first with 5 as the first addend draw assistance, while other make-a-ten framings are first-try correct.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k075",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 18,
+      "hypothesis": "h14",
+      "claim": "Counting-on items where the amount counted on is 1 have drawn more help than items counting on 2 or 3. Still refuted and untested: the counting-on item this Session counted on 3 (5 + 3) and was first-try correct.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p79",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p118",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p145",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k076",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h10",
+      "claim": "The top of the unlocked ranges is now tested rather than assumed: wholes of 17-20 in Units 1-2, Unit 3 wholes of 15-20, counting-on with a teen larger addend in both orders, teen compose and decompose at the top of 11-19, and change-unknown with a large change at a teen whole.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        },
+        {
+          "problem": "p100",
+          "recorded": false
+        },
+        {
+          "problem": "p103",
+          "recorded": false
+        },
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p125",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p155",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p167",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        },
+        {
+          "problem": "p181",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k077",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 13,
+      "hypothesis": "h1",
+      "claim": "Teen-number decompose items (10 + ? = teen) are less secure than compose items. Still refuted: this Session both a decompose item (10 + ? = 17) and a compose item (10 + 7 = ?) were first-try correct, continuing a long clean run in both directions.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 13",
+          "answer": 3,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 16",
+          "answer": 6,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 7 = ?",
+          "answer": 17,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p28",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p49",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p83",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p98",
+          "recorded": false
+        },
+        {
+          "problem": "p100",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k078",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 11,
+      "hypothesis": "h12",
+      "claim": "On missed items the Learner goes to a Reveal rather than working through a Hint. Strengthened slightly: of the three helped items this Session, two were Reveals (16 - 11, 7 + ? = 10) and one was resolved by Hint (15 + 3).",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k079",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h4",
+      "claim": "Compose form (10 + 5 = ?) is less secure than decompose form for teen numbers.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p13",
+          "recorded": false
+        },
+        {
+          "problem": "p18",
+          "recorded": false
+        },
+        {
+          "problem": "p21",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k080",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 12,
+      "hypothesis": "h1",
+      "claim": "Counting-on misses were tied to larger-first items whose sum crosses ten. Still refuted, and the test still has not really run: this Session's only counting-on item was 9 + 1 (p101), first-try correct, with a sum of exactly ten.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p1",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "2 + 5 = ?",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p3",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "larger-first",
+          "equation": "9 + 3 = ?",
+          "answer": 12,
+          "assistance": "hint-assisted-correct"
+        },
+        {
+          "problem": "p9",
+          "recorded": true,
+          "session": 1,
+          "skill": "counting-on",
+          "structure": "smaller-first",
+          "equation": "2 + 13 = ?",
+          "answer": 15,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p30",
+          "recorded": false
+        },
+        {
+          "problem": "p31",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p81",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k081",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h10",
+      "claim": "Make-a-ten and subtraction-as-unknown-addend are available, since every item offered in each has been answered on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p35",
+          "recorded": false
+        },
+        {
+          "problem": "p36",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p59",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p93",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p109",
+          "recorded": false
+        },
+        {
+          "problem": "p112",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p142",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k082",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h29",
+      "claim": "Make-a-ten items miss when the larger addend is 7 and hold when it is 8 or 9.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p184",
+          "recorded": false
+        },
+        {
+          "problem": "p185",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k083",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "average",
+      "session": 10,
+      "hypothesis": "h15",
+      "claim": "Make-a-ten is not yet settled: after a long run of first-try correct items, support reappears occasionally rather than the Skill being finished.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p48",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p87",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k084",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "strong",
+      "session": 11,
+      "hypothesis": "h10",
+      "claim": "The top of the unlocked ranges is now tested rather than assumed: wholes of 17-20 in Units 1-2 and, as of this Session, Unit 3 wholes of 15, 18, and 20.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p52",
+          "recorded": false
+        },
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p86",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p91",
+          "recorded": false
+        },
+        {
+          "problem": "p94",
+          "recorded": false
+        },
+        {
+          "problem": "p96",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k085",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h23",
+      "claim": "Unknown-addend problems are not yet available on a first attempt.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p129",
+          "recorded": false
+        },
+        {
+          "problem": "p130",
+          "recorded": false
+        },
+        {
+          "problem": "p131",
+          "recorded": false
+        },
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p134",
+          "recorded": false
+        },
+        {
+          "problem": "p135",
+          "recorded": false
+        },
+        {
+          "problem": "p137",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p169",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p177",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k086",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 17,
+      "hypothesis": "h19",
+      "claim": "Within partners to 10, the take-from-ten form is currently less settled than the missing-partner form. Reopened as proposed: the take-from-ten item 10 - 9 was a first-try miss ending in a Reveal, and no missing-partner item appeared for comparison.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p104",
+          "recorded": false
+        },
+        {
+          "problem": "p105",
+          "recorded": false
+        },
+        {
+          "problem": "p112",
+          "recorded": false
+        },
+        {
+          "problem": "p113",
+          "recorded": false
+        },
+        {
+          "problem": "p115",
+          "recorded": false
+        },
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p120",
+          "recorded": false
+        },
+        {
+          "problem": "p123",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p141",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k087",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h21",
+      "claim": "Unit 3 item types (result or total unknown) have not been attempted yet, so nothing is known about how the Learner handles them.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p185",
+          "recorded": false
+        },
+        {
+          "problem": "p187",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k088",
+      "report": "2026-09-18T18-12-41Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h14",
+      "claim": "Unit 1 Skills lose their first-try reliability when they are absent from the planned diet for several Sessions; bringing them back will show first-attempt misses rather than clean work.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p133",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p140",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        },
+        {
+          "problem": "p173",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k089",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h14",
+      "claim": "In unknown-addend, a missing part of 1 (the two given numbers sitting right next to each other) has drawn assistance every time it has appeared, in both the subtract and missing-addend forms.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p54",
+          "recorded": false
+        },
+        {
+          "problem": "p60",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p84",
+          "recorded": false
+        },
+        {
+          "problem": "p88",
+          "recorded": false
+        },
+        {
+          "problem": "p90",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p102",
+          "recorded": false
+        },
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p144",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k090",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 20,
+      "hypothesis": "h29",
+      "claim": "Change-unknown needs assistance at a higher rate than any other Skill, even though other Skills also stumble.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p165",
+          "recorded": false
+        },
+        {
+          "problem": "p170",
+          "recorded": false
+        },
+        {
+          "problem": "p178",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k091",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h22",
+      "claim": "Help falls on items written with the blank in the middle (a + ? = total, including teen decompose) more than on items with the blank at the end. Still refuted, now in the opposite direction: both middle-blank items were clean (10 + ? = 18, 9 + ? = 14) and all three helped items had the blank at the end (8 - 2, 2 + 14, 6 + 7).",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p150",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p152",
+          "recorded": false
+        },
+        {
+          "problem": "p154",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p161",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p166",
+          "recorded": false
+        },
+        {
+          "problem": "p168",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k092",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "weak",
+      "session": 20,
+      "hypothesis": "h25",
+      "claim": "Make-a-ten first attempts are now succeeding more often than not, with help down to about one item per Session.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p117",
+          "recorded": false
+        },
+        {
+          "problem": "p124",
+          "recorded": false
+        },
+        {
+          "problem": "p126",
+          "recorded": false
+        },
+        {
+          "problem": "p128",
+          "recorded": false
+        },
+        {
+          "problem": "p136",
+          "recorded": false
+        },
+        {
+          "problem": "p138",
+          "recorded": false
+        },
+        {
+          "problem": "p146",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p156",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p162",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p174",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k093",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "fast-fatigue",
+      "session": 12,
+      "hypothesis": "h14",
+      "claim": "Counting-on items where the amount counted on is 1 have drawn more help than items counting on 2 or 3. Reopened as proposed: this Session the plus-one item 8 + 1 was a first-try miss resolved by a Hint while the plus-two item 11 + 2 was first-try correct.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p53",
+          "recorded": false
+        },
+        {
+          "problem": "p56",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p63",
+          "recorded": false
+        },
+        {
+          "problem": "p67",
+          "recorded": false
+        },
+        {
+          "problem": "p68",
+          "recorded": false
+        },
+        {
+          "problem": "p69",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p79",
+          "recorded": false
+        },
+        {
+          "problem": "p82",
+          "recorded": false
+        },
+        {
+          "problem": "p90",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k094",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "strong",
+      "session": 20,
+      "hypothesis": "h6",
+      "claim": "The Learner's fluency with partners to 10 and with 10 + n teen numbers carries over to new sums that cross ten (make-a-ten) and to subtraction framed as an unknown addend, without needing Hints on the first exposure.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        },
+        {
+          "problem": "p26",
+          "recorded": false
+        },
+        {
+          "problem": "p27",
+          "recorded": false
+        },
+        {
+          "problem": "p28",
+          "recorded": false
+        },
+        {
+          "problem": "p33",
+          "recorded": false
+        },
+        {
+          "problem": "p34",
+          "recorded": false
+        },
+        {
+          "problem": "p36",
+          "recorded": false
+        },
+        {
+          "problem": "p37",
+          "recorded": false
+        },
+        {
+          "problem": "p38",
+          "recorded": false
+        },
+        {
+          "problem": "p39",
+          "recorded": false
+        },
+        {
+          "problem": "p40",
+          "recorded": false
+        },
+        {
+          "problem": "p42",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p44",
+          "recorded": false
+        },
+        {
+          "problem": "p45",
+          "recorded": false
+        },
+        {
+          "problem": "p46",
+          "recorded": false
+        },
+        {
+          "problem": "p47",
+          "recorded": false
+        },
+        {
+          "problem": "p50",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p55",
+          "recorded": false
+        },
+        {
+          "problem": "p57",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        },
+        {
+          "problem": "p59",
+          "recorded": false
+        },
+        {
+          "problem": "p61",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p78",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k095",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "average",
+      "session": 20,
+      "hypothesis": "h18",
+      "claim": "Inside unknown-addend, the items that still draw help are the ones where the given part is below ten and the whole is above ten, so the count spans the ten; items whose numbers sit entirely on one side of ten are answered on the first try.",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p84",
+          "recorded": false
+        },
+        {
+          "problem": "p92",
+          "recorded": false
+        },
+        {
+          "problem": "p107",
+          "recorded": false
+        },
+        {
+          "problem": "p121",
+          "recorded": false
+        },
+        {
+          "problem": "p149",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p163",
+          "recorded": false
+        },
+        {
+          "problem": "p177",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k096",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 3,
+      "hypothesis": "h2",
+      "claim": "Work anchored on ten with the blank in the middle is reliable on first attempts: missing-partner to 10 (including partners 5, 6, 7), take-from-ten, and decompose of teens up to 19 have been first-try-correct every time.",
+      "status": "supported",
+      "evidence": [
+        {
+          "problem": "p2",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 14",
+          "answer": 4,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p4",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "compose",
+          "equation": "10 + 4 = ?",
+          "answer": 14,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p5",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 5 = ?",
+          "answer": 5,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p6",
+          "recorded": true,
+          "session": 1,
+          "skill": "teen-numbers",
+          "structure": "decompose",
+          "equation": "10 + ? = 17",
+          "answer": 7,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p7",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "take-from-ten",
+          "equation": "10 - 2 = ?",
+          "answer": 8,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p8",
+          "recorded": true,
+          "session": 1,
+          "skill": "partners-to-10",
+          "structure": "missing-partner",
+          "equation": "2 + ? = 10",
+          "answer": 8,
+          "assistance": "first-try-correct"
+        },
+        {
+          "problem": "p10",
+          "recorded": false
+        },
+        {
+          "problem": "p11",
+          "recorded": false
+        },
+        {
+          "problem": "p12",
+          "recorded": false
+        },
+        {
+          "problem": "p14",
+          "recorded": false
+        },
+        {
+          "problem": "p15",
+          "recorded": false
+        },
+        {
+          "problem": "p16",
+          "recorded": false
+        },
+        {
+          "problem": "p17",
+          "recorded": false
+        },
+        {
+          "problem": "p20",
+          "recorded": false
+        },
+        {
+          "problem": "p22",
+          "recorded": false
+        },
+        {
+          "problem": "p24",
+          "recorded": false
+        },
+        {
+          "problem": "p25",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k097",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "fast-fatigue",
+      "session": 20,
+      "hypothesis": "h10",
+      "claim": "Within the small wholes now being used, items written as subtraction (a - b = ?) draw support more often than items written as addition with a blank (a + ? = c).",
+      "status": "refuted",
+      "evidence": [
+        {
+          "problem": "p87",
+          "recorded": false
+        },
+        {
+          "problem": "p95",
+          "recorded": false
+        },
+        {
+          "problem": "p97",
+          "recorded": false
+        },
+        {
+          "problem": "p99",
+          "recorded": false
+        },
+        {
+          "problem": "p101",
+          "recorded": false
+        },
+        {
+          "problem": "p106",
+          "recorded": false
+        },
+        {
+          "problem": "p116",
+          "recorded": false
+        },
+        {
+          "problem": "p132",
+          "recorded": false
+        },
+        {
+          "problem": "p143",
+          "recorded": false
+        },
+        {
+          "problem": "p147",
+          "recorded": false
+        },
+        {
+          "problem": "p148",
+          "recorded": false
+        },
+        {
+          "problem": "p151",
+          "recorded": false
+        },
+        {
+          "problem": "p153",
+          "recorded": false
+        },
+        {
+          "problem": "p157",
+          "recorded": false
+        },
+        {
+          "problem": "p158",
+          "recorded": false
+        },
+        {
+          "problem": "p159",
+          "recorded": false
+        },
+        {
+          "problem": "p160",
+          "recorded": false
+        },
+        {
+          "problem": "p164",
+          "recorded": false
+        },
+        {
+          "problem": "p171",
+          "recorded": false
+        },
+        {
+          "problem": "p172",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k098",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "change-unknown-weakness",
+      "session": 9,
+      "hypothesis": "h15",
+      "claim": "Unknown-addend is the one Skill still producing assistance, and the assistance is scattered across both structures and all whole sizes rather than tracking any single surface feature.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p71",
+          "recorded": false
+        },
+        {
+          "problem": "p72",
+          "recorded": false
+        },
+        {
+          "problem": "p74",
+          "recorded": false
+        },
+        {
+          "problem": "p77",
+          "recorded": false
+        },
+        {
+          "problem": "p80",
+          "recorded": false
+        },
+        {
+          "problem": "p62",
+          "recorded": false
+        },
+        {
+          "problem": "p64",
+          "recorded": false
+        },
+        {
+          "problem": "p65",
+          "recorded": false
+        },
+        {
+          "problem": "p66",
+          "recorded": false
+        },
+        {
+          "problem": "p43",
+          "recorded": false
+        },
+        {
+          "problem": "p51",
+          "recorded": false
+        },
+        {
+          "problem": "p58",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k099",
+      "report": "2026-09-18T18-41-44Z.json",
+      "learner": "average",
+      "session": 13,
+      "hypothesis": "h24",
+      "claim": "Change-unknown draws Hints even at the smallest numbers, so the difficulty is not about the size of the whole: 5 + ? = 6 with a change of 1 was Hint-assisted.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p104",
+          "recorded": false
+        }
+      ]
+    },
+    {
+      "id": "k100",
+      "report": "2026-09-18T19-09-56Z.json",
+      "learner": "crossing-ten-weakness",
+      "session": 20,
+      "hypothesis": "h33",
+      "claim": "The Learner can now run a whole Session clean: every item across ten-anchored, make-a-ten, unknown-addend and both Unit 3 word-problem skills was answered on the first attempt with no Hint or Reveal, including items that cross ten and wholes up to 20.",
+      "status": "proposed",
+      "evidence": [
+        {
+          "problem": "p175",
+          "recorded": false
+        },
+        {
+          "problem": "p176",
+          "recorded": false
+        },
+        {
+          "problem": "p177",
+          "recorded": false
+        },
+        {
+          "problem": "p178",
+          "recorded": false
+        },
+        {
+          "problem": "p179",
+          "recorded": false
+        },
+        {
+          "problem": "p180",
+          "recorded": false
+        },
+        {
+          "problem": "p181",
+          "recorded": false
+        },
+        {
+          "problem": "p182",
+          "recorded": false
+        }
+      ]
+    }
+  ]
+}
