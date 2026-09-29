@@ -5,8 +5,10 @@
  * always-fail Judge would score for free, and which of the gate's two
  * conditions a withheld verdict names.
  */
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { calibrateJudge, JUDGE_AGREEMENT_THRESHOLD, JUDGE_KAPPA_FLOOR, type Calibrated } from "@/evals/judge";
+import { calibrateJudge, JUDGE_AGREEMENT_THRESHOLD, JUDGE_KAPPA_FLOOR, STORY_JUDGE_SYSTEM_PROMPT, type Calibrated } from "@/evals/judge";
+import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 
 /** A Calibration Set of `pass` items the human passed and `fail` items the human failed. */
 const set = (pass: number, fail: number): Calibrated[] => [
@@ -69,5 +71,13 @@ describe("calibrateJudge", () => {
 
     expect(agreementInterval?.lower).toBeCloseTo(0.58, 2);
     expect(agreementInterval?.upper).toBeCloseTo(0.92, 2);
+  });
+});
+
+describe("the Story Judge's prompt", () => {
+  it("says the Nickname placeholder is intended, naming it through the one constant", () => {
+    expect(STORY_JUDGE_SYSTEM_PROMPT).toContain(`${NICKNAME_PLACEHOLDER} as a name and never fail a Story for it`);
+    // Built from the constant, so the prompt cannot drift from what the Stories carry.
+    expect(readFileSync("src/evals/judge.ts", "utf8")).not.toContain(NICKNAME_PLACEHOLDER);
   });
 });
