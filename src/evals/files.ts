@@ -50,7 +50,7 @@ export function writeCharts(reportFile: string, dir = EVALS_DIR): string[] {
 }
 
 /** `rejudge-2026-09-29T20-00-00Z`: the dated name a re-judge's JSON and text share, never taken for an Eval Run's report. */
-export const rejudgeFileStem = (generatedAt: Date): string => `rejudge-${reportFileName(generatedAt).replace(/\.json$/, "")}`;
+const rejudgeFileStem = (generatedAt: Date): string => `rejudge-${reportFileName(generatedAt).replace(/\.json$/, "")}`;
 
 /** A re-judge's JSON and the text it printed, side by side under one dated name. Returns both files. */
 export function writeRejudge(run: RejudgeRun, text: string, dir = EVALS_DIR): { readonly json: string; readonly text: string } {

@@ -38,7 +38,7 @@ if (files.length === 0) {
 
 async function main(): Promise<void> {
   // Read every report before the first call, so a bad path costs nothing.
-  const reports = files.map((file) => ({ file, stories: readReport(file).stories }));
+  const reports = files.map((file) => ({ file, storyReport: readReport(file).stories }));
   const recorder = createRecorder();
   const { judge, name } = await chooseJudge(values.fake ? "fake" : "real", recorder);
   if (values.fake) console.log("The fake Judge is the validators' opinion and fails the gate by design, so readability is withheld.\n");

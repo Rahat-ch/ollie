@@ -29,7 +29,7 @@ import {
   type Frame,
 } from "./chart-kit";
 import { describeWeakness, type WeaknessTag } from "./learners";
-import { describeGeneration, type EvalReport } from "./report";
+import { describeGeneration, describeJudge, type EvalReport } from "./report";
 import { wilsonInterval, type Validity } from "./stats";
 import type { Calibration } from "./judge";
 
@@ -428,13 +428,10 @@ function renderValidityChart(
   );
 }
 
-/** The Judge, said as the text report says it. */
-const judgeName = (name: string): string => (name === "fake" ? "the fake Judge" : describeGeneration(name));
-
 /** Story validity and the Judge's readability gate. */
 export function renderStoryValidityChart(report: EvalReport, reportName: string): string {
   const { validity, judge, generation } = report.stories;
-  return renderValidityChart(report, reportName, validity, judge.calibration, judgeName(judge.name), judge.readability, {
+  return renderValidityChart(report, reportName, validity, judge.calibration, describeJudge(judge.name), judge.readability, {
     title: "Story validity: what the validator accepted",
     noun: "Stories",
     attemptsLabel: "Valid within three attempts",
@@ -447,7 +444,7 @@ export function renderStoryValidityChart(report: EvalReport, reportName: string)
 /** Parent Summary validity and the Judge's faithfulness gate. */
 export function renderSummaryValidityChart(report: EvalReport, reportName: string): string {
   const { validity, judge, generation } = report.summaries;
-  return renderValidityChart(report, reportName, validity, judge.calibration, judgeName(judge.name), judge.faithfulness, {
+  return renderValidityChart(report, reportName, validity, judge.calibration, describeJudge(judge.name), judge.faithfulness, {
     title: "Parent Summary validity: what the validator accepted",
     noun: "Summaries",
     attemptsLabel: "Valid within two attempts",

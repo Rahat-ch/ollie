@@ -15,12 +15,11 @@
 import { mapLimit } from "@/lib/map-limit";
 import type { StoryInput } from "@/generation/types";
 import { telemetrySection, type Recorder, type TelemetrySection } from "@/generation/telemetry";
-import { formatTelemetry, judgeLines, rate } from "./format";
+import { formatTelemetry, judgeLines, scoreLine } from "./format";
 import { calibrateJudge, STORY_JUDGE_SYSTEM_PROMPT, type Calibration, type Judge, type Judgement } from "./judge";
-import { describeGeneration } from "./report";
+import { describeGeneration, describeJudge } from "./report";
 import { storyCalibrationSet } from "./sealed";
-import { share, wilsonInterval } from "./stats";
-import type { StoryReadability, StoryReport } from "./stories";
+import { storyReadability, type StoryReadability, type StoryReport } from "./stories";
 
 /** One Story the stored run's Judge read, with the new Judge's verdict beside the stored one. */
 export type RejudgedStory = {
@@ -36,7 +35,7 @@ export type PlaceholderCount = { readonly fails: number; readonly mentioning: nu
 
 export type StoryRejudge = {
   /** The stored report's file. */
-  readonly report: string;
+  readonly file: string;
   /** Who wrote the Stories. */
   readonly writer: string;
   readonly stored: {
@@ -74,10 +73,10 @@ export const changedVerdicts = (rejudge: StoryRejudge): RejudgedStory[] =>
   rejudge.stories.filter((s) => s.stored !== undefined && s.stored.pass !== s.rejudged.pass);
 
 /** One report's Stories judged again, the gate first on the open half. A template was never judged and is not now. */
-export async function rejudgeStories(report: string, stories: StoryReport, judge: Judge, judgeName: string, concurrency = 6): Promise<StoryRejudge> {
+export async function rejudgeStories(file: string, storyReport: StoryReport, judge: Judge, judgeName: string): Promise<StoryRejudge> {
   const calibration = await calibrateJudge(storyCalibrationSet("tuning"), (story) => judge.judgeStory(story));
-  const written = stories.stories.filter((trace) => trace.source === "story");
-  const rejudged = await mapLimit(written, concurrency, async (trace): Promise<RejudgedStory> => ({
+  const written = storyReport.stories.filter((trace) => trace.source === "story");
+  const rejudged = await mapLimit(written, 6, async (trace): Promise<RejudgedStory> => ({
     input: trace.input,
     text: trace.text,
     ...(trace.judged ? { stored: trace.judged } : {}),
@@ -85,20 +84,18 @@ export async function rejudgeStories(report: string, stories: StoryReport, judge
   }));
   const passed = rejudged.filter((s) => s.rejudged.pass).length;
   return {
-    report,
-    writer: stories.generation,
+    file,
+    writer: storyReport.generation,
     stored: {
-      judge: stories.judge.name,
-      gateSize: stories.judge.calibration.size,
-      readability: stories.judge.readability,
-      withheld: stories.judge.calibration.withheld,
+      judge: storyReport.judge.name,
+      gateSize: storyReport.judge.calibration.size,
+      readability: storyReport.judge.readability,
+      withheld: storyReport.judge.calibration.withheld,
     },
     judge: {
       name: judgeName,
       calibration,
-      readability: calibration.passes
-        ? { judged: rejudged.length, passed, passRate: share(passed, rejudged.length), passRateInterval: wilsonInterval(passed, rejudged.length) }
-        : null,
+      readability: calibration.passes ? storyReadability(passed, rejudged.length) : null,
     },
     placeholder: {
       stored: placeholderCount(rejudged.map((s) => s.stored)),
@@ -118,7 +115,7 @@ export type RejudgeRun = {
 };
 
 export type RejudgeOptions = {
-  readonly reports: readonly { readonly file: string; readonly stories: StoryReport }[];
+  readonly reports: readonly { readonly file: string; readonly storyReport: StoryReport }[];
   readonly judge: Judge;
   readonly judgeName: string;
   /** The recorder the Judge reports to, read at the end for the Cost block. */
@@ -129,8 +126,8 @@ export type RejudgeOptions = {
 /** Every report in turn, each with its own gate. */
 export async function rejudgeRun(options: RejudgeOptions): Promise<RejudgeRun> {
   const reports: StoryRejudge[] = [];
-  for (const { file, stories } of options.reports) {
-    reports.push(await rejudgeStories(file, stories, options.judge, options.judgeName));
+  for (const { file, storyReport } of options.reports) {
+    reports.push(await rejudgeStories(file, storyReport, options.judge, options.judgeName));
   }
   return {
     generatedAt: options.generatedAt.toISOString(),
@@ -140,11 +137,6 @@ export async function rejudgeRun(options: RejudgeOptions): Promise<RejudgeRun> {
     telemetry: telemetrySection(options.recorder.calls(), 0),
   };
 }
-
-const readabilityLine = (readability: StoryReadability | null, withheld: string | null): string =>
-  readability
-    ? `Readability: ${readability.passed} of ${readability.judged} Stories pass (${rate(readability.passRate, readability.passRateInterval)})`
-    : `Readability: scores withheld — ${withheld}`;
 
 const verdict = (judgement: Judgement): string => (judgement.pass ? "pass" : "fail");
 
@@ -156,10 +148,9 @@ export function formatRejudge(rejudge: StoryRejudge): string {
   const { stored, judge } = rejudge;
   const changed = changedVerdicts(rejudge);
   const withStored = rejudge.stories.filter((s) => s.stored !== undefined).length;
-  const judgeName = (name: string): string => (name === "fake" ? "the fake Judge" : describeGeneration(name));
   return [
-    `${rejudge.report}: ${rejudge.stories.length} Stories by ${describeGeneration(rejudge.writer)}`,
-    `Stored (Judge: ${judgeName(stored.judge)}, gate on ${stored.gateSize} Stories): ${readabilityLine(stored.readability, stored.withheld)}`,
+    `${rejudge.file}: ${rejudge.stories.length} Stories by ${describeGeneration(rejudge.writer)}`,
+    `Stored (Judge: ${describeJudge(stored.judge)}, gate on ${stored.gateSize} Stories): ${scoreLine("Readability", "Stories", stored.readability, stored.withheld)}`,
     "Re-judged, gate on the open half of the Story Calibration Set:",
     ...judgeLines(judge, "Stories", "Readability", judge.readability).map((line) => `  ${line}`),
     ...(judge.readability ? [] : ["  The verdicts below are kept for reading, not as a score."]),
@@ -174,9 +165,9 @@ export function formatRejudge(rejudge: StoryRejudge): string {
 /** The whole run as text: each report, then the Cost block. */
 export function formatRejudgeRun(run: RejudgeRun): string {
   return [
-    `Stories judged again by ${run.judge === "fake" ? "the fake Judge" : describeGeneration(run.judge)}, exploratory and after the fact`,
+    `Stories judged again by ${describeJudge(run.judge)}, exploratory and after the fact`,
     "",
     ...run.reports.flatMap((rejudge) => [formatRejudge(rejudge), ""]),
-    formatTelemetry(run.telemetry, { coach: false }),
+    formatTelemetry(run.telemetry),
   ].join("\n");
 }

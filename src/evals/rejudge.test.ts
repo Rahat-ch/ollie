@@ -4,7 +4,7 @@ import type { StoryInput } from "@/generation/types";
 import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { readReport } from "./files";
 import { fakeJudge, recordedFakeJudge, type Judge, type Judgement, type StoryToJudge } from "./judge";
-import { changedVerdicts, formatRejudge, mentionsPlaceholder, rejudgeRun, rejudgeStories } from "./rejudge";
+import { changedVerdicts, formatRejudge, formatRejudgeRun, mentionsPlaceholder, rejudgeRun, rejudgeStories } from "./rejudge";
 import { finalRun, SEALED_SPLIT, storyCalibrationSet } from "./sealed";
 import type { StoryReport, StoryTrace } from "./stories";
 
@@ -40,13 +40,8 @@ const PLACEHOLDER_FAIL = { pass: false, reason: `The literal ${NICKNAME_PLACEHOL
  * placeholder, against both of the stored two; and two verdicts changed.
  */
 const STORED: StoryReport = {
-  generation: "claude-sonnet-5-5",
-  validity: {} as StoryReport["validity"],
-  judge: {
-    name: "claude-sonnet-5-5",
-    calibration: { size: 20, passes: true, withheld: null } as StoryReport["judge"]["calibration"],
-    readability: { judged: 4, passed: 2, passRate: 0.5, passRateInterval: { lower: 0.15, upper: 0.85 } },
-  },
+  // The first Sonnet 5.5 run's validity and gate, as it stored them, with five Stories of this test's own.
+  ...readReport("docs/evals/2026-09-29T19-10-40Z.json").stories,
   stories: [
     story(`${NICKNAME_PLACEHOLDER} sees 2 puppies, then 5 more come. How many puppies now?`, { pass: true, reason: "fine" }),
     story(`${NICKNAME_PLACEHOLDER} has 2 bones and finds 5 more. How many bones now?`, PLACEHOLDER_FAIL),
@@ -125,8 +120,8 @@ describe("rejudgeRun", () => {
     const report = readReport("docs/evals/2026-09-29T19-10-40Z.json");
     const run = await rejudgeRun({
       reports: [
-        { file: "a.json", stories: report.stories },
-        { file: "b.json", stories: STORED },
+        { file: "a.json", storyReport: report.stories },
+        { file: "b.json", storyReport: STORED },
       ],
       judge: recordedFakeJudge(recorder),
       judgeName: "fake",
@@ -134,10 +129,13 @@ describe("rejudgeRun", () => {
       generatedAt: new Date("2026-09-29T20:00:00Z"),
     });
 
-    expect(run.reports.map((r) => r.report)).toEqual(["a.json", "b.json"]);
+    expect(run.reports.map((r) => r.file)).toEqual(["a.json", "b.json"]);
     // The gate's 10 on each report, then its 30 and 4 Stories.
     expect(run.telemetry.byOperation.judge.calls).toBe(10 + 30 + 10 + 4);
     expect(run.telemetry.total.dollars).toBe(0);
     expect(run.reports[0].stored.readability).toMatchObject({ judged: 30, passed: 14 });
+    // No Coach ran, so the Cost block has no Coach-per-Session line.
+    expect(formatRejudgeRun(run)).toContain("Cost (estimated");
+    expect(formatRejudgeRun(run)).not.toContain("per Coach call");
   });
 });
