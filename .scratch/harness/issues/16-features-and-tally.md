@@ -14,7 +14,7 @@ From the Profile's history, the engine computes the first attempts and the first
 
 The tally is added to the Coach's input, in the prompt's evidence format, and it is what the Minimum-Evidence Rule will read. The Coach still never receives a Problem to ask or an answer.
 
-**Blocked by:** 07, 15. Ticket 07's live Sonnet runs must be done before the Coach prompt changes here, or the Arms stop being comparable.
+**Blocked by:** 07 (15 is wontfix, decision 41). Ticket 07's live Sonnet runs must be done before the Coach prompt changes here, or the Arms stop being comparable.
 
 **Status:** ready-for-agent
 

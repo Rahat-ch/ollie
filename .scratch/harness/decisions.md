@@ -162,4 +162,10 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - ADR 0004 is marked superseded. ADR 0002's rule that tracing is eval-only stays true, because nothing traces now.
     - Everything else in Phase 1 stays: Sonnet 5.5, server-side validation, the abuse guard and spend cap, the new voice, CI, and the evals and their committed JSON reports.
     - Ticket 15 (the Phase 2 evidence) is dropped. The labelling page (ticket 13) and the second labeller (ticket 14) stay; they never needed LangSmith.
-    - Why: the owner wants a simpler project and a demo video that talks through the evals. The next step is to review which of tickets 10, 14 and 16 to 23 the demo needs. Tickets 22 and 23 are written but on hold until that review.
+    - Why: the owner wants a simpler project and a demo video that talks through the evals.
+    - The demo's scope, chosen by the owner the same day: tickets 24, 23, 22 and 25 (the README, decision 42), then 10 (Phase 1 only, no LangChain), then a script for the video. Phase 3 (tickets 16 to 21) is parked for a sequel, and tickets 16 and 18 lose their block on 15.
+42. **The README is rewritten (ticket 25, 2026-09-29).**
+    - The owner called it "trash": about 5,300 words, stale in places, and mostly implementation detail.
+    - The new one is about 120 lines: the pitch, how it works, the evals, the results (the failures as prominent as the passes), how to run it, the docs, and the licence.
+    - The detail moves to `docs/develop.md`, `docs/voice.md` and `docs/powers.md`.
+    - Ticket 25 follows 24, which also edits the README. Ticket 10 then fills in the results rows that 22 and 23 produce.
