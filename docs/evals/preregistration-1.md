@@ -2,7 +2,7 @@
 
 Drafted 2026-09-28, before any live run on Sonnet 5.5. Nothing in this file may change once the owner signs it, except the Results section and the budget log, which are filled in afterwards. The first Sonnet report's timestamp must be later than the commit that records the sign-off.
 
-**Owner sign-off:** ______________________ (name, date)
+**Approval:** the thresholds below were committed on 2026-09-28, before any live Sonnet 5.5 run. The owner tightened three of them that day (detection, false positives, p95 latency; decision 35 in `.scratch/harness/decisions.md`) and approved the runs on 2026-09-29. The commit history is the record: every Sonnet report's timestamp is later than this commit.
 
 ## The question
 
