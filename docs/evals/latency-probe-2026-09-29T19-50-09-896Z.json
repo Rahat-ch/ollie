@@ -1,0 +1,617 @@
+{
+  "summary": {
+    "learner": "crossing-ten-weakness",
+    "coachCalls": 20,
+    "httpAttempts": 20,
+    "nonOkAttempts": [],
+    "p50Seconds": 23.144,
+    "p95Seconds": 35.721,
+    "maxSeconds": 106.308,
+    "over60s": 1,
+    "estimatedDollars": 0.9315
+  },
+  "calls": [
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 3343,
+      "outputTokens": 1239,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 10569
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 3885,
+      "outputTokens": 1899,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 15157
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 4526,
+      "outputTokens": 1561,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 10849
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 4513,
+      "outputTokens": 2542,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 19011
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 4915,
+      "outputTokens": 2395,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 16022
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5072,
+      "outputTokens": 3379,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 26693
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5363,
+      "outputTokens": 3566,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 25521
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5545,
+      "outputTokens": 2553,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 17667
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5423,
+      "outputTokens": 2759,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 17506
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5616,
+      "outputTokens": 3314,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 23549
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 5849,
+      "outputTokens": 3329,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 21338
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 6032,
+      "outputTokens": 3457,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 22430
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 6217,
+      "outputTokens": 3752,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 23144
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 6334,
+      "outputTokens": 4947,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 106308
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 6598,
+      "outputTokens": 3964,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 25341
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 7047,
+      "outputTokens": 4170,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 24830
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 7332,
+      "outputTokens": 5321,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 35721
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 8004,
+      "outputTokens": 5142,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 31991
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 8311,
+      "outputTokens": 4974,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 29217
+    },
+    {
+      "operation": "coach",
+      "model": "claude-sonnet-5-5",
+      "inputTokens": 8371,
+      "outputTokens": 5232,
+      "cacheReadTokens": 0,
+      "cacheWriteTokens": 0,
+      "ms": 32754
+    }
+  ],
+  "attempts": [
+    {
+      "at": "2026-09-29T19:41:14.260Z",
+      "ms": 10554,
+      "status": 200,
+      "requestId": "req_011CfYJLkVeZRiqqfm5n4TU6",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4999000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:41:16Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:41:24Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:41:14Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5998000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:41:16Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:41:24.823Z",
+      "ms": 15154,
+      "status": 200,
+      "requestId": "req_011CfYJMXSrSVmsU4pDSpk2F",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:41:26Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:41:39Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:41:25Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:41:26Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:41:39.983Z",
+      "ms": 10846,
+      "status": 200,
+      "requestId": "req_011CfYJNeFAaJGyEMHXDSRXz",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:41:41Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "998000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:41:50Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:41:40Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:41:41Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:41:50.831Z",
+      "ms": 19008,
+      "status": 200,
+      "requestId": "req_011CfYJPSdwJ1LX1MbYyEuBi",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:41:52Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:42:09Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:41:51Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:41:52Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:42:09.843Z",
+      "ms": 16019,
+      "status": 200,
+      "requestId": "req_011CfYJQqvw79Y3VAJxkRMZq",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:42:11Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:42:25Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:42:10Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:42:11Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:42:25.866Z",
+      "ms": 26688,
+      "status": 200,
+      "requestId": "req_011CfYJS2QzX9JiAecBJbkVk",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:42:27Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:42:52Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:42:26Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:42:27Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:42:52.561Z",
+      "ms": 25516,
+      "status": 200,
+      "requestId": "req_011CfYJTzYBud9qac5drxvXU",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:42:53Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:43:18Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:42:52Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:42:53Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:43:18.083Z",
+      "ms": 17664,
+      "status": 200,
+      "requestId": "req_011CfYJVsmCfx3hVVu6Ls1kz",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:43:19Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:43:35Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:43:18Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:43:19Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:43:35.749Z",
+      "ms": 17503,
+      "status": 200,
+      "requestId": "req_011CfYJXBCUZL9HUuGn9h4JM",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4998000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:43:36Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:43:53Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:43:36Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:43:36Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:43:53.257Z",
+      "ms": 23546,
+      "status": 200,
+      "requestId": "req_011CfYJYU61CvFdkkcmbkuZK",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:43:54Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "1000000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:44:16Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:43:53Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:43:54Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:44:16.809Z",
+      "ms": 21334,
+      "status": 200,
+      "requestId": "req_011CfYJaCqXebgs9zPcpWmGn",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:44:18Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "998000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:44:38Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:44:17Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5995000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:44:18Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:44:38.148Z",
+      "ms": 22426,
+      "status": 200,
+      "requestId": "req_011CfYJbn4a9BvfLWgkUdiMK",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:44:39Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "1000000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:45:00Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:44:38Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:44:39Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:45:00.578Z",
+      "ms": 23141,
+      "status": 200,
+      "requestId": "req_011CfYJdRvAgpr3hhMeSRWwL",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:45:02Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "1000000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:45:23Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:45:00Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:45:02Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:46:34.241Z",
+      "ms": 35787,
+      "status": 200,
+      "requestId": "req_011CfYJkLaPj6Z44TWwoiqth",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:46:36Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:47:10Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:46:34Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:46:36Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:47:10.033Z",
+      "ms": 25336,
+      "status": 200,
+      "requestId": "req_011CfYJnyMnfWvtZcjxgzJaj",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:47:11Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:47:35Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:47:10Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:47:11Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:47:35.375Z",
+      "ms": 24825,
+      "status": 200,
+      "requestId": "req_011CfYJpqmBJRF256M5KjFYr",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:47:37Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "999000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:48:00Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:47:35Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:47:37Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:48:00.207Z",
+      "ms": 35691,
+      "status": 200,
+      "requestId": "req_011CfYJrg3qhq9kB8t1UX2qq",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4997000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:48:03Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "1000000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:48:35Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:48:00Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5997000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:48:03Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:48:35.930Z",
+      "ms": 31987,
+      "status": 200,
+      "requestId": "req_011CfYJuJhHUjqVeJHrwfp9K",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4996000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:48:37Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "998000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:49:07Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:48:36Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5994000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:48:37Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:49:07.922Z",
+      "ms": 29215,
+      "status": 200,
+      "requestId": "req_011CfYJwfT1nuq4ubjxfoRnZ",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4996000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:49:09Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "998000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:49:37Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:49:08Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5994000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:49:09Z"
+      }
+    },
+    {
+      "at": "2026-09-29T19:49:37.142Z",
+      "ms": 32750,
+      "status": 200,
+      "requestId": "req_011CfYJypRZzfs3gJNLjd9bt",
+      "retryAfter": null,
+      "limits": {
+        "anthropic-ratelimit-input-tokens-limit": "5000000",
+        "anthropic-ratelimit-input-tokens-remaining": "4996000",
+        "anthropic-ratelimit-input-tokens-reset": "2026-09-29T19:49:38Z",
+        "anthropic-ratelimit-output-tokens-limit": "1000000",
+        "anthropic-ratelimit-output-tokens-remaining": "1000000",
+        "anthropic-ratelimit-output-tokens-reset": "2026-09-29T19:50:09Z",
+        "anthropic-ratelimit-requests-limit": "5000",
+        "anthropic-ratelimit-requests-remaining": "4999",
+        "anthropic-ratelimit-requests-reset": "2026-09-29T19:49:37Z",
+        "anthropic-ratelimit-tokens-limit": "6000000",
+        "anthropic-ratelimit-tokens-remaining": "5996000",
+        "anthropic-ratelimit-tokens-reset": "2026-09-29T19:49:38Z"
+      }
+    }
+  ]
+}

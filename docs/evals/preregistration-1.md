@@ -218,3 +218,10 @@ So row 9c's fail is at least partly the new Judge reading an intended placeholde
 Sonnet also retried 5 Plans in 360, against Opus's 2, and none fell back to the Baseline.
 
 **5. Cost against the planning figure.** The runs cost $6.37 to $6.91, against a planning figure of $10.56 to $10.90 a run. The Sonnet Coach wrote about 0.45 to 0.49M output tokens a run, where the planning figure assumed Opus's 0.80M. No stop rule was reached.
+
+**Follow-up probe, 2026-09-29 (exploratory; changes no verdict).** `scripts/latency-probe.ts` ran one Learner (crossing-ten-weakness) for 20 Sessions on the real Coach, **one call at a time**, and logged every HTTP attempt the SDK made. The data is in `docs/evals/latency-probe-2026-09-29T19-50-09-896Z.json` and cost $0.93.
+
+- **Retries, rate limits and concurrency are ruled out.** There were 20 HTTP attempts for 20 Coach calls, every one a 200, so no SDK retry, 429 or 529 happened. The rate-limit headers show the account nowhere near any limit. And one call still took 106.3 s with nothing else in flight, at 47 output tokens a second against about 150 for the rest.
+- **The tail is occasional slow generation on the API side.** It happens in serial use too, so the live app, which makes one Coach call at a time, will see it.
+- **Serial latency without the tail:** p50 23.1 s and p95 35.7 s. Calls lengthen as the Learner Notes grow: 10 to 15 s in the first Sessions, 30 to 35 s by Session 17. So row 6's 30 s line would fail even without the tail.
+- **Next step: engineering.** Stream the Coach call and abandon it on silence (no tokens for a set time) instead of on total time. Hedge it: send a second request when the first stalls, and keep whichever finishes first.
