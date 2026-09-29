@@ -5,7 +5,7 @@
  * structured output; the Coach runs at effort high. The answers are the
  * fake's own outputs, so the round trip through the SDK's parser is real.
  */
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DIAGNOSTIC_PLAN, newProfile, runSession, scripted, type LearnerNotes } from "@/loop";
 import { coachInput } from "@/coach";
 import { anthropicGeneration, COACH_MODEL, STORY_MODEL, SUMMARY_MODEL } from "@/generation/anthropic";
@@ -177,5 +177,28 @@ describe("what the telemetry records for a call", () => {
     ]);
     // Sonnet 5 serving: $0.20 in + $0.30 out. Sonnet 5.5 declining: $0.20 in + $0.01 out.
     expect(callDollars(call)).toBe(0.71);
+  });
+});
+
+describe("the SDK log the latency probe reads", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("is left as it was when no logger is passed: nothing logged, and the same request sent", async () => {
+    const debug = vi.spyOn(console, "debug").mockImplementation(() => {});
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    const answer = await fakeGeneration().runCoach(coach);
+    const plain = stubFetch(answer);
+    const logged = stubFetch(answer);
+    await anthropicGeneration({ apiKey: "test", fetch: plain.fetch }).runCoach(coach);
+    expect(debug).not.toHaveBeenCalled();
+    expect(info).not.toHaveBeenCalled();
+
+    const lines: string[] = [];
+    const logger = { error: () => {}, warn: () => {}, info: () => {}, debug: (message: string) => void lines.push(message) };
+    await anthropicGeneration({ apiKey: "test", fetch: logged.fetch, logger, logLevel: "debug" }).runCoach(coach);
+    expect(lines.some((line) => line.endsWith("sending request"))).toBe(true);
+    expect(lines.some((line) => line.endsWith("response start"))).toBe(true);
+    expect(logged.sent[0].url).toBe(plain.sent[0].url);
+    expect(logged.sent[0].body).toEqual(plain.sent[0].body);
   });
 });

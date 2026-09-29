@@ -1,0 +1,3180 @@
+{
+  "environment": {
+    "node": "24.13.0",
+    "undici": "7.18.2",
+    "platform": "darwin arm64"
+  },
+  "results": [
+    {
+      "scenario": "a-answer",
+      "says": "a normal answer",
+      "outcome": "ok",
+      "call": {
+        "learner": "a-answer",
+        "index": 1,
+        "startedAt": "2026-09-29T22:18:35.996Z",
+        "totalMs": 23,
+        "prefetchGapMs": 11,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 11,
+            "endMs": 22,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_1",
+            "headersMs": 10,
+            "bodyMs": 1,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 3
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 2,
+              "tlsMs": null,
+              "totalMs": 2
+            },
+            "waitMs": 4,
+            "afterPreviousMs": null
+          }
+        ],
+        "retries": [],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a639c9] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59498/v1/messages?beta=true"
+            },
+            "t": 132.818916,
+            "ms": 11
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:59498/v1/messages?beta=true",
+            "t": 132.861708,
+            "ms": 11
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:59498/v1/messages?beta=true",
+            "t": 134.893916,
+            "ms": 13
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59498",
+            "t": 135.097375,
+            "ms": 13
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 135.207833,
+            "ms": 13
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:59498 from :59499",
+            "t": 136.935166,
+            "ms": 15
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:59498",
+            "remote": "127.0.0.1:59498",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 137.936041,
+            "ms": 16
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 3,
+            "t": 138.198583,
+            "ms": 16
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 139.628416,
+            "ms": 17
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 1,
+            "status": 200,
+            "t": 142.68175,
+            "ms": 21
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 1,
+            "t": 142.883375,
+            "ms": 21
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 1,
+            "status": 200,
+            "requestId": "req_local_1",
+            "t": 143.281333,
+            "ms": 21
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_a639c9, request-id: \"req_local_1\"] post http://127.0.0.1:59498/v1/messages?beta=true succeeded with status 200 in 11ms",
+            "t": 143.600083,
+            "ms": 21
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a639c9] response start",
+            "details": {
+              "url": "http://127.0.0.1:59498/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 11,
+              "requestId": "req_local_1"
+            },
+            "t": 143.646,
+            "ms": 21
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 1,
+            "bytes": 1100,
+            "t": 143.930541,
+            "ms": 22
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a639c9] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:59498/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 11
+            },
+            "t": 143.998708,
+            "ms": 22
+          }
+        ]
+      },
+      "explanation": "",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 11,
+        "matchesSignature": false
+      },
+      "serverEvents": [
+        {
+          "t": 18,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :59499"
+        },
+        {
+          "t": 19,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 19,
+          "kind": "answer",
+          "socket": 1,
+          "request": 1
+        }
+      ]
+    },
+    {
+      "scenario": "b-hang",
+      "says": "the server accepts the request and never answers",
+      "outcome": "ok",
+      "call": {
+        "learner": "b-hang",
+        "index": 1,
+        "startedAt": "2026-09-29T22:18:36.023Z",
+        "totalMs": 301645,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 301218,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 301217,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "HeadersTimeoutError",
+              "causeCode": "UND_ERR_HEADERS_TIMEOUT",
+              "causeMessage": "Headers Timeout Error"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 1
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 1,
+              "tlsMs": null,
+              "totalMs": 1
+            },
+            "waitMs": 301215,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 301640,
+            "endMs": 301645,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_2",
+            "headersMs": 4,
+            "bodyMs": 0,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 0
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 3,
+            "afterPreviousMs": 422
+          }
+        ],
+        "retries": [
+          {
+            "ms": 301218,
+            "message": "[log_44a8b1] connection timed out - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_44a8b1] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59500/v1/messages?beta=true"
+            },
+            "t": 148.769541,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+            "t": 148.785125,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:59500/v1/messages?beta=true",
+            "t": 149.027583,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59500",
+            "t": 149.054791,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 149.080791,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:59500 from :59501",
+            "t": 150.188166,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:59500",
+            "remote": "127.0.0.1:59500",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 150.215041,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 1,
+            "t": 150.241958,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 150.35925,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "UND_ERR_HEADERS_TIMEOUT: Headers Timeout Error",
+            "t": 301364.459875,
+            "ms": 301216
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 301365.208,
+            "ms": 301217
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 1,
+            "error": {
+              "name": "HeadersTimeoutError",
+              "message": "Headers Timeout Error",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 301365.397541,
+            "ms": 301217
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 1,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "HeadersTimeoutError",
+              "causeCode": "UND_ERR_HEADERS_TIMEOUT",
+              "causeMessage": "Headers Timeout Error"
+            },
+            "t": 301365.8725,
+            "ms": 301218
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_44a8b1] connection timed out - retrying, 2 attempts remaining",
+            "t": 301366.117,
+            "ms": 301218
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_44a8b1] connection timed out (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+              "durationMs": 301219,
+              "message": "fetch failed"
+            },
+            "t": 301366.147208,
+            "ms": 301218
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_10c2bd] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+              "retryOf": "log_44a8b1"
+            },
+            "t": 301788.249,
+            "ms": 301640
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+            "t": 301788.269625,
+            "ms": 301640
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:59500/v1/messages?beta=true",
+            "t": 301788.781666,
+            "ms": 301641
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59500",
+            "t": 301788.836791,
+            "ms": 301641
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 301788.895958,
+            "ms": 301641
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:59500 from :59811",
+            "t": 301789.235875,
+            "ms": 301641
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:59500",
+            "remote": "127.0.0.1:59500",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 301789.291875,
+            "ms": 301641
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 0,
+            "t": 301789.325125,
+            "ms": 301641
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 301789.627625,
+            "ms": 301641
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 301792.156208,
+            "ms": 301644
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 301792.25025,
+            "ms": 301644
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_2",
+            "t": 301792.418375,
+            "ms": 301644
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_10c2bd, retryOf: log_44a8b1, request-id: \"req_local_2\"] post http://127.0.0.1:59500/v1/messages?beta=true succeeded with status 200 in 5ms",
+            "t": 301792.591083,
+            "ms": 301644
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_10c2bd] response start",
+            "details": {
+              "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 5,
+              "retryOf": "log_44a8b1",
+              "requestId": "req_local_2"
+            },
+            "t": 301792.621125,
+            "ms": 301644
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 301792.803583,
+            "ms": 301645
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_10c2bd] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:59500/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 5,
+              "retryOf": "log_44a8b1"
+            },
+            "t": 301792.898041,
+            "ms": 301645
+          }
+        ]
+      },
+      "explanation": "301.2s attempt 1 until it threw on new socket #1: TypeError: fetch failed (cause UND_ERR_HEADERS_TIMEOUT Headers Timeout Error); 0.4s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 301640,
+        "matchesSignature": true
+      },
+      "serverEvents": [
+        {
+          "t": 2,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :59501"
+        },
+        {
+          "t": 3,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: hang"
+        },
+        {
+          "t": 301217,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 301642,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :59811"
+        },
+        {
+          "t": 301642,
+          "kind": "request",
+          "socket": 2,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 301643,
+          "kind": "answer",
+          "socket": 2,
+          "request": 2
+        }
+      ]
+    },
+    {
+      "scenario": "c1-close-idle",
+      "says": "the server closes a kept-alive socket (FIN) 500 ms after answering; the next call comes 2 s later",
+      "outcome": "ok",
+      "call": {
+        "learner": "c1-close-idle",
+        "index": 1,
+        "startedAt": "2026-09-29T22:23:39.677Z",
+        "totalMs": 4,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 4,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_2",
+            "headersMs": 3,
+            "bodyMs": 0,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 1
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 1,
+              "tlsMs": null,
+              "totalMs": 1
+            },
+            "waitMs": 2,
+            "afterPreviousMs": null
+          }
+        ],
+        "retries": [],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_450277] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59812/v1/messages?beta=true"
+            },
+            "t": 303801.717708,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:59812/v1/messages?beta=true",
+            "t": 303801.727083,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:59812/v1/messages?beta=true",
+            "t": 303801.963458,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59812",
+            "t": 303802.011041,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 303802.046041,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:59812 from :59819",
+            "t": 303802.609208,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:59812",
+            "remote": "127.0.0.1:59812",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 303802.640291,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 1,
+            "t": 303802.667833,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 303802.827458,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 303804.379,
+            "ms": 3
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 303804.412583,
+            "ms": 3
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_2",
+            "t": 303804.471666,
+            "ms": 3
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_450277, request-id: \"req_local_2\"] post http://127.0.0.1:59812/v1/messages?beta=true succeeded with status 200 in 3ms",
+            "t": 303804.571666,
+            "ms": 4
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_450277] response start",
+            "details": {
+              "url": "http://127.0.0.1:59812/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 3,
+              "requestId": "req_local_2"
+            },
+            "t": 303804.585875,
+            "ms": 4
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 303804.646,
+            "ms": 4
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_450277] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:59812/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 3
+            },
+            "t": 303804.667208,
+            "ms": 4
+          }
+        ]
+      },
+      "explanation": "",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 1,
+        "matchesSignature": false
+      },
+      "serverEvents": [
+        {
+          "t": -2004,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :59813"
+        },
+        {
+          "t": -2003,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": -2002,
+          "kind": "answer",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": -1501,
+          "kind": "close-idle",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": -1500,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 2,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :59819"
+        },
+        {
+          "t": 2,
+          "kind": "request",
+          "socket": 2,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 3,
+          "kind": "answer",
+          "socket": 2,
+          "request": 2
+        }
+      ]
+    },
+    {
+      "scenario": "c2-reset-reused",
+      "says": "the next request on a kept-alive socket is reset at once (RST): the client reused a socket the server had dropped",
+      "outcome": "ok",
+      "call": {
+        "learner": "c2-reset-reused",
+        "index": 1,
+        "startedAt": "2026-09-29T22:23:40.186Z",
+        "totalMs": 441,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 3,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 2,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": true,
+              "earlierRequests": 1,
+              "idleMs": 503,
+              "ageMs": 504
+            },
+            "connect": null,
+            "waitMs": 2,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 439,
+            "endMs": 441,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_3",
+            "headersMs": 2,
+            "bodyMs": 0,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 0
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 2,
+            "afterPreviousMs": 436
+          }
+        ],
+        "retries": [
+          {
+            "ms": 3,
+            "message": "[log_8728a5] connection failed - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_8728a5] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59820/v1/messages?beta=true"
+            },
+            "t": 304309.950458,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+            "t": 304309.961291,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:59820/v1/messages?beta=true",
+            "t": 304310.134083,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 1,
+            "reused": true,
+            "earlierRequests": 1,
+            "idleMs": 503,
+            "ageMs": 504,
+            "t": 304310.216708,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 304310.367833,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "ECONNRESET: read ECONNRESET",
+            "t": 304311.914708,
+            "ms": 3
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 304311.928041,
+            "ms": 3
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 2,
+            "error": {
+              "name": "Error",
+              "message": "read ECONNRESET",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 304311.94225,
+            "ms": 3
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 2,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "t": 304312.033,
+            "ms": 3
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_8728a5] connection failed - retrying, 2 attempts remaining",
+            "t": 304312.099208,
+            "ms": 3
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_8728a5] connection failed (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+              "durationMs": 2,
+              "message": "fetch failed"
+            },
+            "t": 304312.105041,
+            "ms": 3
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a24349] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+              "retryOf": "log_8728a5"
+            },
+            "t": 304747.909458,
+            "ms": 439
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 3,
+            "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+            "t": 304747.936083,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 3,
+            "method": "POST",
+            "path": "http://127.0.0.1:59820/v1/messages?beta=true",
+            "t": 304748.177583,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59820",
+            "t": 304748.205083,
+            "ms": 439
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 304748.229375,
+            "ms": 439
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:59820 from :59826",
+            "t": 304748.481166,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:59820",
+            "remote": "127.0.0.1:59820",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 304748.517583,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 3,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 0,
+            "t": 304748.545666,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 3,
+            "t": 304748.685041,
+            "ms": 439
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 3,
+            "status": 200,
+            "t": 304750.185708,
+            "ms": 441
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 3,
+            "t": 304750.213625,
+            "ms": 441
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 3,
+            "status": 200,
+            "requestId": "req_local_3",
+            "t": 304750.292416,
+            "ms": 441
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_a24349, retryOf: log_8728a5, request-id: \"req_local_3\"] post http://127.0.0.1:59820/v1/messages?beta=true succeeded with status 200 in 3ms",
+            "t": 304750.397708,
+            "ms": 441
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a24349] response start",
+            "details": {
+              "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 3,
+              "retryOf": "log_8728a5",
+              "requestId": "req_local_3"
+            },
+            "t": 304750.412041,
+            "ms": 441
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 3,
+            "bytes": 1100,
+            "t": 304750.472583,
+            "ms": 441
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a24349] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:59820/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 3,
+              "retryOf": "log_8728a5"
+            },
+            "t": 304750.492833,
+            "ms": 441
+          }
+        ]
+      },
+      "explanation": "0.4s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 439,
+        "matchesSignature": false
+      },
+      "serverEvents": [
+        {
+          "t": -503,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :59821"
+        },
+        {
+          "t": -503,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": -502,
+          "kind": "answer",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": 1,
+          "kind": "request",
+          "socket": 1,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 2 on the socket: reset"
+        },
+        {
+          "t": 2,
+          "kind": "reset",
+          "socket": 1,
+          "request": 2
+        },
+        {
+          "t": 3,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 439,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :59826"
+        },
+        {
+          "t": 440,
+          "kind": "request",
+          "socket": 2,
+          "request": 3,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 441,
+          "kind": "answer",
+          "socket": 2,
+          "request": 3
+        }
+      ]
+    },
+    {
+      "scenario": "c3-blackhole-reused",
+      "says": "the next request on a kept-alive socket is swallowed: the socket stays open and nothing ever comes back (a silently dropped connection, as near as localhost gets)",
+      "outcome": "ok",
+      "call": {
+        "learner": "c3-blackhole-reused",
+        "index": 1,
+        "startedAt": "2026-09-29T22:23:41.132Z",
+        "totalMs": 301457,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 301010,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 301009,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "HeadersTimeoutError",
+              "causeCode": "UND_ERR_HEADERS_TIMEOUT",
+              "causeMessage": "Headers Timeout Error"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": true,
+              "earlierRequests": 1,
+              "idleMs": 502,
+              "ageMs": 504
+            },
+            "connect": null,
+            "waitMs": 301007,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 301448,
+            "endMs": 301456,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_3",
+            "headersMs": 7,
+            "bodyMs": 1,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 1
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 1,
+              "tlsMs": null,
+              "totalMs": 1
+            },
+            "waitMs": 4,
+            "afterPreviousMs": 438
+          }
+        ],
+        "retries": [
+          {
+            "ms": 301011,
+            "message": "[log_cde90c] connection timed out - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_cde90c] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59827/v1/messages?beta=true"
+            },
+            "t": 305255.974208,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+            "t": 305255.982916,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:59827/v1/messages?beta=true",
+            "t": 305256.175666,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 1,
+            "reused": true,
+            "earlierRequests": 1,
+            "idleMs": 502,
+            "ageMs": 504,
+            "t": 305256.240916,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 305256.40225,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "UND_ERR_HEADERS_TIMEOUT: Headers Timeout Error",
+            "t": 606261.236708,
+            "ms": 301006
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 606263.134458,
+            "ms": 301008
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 2,
+            "error": {
+              "name": "HeadersTimeoutError",
+              "message": "Headers Timeout Error",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 606263.454958,
+            "ms": 301008
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 2,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "HeadersTimeoutError",
+              "causeCode": "UND_ERR_HEADERS_TIMEOUT",
+              "causeMessage": "Headers Timeout Error"
+            },
+            "t": 606265.444291,
+            "ms": 301010
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_cde90c] connection timed out - retrying, 2 attempts remaining",
+            "t": 606266.149,
+            "ms": 301011
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_cde90c] connection timed out (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+              "durationMs": 301012,
+              "message": "fetch failed"
+            },
+            "t": 606266.213708,
+            "ms": 301011
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a8ccab] sending request",
+            "details": {
+              "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+              "retryOf": "log_cde90c"
+            },
+            "t": 606703.592166,
+            "ms": 301448
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 3,
+            "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+            "t": 606703.645291,
+            "ms": 301448
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 3,
+            "method": "POST",
+            "path": "http://127.0.0.1:59827/v1/messages?beta=true",
+            "t": 606705.256833,
+            "ms": 301450
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:59827",
+            "t": 606705.425166,
+            "ms": 301450
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 606705.595333,
+            "ms": 301450
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:59827 from :60158",
+            "t": 606706.217041,
+            "ms": 301451
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:59827",
+            "remote": "127.0.0.1:59827",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 606706.400291,
+            "ms": 301451
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 3,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 1,
+            "t": 606706.517333,
+            "ms": 301451
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 3,
+            "t": 606707.210041,
+            "ms": 301452
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 3,
+            "status": 200,
+            "t": 606710.202791,
+            "ms": 301455
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 3,
+            "t": 606710.307833,
+            "ms": 301455
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 3,
+            "status": 200,
+            "requestId": "req_local_3",
+            "t": 606710.572583,
+            "ms": 301455
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_a8ccab, retryOf: log_cde90c, request-id: \"req_local_3\"] post http://127.0.0.1:59827/v1/messages?beta=true succeeded with status 200 in 8ms",
+            "t": 606710.885875,
+            "ms": 301455
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a8ccab] response start",
+            "details": {
+              "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 8,
+              "retryOf": "log_cde90c",
+              "requestId": "req_local_3"
+            },
+            "t": 606710.925,
+            "ms": 301456
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 3,
+            "bytes": 1100,
+            "t": 606711.193583,
+            "ms": 301456
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a8ccab] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:59827/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 9,
+              "retryOf": "log_cde90c"
+            },
+            "t": 606711.291458,
+            "ms": 301456
+          }
+        ]
+      },
+      "explanation": "301.0s attempt 1 until it threw on reused socket #1 (idle 502 ms, 1 earlier): TypeError: fetch failed (cause UND_ERR_HEADERS_TIMEOUT Headers Timeout Error); 0.4s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 301448,
+        "matchesSignature": true
+      },
+      "serverEvents": [
+        {
+          "t": -503,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :59828"
+        },
+        {
+          "t": -503,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": -502,
+          "kind": "answer",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": 2,
+          "kind": "request",
+          "socket": 1,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 2 on the socket: hang"
+        },
+        {
+          "t": 301007,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 301452,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :60158"
+        },
+        {
+          "t": 301453,
+          "kind": "request",
+          "socket": 2,
+          "request": 3,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 301454,
+          "kind": "answer",
+          "socket": 2,
+          "request": 3
+        }
+      ]
+    },
+    {
+      "scenario": "d-reset-mid",
+      "says": "the connection is reset (RST) 1 s into the request",
+      "outcome": "ok",
+      "call": {
+        "learner": "d-reset-mid",
+        "index": 1,
+        "startedAt": "2026-09-29T22:28:42.592Z",
+        "totalMs": 1491,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 1005,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 1004,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 1
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 1003,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 1483,
+            "endMs": 1490,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_2",
+            "headersMs": 7,
+            "bodyMs": 1,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 2
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 1,
+              "tlsMs": null,
+              "totalMs": 1
+            },
+            "waitMs": 3,
+            "afterPreviousMs": 478
+          }
+        ],
+        "retries": [
+          {
+            "ms": 1005,
+            "message": "[log_35ebdc] connection failed - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_35ebdc] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60159/v1/messages?beta=true"
+            },
+            "t": 606715.546,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+            "t": 606715.55775,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:60159/v1/messages?beta=true",
+            "t": 606715.859916,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60159",
+            "t": 606715.911833,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 606715.951666,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:60159 from :60160",
+            "t": 606716.441625,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:60159",
+            "remote": "127.0.0.1:60159",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 606716.5245,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 1,
+            "t": 606716.564083,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 606716.751291,
+            "ms": 3
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "ECONNRESET: read ECONNRESET",
+            "t": 607718.999166,
+            "ms": 1005
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 607719.075916,
+            "ms": 1005
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 1,
+            "error": {
+              "name": "Error",
+              "message": "read ECONNRESET",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 607719.142416,
+            "ms": 1005
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 1,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "t": 607719.491458,
+            "ms": 1005
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_35ebdc] connection failed - retrying, 2 attempts remaining",
+            "t": 607719.614125,
+            "ms": 1005
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_35ebdc] connection failed (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+              "durationMs": 1004,
+              "message": "fetch failed"
+            },
+            "t": 607719.629458,
+            "ms": 1005
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_f76573] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+              "retryOf": "log_35ebdc"
+            },
+            "t": 608197.142125,
+            "ms": 1483
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+            "t": 608197.196708,
+            "ms": 1483
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:60159/v1/messages?beta=true",
+            "t": 608198.370875,
+            "ms": 1484
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60159",
+            "t": 608198.51975,
+            "ms": 1484
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 608198.641458,
+            "ms": 1484
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:60159 from :60162",
+            "t": 608199.590916,
+            "ms": 1485
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:60159",
+            "remote": "127.0.0.1:60159",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 608199.722416,
+            "ms": 1486
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 2,
+            "t": 608200.151583,
+            "ms": 1486
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 608200.83675,
+            "ms": 1487
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 608203.514541,
+            "ms": 1489
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 608203.642625,
+            "ms": 1489
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_2",
+            "t": 608203.916666,
+            "ms": 1490
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_f76573, retryOf: log_35ebdc, request-id: \"req_local_2\"] post http://127.0.0.1:60159/v1/messages?beta=true succeeded with status 200 in 7ms",
+            "t": 608204.31425,
+            "ms": 1490
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_f76573] response start",
+            "details": {
+              "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 7,
+              "retryOf": "log_35ebdc",
+              "requestId": "req_local_2"
+            },
+            "t": 608204.360541,
+            "ms": 1490
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 608204.600166,
+            "ms": 1490
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_f76573] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:60159/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 8,
+              "retryOf": "log_35ebdc"
+            },
+            "t": 608204.694708,
+            "ms": 1491
+          }
+        ]
+      },
+      "explanation": "1.0s attempt 1 until it threw on new socket #1: TypeError: fetch failed (cause ECONNRESET read ECONNRESET); 0.5s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 1483,
+        "matchesSignature": false
+      },
+      "serverEvents": [
+        {
+          "t": 3,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :60160"
+        },
+        {
+          "t": 3,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: reset"
+        },
+        {
+          "t": 1004,
+          "kind": "reset",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": 1006,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 1487,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :60162"
+        },
+        {
+          "t": 1487,
+          "kind": "request",
+          "socket": 2,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 1489,
+          "kind": "answer",
+          "socket": 2,
+          "request": 2
+        }
+      ]
+    },
+    {
+      "scenario": "d70-reset",
+      "says": "the connection is reset (RST) 70 s into the request",
+      "outcome": "ok",
+      "call": {
+        "learner": "d70-reset",
+        "index": 1,
+        "startedAt": "2026-09-29T22:28:44.085Z",
+        "totalMs": 70502,
+        "prefetchGapMs": 2,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 2,
+            "endMs": 70006,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 70005,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 2
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 2,
+              "tlsMs": null,
+              "totalMs": 2
+            },
+            "waitMs": 70002,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 70498,
+            "endMs": 70502,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_2",
+            "headersMs": 4,
+            "bodyMs": 0,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 1
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 2,
+            "afterPreviousMs": 491
+          }
+        ],
+        "retries": [
+          {
+            "ms": 70007,
+            "message": "[log_55860d] connection failed - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_55860d] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60163/v1/messages?beta=true"
+            },
+            "t": 608208.374625,
+            "ms": 2
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+            "t": 608208.388125,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:60163/v1/messages?beta=true",
+            "t": 608208.772166,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60163",
+            "t": 608208.812208,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 608208.848875,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:60163 from :60164",
+            "t": 608210.877041,
+            "ms": 4
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:60163",
+            "remote": "127.0.0.1:60163",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 608210.939375,
+            "ms": 4
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 2,
+            "t": 608211.016166,
+            "ms": 4
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 608211.288583,
+            "ms": 4
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "ECONNRESET: read ECONNRESET",
+            "t": 678212.362708,
+            "ms": 70006
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 678212.463,
+            "ms": 70006
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 1,
+            "error": {
+              "name": "Error",
+              "message": "read ECONNRESET",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 678212.586833,
+            "ms": 70006
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 1,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ECONNRESET",
+              "causeMessage": "read ECONNRESET"
+            },
+            "t": 678213.204,
+            "ms": 70006
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_55860d] connection failed - retrying, 2 attempts remaining",
+            "t": 678213.46225,
+            "ms": 70007
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_55860d] connection failed (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+              "durationMs": 70005,
+              "message": "fetch failed"
+            },
+            "t": 678213.497375,
+            "ms": 70007
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_ca9245] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+              "retryOf": "log_55860d"
+            },
+            "t": 678704.479083,
+            "ms": 70498
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+            "t": 678704.498958,
+            "ms": 70498
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:60163/v1/messages?beta=true",
+            "t": 678704.945833,
+            "ms": 70498
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60163",
+            "t": 678705.004333,
+            "ms": 70498
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 678705.048291,
+            "ms": 70498
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:60163 from :60240",
+            "t": 678705.517291,
+            "ms": 70499
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:60163",
+            "remote": "127.0.0.1:60163",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 678705.593375,
+            "ms": 70499
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 1,
+            "t": 678705.633916,
+            "ms": 70499
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 678705.881666,
+            "ms": 70499
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 678707.871833,
+            "ms": 70501
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 678707.978041,
+            "ms": 70501
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_2",
+            "t": 678708.104083,
+            "ms": 70501
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_ca9245, retryOf: log_55860d, request-id: \"req_local_2\"] post http://127.0.0.1:60163/v1/messages?beta=true succeeded with status 200 in 4ms",
+            "t": 678708.318291,
+            "ms": 70501
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_ca9245] response start",
+            "details": {
+              "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 4,
+              "retryOf": "log_55860d",
+              "requestId": "req_local_2"
+            },
+            "t": 678708.35325,
+            "ms": 70502
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 678708.470208,
+            "ms": 70502
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_ca9245] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:60163/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 4,
+              "retryOf": "log_55860d"
+            },
+            "t": 678708.52225,
+            "ms": 70502
+          }
+        ]
+      },
+      "explanation": "70.0s attempt 1 until it threw on new socket #1: TypeError: fetch failed (cause ECONNRESET read ECONNRESET); 0.5s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 70498,
+        "matchesSignature": true
+      },
+      "serverEvents": [
+        {
+          "t": 4,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :60164"
+        },
+        {
+          "t": 5,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: reset"
+        },
+        {
+          "t": 70005,
+          "kind": "reset",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": 70007,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 70499,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :60240"
+        },
+        {
+          "t": 70499,
+          "kind": "request",
+          "socket": 2,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 70501,
+          "kind": "answer",
+          "socket": 2,
+          "request": 2
+        }
+      ]
+    },
+    {
+      "scenario": "d70-close",
+      "says": "the connection is closed (FIN) 70 s into the request",
+      "outcome": "ok",
+      "call": {
+        "learner": "d70-close",
+        "index": 1,
+        "startedAt": "2026-09-29T22:29:54.588Z",
+        "totalMs": 70421,
+        "prefetchGapMs": 2,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 2,
+            "endMs": 70004,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 70003,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "SocketError",
+              "causeCode": "UND_ERR_SOCKET",
+              "causeMessage": "other side closed"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 0
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 70001,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 70419,
+            "endMs": 70421,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_2",
+            "headersMs": 2,
+            "bodyMs": 0,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 0
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 2,
+            "afterPreviousMs": 415
+          }
+        ],
+        "retries": [
+          {
+            "ms": 70004,
+            "message": "[log_a9345e] connection failed - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a9345e] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60241/v1/messages?beta=true"
+            },
+            "t": 678711.331583,
+            "ms": 2
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+            "t": 678711.33975,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:60241/v1/messages?beta=true",
+            "t": 678711.62275,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60241",
+            "t": 678711.65975,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 678711.682,
+            "ms": 2
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:60241 from :60242",
+            "t": 678712.132291,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:60241",
+            "remote": "127.0.0.1:60241",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 678712.151625,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 0,
+            "t": 678712.176416,
+            "ms": 2
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 678712.314791,
+            "ms": 3
+          },
+          {
+            "source": "socket",
+            "kind": "end",
+            "socket": 1,
+            "detail": "the server closed its side (FIN)",
+            "t": 748713.067833,
+            "ms": 70003
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "UND_ERR_SOCKET: other side closed",
+            "t": 748713.385166,
+            "ms": 70004
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 748713.455833,
+            "ms": 70004
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 1,
+            "error": {
+              "name": "SocketError",
+              "message": "other side closed",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 748713.54325,
+            "ms": 70004
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 1,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "SocketError",
+              "causeCode": "UND_ERR_SOCKET",
+              "causeMessage": "other side closed"
+            },
+            "t": 748713.887916,
+            "ms": 70004
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_a9345e] connection failed - retrying, 2 attempts remaining",
+            "t": 748713.986708,
+            "ms": 70004
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_a9345e] connection failed (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+              "durationMs": 70003,
+              "message": "fetch failed"
+            },
+            "t": 748713.997333,
+            "ms": 70004
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_3ec96c] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+              "retryOf": "log_a9345e"
+            },
+            "t": 749128.472166,
+            "ms": 70419
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+            "t": 749128.481333,
+            "ms": 70419
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://127.0.0.1:60241/v1/messages?beta=true",
+            "t": 749128.750708,
+            "ms": 70419
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60241",
+            "t": 749128.773291,
+            "ms": 70419
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 749128.809166,
+            "ms": 70419
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "127.0.0.1:60241 from :60320",
+            "t": 749129.069625,
+            "ms": 70419
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "127.0.0.1:60241",
+            "remote": "127.0.0.1:60241",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 749129.092666,
+            "ms": 70419
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 0,
+            "t": 749129.112791,
+            "ms": 70419
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 749129.249041,
+            "ms": 70420
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 749130.776416,
+            "ms": 70421
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 749130.800583,
+            "ms": 70421
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_2",
+            "t": 749130.853333,
+            "ms": 70421
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_3ec96c, retryOf: log_a9345e, request-id: \"req_local_2\"] post http://127.0.0.1:60241/v1/messages?beta=true succeeded with status 200 in 2ms",
+            "t": 749130.933958,
+            "ms": 70421
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_3ec96c] response start",
+            "details": {
+              "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 2,
+              "retryOf": "log_a9345e",
+              "requestId": "req_local_2"
+            },
+            "t": 749130.943125,
+            "ms": 70421
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 749131.010333,
+            "ms": 70421
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_3ec96c] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:60241/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 2,
+              "retryOf": "log_a9345e"
+            },
+            "t": 749131.0295,
+            "ms": 70421
+          }
+        ]
+      },
+      "explanation": "70.0s attempt 1 until it threw on new socket #1: TypeError: fetch failed (cause UND_ERR_SOCKET other side closed); 0.4s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 70419,
+        "matchesSignature": true
+      },
+      "serverEvents": [
+        {
+          "t": 3,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :60242"
+        },
+        {
+          "t": 3,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: close"
+        },
+        {
+          "t": 70003,
+          "kind": "close",
+          "socket": 1,
+          "request": 1
+        },
+        {
+          "t": 70004,
+          "kind": "socket-closed",
+          "socket": 1
+        },
+        {
+          "t": 70420,
+          "kind": "connection",
+          "socket": 2,
+          "detail": "from :60320"
+        },
+        {
+          "t": 70420,
+          "kind": "request",
+          "socket": 2,
+          "request": 2,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 70421,
+          "kind": "answer",
+          "socket": 2,
+          "request": 2
+        }
+      ]
+    },
+    {
+      "scenario": "e-slow-70s",
+      "says": "the first byte comes 70 s after the request",
+      "outcome": "ok",
+      "call": {
+        "learner": "e-slow-70s",
+        "index": 1,
+        "startedAt": "2026-09-29T22:31:05.011Z",
+        "totalMs": 70006,
+        "prefetchGapMs": 1,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 1,
+            "endMs": 70005,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_1",
+            "headersMs": 70004,
+            "bodyMs": 1,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 0
+            },
+            "connect": {
+              "dnsMs": null,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 0
+            },
+            "waitMs": 70003,
+            "afterPreviousMs": null
+          }
+        ],
+        "retries": [],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_9f2478] sending request",
+            "details": {
+              "url": "http://127.0.0.1:60321/v1/messages?beta=true"
+            },
+            "t": 749132.329583,
+            "ms": 1
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://127.0.0.1:60321/v1/messages?beta=true",
+            "t": 749132.33325,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://127.0.0.1:60321/v1/messages?beta=true",
+            "t": 749132.429208,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "127.0.0.1:60321",
+            "t": 749132.442791,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 749132.453916,
+            "ms": 1
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "127.0.0.1:60321 from :60322",
+            "t": 749132.678333,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "127.0.0.1:60321",
+            "remote": "127.0.0.1:60321",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 749132.687458,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 0,
+            "t": 749132.698916,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 749132.765375,
+            "ms": 1
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 1,
+            "status": 200,
+            "t": 819135.256166,
+            "ms": 70004
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 1,
+            "t": 819135.509916,
+            "ms": 70004
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 1,
+            "status": 200,
+            "requestId": "req_local_1",
+            "t": 819135.860208,
+            "ms": 70004
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_9f2478, request-id: \"req_local_1\"] post http://127.0.0.1:60321/v1/messages?beta=true succeeded with status 200 in 70005ms",
+            "t": 819136.379083,
+            "ms": 70005
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_9f2478] response start",
+            "details": {
+              "url": "http://127.0.0.1:60321/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 70005,
+              "requestId": "req_local_1"
+            },
+            "t": 819136.449875,
+            "ms": 70005
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 1,
+            "bytes": 1100,
+            "t": 819136.816083,
+            "ms": 70005
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_9f2478] response parsed",
+            "details": {
+              "url": "http://127.0.0.1:60321/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 70006
+            },
+            "t": 819137.014708,
+            "ms": 70005
+          }
+        ]
+      },
+      "explanation": "70.0s attempt 1 waiting for headers (status 200, new socket #1)",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 1,
+        "matchesSignature": false
+      },
+      "serverEvents": [
+        {
+          "t": 1,
+          "kind": "connection",
+          "socket": 1,
+          "detail": "from :60322"
+        },
+        {
+          "t": 1,
+          "kind": "request",
+          "socket": 1,
+          "request": 1,
+          "detail": "POST /v1/messages?beta=true, request 1 on the socket: answer"
+        },
+        {
+          "t": 70002,
+          "kind": "answer",
+          "socket": 1,
+          "request": 1
+        }
+      ]
+    }
+  ]
+}
