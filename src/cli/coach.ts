@@ -9,6 +9,8 @@
  *   pnpm coach --learner weak --sessions 3
  *   pnpm coach --real                       # the Anthropic adapter on Opus 5; needs ANTHROPIC_API_KEY
  *   pnpm coach --verbose                    # also the full Session Log for every Session
+ *   pnpm coach --real --sessions 2 --assert # the live smoke check: three Sessions, exit 1 unless
+ *                                           # Evidence Integrity is 1.00 and no Plan came from the Baseline
  *
  * The fake needs no network. --real reads ANTHROPIC_API_KEY from the
  * environment, or from .env.local at the repo root when that file exists.
@@ -16,6 +18,9 @@
  */
 import { parseArgs } from "node:util";
 import { coachSession, type CoachStep } from "@/coach";
+import { scoreHypotheses } from "@/evals/hypotheses";
+import { smokeFailures } from "@/evals/smoke";
+import type { SessionTrace } from "@/evals/run";
 import { SIMULATED_LEARNERS, simulatedLearner, type SimulatedLearner } from "@/evals/learners";
 import { DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession } from "@/loop";
 import { formatEstimates, formatNotes, formatPlan, formatSessionLine, formatSessionLog } from "@/loop/format";
@@ -28,6 +33,7 @@ const { values } = parseArgs({
     sessions: { type: "string", default: "5" },
     real: { type: "boolean", default: false },
     verbose: { type: "boolean", default: false },
+    assert: { type: "boolean", default: false },
   },
 });
 
@@ -57,11 +63,13 @@ async function main(learner: SimulatedLearner): Promise<void> {
   let profile = newProfile();
   let notes = emptyNotes();
   let plan = DIAGNOSTIC_PLAN;
+  const traces: SessionTrace[] = [];
   for (let i = 1; i <= sessions + 1; i++) {
     const result = runSession(plan, profile, learner.seed, simulatedLearner(learner));
     console.log(formatSessionLine(result));
     if (values.verbose) console.log(`\n${formatSessionLog(result)}`);
     const step = await coachSession(generation, result, notes);
+    traces.push({ result, step });
     console.log(`\nSource: ${SOURCE_LABEL[step.source]}`);
     for (const { attempt, reasons } of step.rejections) {
       console.log([`Attempt ${attempt} rejected:`, ...reasons.map((reason) => `  - ${reason}`)].join("\n"));
@@ -71,6 +79,17 @@ async function main(learner: SimulatedLearner): Promise<void> {
     profile = result.profile;
   }
   console.log(formatEstimates(profile));
+  if (values.assert) {
+    const scored = scoreHypotheses({ learner, planner: "coach", sessions: traces });
+    const { coach, retry, baseline } = scored.sources;
+    console.log(`\nEvidence Integrity ${scored.evidence.integrity.toFixed(2)} over ${scored.evidence.citations} citations; Plans: ${coach} Coach, ${retry} retry, ${baseline} Baseline`);
+    const failures = smokeFailures(scored);
+    if (failures.length > 0) {
+      console.error(["Smoke check failed:", ...failures.map((failure) => `  - ${failure}`)].join("\n"));
+      process.exit(1);
+    }
+    console.log("Smoke check passed.");
+  }
 }
 
 main(learner).catch((error: unknown) => {
