@@ -36,9 +36,10 @@ export const generationCoaching = (generation: Pick<Generation, "runCoach" | "wr
 
 /**
  * How long the device waits before the Baseline and the template take over.
- * The Coach thinks for a while on Opus 5 (about 71 s a call in the live
- * Eval Runs), so the device waits longer than the route's own deadline
- * (`COACH_SERVER_DEADLINE_MS`, 75 s): the route decides, stops the model
+ * The Coach is not on any screen's critical path, so the device waits
+ * longer than the route's own deadline (`COACH_SERVER_DEADLINE_MS`, 75 s),
+ * well past a live Coach call (p50 about 11 s, p95 about 18 s on Sonnet
+ * 5.5): the route decides, stops the model
  * call, and says so, and this clock only matters when the route cannot be
  * heard at all. The Summary is shorter.
  */

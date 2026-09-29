@@ -1,7 +1,7 @@
 /**
  * The Coach's timeout, from the device through the route to the model call
- * and back. The live Coach averages about 71 s a call; what happens when it
- * takes that long, or longer, is decided by three clocks at once — the
+ * and back. A slow Coach (71 s, the average of the earliest live runs) or a
+ * slower one is decided by three clocks at once — the
  * device's, the route's, and the model's — so it is tested with all three
  * running: `routeCoaching` on the device, the real `/api/coach` and
  * `/api/summary` handlers behind `fetch`, and a slow fake Coach behind the
@@ -113,7 +113,7 @@ afterEach(() => {
 });
 
 describe("a slow Coach", () => {
-  it("that takes the live average of 71 s reaches the Learner: the device waits for it, and it is called once", async () => {
+  it("that takes 71 s reaches the Learner: the device waits for it, and it is called once", async () => {
     const record = await coachRunTaking(71_000);
 
     expect(slow.calls).toHaveLength(1);
