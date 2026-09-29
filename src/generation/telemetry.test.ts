@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   callDollars,
+  callTokens,
   costTotals,
   createRecorder,
   latency,
   percentile,
   telemetrySection,
+  usageAttempts,
   zeroCall,
   type ModelCall,
 } from "@/generation/telemetry";
@@ -25,6 +27,11 @@ describe("the price table", () => {
   it("charges input and output at the published rate per million tokens", () => {
     // 200,000 in at $5/M is $1.00; 40,000 out at $25/M is $1.00.
     expect(callDollars(call({ inputTokens: 200_000, outputTokens: 40_000 }))).toBe(2);
+    // Sonnet 5.5, every call's model since 2026-09-28: 1,000,000 in at $2/M and 500,000 out at $10/M.
+    expect(callDollars(call({ model: "claude-sonnet-5-5", inputTokens: 1_000_000, outputTokens: 500_000 }))).toBe(7);
+    // Its cache: 1,000,000 read at $0.20/M, 1,000,000 written at $2.50/M.
+    expect(callDollars(call({ model: "claude-sonnet-5-5", cacheReadTokens: 1_000_000 }))).toBe(0.2);
+    expect(callDollars(call({ model: "claude-sonnet-5-5", cacheWriteTokens: 1_000_000 }))).toBe(2.5);
     // Sonnet 5: 1,000,000 in at $2/M and 500,000 out at $10/M.
     expect(callDollars(call({ model: "claude-sonnet-5", inputTokens: 1_000_000, outputTokens: 500_000 }))).toBe(7);
     // Haiku 4.5: 10,000 in at $1/M and 2,000 out at $5/M.
@@ -45,6 +52,50 @@ describe("the price table", () => {
     // Nothing was spent, whatever the model: that is how the fake reports zero and not unknown.
     expect(callDollars(zeroCall("story"))).toBe(0);
     expect(costTotals([call({ model: "claude-unpublished-9", inputTokens: 1_000 }), call({ inputTokens: 1_000 })]).dollars).toBeNull();
+  });
+});
+
+describe("a call the refusal fallback served", () => {
+  const declined = { model: "claude-sonnet-5-5", inputTokens: 100_000, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 };
+  const rescued = call({ model: "claude-sonnet-5", inputTokens: 100_000, outputTokens: 20_000, ms: 30_000, declined: [declined] });
+
+  it("reads who served it and each attempt from usage.iterations, not from the model the call named", () => {
+    const usage = {
+      input_tokens: 100_000,
+      output_tokens: 20_000,
+      iterations: [
+        { type: "message", model: "claude-sonnet-5-5", input_tokens: 100_000, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 },
+        { type: "fallback_message", model: "claude-sonnet-5", input_tokens: 100_000, output_tokens: 20_000, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 },
+      ],
+    };
+    expect(usageAttempts("claude-sonnet-5-5", usage)).toEqual({
+      served: { model: "claude-sonnet-5", inputTokens: 100_000, outputTokens: 20_000, cacheReadTokens: 0, cacheWriteTokens: 0 },
+      declined: [declined],
+    });
+    // No fallback ran: the named model served it, and the top-level usage is the whole call.
+    expect(usageAttempts("claude-sonnet-5-5", { input_tokens: 10, output_tokens: 5, iterations: null })).toEqual({
+      served: { model: "claude-sonnet-5-5", inputTokens: 10, outputTokens: 5, cacheReadTokens: 0, cacheWriteTokens: 0 },
+      declined: [],
+    });
+  });
+
+  it("prices each attempt at its own model and counts the declined one's tokens", () => {
+    // Sonnet 5 served: $0.20 in + $0.20 out. Sonnet 5.5 declined before any output: $0.20 in.
+    expect(callDollars(rescued)).toBe(0.6);
+    expect(callTokens(rescued)).toBe(220_000);
+    expect(callDollars({ ...rescued, declined: [{ ...declined, model: "claude-unpublished-9" }] })).toBeNull();
+  });
+
+  it("adds each attempt to the model it ran on, and the call's wall time once", () => {
+    const telemetry = telemetrySection([rescued, call({ model: "claude-sonnet-5-5", inputTokens: 100_000, ms: 10_000 })], 2);
+    expect(telemetry.byOperation.coach).toMatchObject({ calls: 2, inputTokens: 300_000, ms: 40_000, dollars: 0.8 });
+    expect(telemetry.byOperation.coach.models).toEqual(["claude-sonnet-5", "claude-sonnet-5-5"]);
+    expect(telemetry.byModel).toEqual([
+      expect.objectContaining({ model: "claude-sonnet-5", calls: 1, ms: 30_000, dollars: 0.4 }),
+      expect.objectContaining({ model: "claude-sonnet-5-5", calls: 2, ms: 10_000, dollars: 0.4 }),
+    ]);
+    expect(telemetry.latency.coach).toEqual({ calls: 2, p50Ms: 10_000, p95Ms: 30_000 });
+    expect(telemetry.perSession.dollarsPerSession).toBe(0.4);
   });
 });
 

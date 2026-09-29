@@ -3,11 +3,12 @@
  * Coach-planned Sessions in the pure Loop, and print the Learner Notes and
  * the next Session Plan after every Session, so the Notes can be read
  * evolving. Each Plan is the Coach's, or the Baseline Plan when the Coach's
- * output was rejected twice.
+ * output was rejected twice. It ends with the same Cost block as the eval:
+ * the Coach's calls, tokens, p50 and p95 latency, and estimated dollars.
  *
  *   pnpm coach                              # crossing-ten-weakness, 5 Coach-planned Sessions, the fake Generation
  *   pnpm coach --learner weak --sessions 3
- *   pnpm coach --real                       # the Anthropic adapter on Opus 5; needs ANTHROPIC_API_KEY
+ *   pnpm coach --real                       # the Anthropic adapter on Sonnet 5.5; needs ANTHROPIC_API_KEY
  *   pnpm coach --verbose                    # also the full Session Log for every Session
  *   pnpm coach --real --sessions 2 --assert # the live smoke check: three Sessions, exit 1 unless
  *                                           # Evidence Integrity is 1.00 and no Plan came from the Baseline
@@ -25,6 +26,8 @@ import { SIMULATED_LEARNERS, simulatedLearner, type SimulatedLearner } from "@/e
 import { DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession } from "@/loop";
 import { formatEstimates, formatNotes, formatPlan, formatSessionLine, formatSessionLog } from "@/loop/format";
 import { describeGeneration } from "@/evals/report";
+import { formatTelemetry } from "@/evals/format";
+import { createRecorder, telemetrySection } from "@/generation/telemetry";
 import { chooseGeneration } from "./generation";
 
 const { values } = parseArgs({
@@ -57,7 +60,8 @@ const SOURCE_LABEL: Record<CoachStep["source"], string> = {
 };
 
 async function main(learner: SimulatedLearner): Promise<void> {
-  const { generation, name } = await chooseGeneration(values.real ? "real" : "fake");
+  const recorder = createRecorder();
+  const { generation, name } = await chooseGeneration(values.real ? "real" : "fake", recorder);
   console.log(`Generation: ${describeGeneration(name)}`);
   console.log(`Learner: ${learner.name} (${learner.id}, seed ${learner.seed}), the Diagnostic Session then ${sessions} Coach-planned Sessions\n`);
   let profile = newProfile();
@@ -79,6 +83,8 @@ async function main(learner: SimulatedLearner): Promise<void> {
     profile = result.profile;
   }
   console.log(formatEstimates(profile));
+  // The Coach ran once after each Session, the Diagnostic Session included.
+  console.log(`\n${formatTelemetry(telemetrySection(recorder.calls(), sessions + 1))}`);
   if (values.assert) {
     const scored = scoreHypotheses({ learner, planner: "coach", sessions: traces });
     const { coach, retry, baseline } = scored.sources;
