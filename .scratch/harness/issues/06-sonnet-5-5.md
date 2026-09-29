@@ -19,7 +19,7 @@ The telemetry's price table gains Sonnet 5.5 at $2 input and $10 output per mill
 - [x] The adapters and the Judge name Sonnet 5.5; no Opus model is called anywhere at run time
 - [x] The refusal fallback is on every call; an adapter test checks the request shape
 - [x] Telemetry prices Sonnet 5.5 correctly (unit test)
-- [ ] One live `pnpm coach --real --sessions 3` run succeeds and its latency and cost are noted in the ticket
+- [x] One live `pnpm coach --real --sessions 3` run succeeds and its latency and cost are noted in the ticket
 
 ## Comments
 
@@ -36,3 +36,6 @@ Docs: README (the pool, `/api/coach`, `pnpm coach --real`, the `src/generation/`
 Verified with `pnpm typecheck`, `pnpm lint`, `pnpm test` (70 files, 645 tests), `pnpm eval --fake` (its report and redrawn charts not committed) and `pnpm build`.
 
 Not done here. The live run is unticked because no model was called in this work. The orchestrator runs `pnpm coach --real --sessions 3` after merge and notes the latency and cost from its Cost block here. The comments in `src/app/api/coach/route.ts`, `src/app/api/summary/route.ts`, `src/app/api/story/route.ts` and `src/play/coaching.ts` still say Opus 5 or Sonnet 5 (and `coaching.ts` still quotes Opus 5's 71 s). Ticket 04 is changing those files in parallel, so they were left for it or a follow-up. That the server accepts this exact body (`fallbacks: "default"` with a structured-output format on `claude-sonnet-5-5`) is taken from the API reference and the SDK's types, not from a live call.
+
+**2026-09-28, the live check (orchestrator).** After merge, `pnpm coach --real --sessions 2 --assert` ran on the real `claude-sonnet-5-5` with the refusal fallback: the crossing-ten-weakness Learner, the Diagnostic Session plus two Coach-planned Sessions, three Coach calls. Evidence Integrity 1.00 over 22 citations; Plans 3 Coach, 0 retry, 0 Baseline; the smoke check passed. Coach latency p50 11.0 s, p95 17.9 s (38.7 s over three calls); cost $0.0621 in all, **$0.0207 per Session**, against about 71 s and $0.21 per Session on Opus 5 at high effort in the live reports of 2026-09-18. Three early Sessions are not a measurement: the Notes the Coach carries grow over twenty Sessions, and so will its input, output and latency. Ticket 07's pre-registered runs are the measurement; this is the evidence that the request shape (beta parse, `fallbacks: "default"`, structured output) is accepted by the API and that p95 sits far under the route's 75 s deadline.
+
