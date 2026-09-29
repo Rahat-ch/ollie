@@ -5,7 +5,7 @@
  * even when the model is unreachable. A writer that could not be reached at
  * all is not asked twice: the template stands in at once.
  */
-import type { Generation, SummaryInput, SummaryOutput } from "@/generation/types";
+import type { CallOptions, Generation, SummaryInput, SummaryOutput } from "@/generation/types";
 import { errorMessage, isUnavailable } from "@/lib/errors";
 import { templateSummary } from "./template";
 import { validateSummary } from "./validate";
@@ -26,23 +26,30 @@ export type WrittenSummary = SummaryOutput & {
   readonly rejections: readonly SummaryRejection[];
 };
 
+/**
+ * The Summary step, the same on the device and in the Summary route. The
+ * route passes its signal into every call, and a call whose caller has
+ * gone is not tried again: nobody is waiting for it.
+ */
 export async function writeValidSummary(
   generation: Pick<Generation, "writeSummary">,
   input: SummaryInput,
+  options: CallOptions = {},
 ): Promise<WrittenSummary> {
   const rejections: SummaryRejection[] = [];
   for (let attempt = 1; attempt <= SUMMARY_ATTEMPTS; attempt++) {
     let output: SummaryOutput;
     try {
-      output = await generation.writeSummary(input);
+      output = await generation.writeSummary(input, options);
     } catch (error) {
       rejections.push({ attempt, reasons: [errorMessage(error)] });
-      if (isUnavailable(error)) break;
+      if (isUnavailable(error) || options.signal?.aborted) break;
       continue;
     }
     const verdict = validateSummary(output, input);
     if (verdict.ok) return { ...output, source: "summary", rejections };
     rejections.push({ attempt, output, reasons: verdict.reasons });
+    if (options.signal?.aborted) break;
   }
   return { ...templateSummary(input), source: "template", rejections };
 }

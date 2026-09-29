@@ -1,31 +1,45 @@
 /**
- * What happens after a Session in the browser: one Coach run and one Parent
+ * What happens after a Session in the browser: one Coach step and one Parent
  * Summary, both through API routes, because the model keys live on the
  * server (ADR 0002). The rule itself is the engine's and is not repeated
- * here: `coachSession` calls the Coach, checks the Notes against the Log and
- * the Plan against the Plan Space, retries once, and falls back to the
- * Baseline Plan; `writeValidSummary` checks the Summary and falls back to
- * the template. Either way the record comes back written, so play goes on
- * and the Parent gets a note.
+ * here. The routes run it — the Coach route calls the Coach, checks the
+ * Notes against the Log and the Plan against the Plan Space, retries once,
+ * and falls back to the Baseline Plan; the Summary route checks the Summary
+ * and falls back to the template — and the device checks what they answer
+ * again, with its own Baseline and template for a route that is wrong or
+ * not there. Either way the record comes back written, so play goes on and
+ * the Parent gets a note.
  */
-import { coachSession, isServerBaseline, type CoachRecord, type CoachRun } from "@/coach";
+import { coachSession, coachThroughServer, type CoachRecord, type CoachRun, type CoachStep } from "@/coach";
 import { powerFor } from "@/loop";
-import type { SessionResult } from "@/loop";
-import { parseCoachOutput } from "@/generation/coach-schema";
+import type { LearnerNotes, SessionResult } from "@/loop";
 import { ModelUnavailableError } from "@/lib/errors";
-import { parseSummaryOutput } from "@/generation/summary-schema";
-import type { CoachInput, CoachOutput, Generation, SummaryInput, SummaryOutput } from "@/generation/types";
+import type { Generation, SummaryInput } from "@/generation/types";
+import { summaryThroughServer } from "@/summary/server";
 import { parentSummary, summaryInput } from "@/summary/summary";
-import { writeValidSummary } from "@/summary/write";
+import { writeValidSummary, type WrittenSummary } from "@/summary/write";
 
-/** The two operations that run after a Session. The other two are the Story writer's and the voice's. */
-export type Coaching = Pick<Generation, "runCoach" | "writeSummary">;
+/**
+ * The two steps that run after a Session, each settled with where it came
+ * from: the Coach step, and the Parent Summary checked or the template.
+ */
+export type Coaching = {
+  coach(result: SessionResult, notes: LearnerNotes): Promise<CoachStep>;
+  summarise(input: SummaryInput): Promise<WrittenSummary>;
+};
+
+/** Both steps run here on a Generation, as the routes run them: what the tests use with the fake. */
+export const generationCoaching = (generation: Pick<Generation, "runCoach" | "writeSummary">): Coaching => ({
+  coach: (result, notes) => coachSession(generation, result, notes),
+  summarise: (input) => writeValidSummary(generation, input),
+});
 
 /**
  * How long the device waits before the Baseline and the template take over.
- * The Coach thinks for a while on Opus 5 (about 71 s a call in the live
- * Eval Runs), so the device waits longer than the route's own deadline
- * (`COACH_SERVER_DEADLINE_MS`, 75 s): the route decides, stops the model
+ * The Coach is not on any screen's critical path, so the device waits
+ * longer than the route's own deadline (`COACH_SERVER_DEADLINE_MS`, 75 s),
+ * well past a live Coach call (p50 about 11 s, p95 about 18 s on Sonnet
+ * 5.5): the route decides, stops the model
  * call, and says so, and this clock only matters when the route cannot be
  * heard at all. The Summary is shorter.
  */
@@ -68,27 +82,16 @@ async function post(path: string, body: unknown, timeoutMs: number): Promise<unk
  * The Coach and the Summary as the browser reaches them: one route each,
  * carrying the Session's evidence, the Learner Notes, the Knowledge
  * Estimates, and the Plan Space, and never the Nickname, the Avatar, or the
- * Theme (ADR 0002). A malformed answer throws, which the engine records as
- * a rejection like any other. A route that did not answer in time, and a
- * Coach route that answered with its own Baseline Plan at its deadline,
- * throw as unreachable, so the engine uses the Baseline at once and does not
- * pay for the same wait twice.
+ * Theme (ADR 0002). Each route runs its step and answers what it settled;
+ * the device checks that again and keeps it, or uses its own Baseline Plan
+ * or template. A route is asked once: it has already retried, and a route
+ * that did not answer in time, or stopped the Coach at its own deadline, is
+ * a Coach that could not be reached, so the same wait is not paid for twice.
  */
 export function routeCoaching(): Coaching {
   return {
-    async runCoach(input: CoachInput): Promise<CoachOutput> {
-      const answer = await post("/api/coach", input, COACH_TIMEOUT_MS);
-      // The route stopped a Coach past its deadline and planned the Baseline itself: a Coach that could not be reached.
-      if (isServerBaseline(answer)) throw new ModelUnavailableError(`/api/coach used the Baseline Plan: ${answer.reason}`);
-      const parsed = parseCoachOutput(answer);
-      if (!parsed.ok) throw new Error(`Coach output rejected: ${parsed.reasons.join("; ")}`);
-      return parsed.output;
-    },
-    async writeSummary(input: SummaryInput): Promise<SummaryOutput> {
-      const parsed = parseSummaryOutput(await post("/api/summary", input, SUMMARY_TIMEOUT_MS));
-      if (!parsed.ok) throw new Error(`Parent Summary rejected: ${parsed.reasons.join("; ")}`);
-      return parsed.output;
-    },
+    coach: (result, notes) => coachThroughServer((input) => post("/api/coach", input, COACH_TIMEOUT_MS), result, notes),
+    summarise: (input) => summaryThroughServer((body) => post("/api/summary", body, SUMMARY_TIMEOUT_MS), input),
   };
 }
 
@@ -107,9 +110,9 @@ export async function runCoaching(
   powers: readonly string[],
   at: Date,
 ): Promise<CoachRun> {
-  const step = await coachSession(coaching, result, record.notes);
+  const step = await coaching.coach(result, record.notes);
   const input = summaryInput(result, step.notes, powers);
-  const written = await writeValidSummary(coaching, input);
+  const written = await coaching.summarise(input);
   return { result, step, summary: parentSummary(input, written, at) };
 }
 
