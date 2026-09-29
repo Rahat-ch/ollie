@@ -54,3 +54,16 @@ $ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3210/api/health
 ```
 
 **For the owner, by hand.** The Cloudflare rate-limiting rule is not something the repo can set: follow `docs/deploy.md` › Cloudflare rate-limiting rule (Security › WAF › Rate limiting rules; `/api/*` except `/api/health` on `ollie.rahatcodes.com`, 50 requests per 10 seconds per IP, Block for 10 seconds). Also worth doing: a monthly spend limit in the Anthropic console as the hard stop behind the in-memory cap, and, optionally, a host firewall that only lets Cloudflare's ranges reach ports 80 and 443, since a request that bypasses Cloudflare can set `CF-Connecting-IP` itself.
+
+**2026-09-29, the live capture (orchestrator).** Taken after deploy against https://ollie.rahatcodes.com, with the Cloudflare rule `ollie model routes` deployed and Active:
+- It matches `/api/*` on ollie except `/api/health`.
+- It allows 50 requests per 10 s per IP, then Blocks for 10 s.
+
+Results:
+- A POST to `/api/coach` with `Origin: https://evil.example` got **403**. So did one with no `Origin`.
+- A same-origin POST with an empty body got **400**. The route refuses it before any model call.
+- **App bucket, before the edge rule existed.** 120 parallel same-origin POSTs to `/api/coach` got 51 × 400, then **69 × 429**. The bucket was already partly drained by an earlier run of 70 one-at-a-time requests. Those all got 400, because at one request every few hundred milliseconds the bucket refilled as fast as it was spent.
+- **Edge rule, after it was deployed.** 120 parallel POSTs to `/api/story` got 63 × 400, then **57 × 429**. The 429 came from `server: cloudflare`, error code 1015, `retry-after: 9`, so the flood stopped at the edge.
+- `/api/health` answered 200 throughout.
+- The raw origin IP no longer answers on 80, 443, 8000, 6001 or 6002. The Hetzner Cloud Firewall `cloudflare-only-web` admits 80 and 443 from Cloudflare's IP ranges only, and 22 and ICMP from anywhere. So `CF-Connecting-IP` can be trusted.
+- Anthropic's own monthly spend limit sits behind the in-app cap: $250 a month, with an email alert at $150.
