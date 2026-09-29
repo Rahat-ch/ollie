@@ -14,12 +14,18 @@
  * accepts for the engine's numbers in the Learner's Theme (ADR 0001). With
  * no key, no voice ID, or no answer from ElevenLabs the route says so and
  * the browser falls through the Speech Chain, so no Session ever blocks.
+ *
+ * A line already on the volume is always served. A new render is refused
+ * the same way, as a 503, once the day has sent its allowance of characters
+ * to ElevenLabs or the model routes' spend has reached its cap; both reset
+ * at midnight UTC (src/lib/spend-cap.ts).
  */
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { Generation } from "@/generation";
 import { readEnv } from "@/lib/env";
 import { speechFor } from "@/lib/speech-service";
+import { CAP_REACHED, modelSpend, speechCharacters } from "@/lib/spend-cap";
 import { voiceRenderer } from "@/lib/voice-renderer";
 import { nicknameField, storyProblemIssue, storyProblemShape } from "@/story/request";
 import { validateStory } from "@/story/validate";
@@ -60,6 +66,22 @@ function lineFor(request: SpeechRequest): Line {
 
 const refuse = (error: readonly string[], status: number) => NextResponse.json({ error }, { status });
 
+/**
+ * The renderer behind the day's allowances: a render is refused once either
+ * is spent, and each render's characters are counted before it is sent, so
+ * a render that fails still counts and the count errs high.
+ */
+function allowanceRenderer(renderer: Pick<Generation, "renderSpeech">): Pick<Generation, "renderSpeech"> {
+  return {
+    renderSpeech: async (request) => {
+      const characters = speechCharacters();
+      if (characters.exhausted() || modelSpend().exhausted()) throw new Error(CAP_REACHED);
+      characters.spend(request.text.length);
+      return renderer.renderSpeech(request);
+    },
+  };
+}
+
 export async function POST(request: Request) {
   const parsed = SpeechRequestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
@@ -83,7 +105,7 @@ export async function POST(request: Request) {
   if (!line.ok) return refuse([`text: not a Story for these numbers: ${line.reasons.join("; ")}`], 400);
 
   try {
-    const { audio, mimeType, source } = await speechFor({ audioDir: env.audioDir, renderer }, line.text);
+    const { audio, mimeType, source } = await speechFor({ audioDir: env.audioDir, renderer: allowanceRenderer(renderer) }, line.text);
     return new NextResponse(new Blob([audio as BlobPart], { type: mimeType || AUDIO_MIME }), {
       headers: { "x-ollie-speech": source },
     });

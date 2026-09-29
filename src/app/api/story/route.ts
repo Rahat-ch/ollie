@@ -5,12 +5,15 @@
  * numbers and never the Nickname; the Story comes back in placeholder form
  * and the Nickname is filled in on the device (ADR 0002). The numbers are
  * checked to be a Problem the engine could have set (ADR 0001). Without an
- * API key the route still answers, with the template, so play never blocks.
+ * API key the route still answers, with the template, so play never blocks;
+ * so it does once the day's spend has reached the cap, until midnight UTC,
+ * and every Story it writes is priced into that spend (src/lib/spend-cap.ts).
  */
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import type { Generation } from "@/generation";
 import { readEnv, requireEnv } from "@/lib/env";
+import { CAP_REACHED, modelSpend, spendTelemetry } from "@/lib/spend-cap";
 import { storyFor } from "@/lib/story-service";
 import { storyProblemIssue, storyProblemShape } from "@/story/request";
 
@@ -21,20 +24,25 @@ const StoryRequestSchema = z
     if (issue) ctx.issues.push({ code: "custom", input: ctx.value, path: [issue.path], message: issue.message });
   });
 
-/** The Story writer, or one that fails at once when there is no key, so the template is used. */
+/** A writer that fails at once, so the template is used. */
+const failing = (error: unknown): Pick<Generation, "writeStory"> => ({
+  writeStory: async () => {
+    throw error;
+  },
+});
+
+/** The Story writer, or one that fails at once when there is no key or the day's spend is at the cap. */
 async function storyWriter(): Promise<Pick<Generation, "writeStory">> {
   let apiKey: string;
   try {
     apiKey = requireEnv(readEnv(), "anthropicApiKey");
   } catch (error) {
-    return {
-      writeStory: async () => {
-        throw error;
-      },
-    };
+    return failing(error);
   }
+  const today = modelSpend();
+  if (today.exhausted()) return failing(new Error(CAP_REACHED));
   const { anthropicGeneration } = await import("@/generation/anthropic");
-  return anthropicGeneration({ apiKey });
+  return anthropicGeneration({ apiKey, telemetry: spendTelemetry(today) });
 }
 
 export async function POST(request: Request) {

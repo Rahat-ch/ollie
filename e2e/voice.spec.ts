@@ -143,12 +143,14 @@ test("the home greeting asks the server for nothing: the bubble names the Learne
   expect(speechRequests).toEqual([]);
 
   // And the route no longer voices one at all: a Story is the only line it takes.
-  const answer = await request.post(`${baseURL}/api/speech`, { data: { kind: "greeting", nickname: "Mia" } });
+  // Sent with the app's own Origin, as its page sends it, or the proxy refuses it before the route can.
+  const answer = await request.post(`${baseURL}/api/speech`, { headers: { origin: baseURL! }, data: { kind: "greeting", nickname: "Mia" } });
   expect(answer.status()).toBe(400);
 });
 
 test("the server says Ollie has no voice rather than failing, so a Story falls through too", async ({ request, baseURL }) => {
   const answer = await request.post(`${baseURL}/api/speech`, {
+    headers: { origin: baseURL! },
     data: {
       kind: "story",
       nickname: "Mia",

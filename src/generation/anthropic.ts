@@ -34,7 +34,7 @@ const StoryOutputSchema = z.strictObject({ text: z.string().describe("The Story:
 
 export type AnthropicGenerationOptions = {
   readonly apiKey: string;
-  /** Where each call reports its tokens and its wall time. The app's routes pass none and record nothing; the eval CLI installs one. */
+  /** Where each call reports its tokens and its wall time. The eval CLI installs a recorder; the app's routes install the daily spend cap, which keeps only the dollars (src/lib/spend-cap.ts). */
   readonly telemetry?: Telemetry;
   /** The HTTP client the SDK sends with; only tests pass one, to read the request the adapter builds. */
   readonly fetch?: typeof fetch;
