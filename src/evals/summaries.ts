@@ -12,9 +12,9 @@ import type { Generation, SummaryInput, SummaryOutput } from "@/generation/types
 import { mapLimit } from "@/lib/map-limit";
 import { summaryInput } from "@/summary/summary";
 import { writeValidSummary, type SummaryRejection } from "@/summary/write";
-import { SUMMARY_CALIBRATION_SET } from "./calibration";
 import { calibrateJudge, type Calibration, type Judge, type Judgement } from "./judge";
 import type { LearnerRun } from "./run";
+import { summaryCalibrationSet, type Access } from "./sealed";
 import { share, wilsonInterval, writtenValidity, type Interval, type Validity } from "./stats";
 
 /**
@@ -66,6 +66,8 @@ export type SummaryEvalOptions = {
   readonly sample: readonly SummaryInput[];
   /** How many model calls run at once. */
   readonly concurrency?: number;
+  /** Which half of the Calibration Set the gate reads: the open half unless a final run asks for both. */
+  readonly calibrationAccess?: Access;
 };
 
 /** A rejection reason without its particulars, so the same kind of failure counts together. */
@@ -78,7 +80,7 @@ export async function runSummaryEvals(options: SummaryEvalOptions): Promise<Summ
     const { practiced, activity, source, rejections } = await writeValidSummary(generation, input);
     return { input, output: { practiced, activity }, source, rejections };
   });
-  const calibration = await calibrateJudge(SUMMARY_CALIBRATION_SET, (item) => judge.judgeSummary(item));
+  const calibration = await calibrateJudge(summaryCalibrationSet(options.calibrationAccess ?? "tuning"), (item) => judge.judgeSummary(item));
   let summaries = written;
   let faithfulness: SummaryFaithfulness | null = null;
   if (calibration.passes) {

@@ -1,6 +1,7 @@
 import { TELEMETRY_OPERATIONS, type Latency, type TelemetrySection } from "@/generation/telemetry";
 import { getSkill, SKILLS } from "@/loop";
 import { table } from "@/loop/format";
+import type { PairAgreement } from "./agreement";
 import type { LearnerConvergence, SplitSummary } from "./convergence";
 import type { EvalResults, HypothesisSplit } from "./evals";
 import type { LearnerHypotheses, PlanSources } from "./hypotheses";
@@ -167,6 +168,25 @@ export function formatSummaries(summaries: SummaryReport): string {
   ].join("\n");
 }
 
+/**
+ * Human-human agreement: for every two labellers of a set, each question with
+ * its agreement, interval and kappa, then the items they disagree on, listed
+ * rather than resolved.
+ */
+export function formatHumanAgreement(pairs: readonly PairAgreement[]): string {
+  if (pairs.length === 0) return "Human-human agreement: no set has two labellers yet (docs/evals/labels)";
+  return [
+    "Human-human agreement, over the items both labelled",
+    ...pairs.flatMap(({ set, labellers: [a, b], questions }) =>
+      questions.map((q) => {
+        const kappa = q.kappa === null ? "kappa undefined" : `kappa ${q.kappa.toFixed(2)}`;
+        const listed = q.disagreements.map((d) => `${d.id} (${a} ${d.a}, ${b} ${d.b})`).join("; ");
+        return `  ${set}, ${a} and ${b}, ${q.question}: ${q.agreements} of ${q.items} (${rate(q.agreement, q.agreementInterval)}), ${kappa}${listed ? `; disagree on ${listed}` : ""}`;
+      }),
+    ),
+  ].join("\n");
+}
+
 /** `$0.1234`, or undefined for a model the price table has no rate for. */
 export const money = (dollars: number | null): string => (dollars === null ? "undefined" : `$${dollars.toFixed(4)}`);
 
@@ -226,6 +246,9 @@ export function formatEvalResults(results: EvalResults): string {
     formatStories(results.stories),
     "",
     formatSummaries(results.summaries),
+    "",
+    // A report written before the labelling page has no such section.
+    formatHumanAgreement(results.humanAgreement ?? []),
     "",
     formatTelemetry(results.telemetry),
   ].join("\n");

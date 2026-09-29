@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation";
 import { fakeJudge } from "@/evals/judge";
 import { runEvals } from "@/evals/evals";
-import { formatEvalResults, formatTelemetry } from "@/evals/format";
+import { formatEvalResults, formatHumanAgreement, formatTelemetry } from "@/evals/format";
+import { emptyLabelFile, withLabel, type LabelFile } from "@/evals/labels";
 import { telemetrySection, zeroCall } from "@/generation/telemetry";
 import type { SimulatedLearnerId } from "@/evals/learners";
 
@@ -163,5 +164,28 @@ describe("the text report", () => {
     expect(line("summary")).toMatch(/12\.0 s\s+12\.0 s\s+12\.0 s/);
     // No calls, no percentile: a dash, not a zero.
     expect(line("story")).toMatch(/0\.0 s\s+-\s+-/);
+  });
+});
+
+describe("human-human agreement in the Eval Run", () => {
+  const stories = (labeller: string, fails: readonly string[]): LabelFile<"stories"> =>
+    ["c01", "c02", "c03", "c04"].reduce((file, id) => withLabel(file, { id, pass: !fails.includes(id) }), emptyLabelFile("stories", labeller));
+
+  it("scores every two labellers of a set from their label files, and prints the disagreements", async () => {
+    const results = await runEvals({
+      sessions: 1,
+      coach: { generation: fakeGeneration(), name: "fake" },
+      stories: STORIES,
+      summaries: SUMMARIES,
+      labels: [stories("owner", ["c03"]), stories("second", ["c03", "c04"]), emptyLabelFile("claims", "owner")],
+    });
+    expect(results.humanAgreement).toHaveLength(1);
+    expect(results.humanAgreement[0]).toMatchObject({ set: "stories", labellers: ["owner", "second"] });
+    expect(results.humanAgreement[0].questions[0]).toMatchObject({ question: "pass", items: 4, agreements: 3 });
+    expect(formatEvalResults(results)).toContain("stories, owner and second, pass: 3 of 4 (75%, 95% CI 0.301 to 0.954), kappa 0.50; disagree on c04 (owner pass, second fail)");
+  });
+
+  it("says so when no set has two labellers yet", async () => {
+    expect(formatHumanAgreement([])).toContain("no set has two labellers yet");
   });
 });
