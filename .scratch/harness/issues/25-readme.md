@@ -27,10 +27,23 @@ Update any links and tests that point at README sections (e.g. `grep -rn "README
 
 **Blocked by:** 24 (it edits the README)
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] The README is at most about 150 lines and has the sections above, in that order
-- [ ] Every number in it links to the committed report or file it comes from, and matches it
-- [ ] No stale model name, no LangChain, no Opus-era headline presented as current
-- [ ] The moved detail is in `docs/`, and every link in the README and those docs resolves
-- [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` pass
+- [x] The README is at most about 150 lines and has the sections above, in that order
+- [x] Every number in it links to the committed report or file it comes from, and matches it
+- [x] No stale model name, no LangChain, no Opus-era headline presented as current
+- [x] The moved detail is in `docs/`, and every link in the README and those docs resolves
+- [x] `pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` pass
+
+## Comments
+
+**2026-09-29, implementation.**
+- **README:** 122 lines, about 1,600 words, down from about 5,000. Sections, in order: Ollie (badge, live link, pitch, tagline, thesis), How it works (the diagram and five bullets, then the generative and deterministic line), The evals, Results, Run it, Docs, License.
+- **Results:** the per-role verdicts first, then one row per pre-registered row (1 to 10), each **PASS** or **FAIL** in the same bold. Each run-specific value links to its report; pooled or every-run values link to the Results section of `docs/evals/preregistration-1.md`. Every value was checked against `node scripts/preregistration-1-results.mjs` and, for the Opus Arm's per-run values, against the three Opus reports. One sentence says Sonnet 5.5 stays (decision 38) and points at the follow-up work. Two marked placeholders (an HTML comment and a "pending" line) wait for ticket 22's latency before and after and ticket 23's exploratory re-judge, for ticket 10 to fill in.
+- **Moved:** the Develop section, every CLI flag, playing locally, what leaves the device, environment and keys, the curriculum table and "Where things are" to `docs/develop.md`; "Ollie's voice" to `docs/voice.md`; "Ollie's Powers" to `docs/powers.md`. Each is short sections and bullets. The Deploy section is the deploy link in Docs, and `scripts/deploy-wizard.sh` is in `docs/develop.md`.
+- **Brought up to date while moving:** `pnpm eval` runs every call on Sonnet 5.5 (the old text said Opus 5 and Sonnet 5); `/api/story` writes on Sonnet 5.5; the voice section names the current voice's A/B win (decision 37); the file tour gains `src/cli/`, `src/lib/`, `src/proxy.ts`, `src/design/` and `e2e/`; the command list gains `eval:rescore`, `label`, `voice:ab`, `brand:images` and the two scripts outside `package.json`. "What has and has not run live" is gone; its lasting facts (the Content Pool's 2,790 keys and 5,520 Stories, the rendered lines) are in `docs/develop.md` and `docs/voice.md`.
+- **Decided here:** the curriculum table moved to `docs/develop.md#curriculum`, and the README's pitch keeps the precise claim with a link to it. The README carries the thesis (decision 2) under the tagline. The "How it works" check bullet names only the checks the engine makes today; the Minimum-Evidence Rule (ADR 0005) is named as follow-up work, not as built.
+- **Other docs:** `docs/evals/README.md` no longer says the Summary Judge is Opus 5. Nothing in `src`, `e2e`, `scripts` or `.github` pointed at a README section, and no test read the README.
+- **Test:** `src/docs-links.test.ts` checks that every relative link, and every `#heading` into a Markdown file, in the README, the three new docs, `docs/deploy.md` and the three evals docs resolves.
+- **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm test` (796) and `pnpm build`.
+
