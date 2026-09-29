@@ -48,6 +48,13 @@ describe("renderSpeech", () => {
     await expect(generation.renderSpeech({ text: "You did it!" })).rejects.not.toThrow(new RegExp(KEY));
   });
 
+  it("renders on eleven_v4, the model the voice A/B tries, as on any model it is configured with", async () => {
+    const { calls, fetch } = recorder(audioResponse);
+    await elevenLabsGeneration({ apiKey: KEY, voiceId: "new-voice", modelId: "eleven_v4", fetch }).renderSpeech({ text: "You did it!" });
+    expect(calls[0].url).toContain("new-voice");
+    expect(body(calls[0])).toEqual({ text: "You did it!", model_id: "eleven_v4" });
+  });
+
   it("throws rather than keep an empty file when nothing comes back", async () => {
     const { fetch } = recorder(() => new Response(new Uint8Array(0), { status: 200 }));
     await expect(
@@ -70,6 +77,13 @@ describe("elevenLabsVoiceDesign", () => {
     expect(designed[0].audio).toEqual(new Uint8Array([0x49, 0x44, 0x33]));
     expect(calls[0].url).toBe("https://api.elevenlabs.io/v1/text-to-voice/design");
     expect(body(calls[0])).toMatchObject({ voice_description: "Native English. Warm.", text: "You did it!" });
+    expect(body(calls[0])).not.toHaveProperty("model_id");
+  });
+
+  it("asks for a design model only when given one", async () => {
+    const { calls, fetch } = recorder(previews);
+    await elevenLabsVoiceDesign({ apiKey: KEY, fetch }).design({ brief: "b", previewText: "t", modelId: "eleven_ttv_v3" });
+    expect(body(calls[0]).model_id).toBe("eleven_ttv_v3");
   });
 
   it("saves the chosen preview as a voice and answers with the ID that goes in ELEVENLABS_VOICE_ID", async () => {

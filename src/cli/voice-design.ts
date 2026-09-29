@@ -8,6 +8,7 @@
  *   pnpm voice:design                    # three previews of the brief, written to ./data/voice-previews
  *   pnpm voice:design --save <id>        # save that preview as the voice "Ollie" and print its voice ID
  *   pnpm voice:design --brief "..."      # try another brief
+ *   pnpm voice:design --model eleven_ttv_v3   # the v3 design model, not the API's default (there is no v4 one)
  *
  * Voice Design is charged once per generation, for the preview text, however
  * many previews come back. Listen to all three before saving one: a saved
@@ -24,6 +25,7 @@ const { values } = parseArgs({
     brief: { type: "string", default: OLLIE_VOICE_BRIEF },
     name: { type: "string", default: OLLIE_VOICE_NAME },
     save: { type: "string" },
+    model: { type: "string" },
     out: { type: "string", default: "./data/voice-previews" },
   },
 });
@@ -48,7 +50,8 @@ async function main(): Promise<void> {
 
   console.log(`Brief:\n  ${values.brief}\n`);
   console.log(`Preview text:\n  ${previewText().split("\n").join("\n  ")}\n`);
-  const previews = await design.design({ brief: values.brief, previewText: previewText() });
+  if (values.model) console.log(`Design model: ${values.model}\n`);
+  const previews = await design.design({ brief: values.brief, previewText: previewText(), modelId: values.model });
   for (const preview of previews) {
     const file = `${preview.generatedVoiceId}.mp3`;
     await writeAudioFile(values.out, file, preview.audio);

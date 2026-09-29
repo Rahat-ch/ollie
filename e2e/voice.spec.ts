@@ -54,7 +54,7 @@ const FELL_THROUGH = /^(synthesis|text)$/;
  * means, and it is now the same premise in both engines.
  */
 test.beforeEach(async ({ page }) => {
-  await page.route("**/voice/*.mp3", (route) => route.abort());
+  await page.route("**/voice/*.mp3*", (route) => route.abort());
 });
 
 test("with no voice on the server every line falls through to the line on screen, Ollie talks while it is said, and the Session still finishes", async ({ page, baseURL }) => {
@@ -138,7 +138,8 @@ test("the home greeting asks the server for nothing: the bubble names the Learne
   // the chain falls through from there, and Ollie talks either way.
   await expect(page.locator("main.learner-stage")).toHaveAttribute("data-speech-source", FELL_THROUGH);
   await expect(page.locator("svg.ollie")).toHaveAttribute("data-pose", "talking");
-  expect(wanted).toContain(`${baseURL}/voice/${audioFileName(HOME_GREETING)}`);
+  // The URL carries a tag of the model and voice it was rendered on, so a re-rendered line is fetched again.
+  expect(wanted.map((url) => url.split("?")[0])).toContain(`${baseURL}/voice/${audioFileName(HOME_GREETING)}`);
   // Nothing is asked of the server for the greeting, so the Nickname is not sent for it (ADR 0002).
   expect(speechRequests).toEqual([]);
 

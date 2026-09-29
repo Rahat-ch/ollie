@@ -24,7 +24,8 @@
     "eval:rescore": "tsx src/cli/eval-rescore.ts",
     "pool": "tsx src/cli/pool.ts",
     "voice:design": "tsx src/cli/voice-design.ts",
-    "voice:lines": "tsx src/cli/voice-lines.ts"
+    "voice:lines": "tsx src/cli/voice-lines.ts",
+    "voice:ab": "tsx src/cli/voice-ab.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "0.125.0",
