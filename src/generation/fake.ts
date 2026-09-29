@@ -3,7 +3,7 @@ import { evidenceParts } from "@/summary/assistance";
 import { templateStory } from "@/story/template";
 import { zeroCall, type Telemetry, type TelemetryOperation } from "./telemetry";
 import type { Hypothesis, LearnerNotes, PlanSpace, ProblemId, SessionPlan, SkillId } from "@/loop";
-import type { CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
+import type { CallOptions, CoachEvidence, CoachInput, CoachOutput, Generation, SpeechInput, SpeechOutput, StoryInput, StoryOutput, SummaryInput, SummaryOutput } from "./types";
 
 const hypothesisId = (skill: SkillId): string => `h-${skill}`;
 
@@ -136,9 +136,9 @@ export function fakeGeneration(overrides: Partial<Generation> = {}, telemetry?: 
   const generation: Generation = { writeStory, runCoach, writeSummary, renderSpeech, ...overrides };
   if (!telemetry) return generation;
   const reported =
-    <I, O>(operation: TelemetryOperation, run: (input: I) => Promise<O>) =>
-    async (input: I): Promise<O> => {
-      const output = await run(input);
+    <I, O>(operation: TelemetryOperation, run: (input: I, options?: CallOptions) => Promise<O>) =>
+    async (input: I, options?: CallOptions): Promise<O> => {
+      const output = await run(input, options);
       telemetry.record(zeroCall(operation));
       return output;
     };

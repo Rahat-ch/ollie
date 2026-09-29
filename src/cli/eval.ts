@@ -10,7 +10,7 @@
  * regenerate every chart from that file. Run it before any prompt
  * or Plan Space change so the numbers can be compared.
  *
- *   pnpm eval                 # Opus 5 Coach and Judge, Sonnet 5 Stories; needs ANTHROPIC_API_KEY
+ *   pnpm eval                 # Sonnet 5.5 Coach, Summary, Stories and Judge; needs ANTHROPIC_API_KEY
  *   pnpm eval --fake          # the Generation fake and the fake Judge; no network
  *   pnpm eval --sessions 10
  *

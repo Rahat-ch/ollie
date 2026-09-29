@@ -284,7 +284,7 @@ function renderGeneratedSection(packages) {
   ];
   if (exceptions.length > 0) {
     lines.push(
-      "**Reviewed exceptions.** The following transitive packages are under MPL-2.0, a file-level weak copyleft licence that the hackathon terms do not prohibit (they name GPL, LGPL, AGPL, and SSPL). Each is an unmodified build-time or lint-time tool; none is bundled into shipped code. They are recorded in `REVIEWED_EXCEPTIONS` in `scripts/third-party.mjs`; removing an entry makes `pnpm licenses:check` fail.",
+      "**Reviewed exceptions.** The following transitive packages are under MPL-2.0, a file-level weak copyleft licence that the project's licence policy accepts only as a reviewed exception (it rejects GPL, LGPL, AGPL, and SSPL outright). Each is an unmodified build-time or lint-time tool; none is bundled into shipped code. They are recorded in `REVIEWED_EXCEPTIONS` in `scripts/third-party.mjs`; removing an entry makes `pnpm licenses:check` fail.",
       "",
     );
     for (const pkg of exceptions) {

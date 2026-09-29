@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation";
 import { fakeJudge } from "@/evals/judge";
 import { runEvals } from "@/evals/evals";
-import { formatEvalResults } from "@/evals/format";
+import { formatEvalResults, formatTelemetry } from "@/evals/format";
+import { telemetrySection, zeroCall } from "@/generation/telemetry";
 import type { SimulatedLearnerId } from "@/evals/learners";
 
 const STORIES = { generation: fakeGeneration(), name: "fake", judge: fakeJudge, judgeName: "fake" };
@@ -150,5 +151,17 @@ describe("the text report", () => {
     expect(text).toContain("kappa 0.00, floor 0.60 (an always-pass Judge would score 60%, an always-fail Judge 40%)");
     expect(text).toContain("Readability: scores withheld — agreement 0.60 is below the threshold 0.80, and kappa 0.00 is below the floor 0.60");
     expect(text).toContain("Faithfulness: scores withheld —");
+  });
+
+  it("prints each operation's p50 and p95 call time beside its total, so a slow tail is on the page", () => {
+    const coach = (ms: number) => ({ ...zeroCall("coach"), model: "claude-opus-5", ms });
+    const text = formatTelemetry(telemetrySection([coach(60_000), coach(71_000), coach(140_000), { ...zeroCall("summary"), ms: 12_000 }], 3));
+    const line = (name: string) => text.split("\n").find((row) => row.trim().startsWith(name))!;
+
+    expect(line("Operation")).toMatch(/Time\s+p50\s+p95\s+Estimated/);
+    expect(line("coach")).toMatch(/271\.0 s\s+71\.0 s\s+140\.0 s/);
+    expect(line("summary")).toMatch(/12\.0 s\s+12\.0 s\s+12\.0 s/);
+    // No calls, no percentile: a dash, not a zero.
+    expect(line("story")).toMatch(/0\.0 s\s+-\s+-/);
   });
 });

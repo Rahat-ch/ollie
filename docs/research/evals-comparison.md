@@ -1,6 +1,6 @@
 # Ollie's evals against open-source eval practice and adaptive-learning research
 
-**Researched:** 2026-09-17, against `src/evals/*.ts`, `src/cli/eval.ts`, `docs/evals/`, `docs/submission/`, `.scratch/k5-math/`, and primary sources fetched from OpenAI, UK AISI, promptfoo, Braintrust, LangChain, DeepEval, Ragas, Anthropic, arXiv and PMC. Every claim about an outside tool is cited to a page actually fetched.
+**Researched:** 2026-09-17, against `src/evals/*.ts`, `src/cli/eval.ts`, `docs/evals/`, the project write-up, `docs/evals/evidence.md`, `.scratch/k5-math/`, and primary sources fetched from OpenAI, UK AISI, promptfoo, Braintrust, LangChain, DeepEval, Ragas, Anthropic, arXiv and PMC. Every claim about an outside tool is cited to a page actually fetched.
 
 ## Summary
 
@@ -124,7 +124,7 @@ On the simulation itself, **not validating is the norm rather than Ollie's lapse
 32. Zhang et al. — [systematic review of K-12 intelligent tutoring systems](https://www.nature.com/articles/s41539-025-00320-7), *npj Science of Learning*, 2025 (28 studies, 4,597 students; 14 % elementary, 0 % preschool; "half of the interventions lasted less than a week").
 33. Srivatsa, Maurya & Kochmar — [Can LLMs Reliably Simulate Real Students' Abilities…?](https://arxiv.org/abs/2507.08232) (489 NAEP items; simulated ability placed on the real student scale).
 34. [IRT calibration on Duolingo English Test data](https://arxiv.org/abs/2607.06905) ("an item-split protocol that holds out entire items").
-35. In-repo primary sources: `src/evals/{evals,hypotheses,learners,run,convergence,stories,summaries,judge,judge-anthropic,calibration,stats}.ts`, `src/cli/eval.ts`, `src/generation/anthropic.ts`, `src/loop/{bkt,skills}.ts`, `docs/evals/README.md`, `docs/evals/2026-09-13T17-38-41Z.json`, `docs/submission/{write-up,evidence}.md`, `.scratch/k5-math/{spec,decisions}.md`, issue Comments 05, 07, 10, 12.
+35. In-repo primary sources: `src/evals/{evals,hypotheses,learners,run,convergence,stories,summaries,judge,judge-anthropic,calibration,stats}.ts`, `src/cli/eval.ts`, `src/generation/anthropic.ts`, `src/loop/{bkt,skills}.ts`, `docs/evals/README.md`, `docs/evals/2026-09-13T17-38-41Z.json`, the project write-up (its eval results now in `docs/evals/README.md`), `docs/evals/evidence.md`, `.scratch/k5-math/{spec,decisions}.md`, issue Comments 05, 07, 10, 12.
 
 **Computed here, not sourced**: the Wilson intervals, κ = 0.58 and required sample sizes in §3 and §6 are computed from the report's own counts.
 

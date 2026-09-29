@@ -1,6 +1,6 @@
 /**
  * Fill the Content Pool: for every Theme, Unit 3 Skill and structure, and
- * equation in the Skill's default range, write a Story on Sonnet 5 with
+ * equation in the Skill's default range, write a Story on Sonnet 5.5 with
  * the Nickname placeholder, keep it if the validator allows it, and save
  * the lot to src/story/pool.generated.json, which ships with the app. Keys
  * that already have enough variants are skipped, so the script resumes.

@@ -55,7 +55,7 @@ export function configuredVoice(): { readonly modelId: string; readonly voiceId:
   return { modelId: env.elevenLabsModelId, voiceId: env.elevenLabsVoiceId || undefined };
 }
 
-/** The fake Judge (the validator's opinion, which fails calibration by design), or Opus 5 with the rubric. */
+/** The fake Judge (the validator's opinion, which fails calibration by design), or Sonnet 5.5 with the rubric. */
 export async function chooseJudge(mode: Mode, telemetry?: Telemetry): Promise<{ readonly judge: Judge; readonly name: string }> {
   if (mode === "fake") return { judge: telemetry ? recordedFakeJudge(telemetry) : fakeJudge, name: "fake" };
   const apiKey = anthropicApiKey();

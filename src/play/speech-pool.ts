@@ -64,7 +64,8 @@ export function requestSpeech(request: SpeechRequest, now: number = Date.now()):
   const asked = fetchSpeech(request).then((url) => {
     if (url === null) {
       held.delete(key);
-      refused.set(key, Date.now());
+      // The back-off is timed from the ask, on the caller's clock, not from whenever the answer landed.
+      refused.set(key, now);
     }
     return url;
   });

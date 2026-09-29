@@ -3,3 +3,5 @@ export type { CitedProblem, CoachRecord, CoachRun } from "./record";
 export { addSummary, applyCoachRun, applyCoachStep, awaitCoach, emptyRecord, notesChanges, SUMMARIES_KEPT } from "./record";
 export type { CoachCheck } from "./coach";
 export { checkCoachOutput, coachInput, coachSession } from "./coach";
+export type { ServerBaseline } from "./deadline";
+export { COACH_SERVER_DEADLINE_MS, isServerBaseline, serverBaseline } from "./deadline";

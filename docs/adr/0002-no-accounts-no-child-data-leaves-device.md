@@ -16,12 +16,12 @@ Four routes send anything at all, and this list is the whole of it:
 
 The Nickname is the one personal word that leaves the device, it leaves only so that a Story can be spoken in Ollie's voice and for nothing else, and onboarding says so in the Parent's own words before play begins.
 
-We chose this because the Learner is under 13. COPPA treats a child's voice as personal information and, since the 2025 amendments, a voiceprint as a biometric. The Nerdy hackathon terms ban testing with under-13s without verifiable parental consent and ban biometric collection outright. Voice input was researched in depth (see `docs/research/k5-math-game/03-voice-ai.md`) and dropped for these reasons plus the poor accuracy of speech recognition on child speech.
+We chose this because the Learner is under 13. COPPA treats a child's voice as personal information and, since the 2025 amendments, a voiceprint as a biometric. The project holds itself to the stricter line on top: no testing with under-13s without verifiable parental consent, and no biometric collection at all. Voice input was researched in depth (see `docs/research/k5-math-game/03-voice-ai.md`) and dropped for these reasons plus the poor accuracy of speech recognition on child speech.
 
 ## Consequences
 
 - The Parent reads the Parent Summary in-app behind the Parent Gate. There is no email.
 - The Parent Summary and the Coach are written from a Session's own evidence and never from a name: the Summary calls the Learner "your child", and no first name is sent for either.
-- The Character speaks, the Learner taps. Do not add voice input without re-reading the research and the contest terms.
-- Multiple devices do not share a Profile. Acceptable for the hackathon.
+- The Character speaks, the Learner taps. Do not add voice input without re-reading the research and COPPA's rules on children's voice data.
+- Multiple devices do not share a Profile. Acceptable for a game with no accounts.
 - Tracing (LangSmith, added 2026-09-28) runs in `pnpm eval` only, where every input is a Simulated Learner. No route sends anything to a tracing or evaluation service, and the Jev claim reader runs in the eval only.

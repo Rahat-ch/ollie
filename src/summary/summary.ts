@@ -32,7 +32,7 @@ export type ParentSummary = SummaryOutput & {
   readonly sessionNumber: number;
   /** When the Session was played, ISO 8601. */
   readonly at: string;
-  /** `summary` when Opus 5 wrote it; `template` when every attempt was rejected. */
+  /** `summary` when the model wrote it; `template` when every attempt was rejected. */
   readonly source: "summary" | "template";
   readonly problems: number;
   readonly practice: readonly SummaryPractice[];
