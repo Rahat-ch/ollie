@@ -2,6 +2,8 @@
 
 **Read first:** `CONTEXT.md` (capitalised terms are defined there); `.scratch/harness/spec.md`, Implementation Decisions › Phase 1 › The Sonnet comparison; `.scratch/harness/decisions.md` #5, 6, 12, 28; `docs/evals/README.md` (method and thresholds today); `docs/research/langchain-harness.md` for background. Follow `AGENTS.md`. Deliver as one PR into `main`, merged before the next ticket starts. Never mention the former sponsor or the contest in anything you write.
 
+**Hard rule:** these runs happen before ticket 16 or 17 changes the Coach prompt. Nothing in Phase 2 changes it, so they may run at any time before Phase 3.
+
 **What to build:** Before any live run, Pre-registration 1 is committed to the evals folder. It states:
 - the Arms: Sonnet 5.5 at high effort, against the three stored Opus 5 reports re-scored with the same scorer;
 - the metrics:
