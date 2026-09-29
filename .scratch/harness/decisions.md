@@ -162,4 +162,5 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - ADR 0004 is marked superseded. ADR 0002's rule that tracing is eval-only stays true, because nothing traces now.
     - Everything else in Phase 1 stays: Sonnet 5.5, server-side validation, the abuse guard and spend cap, the new voice, CI, and the evals and their committed JSON reports.
     - Ticket 15 (the Phase 2 evidence) is dropped. The labelling page (ticket 13) and the second labeller (ticket 14) stay; they never needed LangSmith.
-    - Why: the owner wants a simpler project and a demo video that talks through the evals. The next step is to review which of tickets 10, 14 and 16 to 23 the demo needs. Tickets 22 and 23 are written but on hold until that review.
+    - Why: the owner wants a simpler project and a demo video that talks through the evals.
+    - The demo's scope, chosen by the owner the same day: tickets 24, 23 and 22, then 10 (Phase 1 only, no LangChain), then a script for the video. Phase 3 (tickets 16 to 21) is parked for a sequel, and tickets 16 and 18 lose their block on 15.

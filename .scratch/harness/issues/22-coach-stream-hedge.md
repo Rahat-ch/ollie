@@ -28,7 +28,7 @@ The orchestrator re-runs the probe once after merge (about $1, approved) and rec
 
 **Blocked by:** 24 (the route's step changes there)
 
-**Status:** needs-triage (written 2026-09-29, on hold until the owner's review of what the demo needs, decision 41)
+**Status:** ready-for-agent (the owner put it in the demo's scope on 2026-09-29, decision 41)
 
 - [ ] The request shape is tested off the wire through a stubbed `fetch` that serves an SSE stream, as `src/generation/anthropic.test.ts` does today: streamed, structured output, the fallback, effort `high`
 - [ ] On fake timers: 10 s of silence sends exactly one hedge; the hedge wins and the first is aborted; the first resumes, wins, and the hedge is aborted; a `ping` does not reset the clock; a stall before the first token hedges; both silent for 30 s ends as a Coach not reached; the caller's abort aborts both
