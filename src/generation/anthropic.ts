@@ -38,10 +38,12 @@ export type AnthropicGenerationOptions = {
   readonly telemetry?: Telemetry;
   /** The HTTP client the SDK sends with; only tests pass one, to read the request the adapter builds. */
   readonly fetch?: typeof fetch;
+  /** How many times the SDK itself retries a failed request; its default (2) unless the caller retries instead, as the Coach graph does. */
+  readonly maxRetries?: number;
 };
 
 export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
-  const client = new Anthropic({ apiKey: options.apiKey, fetch: options.fetch });
+  const client = new Anthropic({ apiKey: options.apiKey, fetch: options.fetch, ...(options.maxRetries === undefined ? {} : { maxRetries: options.maxRetries }) });
   const { telemetry } = options;
 
   async function runCoach(input: CoachInput, options: CallOptions = {}): Promise<CoachOutput> {
