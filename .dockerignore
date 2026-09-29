@@ -17,6 +17,11 @@ next-env.d.ts
 .agents
 skills-lock.json
 docs
+# ...except the label files the eval code imports: Next's build type-checks all of
+# src/, eval code included, so they must be in the build context.
+!docs/evals
+docs/evals/*
+!docs/evals/labels
 *.md
 
 # secrets and local env files: never enter the image; set them in Coolify
