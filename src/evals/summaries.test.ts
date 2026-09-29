@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { fakeGeneration } from "@/generation/fake";
 import { validateSummary } from "@/summary/validate";
-import { SUMMARY_CALIBRATION_SET } from "./calibration";
 import { fakeJudge, JUDGE_AGREEMENT_THRESHOLD, type Judge } from "./judge";
 import { SIMULATED_LEARNERS } from "./learners";
 import { coachPlanner, runLearner } from "./run";
+import { finalRun, summaryCalibrationSet } from "./sealed";
 import { runSummaryEvals, summarySample } from "./summaries";
+
+/** Both halves: these tests check the set itself, and tune nothing. */
+const SUMMARY_CALIBRATION_SET = summaryCalibrationSet(finalRun("the Summary Calibration Set's own tests"));
 
 /** A Judge that answers with the Calibration Set's own verdicts, and passes anything else. */
 const agreeingJudge: Judge = {

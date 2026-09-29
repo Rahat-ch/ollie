@@ -1,0 +1,106 @@
+{
+  "set": "stories",
+  "labeller": "owner",
+  "labels": [
+    {
+      "id": "c01",
+      "pass": true,
+      "note": "Add-to told as puppies arriving; simple and in the Theme."
+    },
+    {
+      "id": "c02",
+      "pass": true,
+      "note": "Take-from told as fish swimming away."
+    },
+    {
+      "id": "c03",
+      "pass": true,
+      "note": "Put-together with two named groups and a total question."
+    },
+    {
+      "id": "c04",
+      "pass": true,
+      "note": "Add-to change: start and end given, the change asked and never stated."
+    },
+    {
+      "id": "c05",
+      "pass": true,
+      "note": "Take-from change: start and end given, asks how many went."
+    },
+    {
+      "id": "c06",
+      "pass": true,
+      "note": "Fairies add-to with a short second sentence."
+    },
+    {
+      "id": "c07",
+      "pass": true,
+      "note": "Take-from with bones, a natural leaving verb."
+    },
+    {
+      "id": "c08",
+      "pass": true,
+      "note": "Put-together in the truck Theme."
+    },
+    {
+      "id": "c09",
+      "pass": true,
+      "note": "Change unknown with rockets landing, end state stated."
+    },
+    {
+      "id": "c10",
+      "pass": true,
+      "note": "Take-from change with dinosaurs leaving the cave."
+    },
+    {
+      "id": "c11",
+      "pass": true,
+      "note": "Ocean add-to with the Nickname in the question."
+    },
+    {
+      "id": "c12",
+      "pass": true,
+      "note": "Past tense throughout, still simple."
+    },
+    {
+      "id": "c13",
+      "pass": false,
+      "note": "Says the take-from as more arriving: the action contradicts the arithmetic."
+    },
+    {
+      "id": "c14",
+      "pass": false,
+      "note": "Add-to narrated as leaving; asks how many are left."
+    },
+    {
+      "id": "c15",
+      "pass": false,
+      "note": "Word order and grammar a child could not follow."
+    },
+    {
+      "id": "c16",
+      "pass": false,
+      "note": "A bare sum with a Theme word pasted on; no scene."
+    },
+    {
+      "id": "c17",
+      "pass": false,
+      "note": "Change unknown that asks for the end instead of the change."
+    },
+    {
+      "id": "c18",
+      "pass": false,
+      "note": "Put-together that asks about only one group."
+    },
+    {
+      "id": "c19",
+      "pass": false,
+      "note": "Take-from change narrated as arriving, so the question makes no sense."
+    },
+    {
+      "id": "c20",
+      "pass": false,
+      "note": "The numbers are there but the scene is nonsense for a six-year-old."
+    }
+  ]
+}

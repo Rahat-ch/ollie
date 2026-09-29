@@ -18,8 +18,9 @@
  * .env.local at the repo root when that file exists.
  */
 import { parseArgs } from "node:util";
-import { runEvals } from "@/evals/evals";
+import { EVAL_RUN_ACCESS, runEvals } from "@/evals/evals";
 import { writeCharts, writeReport } from "@/evals/files";
+import { readLabelFiles } from "@/evals/label-files";
 import { formatEvalResults } from "@/evals/format";
 import { describeGeneration, evalReport } from "@/evals/report";
 import { createRecorder } from "@/generation/telemetry";
@@ -58,6 +59,7 @@ async function main(): Promise<void> {
     sessions,
     coach,
     recorder,
+    labels: readLabelFiles(EVAL_RUN_ACCESS),
     stories: { generation: coach.generation, name: coach.storyName, judge: judge.judge, judgeName: judge.name },
     summaries: { generation: coach.generation, name: coach.name, judge: judge.judge, judgeName: judge.name },
     onSession: values.fake

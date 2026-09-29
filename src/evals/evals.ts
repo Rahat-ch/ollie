@@ -4,16 +4,20 @@
  * the Coach, for its Hypotheses; the Story evals, validity and Judge
  * readability, over a fixed sample of Problems; and the Parent Summary
  * evals, validity and Judge faithfulness, over the Coach run's own
- * Sessions. The held-out Learners are
+ * Sessions; and human-human agreement between every two people who labelled
+ * the same set. The held-out Learners are
  * scored in their own split and are never used to tune the Coach prompt.
  * Pure over its inputs: on the fake the same options give the same results.
  */
 import { telemetrySection, type Recorder, type TelemetrySection } from "@/generation/telemetry";
 import type { Generation } from "@/generation";
+import { agreementOfAll, type PairAgreement } from "./agreement";
 import { convergenceReport, TARGET_ACCURACY_BAND, type ConvergenceReport } from "./convergence";
 import { evidenceIntegrity, scoreHypotheses, type LearnerHypotheses, type PlanSources } from "./hypotheses";
+import type { AnyLabelFile } from "./labels";
 import { SIMULATED_LEARNERS, type SimulatedLearnerId } from "./learners";
 import { baselinePlanner, coachPlanner, runLearner, type LearnerRun, type SessionTrace } from "./run";
+import { finalRun } from "./sealed";
 import { mean, share, summariseSplits, wilsonInterval, type Interval, type Split } from "./stats";
 import { runStoryEvals, type StoryEvalOptions, type StoryReport } from "./stories";
 import { runSummaryEvals, summarySample, type SummaryEvalOptions, type SummaryReport } from "./summaries";
@@ -63,6 +67,12 @@ export type EvalResults = {
   readonly hypotheses: HypothesisReport;
   readonly stories: StoryReport;
   readonly summaries: SummaryReport;
+  /**
+   * Human-human agreement and kappa for every two labellers of the same set,
+   * over the items both labelled: the ceiling the Judge is held to, beside
+   * its own calibration. Empty until some set has two labellers.
+   */
+  readonly humanAgreement: readonly PairAgreement[];
   /** What the run's model calls used and are estimated to have cost. Zero throughout on the fake. */
   readonly telemetry: TelemetrySection;
 };
@@ -78,18 +88,29 @@ export type EvalOptions = {
   readonly sessions: number;
   readonly coach: CoachGeneration;
   /** The Story writer and the Judge, with the names the report records for them. */
-  readonly stories: Omit<StoryEvalOptions, "sample" | "concurrency">;
+  readonly stories: Omit<StoryEvalOptions, "sample" | "concurrency" | "calibrationAccess">;
   /** The Parent Summary writer and the Judge; the sample is the Coach run's own Sessions. */
-  readonly summaries: Omit<SummaryEvalOptions, "sample" | "concurrency">;
+  readonly summaries: Omit<SummaryEvalOptions, "sample" | "concurrency" | "calibrationAccess">;
   /**
    * Where the adapters report every model call. The run reads it once at the
    * end for the report's telemetry section; without one that section is
    * empty rather than absent.
    */
   readonly recorder?: Recorder;
+  /** Every label file, read with `EVAL_RUN_ACCESS`; none means no human-human agreement to report. */
+  readonly labels?: readonly AnyLabelFile[];
   /** Called after every Session of every Coach run, so a long run can show progress. */
   readonly onSession?: (learner: SimulatedLearnerId, trace: SessionTrace) => void;
 };
+
+/**
+ * The Eval Run reads both halves of every labelled set. Its Judge gate is
+ * fixed on the whole of both Calibration Sets by Pre-registration 1 (row 10),
+ * so a run is a scoring run, never a tuning one, and the human-human
+ * agreement beside it is over the same items. Code that tunes the Judge or
+ * the claim reader reads the open half only (src/evals/sealed.ts).
+ */
+export const EVAL_RUN_ACCESS = finalRun("the Eval Run: the Judge gate is fixed on the whole of both Calibration Sets by Pre-registration 1, row 10");
 
 const sum = (values: readonly number[]): number => values.reduce((a, b) => a + b, 0);
 
@@ -149,14 +170,14 @@ export function hypothesisReport(runs: readonly LearnerRun[]): HypothesisReport 
 export async function runEvals(options: EvalOptions): Promise<EvalResults> {
   const { sessions, coach, onSession } = options;
   const baseline = await Promise.all(SIMULATED_LEARNERS.map((learner) => runLearner(learner, baselinePlanner, sessions)));
-  const storiesPromise = runStoryEvals(options.stories);
+  const storiesPromise = runStoryEvals({ ...options.stories, calibrationAccess: EVAL_RUN_ACCESS });
   const coached = await Promise.all(
     SIMULATED_LEARNERS.map((learner) =>
       runLearner(learner, coachPlanner(coach.generation), sessions, (trace) => onSession?.(learner.id, trace)),
     ),
   );
   const stories = await storiesPromise;
-  const summaries = await runSummaryEvals({ ...options.summaries, sample: summarySample(coached) });
+  const summaries = await runSummaryEvals({ ...options.summaries, sample: summarySample(coached), calibrationAccess: EVAL_RUN_ACCESS });
   return {
     sessions,
     targetAccuracyBand: TARGET_ACCURACY_BAND,
@@ -168,6 +189,7 @@ export async function runEvals(options: EvalOptions): Promise<EvalResults> {
     hypotheses: hypothesisReport(coached),
     stories,
     summaries,
+    humanAgreement: agreementOfAll(options.labels ?? []),
     // Read last, so every call the run made is in it.
     telemetry: telemetrySection(options.recorder?.calls() ?? [], sessions * SIMULATED_LEARNERS.length),
   };
