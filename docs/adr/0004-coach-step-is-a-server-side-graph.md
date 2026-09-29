@@ -1,9 +1,11 @@
 ---
-status: accepted
+status: superseded
 date: 2026-09-28
 ---
 
 # The Coach step is a LangGraph graph on the server; the engine's rules stay in the engine
+
+> **Superseded on 2026-09-29.** LangGraph was removed to keep the project simple (decision 41 in `.scratch/harness/decisions.md`). The Coach route runs the plain server Coach step again: `serverCoachStep` over the engine's `coachStep`, in `src/coach/server.ts`. It keeps the check against the Problem IDs and the Plan Space rebuilt from the body, the one retry with every reason, the Baseline, the cancellation when the browser goes, and the route's 75 s deadline. The SDK's own retries replace the graph's transport retries, and nothing is traced. The rest of this ADR is kept as history.
 
 The Coach step runs in `POST /api/coach` as a LangGraph graph:
 - build the input;

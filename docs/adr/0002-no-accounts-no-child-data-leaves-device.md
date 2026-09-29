@@ -24,4 +24,4 @@ We chose this because the Learner is under 13. COPPA treats a child's voice as p
 - The Parent Summary and the Coach are written from a Session's own evidence and never from a name: the Summary calls the Learner "your child", and no first name is sent for either.
 - The Character speaks, the Learner taps. Do not add voice input without re-reading the research and COPPA's rules on children's voice data.
 - Multiple devices do not share a Profile. Acceptable for a game with no accounts.
-- Tracing (LangSmith, added 2026-09-28) runs in `pnpm eval` only, where every input is a Simulated Learner. No route sends anything to a tracing or evaluation service, and the Jev claim reader runs in the eval only.
+- Nothing is traced, in the app or in `pnpm eval` (tracing was added to the eval on 2026-09-28 and removed on 2026-09-29). No route sends anything to a tracing or evaluation service, and the Jev claim reader runs in the eval only.
