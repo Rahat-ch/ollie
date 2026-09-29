@@ -16,7 +16,7 @@ The engine's retry-with-reasons is an edge in the graph, not the `retryPolicy`.
 
 Also out of scope: no checkpointer, no interrupt, no `createAgent`, no LangChain chat model, and nothing imported by the browser. The README shows the graph drawn from the compiled graph itself.
 
-**Blocked by:** 10
+**Blocked by:** 04 (done). Re-pointed 2026-09-28 from 10: the graph needs the server-side Coach step, not the Phase 1 results.
 
 **Status:** ready-for-agent
 

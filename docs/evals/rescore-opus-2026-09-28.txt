@@ -1,0 +1,28 @@
+pnpm eval:rescore over the three Opus 5 live reports of 2026-09-18, run on 2026-09-28 at commit 8caa714 with no model call. Stored scores left of each arrow, the current scorer's right of it. No value changed.
+
+docs/evals/2026-09-18T18-12-41Z.json (the Anthropic adapter on claude-opus-5, 20 Sessions), stored -> rescored:
+
+Strong                   |  detection no weakness planted -> no weakness planted  |  false positives 2 of 11 -> 2 of 11
+Average                  |  detection no weakness planted -> no weakness planted  |  false positives 0 of 9 -> 0 of 9
+Weak                     |  detection no weakness planted -> no weakness planted  |  false positives 1 of 11 -> 1 of 11
+Crossing-ten weakness    |  detection crossing-ten never -> crossing-ten never  |  false positives 1 of 8 -> 1 of 8
+Change-unknown weakness  |  detection change-unknown 13 -> change-unknown 13  |  false positives 0 of 15 -> 0 of 15
+Fast fatigue             |  detection no weakness planted -> no weakness planted  |  false positives 3 of 15 -> 3 of 15
+
+docs/evals/2026-09-18T18-41-44Z.json (the Anthropic adapter on claude-opus-5, 20 Sessions), stored -> rescored:
+
+Strong                   |  detection no weakness planted -> no weakness planted  |  false positives 1 of 10 -> 1 of 10
+Average                  |  detection no weakness planted -> no weakness planted  |  false positives 2 of 13 -> 2 of 13
+Weak                     |  detection no weakness planted -> no weakness planted  |  false positives 2 of 12 -> 2 of 12
+Crossing-ten weakness    |  detection crossing-ten 6 -> crossing-ten 6  |  false positives 2 of 9 -> 2 of 9
+Change-unknown weakness  |  detection change-unknown 16 -> change-unknown 16  |  false positives 0 of 12 -> 0 of 12
+Fast fatigue             |  detection no weakness planted -> no weakness planted  |  false positives 0 of 8 -> 0 of 8
+
+docs/evals/2026-09-18T19-09-56Z.json (the Anthropic adapter on claude-opus-5, 20 Sessions), stored -> rescored:
+
+Strong                   |  detection no weakness planted -> no weakness planted  |  false positives 2 of 12 -> 2 of 12
+Average                  |  detection no weakness planted -> no weakness planted  |  false positives 4 of 10 -> 4 of 10
+Weak                     |  detection no weakness planted -> no weakness planted  |  false positives 2 of 14 -> 2 of 14
+Crossing-ten weakness    |  detection crossing-ten 6 -> crossing-ten 6  |  false positives 2 of 9 -> 2 of 9
+Change-unknown weakness  |  detection change-unknown never -> change-unknown never  |  false positives 0 of 9 -> 0 of 9
+Fast fatigue             |  detection no weakness planted -> no weakness planted  |  false positives 2 of 11 -> 2 of 11

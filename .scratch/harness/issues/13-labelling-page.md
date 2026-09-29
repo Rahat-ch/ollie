@@ -16,7 +16,7 @@ Before anyone tunes anything, half of each set is sealed at random with a fixed 
 
 The owner may label through a LangSmith annotation queue. The labels land in the same JSON.
 
-**Blocked by:** 10
+**Blocked by:** None (can start immediately). Re-pointed 2026-09-28 from 10.
 
 **Status:** ready-for-agent
 

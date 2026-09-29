@@ -10,7 +10,7 @@ A replay target turns stored reports into experiments at no model cost. The Phas
 
 The committed JSON reports stay the record. LangSmith is the view, on the free Developer plan.
 
-**Blocked by:** 10
+**Blocked by:** None for the experiments and the replay of stored reports. The Opus-against-Sonnet comparative experiment needs 07's Sonnet reports; add it when they exist. Re-pointed 2026-09-28 from 10.
 
 **Status:** ready-for-agent
 
