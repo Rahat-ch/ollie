@@ -12,6 +12,7 @@
  */
 import { zeroCall, type Telemetry } from "@/generation/telemetry";
 import type { StoryInput, SummaryInput, SummaryOutput } from "@/generation/types";
+import { NICKNAME_PLACEHOLDER } from "@/story/nickname";
 import { describeProblem } from "@/story/prompt";
 import { validateStory } from "@/story/validate";
 import { evidenceParts } from "@/summary/assistance";
@@ -59,6 +60,8 @@ export const JUDGE_AGREEMENT_THRESHOLD = 0.8;
 export const JUDGE_KAPPA_FLOOR = 0.6;
 
 export const STORY_JUDGE_SYSTEM_PROMPT = `You judge one word problem written for a Grade 1 child, age 6 or 7, who hears it read aloud once and then answers by tapping a number.
+
+Every Story is written with ${NICKNAME_PLACEHOLDER} where the child's name goes, and the app puts the child's Nickname in its place before the Story is read aloud. Read ${NICKNAME_PLACEHOLDER} as a name and never fail a Story for it.
 
 The numbers, sentence count, word count, and vocabulary have already been checked by a program. You judge what a program cannot. The Story passes only if all three hold:
 1. Readability: a 6-year-old could follow it after hearing it once. Simple, natural sentences; nothing confusing, garbled, or odd.

@@ -49,6 +49,14 @@ export type StoryReadability = {
   readonly passRateInterval: Interval | null;
 };
 
+/** Readability over the Stories the Judge read. */
+export const storyReadability = (passed: number, judged: number): StoryReadability => ({
+  judged,
+  passed,
+  passRate: share(passed, judged),
+  passRateInterval: wilsonInterval(passed, judged),
+});
+
 export type StoryReport = {
   readonly generation: string;
   readonly validity: StoryValidity;
@@ -94,7 +102,7 @@ export async function runStoryEvals(options: StoryEvalOptions): Promise<StoryRep
     );
     const judged = stories.filter((t) => t.judged !== undefined);
     const passed = judged.filter((t) => t.judged?.pass).length;
-    readability = { judged: judged.length, passed, passRate: share(passed, judged.length), passRateInterval: wilsonInterval(passed, judged.length) };
+    readability = storyReadability(passed, judged.length);
   }
   return {
     generation: options.name,
