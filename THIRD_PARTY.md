@@ -40,7 +40,7 @@ Both fonts are under the **SIL Open Font License 1.1** and are self-hosted with 
 
 ## Open-source dependencies
 
-**LangGraph** (`@langchain/langgraph` and `@langchain/core`, both MIT) runs the Coach step on the server as a graph (ADR 0004); no page loads it (`pnpm bundle:check`). It brings in `langsmith` (MIT), whose tracing sends nothing unless `LANGSMITH_TRACING` or `LANGCHAIN_TRACING_V2` is set, and neither is set in production.
+**LangGraph** (`@langchain/langgraph` and `@langchain/core`, both MIT) runs the Coach step on the server as a graph (ADR 0004); no page loads it (`pnpm bundle:check`). It brings in `langsmith` (MIT), whose tracing sends nothing unless `LANGSMITH_TRACING` or `LANGCHAIN_TRACING_V2` is set, and neither is set in production. `langsmith` 0.10.5 is also a pinned devDependency of its own: `pnpm eval` traces its calls and makes each run a LangSmith experiment when `LANGSMITH_TRACING` and `LANGSMITH_API_KEY` are both set, and `pnpm eval:langsmith` replays stored reports as experiments (`docs/evals/README.md`, "LangSmith"). No route imports it (`src/evals/langsmith/no-route-tracing.test.ts`, `pnpm bundle:check`).
 
 Every npm package in the installed tree, including devDependencies and optionalDependencies, with the licence declared in its `package.json`. The table is generated; run `node scripts/third-party.mjs --write` to refresh it. Platform-specific optional packages (for example `lightningcss-<platform>`) appear as installed on the machine that ran the audit; the Linux production image installs the corresponding `linux-x64-musl` variant of the same package, under the same licence.
 

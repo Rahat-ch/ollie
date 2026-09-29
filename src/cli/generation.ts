@@ -15,9 +15,15 @@ import { voiceRenderer, type VoiceRenderer } from "@/lib/voice-renderer";
 
 export type Mode = "fake" | "real";
 
+/** The process environment, with .env.local read into it when the repo has one. */
+export function cliEnv(): NodeJS.ProcessEnv {
+  if (existsSync(".env.local")) process.loadEnvFile(".env.local");
+  return process.env;
+}
+
 /** The environment, with .env.local read over it when the repo has one. */
 function localEnv(): Env {
-  if (existsSync(".env.local")) process.loadEnvFile(".env.local");
+  cliEnv();
   return readEnv();
 }
 
