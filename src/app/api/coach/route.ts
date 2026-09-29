@@ -25,9 +25,9 @@ import { modelRoute } from "@/lib/model-route";
 
 export const POST = modelRoute({
   schema: CoachInputSchema,
-  run: async (input, apiKey, signal) => {
+  run: async (input, apiKey, signal, telemetry) => {
     const { anthropicGeneration } = await import("@/generation/anthropic");
-    return serverCoachStep(anthropicGeneration({ apiKey }), input, signal);
+    return serverCoachStep(anthropicGeneration({ apiKey, telemetry }), input, signal);
   },
   deadline: { ms: COACH_SERVER_DEADLINE_MS, answer: serverBaseline },
 });

@@ -1,8 +1,9 @@
 /**
  * What a run of the models cost. Every call behind the Generation seam and
  * every Judge call is reported to a recorder, which the caller passes to the
- * adapter: never a global, so the app's routes record nothing and only the
- * eval CLI installs one for its run. The fake reports the same call shape
+ * adapter, never a global. The eval CLI installs one for its run and keeps
+ * every call; the app's model routes install the daily spend cap, which
+ * keeps only each call's dollars (src/lib/spend-cap.ts). The fake reports the same call shape
  * with no tokens and no milliseconds, so a fake run exercises the path.
  * Each call is kept with its own wall time and tokens, not only summed, so
  * a report can say how slow the slow calls were (p50 and p95 per operation).

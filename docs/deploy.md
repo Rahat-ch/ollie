@@ -49,6 +49,68 @@ Without `ELEVENLABS_API_KEY` and `ELEVENLABS_VOICE_ID` the speech route answers 
    - switch the `ollie` record back to **DNS only**, redeploy or wait for Traefik to retry, confirm the Let's Encrypt cert, then switch back to **Proxied**; or
    - keep the proxy on and use SSL/TLS mode **Full** (not strict) until the origin certificate is in place, then move to **Full (strict)**.
 
+## Abuse guard on the model routes
+
+The model routes (`/api/coach`, `/api/summary`, `/api/story`, `/api/speech`) are public and unauthenticated, and each can spend money. Four things stand between them and a run-up bill. There is no captcha and no invite key.
+
+| Layer | Where | What it does |
+| --- | --- | --- |
+| Origin check | `src/proxy.ts` → `src/lib/abuse-guard.ts` | A `/api/*` request whose `Origin` does not name the host it was sent to gets **403**. A request with no `Origin` is refused too: every browser sends one on a POST, same-origin ones included, so only a script arrives without it. Host and port are compared, not the scheme, because TLS ends before the container. |
+| Token bucket | the same proxy | Per client address: a burst of 60 requests, then 1 a second. Past that, **429** with `Retry-After`. A Session makes about 25 requests over several minutes. The address is `CF-Connecting-IP`, else the first `X-Forwarded-For`, else `X-Real-IP`. |
+| Daily spend cap | `src/lib/spend-cap.ts`, in the routes | **$5 a day** of Anthropic spend, summed from the telemetry's per-call cost estimate, reset at **midnight UTC**. Past it the Coach and Summary routes answer **503**, which the device treats as a model it could not reach: the Baseline Plan and the template Summary. The Story route answers the template Story. Speech renders stop too; lines already on the volume are still served. |
+| Edge rate limit | Cloudflare, set by hand (below) | Drops a flood at the edge before it reaches the container. |
+
+`/api/health` is outside the origin check and the bucket, so Coolify and the Docker `HEALTHCHECK` keep working.
+
+**Speech has its own allowance.** ElevenLabs bills characters against the plan's quota, not dollars the telemetry can price, so the speech route counts the characters it sends to be rendered: **20,000 a day**, also reset at midnight UTC. A line already rendered comes off the volume and costs nothing. Renders stop when either the character allowance or the $5 cap is spent, so past the cap the app spends on no vendor until midnight UTC.
+
+**What the in-memory counts mean.** One container serves the app, so the bucket and the day's spend live in memory. A redeploy or restart forgets the day's spend, which allows at most one more day's cap. Calls already in flight when the cap is reached can take the day a few cents past $5. The cap is an estimate from the published rates, never the invoice; set a monthly spend limit in the Anthropic console as the hard stop.
+
+**Trusting the address headers.** `CF-Connecting-IP` is set by Cloudflare, which overwrites any value a client sends. A request that reaches the Hetzner host directly, not through Cloudflare, can set it to anything and so rotate addresses past the bucket; the origin check and the spend cap still hold. To close that, allow ports 80 and 443 on the host's firewall only from [Cloudflare's IP ranges](https://www.cloudflare.com/ips/) (optional; Let's Encrypt renewals then need the DNS-01 challenge or a temporary rule).
+
+### Cloudflare rate-limiting rule (by hand, once)
+
+The owner sets this up in the dashboard; nothing in the repo can.
+
+1. In the Cloudflare dashboard, open the `rahatcodes.com` zone.
+2. Go to **Security** → **WAF** → **Rate limiting rules**, and select **Create rule**.
+3. **Rule name:** `ollie model routes`.
+4. **If incoming requests match…** Use the expression editor (**Edit expression**) and paste:
+
+   ```
+   (http.host eq "ollie.rahatcodes.com" and starts_with(http.request.uri.path, "/api/") and http.request.uri.path ne "/api/health")
+   ```
+
+   If the plan's editor does not offer `starts_with` or the host field, build it with the field pickers instead: **URI Path** *starts with* (or *contains*) `/api/`, **and** **URI Path** *does not equal* `/api/health`.
+5. **With the same characteristics:** **IP** (the default; on the Free plan it is the only choice).
+6. **When rate exceeds:** **50** requests per **10 seconds**. The app's own bucket allows a burst of 60 and then 1 a second, so a real Session never comes near this; it only catches floods.
+7. **Then take action:** **Block**, with the default response (HTTP **429**).
+8. **For duration:** **10 seconds** (the Free plan's only choice; longer on paid plans is fine).
+9. **Deploy**. The rule applies only while the `ollie` DNS record is **Proxied** (orange cloud).
+
+To confirm it, send more than 50 requests in 10 seconds from one machine, as in the checks below, and look for the rule under **Security** → **Events**.
+
+### Checking the guard from outside
+
+Against the live site after a deploy (or `http://localhost:<port>` on a local `pnpm build` and the standalone server, with the `Origin` changed to match):
+
+```sh
+# 403: another site's Origin.
+curl -si -X POST https://ollie.rahatcodes.com/api/coach \
+  -H 'Origin: https://evil.example' -H 'Content-Type: application/json' -d '{}'
+
+# 429: a burst from one address. The first 60 reach the route (400 for the empty body), the rest are refused.
+for i in $(seq 1 62); do
+  curl -s -o /dev/null -w '%{http_code}\n' -X POST https://ollie.rahatcodes.com/api/story \
+    -H 'Origin: https://ollie.rahatcodes.com' -H 'Content-Type: application/json' -d '{}'
+done | sort | uniq -c
+
+# 200: the health check is untouched.
+curl -s -o /dev/null -w '%{http_code}\n' https://ollie.rahatcodes.com/api/health
+```
+
+Through Cloudflare the burst may be answered 429 by the edge rule before the app's bucket, which is fine: either proves the limit.
+
 ## Running the image locally
 
 Docker is required (it is not installed on the Mac Mini used for development, so this is for another machine or CI).

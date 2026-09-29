@@ -12,11 +12,17 @@
  * A route with a deadline also stops the call when the deadline passes and
  * answers with its own fallback instead, which says why: the route, not the
  * browser's patience, decides when a slow model is given up on.
+ *
+ * Every call the operation makes is priced into the day's spend, and once
+ * the day has spent the cap the route answers 503 without calling at all,
+ * as it does with no key, until midnight UTC (src/lib/spend-cap.ts).
  */
 import { NextResponse } from "next/server";
 import type { z } from "zod";
 import { errorMessage } from "./errors";
 import { readEnv, requireEnv } from "./env";
+import { CAP_REACHED, modelSpend, spendTelemetry, type DailyAllowance } from "./spend-cap";
+import type { Telemetry } from "@/generation/telemetry";
 
 /** How long the route lets the operation run, and what it answers instead once that has passed. */
 export type RouteDeadline<T> = {
@@ -30,17 +36,20 @@ export type ModelRoute<T> = {
   readonly schema: z.ZodType<T>;
   /**
    * The operation, given the checked body, the key the server holds, and a
-   * signal that aborts when the request does or the deadline passes. The
-   * operation passes it into the model call.
+   * signal that aborts when the request does or the deadline passes, and
+   * the telemetry that prices each call into the day's spend. The operation
+   * passes the signal into the model call and the telemetry to the adapter.
    */
-  readonly run: (input: T, apiKey: string, signal: AbortSignal) => Promise<unknown>;
+  readonly run: (input: T, apiKey: string, signal: AbortSignal, telemetry: Telemetry) => Promise<unknown>;
   readonly deadline?: RouteDeadline<T>;
+  /** The day's spend the cap is checked against; the server's shared one unless a test passes its own. */
+  readonly spend?: () => DailyAllowance;
 };
 
 /** Marks the deadline winning the race against the operation. */
 const PASSED = Symbol("deadline passed");
 
-export function modelRoute<T>({ schema, run, deadline }: ModelRoute<T>): (request: Request) => Promise<Response> {
+export function modelRoute<T>({ schema, run, deadline, spend = modelSpend }: ModelRoute<T>): (request: Request) => Promise<Response> {
   return async function POST(request: Request): Promise<Response> {
     const parsed = schema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
@@ -52,6 +61,8 @@ export function modelRoute<T>({ schema, run, deadline }: ModelRoute<T>): (reques
     } catch (error) {
       return NextResponse.json({ error: errorMessage(error) }, { status: 503 });
     }
+    const today = spend();
+    if (today.exhausted()) return NextResponse.json({ error: CAP_REACHED }, { status: 503 });
     const stop = new AbortController();
     const signal = AbortSignal.any([request.signal, stop.signal]);
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -60,7 +71,7 @@ export function modelRoute<T>({ schema, run, deadline }: ModelRoute<T>): (reques
       if (deadline) timer = setTimeout(() => resolve(PASSED), deadline.ms);
     });
     try {
-      const outcome = await Promise.race([run(parsed.data, apiKey, signal), passed]);
+      const outcome = await Promise.race([run(parsed.data, apiKey, signal, spendTelemetry(today)), passed]);
       if (outcome !== PASSED) return NextResponse.json(outcome);
       const reason = `the model did not answer within the server's deadline of ${Math.round(deadline!.ms / 1000)} s`;
       stop.abort(new Error(reason));

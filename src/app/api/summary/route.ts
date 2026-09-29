@@ -17,9 +17,9 @@ import { serverSummary } from "@/summary/server";
 
 export const POST = modelRoute({
   schema: SummaryInputSchema,
-  run: async (input, apiKey, signal) => {
+  run: async (input, apiKey, signal, telemetry) => {
     const { anthropicGeneration } = await import("@/generation/anthropic");
     // The signal cancels the call when the browser gives up on it.
-    return serverSummary(anthropicGeneration({ apiKey }), input, signal);
+    return serverSummary(anthropicGeneration({ apiKey, telemetry }), input, signal);
   },
 });
