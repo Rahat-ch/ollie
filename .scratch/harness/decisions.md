@@ -129,4 +129,8 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - Ticket 12 starts now and adds the Opus-against-Sonnet comparison once ticket 07's reports exist.
     - Ticket 07's live runs may run at any time before Phase 3 changes the Coach prompt. Ticket 16 is blocked by 07.
     - The Phase 1 post waits for ticket 10.
+37. **Ollie's voice.**
+    - The new voice is `RxxDqtqDp9ZV3RZpYuL0`, designed on `eleven_ttv_v3` from the unchanged brief, rendered on `eleven_v4`.
+    - It won the blind A/B 15 to 0 against the old voice on `eleven_v3` (2026-09-28).
+    - All bundled lines are re-rendered.
 
