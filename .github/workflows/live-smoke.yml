@@ -1,0 +1,48 @@
+# The live smoke eval: one Simulated Learner for three Sessions (the
+# Diagnostic Session and two Coach-planned ones) on the real models. It fails
+# unless Evidence Integrity is 1.00 and no Plan came from the Baseline.
+# Started by hand only, never on a schedule: every run spends API budget.
+# Without the ANTHROPIC_API_KEY secret it skips, and makes no call.
+name: Live smoke eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      learner:
+        description: Simulated Learner id (see src/evals/learners.ts)
+        required: false
+        default: crossing-ten-weakness
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - name: Skip without the ANTHROPIC_API_KEY secret
+        if: env.ANTHROPIC_API_KEY == ''
+        run: echo "::notice title=Live smoke eval skipped::The ANTHROPIC_API_KEY secret is not set, so no live call was made."
+      - if: env.ANTHROPIC_API_KEY != ''
+        uses: actions/checkout@v4
+      - if: env.ANTHROPIC_API_KEY != ''
+        uses: pnpm/action-setup@v4
+      - if: env.ANTHROPIC_API_KEY != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - if: env.ANTHROPIC_API_KEY != ''
+        run: pnpm install --frozen-lockfile
+      - name: One Learner, three Sessions, live
+        if: env.ANTHROPIC_API_KEY != ''
+        run: pnpm coach --real --learner "$LEARNER" --sessions 2 --assert
+        env:
+          LEARNER: ${{ inputs.learner }}
