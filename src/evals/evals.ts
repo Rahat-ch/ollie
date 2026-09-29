@@ -101,7 +101,19 @@ export type EvalOptions = {
   readonly labels?: readonly AnyLabelFile[];
   /** Called after every Session of every Coach run, so a long run can show progress. */
   readonly onSession?: (learner: SimulatedLearnerId, trace: SessionTrace) => void;
+  /**
+   * Runs each part of the run that calls a model: each Learner's Coach run,
+   * the Stories, the Summaries. The eval command passes LangSmith's when
+   * tracing is on (src/evals/langsmith/tracing.ts), so each part is one
+   * trace; without one each part simply runs, and the results are the same.
+   */
+  readonly span?: EvalSpan;
 };
+
+/** Runs one named part of an Eval Run and returns what it returned. */
+export type EvalSpan = <T>(name: string, run: () => Promise<T>) => Promise<T>;
+
+const untraced: EvalSpan = (_name, run) => run();
 
 /**
  * The Eval Run reads both halves of every labelled set. Its Judge gate is
@@ -168,16 +180,20 @@ export function hypothesisReport(runs: readonly LearnerRun[]): HypothesisReport 
  * so a real adapter finishes in the time of one Learner.
  */
 export async function runEvals(options: EvalOptions): Promise<EvalResults> {
-  const { sessions, coach, onSession } = options;
+  const { sessions, coach, onSession, span = untraced } = options;
   const baseline = await Promise.all(SIMULATED_LEARNERS.map((learner) => runLearner(learner, baselinePlanner, sessions)));
-  const storiesPromise = runStoryEvals({ ...options.stories, calibrationAccess: EVAL_RUN_ACCESS });
+  const storiesPromise = span("stories", () => runStoryEvals({ ...options.stories, calibrationAccess: EVAL_RUN_ACCESS }));
   const coached = await Promise.all(
     SIMULATED_LEARNERS.map((learner) =>
-      runLearner(learner, coachPlanner(coach.generation), sessions, (trace) => onSession?.(learner.id, trace)),
+      span(`coach: ${learner.id}`, () =>
+        runLearner(learner, coachPlanner(coach.generation), sessions, (trace) => onSession?.(learner.id, trace)),
+      ),
     ),
   );
   const stories = await storiesPromise;
-  const summaries = await runSummaryEvals({ ...options.summaries, sample: summarySample(coached), calibrationAccess: EVAL_RUN_ACCESS });
+  const summaries = await span("summaries", () =>
+    runSummaryEvals({ ...options.summaries, sample: summarySample(coached), calibrationAccess: EVAL_RUN_ACCESS }),
+  );
   return {
     sessions,
     targetAccuracyBand: TARGET_ACCURACY_BAND,
