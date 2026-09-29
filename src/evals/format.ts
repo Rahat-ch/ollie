@@ -130,7 +130,7 @@ function validityLines(validity: Validity): string[] {
  * of the agreement is skill (kappa against the two trivial Judges), then the
  * score it earned or the condition that withheld it.
  */
-function judgeLines(
+export function judgeLines(
   judge: { readonly name: string; readonly calibration: Calibration },
   noun: string,
   scoreName: string,
@@ -198,11 +198,11 @@ const seconds = (ms: number): string => `${(ms / 1000).toFixed(1)} s`;
  * moved, the time they took in all, how long the middle call and the 95th
  * percentile call took (a total hides a slow tail that runs past a
  * deadline), and what the published rate table says that cost; then what
- * one Session of the Coach cost. The dollars are an
- * estimate from the rates on the day, never the invoice, and a model with
- * no published rate is said to be undefined rather than guessed at.
+ * one Session of the Coach cost, unless the run had no Coach. The dollars
+ * are an estimate from the rates on the day, never the invoice, and a model
+ * with no published rate is said to be undefined rather than guessed at.
  */
-export function formatTelemetry(telemetry: TelemetrySection): string {
+export function formatTelemetry(telemetry: TelemetrySection, { coach = true }: { readonly coach?: boolean } = {}): string {
   const latency = (ms: number | null | undefined): string => (ms == null ? "-" : seconds(ms));
   const row = (name: string, totals: TelemetrySection["total"], each?: Latency): string[] => [
     name,
@@ -222,8 +222,12 @@ export function formatTelemetry(telemetry: TelemetrySection): string {
       ...TELEMETRY_OPERATIONS.map((operation) => row(operation, telemetry.byOperation[operation], telemetry.latency[operation])),
       row("Total", telemetry.total),
     ]),
-    `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
-      `${money(perSession.dollarsPerSession)} per Session over ${perSession.sessions} Sessions`,
+    ...(coach
+      ? [
+          `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
+            `${money(perSession.dollarsPerSession)} per Session over ${perSession.sessions} Sessions`,
+        ]
+      : []),
   ].join("\n");
 }
 
