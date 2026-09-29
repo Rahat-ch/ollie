@@ -8,7 +8,7 @@
 
 The eval runs every Learner under both families and the Baseline. The report gives Sessions to Mastery per family, with the Coach-minus-Baseline difference and its interval, ready for the 0.5-Skill non-inferiority test.
 
-**Blocked by:** 15
+**Blocked by:** None (15 is wontfix, decision 41). Parked for after the demo.
 
 **Status:** ready-for-agent
 

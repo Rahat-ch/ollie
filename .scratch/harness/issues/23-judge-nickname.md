@@ -25,7 +25,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** needs-triage (written 2026-09-29, on hold until the owner's review of what the demo needs, decision 41)
+**Status:** ready-for-agent (the owner put it in the demo's scope on 2026-09-29, decision 41)
 
 - [ ] The prompt names the placeholder through `NICKNAME_PLACEHOLDER`; a test holds it
 - [ ] `pnpm eval:rejudge --fake` runs on a stored report with no network, and a test checks its figures against a hand-computed case
