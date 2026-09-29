@@ -25,9 +25,23 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] `git grep -iE "langgraph|langsmith|@langchain|coachGraph|LANGSMITH"` finds nothing outside `docs/research/`, the stored reports, `.scratch/` history and ADR 0004's superseded body
-- [ ] The Coach route's tests and `src/coach/` tests pass with the same cases as before (accepted, retried with reasons, Baseline after two rejections, unreachable, deadline, abort)
-- [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm eval --fake`, `pnpm build`, `pnpm licenses:check` and the Coach browser tests (`e2e/coach.spec.ts`, desktop-chrome) pass; CI's check and docker jobs are green
-- [ ] A fake `pnpm eval` on this branch writes a report identical to one on `main` apart from `generatedAt`
+- [x] `git grep -iE "langgraph|langsmith|@langchain|coachGraph|LANGSMITH"` finds nothing outside `docs/research/`, the stored reports, `.scratch/` history and ADR 0004's superseded body
+- [x] The Coach route's tests and `src/coach/` tests pass with the same cases as before (accepted, retried with reasons, Baseline after two rejections, unreachable, deadline, abort)
+- [x] `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm eval --fake`, `pnpm build`, `pnpm licenses:check` and the Coach browser tests (`e2e/coach.spec.ts`, desktop-chrome) pass; CI's check and docker jobs are green
+- [x] A fake `pnpm eval` on this branch writes a report identical to one on `main` apart from `generatedAt`
+
+## Comments
+
+**2026-09-29, implementation (PR #73).**
+- **Deleted:** the Coach graph (`src/coach/graph.ts` and its tests, `src/cli/coach-graph.ts`); all of `src/evals/langsmith/` and `src/cli/eval-langsmith.ts`; `scripts/bundle-check.mjs` (every check in it was about LangGraph or LangSmith), with its CI step; and the `coach:graph`, `eval:langsmith` and `bundle:check` scripts.
+- **Dependencies:** `@langchain/langgraph`, `@langchain/core` and `langsmith` are out of `package.json` and the lockfile, and `THIRD_PARTY.md` is regenerated.
+- **The Coach files are back to 40c4ec7:** `src/coach/server.ts`, `coach.ts` and `index.ts` are byte-identical. `route.ts` and `model-route.ts` differ from it only by ticket 05's spend cap. The route uses the SDK's default retries again, and the `maxRetries` option is gone.
+- **The eval files:** `src/cli/eval.ts`, `src/cli/generation.ts` and `src/evals/evals.ts` are back to before ticket 12. Ticket 13's labels, ticket 05's cap, ticket 06's Sonnet move and the Docker job all survive.
+- **Tests:** a new unreachable-Coach case is in `coach.test.ts`. The stronger signal test from ticket 11 is kept in `server.test.ts`. The deadline stays covered by `src/play/coach-timeout.test.ts` and `e2e/coach.spec.ts`.
+- **Docs:** ADR 0004 is superseded. ADR 0002 says nothing is traced. ADR 0003 is amended. The README and the evals docs lose LangGraph and LangSmith. `docs/evals/evidence.md` no longer pins a test count.
+- **Pre-registration 1:** two dated notes in its Findings say the route's `maxRetries: 0` contrast no longer holds. The finding text and everything above Results are unchanged.
+- **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm test` (788), `pnpm eval --fake`, `pnpm build`, `pnpm licenses:check`, and `e2e/coach.spec.ts` on desktop-chrome. A fake eval report is identical to main's apart from `generatedAt`. CI's check and docker jobs are green.
+- **Reviewed (orchestrator):** two axes, standards and spec. The three stale docs they found are fixed in 3285779.
+- **Not verified:** anything live.

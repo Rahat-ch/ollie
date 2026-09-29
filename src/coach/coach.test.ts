@@ -3,6 +3,7 @@ import { baselinePlan, DIAGNOSTIC_PLAN, emptyNotes, newProfile, runSession, scri
 import { getSimulatedLearner, simulatedLearner } from "@/evals/learners";
 import { fakeGeneration } from "@/generation/fake";
 import type { CoachInput, CoachOutput, Generation } from "@/generation/types";
+import { ModelUnavailableError } from "@/lib/errors";
 import type { CoachStep } from "./types";
 import { checkCoachOutput, coachInput, coachSession, sessionBounds } from "./coach";
 
@@ -155,6 +156,24 @@ describe("coachSession after a failed retry", () => {
       { attempt: 2, reasons: ["network down"] },
     ]);
     expect(retryInputs[0].rejected).toEqual({ reasons: ["network down"] });
+  });
+
+  it("uses the Baseline Plan at once when the Coach cannot be reached, and never retries", async () => {
+    let calls = 0;
+    const generation = fakeGeneration({
+      runCoach: () => {
+        calls += 1;
+        return Promise.reject(new ModelUnavailableError("ANTHROPIC_API_KEY is not set"));
+      },
+    });
+
+    const step = await coachSession(generation, result, notes);
+
+    expect(calls).toBe(1);
+    expect(step.source).toBe("baseline");
+    expect(step.plan).toEqual(baselinePlan(result.profile));
+    expect(step.notes).toEqual(notes);
+    expect(step.rejections).toEqual([{ attempt: 1, reasons: ["ANTHROPIC_API_KEY is not set"], unavailable: true }]);
   });
 
   it("rejects malformed output before the engine's checks run", async () => {
