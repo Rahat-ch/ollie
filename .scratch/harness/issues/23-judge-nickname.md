@@ -25,10 +25,32 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent (the owner put it in the demo's scope on 2026-09-29, decision 41)
+**Status:** resolved
 
-- [ ] The prompt names the placeholder through `NICKNAME_PLACEHOLDER`; a test holds it
-- [ ] `pnpm eval:rejudge --fake` runs on a stored report with no network, and a test checks its figures against a hand-computed case
-- [ ] The re-judge reads the open half only; the seal's caller test is unchanged and passes
-- [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm eval --fake` and `pnpm build` pass
-- [ ] After merge: both Arms re-judged and published as exploratory; 9c unchanged; spend logged (the orchestrator)
+- [x] The prompt names the placeholder through `NICKNAME_PLACEHOLDER`; a test holds it
+- [x] `pnpm eval:rejudge --fake` runs on a stored report with no network, and a test checks its figures against a hand-computed case
+- [x] The re-judge reads the open half only; the seal's caller test is unchanged and passes
+- [x] `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm eval --fake` and `pnpm build` pass
+- [x] After merge: both Arms re-judged and published as exploratory; 9c unchanged; spend logged (the orchestrator)
+
+## Comments
+
+**2026-09-29, implementation (PR #74).**
+- **The prompt.** One paragraph is added to `STORY_JUDGE_SYSTEM_PROMPT`, built from `NICKNAME_PLACEHOLDER`. It was written once. A test holds the sentence and checks that `judge.ts` has no second copy of the string.
+- **The command.** `pnpm eval:rejudge --report <file> ... [--fake] [--out <dir>]`: `src/evals/rejudge.ts`, with its tests, and `src/cli/eval-rejudge.ts`.
+  - It gates each report on the open half of the Story Calibration Set (`"tuning"` access, no new `finalRun` caller), with the eval's own thresholds and `wilsonInterval`.
+  - It prints the stored and re-judged readability, the gate, the fails that mention the placeholder (new and stored), and every changed verdict. It ends with the Cost block.
+  - `--fake` writes to the temp directory.
+- **Decided in the PR.**
+  - Stories are judged even when the gate fails; only the readability score is withheld.
+  - Placeholder mentions are counted with `/nickname|placeholder/i`.
+  - The files are named `rejudge-<date>`, so `latestReportFile` never picks one up.
+- **Review fixes.** A two-axis review led to shared helpers: `describeJudge`, `scoreLine` and `storyReadability`. `formatTelemetry` no longer takes a flag, and the command's names are clearer.
+
+**2026-09-29, the live run (orchestrator).**
+- **What ran.** All six stored reports were re-judged in one run: 238 Judge calls, $0.5607. The output is `docs/evals/rejudge-2026-09-29T21-50-24Z.{txt,json}`.
+- **Placeholder mentions.** 0 of the 99 re-judged fails mention the placeholder, against 33 of 46 before.
+- **Readability.** Sonnet 5.5's Stories re-judge at 0.500 to 0.567. Sonnet 5's Stories (the Opus Arm) re-judge at 0.276 to 0.414 under the same Judge. So row 9c's drop is the Judge, not the writer. The Sonnet 5.5 Judge is harsh on Theme fit.
+- **The gate.** It opened in all six runs on the open half (8 or 9 of 10).
+- **Where it is published.** In `docs/evals/preregistration-1.md`, after the follow-up probe, labelled exploratory. Row 9c's FAIL is unchanged. The spend and the latency probe's $0.93, which had not been logged, are now in the budget log.
+

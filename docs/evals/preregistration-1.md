@@ -120,6 +120,8 @@ A stopped series is reported as it stands, with the runs it has, and it is not a
 | 2026-09-29 | Sonnet 5.5 run 1, `2026-09-29T19-10-40Z.json` | $6.7164 | $6.78 |
 | 2026-09-29 | Sonnet 5.5 run 2, `2026-09-29T19-24-39Z.json` | $6.3714 | $13.15 |
 | 2026-09-29 | Sonnet 5.5 run 3, `2026-09-29T19-37-11Z.json` | $6.9060 | $20.06 |
+| 2026-09-29 | Latency probe, one Learner serially (`latency-probe-2026-09-29T19-50-09-896Z.json`), recorded here after the fact | $0.93 | $20.99 |
+| 2026-09-29 | Exploratory Story re-judge, harness ticket 23 (`rejudge-2026-09-29T21-50-24Z.json`), 238 Judge calls | $0.5607 | $21.55 |
 
 The three Opus runs of 2026-09-18 ($79.86) predate this budget and are not counted against it. The owner should correct this line if that is wrong. Any live CI smoke run that has been started by hand since ticket 02 has to be added here from its log. None is recorded at the time of writing.
 
@@ -225,3 +227,29 @@ Sonnet also retried 5 Plans in 360, against Opus's 2, and none fell back to the 
 - **The tail is occasional slow generation on the API side.** It happens in serial use too, so the live app, which makes one Coach call at a time, will see it.
 - **Serial latency without the tail:** p50 23.1 s and p95 35.7 s. Calls lengthen as the Learner Notes grow: 10 to 15 s in the first Sessions, 30 to 35 s by Session 17. So row 6's 30 s line would fail even without the tail.
 - **Next step: engineering.** Stream the Coach call and abandon it on silence (no tokens for a set time) instead of on total time. Hedge it: send a second request when the first stalls, and keep whichever finishes first.
+
+**Exploratory: the Story Judge told about the placeholder, 2026-09-29.** This was done after the fact and changes no verdict. Row 9c's FAIL stands as pre-registered.
+
+- **What changed.** Harness ticket 23 added one sentence to the Story Judge's prompt (`STORY_JUDGE_SYSTEM_PROMPT`, `src/evals/judge.ts`). It says `{{nickname}}` stands for the child's Nickname, which the app fills in, and that the Judge must never fail a Story for it. The sentence was written once and not tuned.
+- **The run.** `pnpm eval:rejudge` re-judged the stored Stories of all six reports with the new prompt on the Sonnet 5.5 Judge. That covers the three Sonnet 5.5 runs, and the three Opus-Arm runs, whose Stories Sonnet 5 wrote. Each report's gate ran on the open half of the Story Calibration Set only (10 Stories), so the sealed half stays unscored for Pre-registration 2. The output is [rejudge-2026-09-29T21-50-24Z.txt](./rejudge-2026-09-29T21-50-24Z.txt), with every verdict and reason in the [JSON](./rejudge-2026-09-29T21-50-24Z.json). It cost $0.56.
+
+| Stories | Stored readability | Re-judged readability (new prompt, Sonnet 5.5 Judge) | Open-half gate |
+|---|---|---|---|
+| Sonnet 5.5 writer, run 1 | 14 of 30 (0.467) | 17 of 30 (0.567, CI 0.392 to 0.726) | 9 of 10, kappa 0.80 |
+| Sonnet 5.5 writer, run 2 | 14 of 30 (0.467) | 16 of 30 (0.533, CI 0.361 to 0.698) | 8 of 10, kappa 0.60 |
+| Sonnet 5.5 writer, run 3 | 16 of 30 (0.533) | 15 of 30 (0.500, CI 0.332 to 0.668) | 8 of 10, kappa 0.60 |
+| Sonnet 5 writer (Opus Arm), run 1 | 20 of 30 (0.667, Opus 5 Judge) | 11 of 30 (0.367, CI 0.219 to 0.545) | 9 of 10, kappa 0.80 |
+| Sonnet 5 writer (Opus Arm), run 2 | 21 of 29 (0.724, Opus 5 Judge) | 8 of 29 (0.276, CI 0.147 to 0.457) | 9 of 10, kappa 0.80 |
+| Sonnet 5 writer (Opus Arm), run 3 | 19 of 29 (0.655, Opus 5 Judge) | 12 of 29 (0.414, CI 0.255 to 0.593) | 8 of 10, kappa 0.60 |
+
+What it shows:
+
+- **The placeholder problem is gone.** None of the 99 re-judged fails mentions the placeholder, against 33 of 46 stored Sonnet-Judge fails. This was checked by reading the reasons, not only the count.
+- **Readability barely moved.** It rose from 0.467 to 0.533 up to 0.500 to 0.567 for the Sonnet 5.5 Stories. The Sonnet 5.5 Judge still fails about half of them, now mostly on Theme fit ("a bare sum with a Theme word pasted on") and on stiff phrasing such as "at the start". Read against row 9c's 0.55 line, one run of three would clear it.
+- **With the Judge held fixed, the newer writer does better.** Sonnet 5.5's Stories score 0.500 to 0.567, and Sonnet 5's score 0.276 to 0.414, under the same Judge and prompt. So row 9c's drop comes from the Judge changing (Opus 5 to Sonnet 5.5), and a stricter reading of Theme fit, not from a worse Story writer.
+- **Caveats.**
+  - The gate is 10 Stories, not the 20 of row 10, and two runs sit exactly on its lines (8 of 10, kappa 0.60).
+  - Each Story was judged once, and some identical or near-identical Stories got different verdicts across runs.
+  - The Sonnet 5.5 Judge disagrees with the owner's labels on 1 or 2 of the 10 open Stories. On the Theme rubric it is harsher than both the owner and the Opus 5 Judge.
+  - Whether that harshness is right is a rubric question for Pre-registration 2. It is not settled here.
+

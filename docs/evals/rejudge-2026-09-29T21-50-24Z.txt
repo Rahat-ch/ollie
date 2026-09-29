@@ -1,0 +1,177 @@
+Stories judged again by the Anthropic adapter on claude-sonnet-5-5, exploratory and after the fact
+
+docs/evals/2026-09-29T19-10-40Z.json: 30 Stories by the Anthropic adapter on claude-sonnet-5-5
+Stored (Judge: the Anthropic adapter on claude-sonnet-5-5, gate on 20 Stories): Readability: 14 of 30 Stories pass (47%, 95% CI 0.302 to 0.639)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 9 of 10 Stories (90%, 95% CI 0.596 to 0.982), threshold 80%
+  Agreement beyond chance: kappa 0.80, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 17 of 30 Stories pass (57%, 95% CI 0.392 to 0.726)
+Fails that mention the placeholder: 0 of 13 (stored: 11 of 16)
+Verdicts changed: 5 of 30 Stories with a stored verdict
+  fail -> pass  puppies, take-from: "{{nickname}} sees 15 puppies in the yard, then 6 go away. How many puppies are left?"
+    The story is short and clear, 6 puppies leaving from 15 matches taking away, it asks how many are left without stating the answer, and the yard scene with puppies fits the theme.
+  fail -> pass  puppies, add-to-change: "{{nickname}} saw 1 puppy in the yard, and then some more puppies came, and now there are 6. How many puppies came?"
+    The story gives the start (1) and end (6), asks how many came without stating the answer, is simple enough for a 6-year-old to follow, and is set in a puppy yard scene.
+  pass -> fail  ocean, add-to-change: "{{nickname}} saw 4 crabs on the sand at the start, and then some more came, so now there are 5. How many came?"
+    The arithmetic fits (start 4, end 5, asks how many came, never states 1), but it reads as a bare sum with a crab word pasted on, with no ocean scene or detail, and 'at the start' sounds like a math problem rather than a natural story.
+  fail -> pass  ocean, take-from-change: "{{nickname}} saw 8 fish at the reef, and some swam away, so now there are 1. How many fish went away?"
+    The story gives the start (8) and the end (1), narrates fish leaving, asks how many went away without stating the number, and is a simple ocean reef scene a 6-year-old can follow.
+  fail -> pass  fairies, take-from-change: "{{nickname}} saw 6 fairies in the garden, and some flew away, so now there are 1. How many fairies went away?"
+    The story gives the start of 6 and the end of 1, says some fairies flew away without stating how many, and asks how many went away, all in a simple fairy garden scene a 6-year-old could follow.
+
+docs/evals/2026-09-29T19-24-39Z.json: 30 Stories by the Anthropic adapter on claude-sonnet-5-5
+Stored (Judge: the Anthropic adapter on claude-sonnet-5-5, gate on 20 Stories): Readability: 14 of 30 Stories pass (47%, 95% CI 0.302 to 0.639)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 8 of 10 Stories (80%, 95% CI 0.490 to 0.943), threshold 80%
+  Agreement beyond chance: kappa 0.60, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 16 of 30 Stories pass (53%, 95% CI 0.361 to 0.698)
+Fails that mention the placeholder: 0 of 14 (stored: 12 of 16)
+Verdicts changed: 10 of 30 Stories with a stored verdict
+  pass -> fail  puppies, take-from: "{{nickname}} sees 15 puppies in the yard, and then 6 go away. How many puppies are left?"
+    The story is clear and correctly narrates 15 puppies with 6 leaving and asks how many are left, but it reads as a bare sum with 'puppies' pasted in, since there is no real scene beyond the yard and 'go away' gives no reason or action.
+  fail -> pass  puppies, take-from-change: "{{nickname}} saw 15 puppies in the yard, and some went away, so now there are 7. How many puppies went away?"
+    The Story is simple and clear, gives the start of 15 and the end of 7 with puppies leaving, asks how many went away without stating it, and is set in a puppy yard scene.
+  pass -> fail  ocean, add-to: "{{nickname}} sees 4 fish at the start, then 1 more fish comes. How many fish are there now, {{nickname}}?"
+    The arithmetic fits (4 fish plus 1 more, asked how many now), but it reads as a bare sum with only the word 'fish' as Theme, with no ocean setting such as the sea, a reef, or waves.
+  pass -> fail  ocean, add-to-change: "{{nickname}} saw 4 crabs on the sand at the start, and then some more came, and now there are 5. How many came?"
+    The arithmetic fits (start 4, some came, now 5, asks how many came, never states the number), but it reads as a bare sum with crabs pasted in and no ocean scene, and the phrasing 'at the start' is stiff for a 6-year-old.
+  fail -> pass  ocean, take-from-change: "{{nickname}} saw 8 fish at the reef, and then some swam away, and now there are 1. How many fish went away?"
+    The story gives the start (8) and end (1), narrates fish leaving, asks how many went away without stating it, and is a simple ocean reef scene a 6-year-old can follow.
+  fail -> pass  fairies, add-to: "{{nickname}} saw 7 fairies in a garden at the start, and then 5 more came. How many fairies are there now?"
+    The story is simple and clear, narrates 7 fairies with 5 more arriving (addition) and asks how many now, and it is set in a fairy garden scene.
+  fail -> pass  fairies, take-from: "{{nickname}} saw 13 fairies in the garden, and then 9 flew away. How many fairies are left?"
+    The story clearly narrates 13 fairies with 9 flying away, matches the take-away arithmetic, asks how many are left, and is a simple fairy-garden scene a 6-year-old can follow.
+  fail -> pass  fairies, take-from-change: "{{nickname}} saw 6 fairies in the garden, and then some flew away, so now there are 1. How many fairies went away?"
+    It states the start of 6 and the end of 1, asks how many flew away without giving that number, uses simple wording a 6-year-old can follow, and sets the scene with fairies in a garden.
+  pass -> fail  trucks, put-together: "{{nickname}} saw 12 trucks and 3 rocks at the site. How many things are there altogether?"
+    The Story does name two groups (12 trucks, 3 rocks) and asks for a total, but it reads as a bare sum with trucks and rocks pasted in, with no truck scene, and 'things' makes the combined question vague.
+  fail -> pass  trucks, add-to-change: "{{nickname}} saw 9 trucks at the start, and then some more came to the road, so now there are 10. How many trucks came?"
+    The story gives start 9 and end 10, asks how many trucks came without stating the number, and is a simple, clear road scene with trucks, though the phrasing 'at the start' is slightly stilted.
+
+docs/evals/2026-09-29T19-37-11Z.json: 30 Stories by the Anthropic adapter on claude-sonnet-5-5
+Stored (Judge: the Anthropic adapter on claude-sonnet-5-5, gate on 20 Stories): Readability: 16 of 30 Stories pass (53%, 95% CI 0.361 to 0.698)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 8 of 10 Stories (80%, 95% CI 0.490 to 0.943), threshold 80%
+  Agreement beyond chance: kappa 0.60, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 15 of 30 Stories pass (50%, 95% CI 0.332 to 0.668)
+Fails that mention the placeholder: 0 of 15 (stored: 10 of 14)
+Verdicts changed: 7 of 30 Stories with a stored verdict
+  pass -> fail  puppies, take-from: "{{nickname}} sees 15 puppies in the yard, and then 6 go away. How many puppies are left?"
+    The Story matches the arithmetic (15 puppies, 6 leave, ask how many left) and is easy to follow, but it reads as a bare sum with 'puppies' pasted in, with no scene such as puppies playing or where they go.
+  pass -> fail  ocean, add-to: "{{nickname}} sees 4 fish at the start, then 1 more fish comes. How many fish are there now, {{nickname}}?"
+    The arithmetic fits (4 fish plus 1 more, asking how many now), but it reads as a bare sum with only the word 'fish' as ocean flavor and no real ocean scene, so it fails the Theme check.
+  pass -> fail  ocean, add-to-change: "{{nickname}} saw 4 crabs on the sand at the start, and then some more came, so now there are 5. How many came?"
+    The arithmetic fits, since it gives the start of 4 and the end of 5 and asks how many came without stating it, but it reads as a bare sum with an ocean word added rather than a real ocean scene, and the phrasing 'at the start' is stilted for a 6-year-old.
+  fail -> pass  fairies, add-to: "{{nickname}} saw 7 fairies in a garden at the start, and then 5 more came. How many fairies are there now?"
+    The story is simple and clear, narrates 7 fairies with 5 more arriving (addition) and asks how many now, and it is set in a fairy garden scene.
+  pass -> fail  fairies, add-to-change: "{{nickname}} saw 2 fairies at the start. Some more came, and now there are 5, so how many came?"
+    The arithmetic fits, since it gives the start of 2 and the end of 5 and asks how many came without stating 3, but it reads as a bare sum with 'fairies' pasted in and has no fairy scene such as a garden, wings, or sparkles.
+  fail -> pass  fairies, take-from-change: "{{nickname}} saw 6 fairies in the garden, and then some flew away, so now there are 1. How many fairies went away?"
+    The story gives the start (6) and the end (1), asks how many flew away without stating it, uses simple language a 6-year-old can follow, and sets the scene naturally in a fairy garden.
+  fail -> pass  trucks, add-to-change: "{{nickname}} saw 9 trucks at the start, and then some more came to the road, so now there are 10. How many trucks came?"
+    The story gives start 9 and end 10, asks how many trucks came without stating the number, and is simple, clear, and set in a trucks scene.
+
+docs/evals/2026-09-18T18-12-41Z.json: 30 Stories by the Anthropic adapter on claude-sonnet-5
+Stored (Judge: the Anthropic adapter on claude-opus-5, gate on 20 Stories): Readability: 20 of 30 Stories pass (67%, 95% CI 0.488 to 0.808)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 9 of 10 Stories (90%, 95% CI 0.596 to 0.982), threshold 80%
+  Agreement beyond chance: kappa 0.80, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 11 of 30 Stories pass (37%, 95% CI 0.219 to 0.545)
+Fails that mention the placeholder: 0 of 19 (stored: 0 of 10)
+Verdicts changed: 13 of 30 Stories with a stored verdict
+  pass -> fail  puppies, add-to: "{{nickname}} has 2 puppies at the start. Then 5 more puppies come, so how many puppies are there now?"
+    The story is a bare sum with 'puppies' substituted for objects and has no scene, setting, or puppy activity, so it fails the Theme criterion even though the adding action and question match the problem.
+  pass -> fail  puppies, add-to-change: "{{nickname}} had 1 puppy at the start, and more puppies came until there were 6. How many puppies came?"
+    It gives the start (1) and end (6) and asks how many came without stating it, but it reads as a bare sum with 'puppies' pasted in, with no scene, setting, or action to make it a puppy story.
+  pass -> fail  dinosaurs, take-from: "{{nickname}} had 9 dinosaurs playing at home. Then 5 dinosaurs went away, so how many dinosaurs were left?"
+    The story fits the subtraction (9 start, 5 leave, asks how many left) and is easy to follow, but the dinosaur theme is only a word swapped in ("dinosaurs playing at home" with no dinosaur scene), so it reads as a bare sum with a theme word pasted on.
+  pass -> fail  dinosaurs, add-to-change: "{{nickname}} saw 4 dinosaurs playing at the start, and more dinosaurs came until there were 6. How many dinosaurs came?"
+    It has the right start, end, and question without stating the answer, but it reads like a bare sum with 'dinosaurs' pasted in, with stiff phrasing ('at the start') and almost no dinosaur scene, so it fails the Theme fit and is a bit awkward for a young listener.
+  pass -> fail  dinosaurs, take-from-change: "{{nickname}} had 14 dinosaurs playing at the start, and now only 9 stay. How many dinosaurs went away?"
+    The Story reads as a bare sum with 'dinosaurs' pasted in, since it has no dinosaur scene and never says that some went away, and 'had 14 dinosaurs playing' is an awkward way for a child to hear it.
+  pass -> fail  space, add-to: "{{nickname}} had 3 rockets at the start. Then 10 more rockets came, so how many rockets are there now?"
+    The arithmetic fits (3 rockets plus 10 more, asking the total), but the Story is a bare sum with 'rockets' pasted in and has no space scene such as a launch pad, stars, or astronauts, so it fails the Theme check.
+  pass -> fail  space, take-from: "{{nickname}} had 5 rockets in the sky. Then 1 went away, so how many rockets are left?"
+    The Story fits the subtraction (5 rockets, 1 leaves, asks how many are left), but the space Theme is only a pasted word: 'rockets in the sky' is odd for space and there is no real space scene, and 'went away' is vague.
+  pass -> fail  space, add-to-change: "{{nickname}} had 7 rockets at the start, and more came until there were 12. How many rockets came?"
+    The arithmetic fits, since it gives start 7 and end 12 and asks how many came without stating 5, but the space theme is only a pasted word: 'rockets' stands in for any object and there is no actual space scene.
+  pass -> fail  ocean, take-from: "{{nickname}} saw 5 shells on the sand. Then 2 shells were gone, so how many shells were left?"
+    The Story says '2 shells were gone' without a clear action of leaving, and it reads like a bare sum with only the word 'shells' and 'sand' as ocean touches, so it is a weak beach scene rather than a clear ocean scene and the phrasing 'so how many' is slightly awkward.
+  pass -> fail  ocean, put-together: "{{nickname}} found 6 shells and then found 7 more shells. How many shells did {{nickname}} have altogether?"
+    The story is a bare sum with 'shells' pasted on: it describes no ocean scene (no beach, waves, or sea), and it uses 'found 7 more' (adding to one kind) rather than naming two different kinds as the problem states.
+  pass -> fail  fairies, put-together: "{{nickname}} saw 11 fairies dancing and 3 more fairies flew in. How many fairies were there altogether?"
+    The Story turns two named kinds into one group that gets 3 more fairies, so it reads as a join action when the problem is a total of two groups, and it has only a thin fairy scene with no setting beyond dancing.
+  fail -> pass  trucks, add-to: "{{nickname}} had 10 trucks at the start, then 5 more trucks came. How many trucks does {{nickname}} have now?"
+    The story is a simple, clear sentence pair that adds 5 arriving trucks to 10 and asks for the total now, and it is set in a trucks theme, though the theme is light.
+  fail -> pass  trucks, add-to-change: "{{nickname}} had 9 trucks at the start, and more trucks came until there were 10. How many trucks came?"
+    It states the start of 9 and end of 10, narrates trucks arriving, asks how many came without giving the number, and is simple and clear about trucks, though the Theme is light.
+
+docs/evals/2026-09-18T18-41-44Z.json: 29 Stories by the Anthropic adapter on claude-sonnet-5
+Stored (Judge: the Anthropic adapter on claude-opus-5, gate on 20 Stories): Readability: 21 of 29 Stories pass (72%, 95% CI 0.543 to 0.853)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 9 of 10 Stories (90%, 95% CI 0.596 to 0.982), threshold 80%
+  Agreement beyond chance: kappa 0.80, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 8 of 29 Stories pass (28%, 95% CI 0.147 to 0.457)
+Fails that mention the placeholder: 0 of 21 (stored: 0 of 8)
+Verdicts changed: 13 of 29 Stories with a stored verdict
+  pass -> fail  puppies, put-together: "{{nickname}} has 6 puppies playing and 4 more puppies come to join them. How many puppies does {{nickname}} have altogether?"
+    The problem asks for two groups of different kinds named together for a total, but the Story narrates 4 more puppies arriving to join, which is an add-to-start action, and both groups are the same kind of puppy.
+  pass -> fail  puppies, add-to-change: "{{nickname}} had 1 puppy at the start, and more puppies came until there were 6. How many puppies came?"
+    The Story fits the arithmetic, but it is a bare sum with 'puppies' pasted in and has no real scene, so it fails the Theme requirement.
+  pass -> fail  puppies, take-from-change: "{{nickname}} had 15 puppies playing in the yard, but now only 7 stay to nap. How many puppies went away?"
+    The Story states the start and end but never says that puppies went away and only implies it with 'now only 7 stay to nap', and it reads as a bare sum with little puppy scene, though the question is correct; more importantly, 'had 15 puppies playing' with 'stay to nap' is slightly muddled about where the rest went.
+  pass -> fail  dinosaurs, take-from: "{{nickname}} had 9 dinosaurs playing in the jungle at the start, but 5 went away. How many dinosaurs are left?"
+    The subtraction fits (9 dinosaurs, 5 go away, ask how many are left), but the Theme is only a pasted-on word: a bare sum with 'in the jungle' and no real dinosaur scene, and the phrasing 'had 9 dinosaurs playing... at the start' is slightly awkward for a child to follow.
+  pass -> fail  dinosaurs, add-to-change: "{{nickname}} saw 4 dinosaurs at the start, and more dinosaurs came until there were 6. How many dinosaurs came?"
+    The arithmetic fits (start 4, end 6, asks how many came, never states 2), but it reads as a bare sum with 'dinosaurs' pasted in, with no scene, setting, or action to make it a dinosaur story.
+  pass -> fail  space, add-to: "{{nickname}} had 3 rockets at start. Then 10 more rockets came, so how many rockets does {{nickname}} have now?"
+    The arithmetic fits (3 rockets plus 10 more asks for the total), but the Story is a bare sum with 'rockets' pasted in, with no space scene, and the phrasing 'at start' is awkward for a 6-year-old.
+  pass -> fail  space, take-from: "{{nickname}} had 5 rockets in the sky. Then 1 went away, so how many rockets are left?"
+    The story fits the subtraction (5, then 1 leaves, ask how many left) and is easy to follow, but the space theme is only a pasted word: 'rockets in the sky' is not a space scene and there is no real space setting like stars, a moon, or a spaceship trip.
+  pass -> fail  space, add-to-change: "{{nickname}} had 7 rockets, then more rockets came and now there are 12 rockets. How many rockets came?"
+    The arithmetic fits (start 7, end 12, asks how many came, never states 5), but it reads as a bare sum with 'rockets' pasted in, with no space scene such as a launch pad, a station, or a mission, so it fails the Theme requirement.
+  pass -> fail  ocean, take-from: "{{nickname}} had 5 shells on the sand. Then 2 shells were gone, so how many shells were left?"
+    The Story says '2 shells were gone' without showing how they went away, and the ocean setting is only a bare mention of shells on sand, so it reads like a bare subtraction sum with a Theme word pasted on.
+  pass -> fail  ocean, put-together: "{{nickname}} found 6 shells and then found 7 more shells. How many shells did {{nickname}} find altogether?"
+    The story is a plain 6+7 addition sum with 'shells' pasted in, with no ocean scene like a beach or waves, so it fails the Theme criterion, and it also describes 7 'more' of the same kind rather than two different kinds.
+  pass -> fail  fairies, add-to-change: "{{nickname}} saw 2 fairies at the start, and more came until there were 5 fairies. How many fairies came?"
+    The arithmetic fits (start 2, end 5, asks how many came, and never states 3), but it reads as a bare sum with the word 'fairies' pasted in, with no fairy scene such as a garden, wings, or sparkle.
+  pass -> fail  trucks, add-to: "{{nickname}} had 10 trucks at the start, then 5 more trucks came. How many trucks are there now?"
+    The Story is a bare sum with 'trucks' swapped in and has no scene, setting, or truck action, so it fails the Theme requirement even though the adding and question are correct.
+  pass -> fail  trucks, put-together: "{{nickname}} has 12 trucks and 3 more trucks at the site. How many trucks does {{nickname}} have altogether?"
+    The Story does not name two different kinds, and the phrase '3 more trucks at the site' is muddled about whether the trucks are added or already there, and it reads like a bare sum with only the word 'trucks' and 'site' for a Theme.
+
+docs/evals/2026-09-18T19-09-56Z.json: 29 Stories by the Anthropic adapter on claude-sonnet-5
+Stored (Judge: the Anthropic adapter on claude-opus-5, gate on 20 Stories): Readability: 19 of 29 Stories pass (66%, 95% CI 0.473 to 0.801)
+Re-judged, gate on the open half of the Story Calibration Set:
+  Judge (the Anthropic adapter on claude-sonnet-5-5): agreed with the Calibration Set on 8 of 10 Stories (80%, 95% CI 0.490 to 0.943), threshold 80%
+  Agreement beyond chance: kappa 0.60, floor 0.60 (an always-pass Judge would score 50%, an always-fail Judge 50%)
+  Readability: 12 of 29 Stories pass (41%, 95% CI 0.255 to 0.593)
+Fails that mention the placeholder: 0 of 17 (stored: 0 of 10)
+Verdicts changed: 9 of 29 Stories with a stored verdict
+  pass -> fail  puppies, put-together: "{{nickname}} has 6 puppies playing and 4 more puppies come to join. How many puppies are there altogether?"
+    The Story narrates puppies arriving to join, which is an add-to action, but the problem needs two different kinds of puppies named together as a total, and both groups are just 'puppies' with no distinction.
+  pass -> fail  dinosaurs, add-to: "{{nickname}} had 8 dinosaurs at the start. Then 7 more dinosaurs came, so how many dinosaurs are there now?"
+    It matches the addition (8 plus 7 more, asked how many now), but it reads as a bare sum with the word dinosaurs pasted in, with no dinosaur scene or setting.
+  pass -> fail  dinosaurs, take-from: "{{nickname}} counts 9 dinosaurs at the start. Then 5 dinosaurs walk away, so how many dinosaurs are left?"
+    The arithmetic matches (9 start, 5 leave, ask how many are left) and it is easy to follow, but it reads as a bare sum with the word 'dinosaurs' swapped in and has no real dinosaur scene, so it fails the Theme fit.
+  pass -> fail  space, add-to: "{{nickname}} had 3 rockets at the start, and then 10 more rockets came. How many rockets does {{nickname}} have now?"
+    The arithmetic is right (3 plus 10 more, asks how many now), but the Theme is only a pasted word: rockets are counted with no space scene such as a launch pad, stars, or a mission, so it reads as a bare sum.
+  pass -> fail  space, take-from-change: "{{nickname}} had 6 rockets, and some went away, leaving 1 rocket. How many rockets went away?"
+    The arithmetic fits (start 6, end 1, asks how many left, never states 5), but it reads as a bare sum with only the word 'rockets' as Theme, with no space scene such as a launch or a sky setting.
+  pass -> fail  ocean, put-together: "{{nickname}} found 6 shells and 7 more shells on the beach. How many shells did {{nickname}} have altogether?"
+    The Story describes a sum that fits the arithmetic, but it names only one kind of item (shells) instead of two different kinds, and the ocean Theme is only a thin beach setting with no real scene.
+  pass -> fail  trucks, add-to: "{{nickname}} had 10 trucks at the start, then 5 more trucks came. How many trucks are there now?"
+    The Story is a bare sum with 'trucks' swapped in and has no scene, setting, or action that makes it feel like it happens in a trucks world, so it fails the Theme requirement.
+  pass -> fail  trucks, take-from: "{{nickname}} had 10 trucks at the start. Then 6 trucks went away, so how many trucks are left?"
+    The Story reads as a bare sum with the word trucks pasted in, with no scene, setting, or reason for the trucks leaving, so it fails the Theme criterion, and 'went away' is also vague.
+  fail -> pass  trucks, add-to-change: "{{nickname}} had 9 trucks at the start, and more trucks came until there were 10. How many trucks came?"
+    The story gives the start of 9 and the end of 10, asks how many trucks came without stating the answer, is simple enough for a 6-year-old to follow, and is clearly about trucks.
+
+Cost (estimated from the published rates on the day, not the invoice); p50 and p95 are per call
+Operation  Model              Calls  Tokens   Time      p50    p95    Estimated
+coach      -                  0      0        0.0 s     -      -      $0.0000
+summary    -                  0      0        0.0 s     -      -      $0.0000
+story      -                  0      0        0.0 s     -      -      $0.0000
+judge      claude-sonnet-5-5  238    202,787  1012.1 s  2.2 s  5.0 s  $0.5607
+Total      claude-sonnet-5-5  238    202,787  1012.1 s  -      -      $0.5607
