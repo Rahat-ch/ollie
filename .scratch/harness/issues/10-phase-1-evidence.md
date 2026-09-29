@@ -13,7 +13,7 @@ Contents:
 
 **Blocked by:** 05, 07, 09, 22 (decision 39: the latency row shows the Coach call before and after streaming and hedging)
 
-**Status:** ready-for-agent
+**Status:** wontfix (folded into 25, decision 44)
 
 - [ ] Every number in the section links to the committed report, test or file it comes from
 - [ ] The failed thresholds are listed as prominently as the passed ones

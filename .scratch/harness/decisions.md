@@ -169,3 +169,9 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - The new one is about 120 lines: the pitch, how it works, the evals, the results (the failures as prominent as the passes), how to run it, the docs, and the licence.
     - The detail moves to `docs/develop.md`, `docs/voice.md` and `docs/powers.md`.
     - Ticket 25 follows 24, which also edits the README. Ticket 10 then fills in the results rows that 22 and 23 produce.
+44. **Fast path to the demo (2026-09-29).**
+    - Ticket 22 (the streamed, hedged Coach call) is parked for after the demo. Why: the Coach runs after a Session and is not on screen.
+    - The latency story is told as found and diagnosed: p95 92.2 to 94.0 s against the 30 s line, and the latency probe traced the tail to occasional slow generation on the API side, not retries or concurrency. The fix is designed and not built.
+    - The investigation's finding is kept in ticket 22's Comments: Sonnet 5.5's default hidden thinking streams nothing while it reasons, so a silence clock needs `display: "summarized"`, measured first.
+    - Ticket 10 (the Phase 1 evidence) is folded into ticket 25. The README's Results section is the Phase 1 evidence.
+    - The demo is the app's basics and the evals, filmed once ticket 25 merges.

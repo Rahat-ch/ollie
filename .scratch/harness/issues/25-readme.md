@@ -27,6 +27,8 @@ Update any links and tests that point at README sections (e.g. `grep -rn "README
 
 **Blocked by:** 24 (it edits the README)
 
+**Scope (2026-09-29, decision 44):** this ticket now also covers ticket 10's evidence: the Results section is the Phase 1 evidence (cost per Session, the abuse guard's live 403 and 429, the voice A/B, the CI badge), ticket 23's re-judge is written in, and ticket 22's placeholder is replaced by the latency story as found and diagnosed.
+
 **Status:** resolved
 
 - [x] The README is at most about 150 lines and has the sections above, in that order
@@ -47,3 +49,11 @@ Update any links and tests that point at README sections (e.g. `grep -rn "README
 - **Test:** `src/docs-links.test.ts` checks that every relative link, and every `#heading` into a Markdown file, in the README, the three new docs, `docs/deploy.md` and the three evals docs resolves.
 - **Verified:** `pnpm typecheck`, `pnpm lint`, `pnpm test` (796) and `pnpm build`.
 
+
+**2026-09-29, scope change (decision 44).** The owner cut the plan to reach the demo faster, and this ticket took on ticket 10's evidence.
+- **Merged main** (04849fa: tickets 23 and 24, and the re-judge of #75). The one conflict, in `docs/evals/README.md`, took main's text plus this ticket's Summary-Judge fix.
+- **Ticket 23's placeholder is now content:** a short note under 9c. Told about the placeholder, the Judge cites it in 0 of 99 fails. Under the same Sonnet 5.5 Judge, Sonnet 5.5's Stories score 0.500 to 0.567 and Sonnet 5's 0.276 to 0.414, so 9c's drop is a stricter Judge, not the writer. It is exploratory, and the FAIL stands. The numbers link to `docs/evals/rejudge-2026-09-29T21-50-24Z.txt`.
+- **Ticket 22's placeholder is gone.** The latency story leads with the comparison: the mean Coach call dropped from 69.9 to 73.3 s (Opus 5) to 29.0 to 31.4 s (Sonnet 5.5), from `telemetry.byOperation.coach` in each report, and cost per Session fell by about 75%. Then the FAIL: 7 to 11 calls a run stall for about 70 s, so p95 is 92.2 to 94.0 s against the 30 s line; without them it is 36 to 42 s. The probe and the pre-registration's findings are linked, and the fix (ticket 22) is designed, not built. No Opus p95 or median is given, because none was recorded. `docs/evals/README.md` gets the same framing, and its "cause is not established" sentence now gives the probe's finding.
+- **Ticket 10 folded in:** "The hardening, measured" lists cost per Session on both Arms, the abuse guard's live 403 and 429 (from ticket 05's live capture, with the commands in `docs/deploy.md`), the voice A/B's 15 to 0 (`docs/voice/ab-tally.json`), and the CI badge. Every number links to its file.
+- **Plan files:** decision 44 added; ticket 22 is needs-triage with the hidden-thinking finding in its Comments; ticket 10 is wontfix.
+- **README:** 129 lines.
