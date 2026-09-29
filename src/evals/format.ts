@@ -7,7 +7,7 @@ import type { EvalResults, HypothesisSplit } from "./evals";
 import type { LearnerHypotheses, PlanSources } from "./hypotheses";
 import { describeWeakness, type SimulatedLearnerId } from "./learners";
 import type { Calibration } from "./judge";
-import { describeGeneration } from "./report";
+import { describeGeneration, describeJudge } from "./report";
 import type { Interval, SplitKey, Validity } from "./stats";
 import type { StoryReport } from "./stories";
 import type { SummaryReport } from "./summaries";
@@ -125,12 +125,24 @@ function validityLines(validity: Validity): string[] {
   ];
 }
 
+/** A Judge's score line: what passed and what that is worth, or the condition that withheld it. */
+export function scoreLine(
+  scoreName: string,
+  noun: string,
+  score: { readonly judged: number; readonly passed: number; readonly passRate: number; readonly passRateInterval: Interval | null } | null,
+  withheld: string | null,
+): string {
+  return score
+    ? `${scoreName}: ${score.passed} of ${score.judged} ${noun} pass (${rate(score.passRate, score.passRateInterval)})`
+    : `${scoreName}: scores withheld — ${withheld}`;
+}
+
 /**
  * The Judge's gate: what it agreed on and what that is worth, then how much
  * of the agreement is skill (kappa against the two trivial Judges), then the
  * score it earned or the condition that withheld it.
  */
-function judgeLines(
+export function judgeLines(
   judge: { readonly name: string; readonly calibration: Calibration },
   noun: string,
   scoreName: string,
@@ -138,13 +150,11 @@ function judgeLines(
 ): string[] {
   const { calibration } = judge;
   return [
-    `Judge (${judge.name === "fake" ? "the fake Judge" : describeGeneration(judge.name)}): agreed with the Calibration Set on ` +
+    `Judge (${describeJudge(judge.name)}): agreed with the Calibration Set on ` +
       `${calibration.agreements} of ${calibration.size} ${noun} (${rate(calibration.agreement, calibration.agreementInterval)}), threshold ${pct(calibration.threshold)}`,
     `Agreement beyond chance: kappa ${calibration.kappa.toFixed(2)}, floor ${calibration.kappaFloor.toFixed(2)} ` +
       `(an always-pass Judge would score ${pct(calibration.alwaysPassAgreement)}, an always-fail Judge ${pct(calibration.alwaysFailAgreement)})`,
-    score
-      ? `${scoreName}: ${score.passed} of ${score.judged} ${noun} pass (${rate(score.passRate, score.passRateInterval)})`
-      : `${scoreName}: scores withheld — ${calibration.withheld}`,
+    scoreLine(scoreName, noun, score, calibration.withheld),
   ];
 }
 
@@ -198,9 +208,10 @@ const seconds = (ms: number): string => `${(ms / 1000).toFixed(1)} s`;
  * moved, the time they took in all, how long the middle call and the 95th
  * percentile call took (a total hides a slow tail that runs past a
  * deadline), and what the published rate table says that cost; then what
- * one Session of the Coach cost. The dollars are an
- * estimate from the rates on the day, never the invoice, and a model with
- * no published rate is said to be undefined rather than guessed at.
+ * one Session of the Coach cost, when the run called the Coach at all. The
+ * dollars are an estimate from the rates on the day, never the invoice, and
+ * a model with no published rate is said to be undefined rather than
+ * guessed at.
  */
 export function formatTelemetry(telemetry: TelemetrySection): string {
   const latency = (ms: number | null | undefined): string => (ms == null ? "-" : seconds(ms));
@@ -222,8 +233,12 @@ export function formatTelemetry(telemetry: TelemetrySection): string {
       ...TELEMETRY_OPERATIONS.map((operation) => row(operation, telemetry.byOperation[operation], telemetry.latency[operation])),
       row("Total", telemetry.total),
     ]),
-    `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
-      `${money(perSession.dollarsPerSession)} per Session over ${perSession.sessions} Sessions`,
+    ...(perSession.coachCalls > 0
+      ? [
+          `Coach: ${money(perSession.dollarsPerCoachCall)} per Coach call over ${perSession.coachCalls} calls, ` +
+            `${money(perSession.dollarsPerSession)} per Session over ${perSession.sessions} Sessions`,
+        ]
+      : []),
   ].join("\n");
 }
 

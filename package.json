@@ -22,6 +22,7 @@
     "eval": "tsx src/cli/eval.ts",
     "eval:chart": "tsx src/cli/eval-chart.ts",
     "eval:rescore": "tsx src/cli/eval-rescore.ts",
+    "eval:rejudge": "tsx src/cli/eval-rejudge.ts",
     "label": "tsx src/cli/label.ts",
     "pool": "tsx src/cli/pool.ts",
     "voice:design": "tsx src/cli/voice-design.ts",

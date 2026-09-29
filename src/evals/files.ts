@@ -1,8 +1,9 @@
-/** The only I/O in the evals: reading and writing dated reports and the chart under docs/evals. */
+/** The only I/O in the evals: reading and writing dated reports, the charts and re-judges under docs/evals. */
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { renderConvergenceChart } from "./chart";
 import { EVAL_CHARTS } from "./charts";
+import type { RejudgeRun } from "./rejudge";
 import { EVALS_DIR, isReportFileName, reportFileName, type EvalReport } from "./report";
 
 export const CHART_FILE = "convergence.svg";
@@ -46,4 +47,16 @@ export function writeCharts(reportFile: string, dir = EVALS_DIR): string[] {
     writeFileSync(target, svg);
     return target;
   });
+}
+
+/** `rejudge-2026-09-29T20-00-00Z`: the dated name a re-judge's JSON and text share, never taken for an Eval Run's report. */
+const rejudgeFileStem = (generatedAt: Date): string => `rejudge-${reportFileName(generatedAt).replace(/\.json$/, "")}`;
+
+/** A re-judge's JSON and the text it printed, side by side under one dated name. Returns both files. */
+export function writeRejudge(run: RejudgeRun, text: string, dir = EVALS_DIR): { readonly json: string; readonly text: string } {
+  mkdirSync(dir, { recursive: true });
+  const stem = path.join(dir, rejudgeFileStem(new Date(run.generatedAt)));
+  writeFileSync(`${stem}.json`, JSON.stringify(run, null, 2) + "\n");
+  writeFileSync(`${stem}.txt`, text + "\n");
+  return { json: `${stem}.json`, text: `${stem}.txt` };
 }

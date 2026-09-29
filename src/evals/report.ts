@@ -21,3 +21,6 @@ export const isReportFileName = (name: string): boolean =>
 /** The Generation that ran the Coach, in prose, from the name the report records. */
 export const describeGeneration = (generation: string): string =>
   generation === "fake" ? "the Generation fake" : `the Anthropic adapter on ${generation}`;
+
+/** The Judge, in prose, from the name the report records. */
+export const describeJudge = (name: string): string => (name === "fake" ? "the fake Judge" : describeGeneration(name));
