@@ -117,12 +117,104 @@ A stopped series is reported as it stands, with the runs it has, and it is not a
 |---|---|---|---|
 | 2026-09-28 | Harness ticket 06: live `pnpm coach --real --sessions 2 --assert`, 3 Coach calls on Sonnet 5.5 | $0.0621 | $0.06 |
 | 2026-09-28 | Re-scoring the three Opus reports (`pnpm eval:rescore`), no model call | $0.00 | $0.06 |
-| | Sonnet 5.5 run 1 | | |
-| | Sonnet 5.5 run 2 | | |
-| | Sonnet 5.5 run 3 | | |
+| 2026-09-29 | Sonnet 5.5 run 1, `2026-09-29T19-10-40Z.json` | $6.7164 | $6.78 |
+| 2026-09-29 | Sonnet 5.5 run 2, `2026-09-29T19-24-39Z.json` | $6.3714 | $13.15 |
+| 2026-09-29 | Sonnet 5.5 run 3, `2026-09-29T19-37-11Z.json` | $6.9060 | $20.06 |
 
 The three Opus runs of 2026-09-18 ($79.86) predate this budget and are not counted against it. The owner should correct this line if that is wrong. Any live CI smoke run that has been started by hand since ticket 02 has to be added here from its log. None is recorded at the time of writing.
 
 ## Results
 
-Not yet run.
+Written on 2026-09-29 from the three Sonnet 5.5 reports, committed unedited: `2026-09-29T19-10-40Z.json` (run 1), `2026-09-29T19-24-39Z.json` (run 2) and `2026-09-29T19-37-11Z.json` (run 3). The sign-off commit (eac6b9b) is timed 18:56:43Z; the first Sonnet report 19:10:40Z. The three runs were sequential, none crashed, and none was repeated. The charts in this folder are now drawn from run 3.
+
+**How to reproduce this table.** From the repo root:
+
+```sh
+node scripts/preregistration-1-results.mjs
+```
+
+It reads the six report files, calls no model and writes nothing. It computes every Wilson interval with the formula of `wilsonInterval` (`src/evals/stats.ts`) and stops with an error if one differs from the interval the report stored; it also recomputes each run's Coach p50 and p95 from `telemetry.calls` and stops if they differ from `telemetry.latency.coach`. `pnpm eval:rescore --report <file>` was run on each Sonnet report as well: stored and re-scored detection and false positives are the same for every Learner in every run.
+
+Values are listed low to high. Pass or fail is read from the point value against the row's line, as the row defines it.
+
+| # | Metric | Sonnet 5.5, three runs | Opus 5, three runs | Threshold (pass) | Result |
+|---|---|---|---|---|---|
+| 1 | Evidence Integrity, each split | tuning: run 1 1.0000 (8573 of 8573, CI 0.9996 to 1.0000); run 2 1.0000 (7323 of 7323, CI 0.9995 to 1.0000); run 3 1.0000 (7248 of 7248, CI 0.9995 to 1.0000)<br>held out: run 1 1.0000 (4067 of 4067, CI 0.9991 to 1.0000); run 2 1.0000 (3609 of 3609, CI 0.9989 to 1.0000); run 3 1.0000 (4369 of 4369, CI 0.9991 to 1.0000)<br>invented Problem IDs: 0 in 35189 citations | 1.0000 in all six split-runs; 1 invented ID in 95,922 | ≥ 0.999 in every split of every run | **pass** |
+| 2 | Claim Agreement, each split | tuning: run 3 0.956 (CI 0.951 to 0.960); run 2 0.980 (CI 0.977 to 0.983); run 1 0.985 (CI 0.982 to 0.987)<br>held out: run 2 0.930 (CI 0.922 to 0.938); run 3 0.994 (CI 0.991 to 0.996); run 1 0.996 (CI 0.994 to 0.998) | tuning 0.923 to 0.940; held out 0.931 to 0.951 | tuning ≥ 0.893; held out ≥ 0.900 | **pass** |
+| 3a | First-attempt Coach Plans, pooled | 355 of 360 (0.986, CI 0.968 to 0.994); 5 retries (per run 3, 0, 2) | 358 of 360 (0.994); 2 retries | ≥ 342 of 360 | **pass** |
+| 3b | Baseline fallbacks, pooled | 0 of 360 (CI 0.000 to 0.011) | 0 of 360 | ≤ 3 of 360 | **pass** |
+| 4a | Detection (prose reader), pooled | 6 of 6 (1.00, CI 0.61 to 1.00); crossing-ten: run 1 Session 6, run 2 Session 14, run 3 Session 6; change-unknown: run 1 Session 10, run 2 Session 12, run 3 Session 5 | 4 of 6; Sessions 6, 6, 13, 16 | ≥ 3 of 6, each weakness named in at least one run | **pass** |
+| 4b | False positives (prose reader), tuning | run 3 7/21 = 0.333 (CI 0.172 to 0.546); run 1 7/19 = 0.368 (CI 0.191 to 0.590); run 2 7/14 = 0.500 (CI 0.268 to 0.732) | 4/39, 7/44, 10/45: 0.103 to 0.222 | every run ≤ 0.222 (10 of 45) | **fail** |
+| 4c | False positives (prose reader), held out | run 3 2/14 = 0.143 (CI 0.040 to 0.399); run 2 2/12 = 0.167 (CI 0.047 to 0.448); run 1 3/10 = 0.300 (CI 0.108 to 0.603) | 3/30, 0/20, 2/20: 0.000 to 0.100 | every run ≤ 0.100 (3 of 30) | **fail** |
+| 5 | Mean Skills Mastered by Session 20 | tuning: run 2 5.00, run 3 5.25, run 1 5.50 (Baseline 6.00)<br>held out: run 1 5.50, run 2 5.50, run 3 6.00 (Baseline 6.00) | tuning 5.75, 5.75, 6.50; held out 5.50, 5.50, 5.00 | tuning ≥ 5.25; held out ≥ 4.50, every run | **fail** |
+| 6 | p95 Coach latency, per run | run 3 p95 92.2 s (p50 26.4 s, 122 calls); run 1 p95 93.4 s (p50 26.0 s, 123 calls); run 2 p95 94.0 s (p50 23.1 s, 120 calls) | not recorded; mean 69.9 to 73.3 s | p95 < 30.0 s in every run | **fail** |
+| 7 | Cost per Session | run 2 $0.0499, run 1 $0.0527, run 3 $0.0541 | $0.2083 to $0.2148 | every run < $0.2083 | **pass** |
+| 8a | Summary validity, first attempt | run 1 6 of 6 (CI 0.610 to 1.000); run 2 6 of 6 (CI 0.610 to 1.000); run 3 6 of 6 (CI 0.610 to 1.000) | 6 of 6 every run | ≥ 5 of 6 in every run | **pass** |
+| 8b | Summary template fallbacks | run 1 0, run 2 0, run 3 0 | 0 every run | 0 in every run | **pass** |
+| 8c | Summary faithfulness (Judge, gate open) | run 1 5 of 6 = 0.833 (CI 0.436 to 0.970); run 2 6 of 6 = 1.000 (CI 0.610 to 1.000); run 3 6 of 6 = 1.000 (CI 0.610 to 1.000) | 6 of 6 every run | ≥ 5 of 6 in every run the gate opened | **pass** |
+| 9a | Story validity, first attempt (of 30) | run 1 30 (CI 0.886 to 1.000); run 2 30 (CI 0.886 to 1.000); run 3 30 (CI 0.886 to 1.000) | 26, 27, 28 | ≥ 24 of 30 in every run | **pass** |
+| 9b | Story validity within three attempts (of 30) | run 1 30, 0 templates (CI 0.886 to 1.000); run 2 30, 0 templates (CI 0.886 to 1.000); run 3 30, 0 templates (CI 0.886 to 1.000) | 30, 29, 29; templates 0, 1, 1 | ≥ 28 of 30 in every run | **pass** |
+| 9c | Story readability (Judge, gate open) | run 1 14 of 30 = 0.467 (CI 0.302 to 0.639); run 2 14 of 30 = 0.467 (CI 0.302 to 0.639); run 3 16 of 30 = 0.533 (CI 0.361 to 0.698) | 20/30, 21/29, 19/29: 0.655 to 0.724 | ≥ 0.55 in every run the gate opened | **fail** |
+| 10 | Judge gate, both Calibration Sets | Stories: run 1 17 of 20 = 0.85 (CI 0.640 to 0.948), kappa 0.71; run 2 17 of 20 = 0.85 (CI 0.640 to 0.948), kappa 0.71; run 3 17 of 20 = 0.85 (CI 0.640 to 0.948), kappa 0.71<br>Summaries: run 1 10 of 10 = 1.00 (CI 0.722 to 1.000), kappa 1.00; run 2 10 of 10 = 1.00 (CI 0.722 to 1.000), kappa 1.00; run 3 10 of 10 = 1.00 (CI 0.722 to 1.000), kappa 1.00 | Stories 20/20 kappa 1.00 every run; Summaries 9/10, 10/10, 10/10 | agreement ≥ 0.80 and kappa ≥ 0.60, both sets, every run | **pass** |
+
+Five rows fail: 4b, 4c, 5, 6 and 9c. None is withheld, because the Judge gate opened on both Calibration Sets in every run. No invented Problem ID appeared in any run (0 of 35,189 citations), so row 1 has none to list.
+
+**Which failures sit inside the Opus Arm's own spread.** None of them does, on the point values.
+
+- **4b, false positives, tuning.** Every Sonnet run (0.333, 0.368, 0.500) is above the worst Opus run (0.222). Only run 3's 0.333 falls inside the worst Opus run's own interval (0.125 to 0.363).
+- **4c, false positives, held out.** Every Sonnet run (0.143, 0.167, 0.300) is above the worst Opus run (0.100). Runs 2 and 3 fall inside that Opus run's interval (0.035 to 0.256), and run 1 does not.
+- **5, Sessions to Mastery.** One run fails, on one split: run 2's tuning mean is 5.00 against the 5.25 line, one Skill on one tuning Learner short. Opus's tuning range was 5.75 to 6.50, so this is below it. Runs 1 and 3 pass on tuning, and run 3's 5.25 sits exactly on the line. The held-out split passes in every run (5.50 to 6.00, at or above Opus's 5.00 to 5.50).
+- **6, p95 Coach latency.** There is no Opus p95 to compare with. Every run is about three times the 30 s line (92.2 to 94.0 s). The line would still fail without the slow tail described below: set aside every call over 60 s, and the p95 of the remaining calls is 36.3, 41.9 and 37.5 s.
+- **9c, Story readability.** 0.467 to 0.533, against Opus's 0.655 to 0.724 and the 0.55 line. Both the writer (Sonnet 5 to Sonnet 5.5) and the Judge (Opus 5 to Sonnet 5.5) changed, so this fail cannot be put down to either one alone. See the findings below.
+
+**Per-role verdicts.**
+
+- **Coach: not acceptable.** Rows 1, 2, 3a, 3b, 4a and 7 pass. Rows 4b, 4c, 5 and 6 fail.
+- **Parent Summary: acceptable.** Rows 8a, 8b and 8c pass. Run 1's faithfulness, 5 of 6, is exactly on the line.
+- **Story writer: not acceptable.** Rows 9a and 9b pass, with 30 of 30 valid on the first attempt in every run. Row 9c fails.
+- **Judge: acceptable on row 10.** The gate opened on both sets in every run. On the Story Calibration Set, Sonnet 5.5 agreed on 17 of 20 (kappa 0.71) in every run, where Opus 5 agreed on 20 of 20.
+
+Nothing was re-run and no threshold was changed.
+
+### Findings outside the pre-registered lines
+
+These are observations made while writing the results. **They change no verdict above.**
+
+**1. The Coach latency tail.** Verified from each run's `telemetry.calls`, with positions counted from 1 in completion order among that run's Coach calls. `node scripts/preregistration-1-results.mjs` prints these figures.
+
+- In all three runs the Coach's p95 is 92.2 to 94.0 s, while its p50 is 23.1 to 26.4 s. The distribution has two separate parts. No Coach call in any run took between 60 and 80 s. Every call over 60 s took 86 to 114 s, and every other call took at most 50.8 s.
+- The slow calls come in rounds of consecutive calls:
+  - run 1: 11 of 123 calls, at positions 31 to 37 (6 of those 7 calls; 36 was not slow) and 98 to 103 (5 of 6; 100 was not slow);
+  - run 2: 11 of 120 calls, at 28 to 34 (6 of 7; 33 was not slow) and 104 to 108 (all 5);
+  - run 3: 7 of 122 calls, at 59 to 64 (all 6) and at 122, the run's last Coach call, alone.
+
+  Runs 1 and 2 put their two rounds in nearly the same places. Run 3 does not.
+- The slow calls do not write more. Their median output was 3,218, 3,888 and 4,039 tokens, against 3,969, 3,593 and 4,007 for the other calls. Their output throughput was 35 to 44 tokens a second, against about 153 to 158 for the other calls. Put another way, every slow call took 65 to 74 s longer than its own output would take at the ordinary rate. That looks like a roughly fixed wait of about 70 s added to an otherwise ordinary call, rather than generation that was slow throughout. It is an inference from wall time and tokens only.
+- The eval runs the six Learners concurrently (`runEvals` in `src/evals/evals.ts`, `Promise.all`), so about six Coach calls are in flight at once. The Stories and their Judge calls also overlap the first Coach Sessions. A round of 5 or 6 slow calls is about the number of calls in flight, which fits one event delaying every call open at that moment. Every call was served by `claude-sonnet-5-5`; the refusal fallback served none.
+- **The cause is not established.** Telemetry records one wall time per call and nothing about what happened inside it. There are two candidates:
+  - SDK-internal retries after a 429 or 529, which telemetry does not record. The eval builds its Coach with the SDK's default retries (`src/cli/generation.ts`), while the live route sets `maxRetries: 0` (`src/app/api/coach/route.ts`).
+  - Concurrency effects on the serving side.
+
+  Nothing in the reports can tell these apart.
+- **The eval may overstate production latency.** The live app makes one Coach call per Learner at a time, not six at once. Also, with retries off, a call that the eval would have waited out would fail or reach the 75 s deadline in production, and the Learner would get the Baseline Plan. So the tail's cost in production would be a Baseline fallback, not a wait. This does not rescue row 6. The calls outside the rounds alone have a p95 of 36 to 42 s, and Coach calls grow over a run as the Notes grow: input from about 3,300 to about 10,000 tokens, output from about 1,000 to about 7,000.
+- **Proposed next step.** Record per call, in telemetry, the SDK's retry count and the request ids it saw. Then time one Learner's 20 Sessions serially on Sonnet 5.5 (about $1 at these runs' cost per Session) to see whether the ~70 s rounds appear without concurrency.
+
+**2. Story readability and the Judge change.** Every Story in both Arms carries the `{{nickname}}` placeholder by design (`NICKNAME_PLACEHOLDER`, `src/story/nickname.ts`). The app fills it in at play time, and the Story Judge's prompt (`STORY_JUDGE_SYSTEM_PROMPT`, `src/evals/judge.ts`) does not mention it.
+
+- The Sonnet 5.5 Judge cites the placeholder as a defect in 11 of its 16, 12 of its 16 and 10 of its 14 failed Stories across the three runs. The Opus 5 Judge cited it in none of its 8 to 10 fails per run.
+- On the Story Calibration Set, Sonnet 5.5 failed 3 human-passed Stories in every run, and 6 of those 9 disagreements cite the placeholder.
+
+So row 9c's fail is at least partly the new Judge reading an intended placeholder as garbled text, and not only the new writer. The row stands as a fail as pre-registered. Anyone choosing the Judge afterwards should know this.
+
+**3. Fewer supported Hypotheses, so higher false-positive rates.** Sonnet 5.5's Coach supported 19, 14 and 21 Hypotheses on the tuning split and 10, 12 and 14 held out. Opus 5 supported 39, 44 and 45, and 30, 20 and 20. The number of false positives is similar: 7, 7 and 7 on tuning against Opus's 4, 7 and 10, and 3, 2 and 2 held out against 3, 0 and 2. The rates in rows 4b and 4c rose mainly because the denominators roughly halved. The rows are defined on the rate, and they fail.
+
+**4. Where Sonnet 5.5 did better than Opus 5.**
+
+- Detection was 6 of 6, with first Sessions 5 to 14, against Opus's 4 of 6 at Sessions 6 to 16.
+- Claim Agreement was above Opus's range in five of the six split-runs.
+- Every Story was valid on the first attempt.
+- Cost per Session was about a quarter of Opus's.
+
+Sonnet also retried 5 Plans in 360, against Opus's 2, and none fell back to the Baseline.
+
+**5. Cost against the planning figure.** The runs cost $6.37 to $6.91, against a planning figure of $10.56 to $10.90 a run. The Sonnet Coach wrote about 0.45 to 0.49M output tokens a run, where the planning figure assumed Opus's 0.80M. No stop rule was reached.
