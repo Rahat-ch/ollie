@@ -10,7 +10,7 @@
 
 **Blocked by:** 11, 12, 14
 
-**Status:** ready-for-agent
+**Status:** wontfix (decision 41: LangChain is removed; ticket 24)
 
 - [ ] README shows the rendered graph and says in one paragraph what the graph owns and what it never owns
 - [ ] Screenshots are committed and every number in them matches a committed report

@@ -40,3 +40,5 @@ Decided here, not in the spec. Tracing wraps `Generation` with `traceable` rathe
 2. `pnpm eval --fake`, which calls no model. The last line names the experiment. In LangSmith, check the dataset `ollie-simulated-learners-v1` (6 Examples), the new experiment (6 runs, each with its feedback, and the run-level scores), and 8 traces in the project `ollie-eval` with the fake's calls nested inside. Do not commit the fake report and charts it writes.
 3. `pnpm eval:langsmith replay`: the three Opus 5 reports become three experiments, 18 traces, no model call.
 4. Tick the second box. When ticket 07's three Sonnet reports are committed, run `pnpm eval:langsmith compare --b docs/evals/<sonnet 1>.json --b docs/evals/<sonnet 2>.json --b docs/evals/<sonnet 3>.json` and tick the fourth. Ticket 07's own runs may be made with the variables set; its reports are unchanged by them.
+
+**2026-09-29, removed.** Decision 41 takes LangChain out of the project; ticket 24 removes this ticket's code. The Coach route runs the plain server Coach step again.

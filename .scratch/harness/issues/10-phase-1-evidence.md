@@ -11,7 +11,7 @@ Contents:
 - the voice A/B tally;
 - the CI badge.
 
-**Blocked by:** 05, 07, 09
+**Blocked by:** 05, 07, 09, 22 (decision 39: the latency row shows the Coach call before and after streaming and hedging)
 
 **Status:** ready-for-agent
 
