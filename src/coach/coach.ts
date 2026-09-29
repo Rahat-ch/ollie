@@ -101,7 +101,7 @@ export function checkCoachOutput(value: unknown, bounds: CoachBounds): CoachChec
   return reasons.length === 0 ? { ok: true, output } : { ok: false, reasons };
 }
 
-export type CoachCall =
+type CoachCall =
   | { readonly ok: true; readonly output: CoachOutput }
   | { readonly ok: false; readonly output?: CoachOutput; readonly reasons: readonly string[]; readonly unavailable?: boolean };
 
@@ -130,7 +130,7 @@ async function callCoach(
 }
 
 /** A rejection carrying the rejected output when there was one. */
-export function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: false }): CoachRejection {
+function rejected(attempt: CoachRejection["attempt"], call: CoachCall & { ok: false }): CoachRejection {
   const rejection = { attempt, reasons: call.reasons, ...(call.unavailable ? { unavailable: true } : {}) };
   return call.output ? { ...rejection, output: call.output } : rejection;
 }
@@ -150,9 +150,7 @@ export function baselineStep(bounds: CoachBounds, notes: LearnerNotes, rejection
  * think a second call would arrive, so the Baseline Plan is used at once.
  * Nor is a call whose caller has gone (its signal aborted): nobody is
  * waiting for the retry. `coachSession` runs it on the Session itself; the
- * Coach route runs the same rule as a LangGraph graph (`coachGraph` in
- * `./graph.ts`) on bounds rebuilt from the body, and a parity test holds
- * the two to the same Coach step on every case.
+ * Coach route runs it (`serverCoachStep`) on bounds rebuilt from the body.
  */
 export async function coachStep(
   generation: Pick<Generation, "runCoach">,
@@ -172,8 +170,7 @@ export async function coachStep(
 /**
  * The Coach step for a completed Session, checked against the Session
  * itself: what the eval and the CLI run on a Generation. The Coach route
- * runs the same rule, as the Coach graph, on the bounds it rebuilds
- * (`serverCoachStep` in `./graph.ts`), and the
+ * runs the same rule on the bounds it rebuilds (`serverCoachStep`), and the
  * device reaches it through the route (`coachThroughServer`).
  */
 export function coachSession(
