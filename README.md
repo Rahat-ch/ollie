@@ -69,21 +69,28 @@ The limits: six hand-designed Simulated Learners who cannot learn from practice,
 
 Row 5 fails on one run's tuning split. The held-out split passes, and the Baseline mastered [6.00][s1] on both. `node scripts/preregistration-1-results.mjs` re-derives every value from the six reports; it calls no model and writes nothing.
 
-What the failures say:
+**Latency (row 6): faster than Opus 5, and still a FAIL.** The mean Coach call dropped from about 71 s on Opus 5 ([69.9 s][o2] to [73.3 s][o1]) to about 30 s on Sonnet 5.5 ([29.0 s][s3] to [31.4 s][s1]), and cost per Session fell by about 75%. Sonnet's median call took [23.1 to 26.4 s][pr], and it wrote about [3,740][s2] to [4,010][s3] output tokens a call against Opus's [6,516][o2] to [6,852][o1]. It still failed the strict pre-registered line, p95 under 30 s, which was tightened before the runs (decision 35). In each run, [7 to 11 of about 120 calls][fu] stalled for roughly 70 s on the API side, which puts p95 at [92.2 to 94.0 s][pr]. Without the stalls, p95 is [36 to 42 s][fu]. Opus 5 has no p95: its reports predate per-call latency.
 
-- **False positives:** Sonnet 5.5 supported [about half as many Hypotheses][pr] as Opus 5, with a similar count of false ones, so the rate rose.
-- **Latency:** the median call took [23 to 26 s][pr], but some calls stalled for [about 70 s][pr]. A serial [probe](docs/evals/latency-probe-2026-09-29T19-50-09-896Z.json) showed the stalls are slow generation on the API side, not retries or rate limits.
-- **Story readability:** the writer and the Judge both changed. The Sonnet 5.5 Judge often marked the intended `{{nickname}}` placeholder as a defect.
+- **Latency, diagnosed but not fixed:** a serial [latency probe][probe] ruled out retries, rate limits and concurrency. The stalls are slow generation on the API side ([follow-up][fu]). The fix, a streamed and hedged Coach call, is designed in [ticket 22][t22] and not built yet. The Coach runs after a Session ends, off screen, so it waits until after the demo.
+- **False positives (4b, 4c):** Sonnet 5.5 supported [about half as many Hypotheses][pr] as Opus 5, with a similar count of false ones, so the rate rose.
+- **Story readability (9c), exploratory re-judge:** the Sonnet 5.5 Judge had been marking the intended `{{nickname}}` placeholder as a defect. Told about it in its prompt, it cites the placeholder in [0 of 99][rj] fails. Under that same Judge, Sonnet 5.5's Stories score [0.500 to 0.567][rj] and Sonnet 5's score [0.276 to 0.414][rj]. So 9c's drop is a stricter Judge, not a worse writer. This was done after the fact, and 9c's FAIL stands ([details][fu]).
 
-Sonnet 5.5 is still the model behind every call: it costs about a quarter as much, its Coach failures are over-eager claims and latency, and Opus 5 was no faster (decision 38 in [decisions.md](.scratch/harness/decisions.md)). The follow-up work is in [.scratch/harness/issues/](.scratch/harness/issues/): a streamed and hedged Coach call for latency, the Minimum-Evidence Rule ([ADR 0005](docs/adr/0005-supported-hypotheses-need-engine-evidence.md)) for over-eager claims, and Pre-registration 2 to re-test.
+Sonnet 5.5 is still the model behind every call (decision 38 in [decisions.md](.scratch/harness/decisions.md)). It is cheaper and faster on average, and its Coach failures are over-eager claims and the latency tail. The follow-up work is in [.scratch/harness/issues/](.scratch/harness/issues/): the streamed and hedged Coach call, the Minimum-Evidence Rule ([ADR 0005](docs/adr/0005-supported-hypotheses-need-engine-evidence.md)) for over-eager claims, and Pre-registration 2 to re-test.
 
-<!-- PENDING (ticket 22, filled in by ticket 10): p95 Coach latency before and after the streamed, hedged Coach call, from the re-run latency probe. Do not invent numbers. -->
-**Coach latency after streaming and hedging:** pending.
+**The hardening, measured:**
 
-<!-- PENDING (ticket 23, filled in by ticket 10): Story readability re-judged with the {{nickname}} note in the Judge's prompt. Exploratory; the pre-registered 9c FAIL stands. Do not invent numbers. -->
-**Story readability re-judged (exploratory):** pending. The pre-registered 9c FAIL stands whatever it shows.
+- **Cost per Session:** Opus 5 [$0.2083][o3] to [$0.2148][o1], Sonnet 5.5 [$0.0499][s2] to [$0.0541][s3].
+- **Abuse guard, on the live site:** a cross-origin POST got [403][t05]. A burst got 429 from the app's own bucket ([69 of 120][t05]) and from the Cloudflare edge rule ([57 of 120][t05]). The commands are in [docs/deploy.md](docs/deploy.md#checking-the-guard-from-outside).
+- **Ollie's voice:** the new voice on `eleven_v4` won the blind A/B [15 to 0][ab] against the old one on `eleven_v3`.
+- **CI:** the badge at the top. Every push runs typecheck, lint, unit tests, `pnpm eval --fake`, the build and the Docker image.
 
 [pr]: docs/evals/preregistration-1.md#results
+[fu]: docs/evals/preregistration-1.md#findings-outside-the-pre-registered-lines
+[probe]: docs/evals/latency-probe-2026-09-29T19-50-09-896Z.json
+[rj]: docs/evals/rejudge-2026-09-29T21-50-24Z.txt
+[t22]: .scratch/harness/issues/22-coach-stream-hedge.md
+[t05]: .scratch/harness/issues/05-abuse-guard.md
+[ab]: docs/voice/ab-tally.json
 [s1]: docs/evals/2026-09-29T19-10-40Z.json
 [s2]: docs/evals/2026-09-29T19-24-39Z.json
 [s3]: docs/evals/2026-09-29T19-37-11Z.json
