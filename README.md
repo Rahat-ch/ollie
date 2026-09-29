@@ -21,6 +21,39 @@ Two seams carry the whole app. **The Loop** is a pure function: given a Session 
 
 Nothing in the second list is ever produced or altered by a model, and everything in the first passes a deterministic check before a child or a parent sees it. The decisions behind this are in [docs/adr/](docs/adr/), and the research the pedagogy rests on is in [docs/research/k5-math-game/](docs/research/k5-math-game/).
 
+### The Coach step on the server
+
+`POST /api/coach` runs the Coach step as a compiled LangGraph graph (`src/coach/graph.ts`, [ADR 0004](docs/adr/0004-coach-step-is-a-server-side-graph.md)). The drawing below is the compiled graph's own, not a copy: `pnpm coach:graph` redraws it into this file, and a test fails when the two differ.
+
+<!-- BEGIN:coach-graph (pnpm coach:graph) -->
+```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
+graph TD;
+	__start__(<p>__start__</p>)
+	buildInput(buildInput)
+	__error_handler__callCoach(__error_handler__callCoach)
+	callCoach(callCoach)
+	validate(validate)
+	accept(accept)
+	baseline(baseline)
+	__end__(<p>__end__</p>)
+	__start__ --> buildInput;
+	accept --> __end__;
+	baseline --> __end__;
+	buildInput --> callCoach;
+	callCoach --> validate;
+	validate -.-> accept;
+	validate -. &nbsp;retry&nbsp; .-> callCoach;
+	validate -.-> baseline;
+	callCoach -.-> validate;
+	classDef default fill:#f2f0ff,line-height:1.2;
+	classDef first fill-opacity:0;
+	classDef last fill:#bfb6fc;
+```
+<!-- END:coach-graph -->
+
+The nodes wrap the engine's functions unchanged: `buildInput` rebuilds the Problem IDs and the Plan Space from the body (`coachInput` when it is given a Session instead), `callCoach` is the one call through the `Generation` seam, `validate` is `checkCoachOutput`, and `baseline` is the Baseline Plan with the Notes from before the Session. The `retry` edge is the engine's one retry, which carries the rejected output and every reason. `callCoach` also has a retry policy for transport errors only (429, 529 and the network), which sends the same request again, and a timeout at the server's deadline; a call that fails either way goes to `__error_handler__callCoach`, which hands it to `validate` as a rejection (LangGraph wires the handler in at run time, so it is drawn unconnected; its hand-off is the dotted `callCoach` to `validate` edge), and a timed-out Coach counts as not reached, so the Baseline is used at once. There is no checkpointer, no interrupt and no LangChain chat model, and no page loads the graph: `pnpm bundle:check` fails if LangGraph reaches the browser's bundle.
+
 ## Curriculum
 
 A focused Grade 1 arithmetic progression aligned to key CCSS 1.OA and 1.NBT concepts. It is not the whole of Grade 1.
@@ -47,9 +80,11 @@ pnpm lint         # eslint
 pnpm test         # unit tests (vitest)
 pnpm test:e2e     # browser tests (playwright; builds and starts the app on :3100)
 pnpm licenses:check  # fail on any copyleft or unrecognised licence
+pnpm bundle:check # after pnpm build: fail if LangGraph code is in the browser's bundle
 pnpm diagnostic   # run the Diagnostic Session through the Loop and print the Log and Estimates
 pnpm baseline     # run ten Baseline Sessions on one Profile and print Mastery and Unit transitions
 pnpm coach        # run a Simulated Learner through the Diagnostic Session and five Coach-planned Sessions; print the Learner Notes and Session Plan after each
+pnpm coach:graph  # redraw the Coach graph in this README from the compiled graph (--print to print it)
 pnpm eval         # run the six Simulated Learners for 20 Sessions under the Coach and the Baseline; write a dated report and the chart
 pnpm eval:chart   # regenerate docs/evals/convergence.svg from the latest report file
 pnpm pool         # fill the Content Pool (src/story/pool.generated.json) with a Story per Theme, Unit 3 structure, and equation on Sonnet 5.5
@@ -110,7 +145,7 @@ A Docker container built by Coolify on a Hetzner host, behind Cloudflare, with a
 - `src/generation/`: the Generation seam. One interface with four operations (write Story, run Coach, write Parent Summary, render speech), the fake every test and `pnpm coach` run on, the Anthropic adapter (the Coach, Parent Summary and Story writer on Claude Sonnet 5.5 (`claude-sonnet-5-5`, the Coach at effort high) with their prompts and output schemas, every call sending the server-side refusal fallback), and the ElevenLabs adapter (text to speech on the designed voice, and Voice Design itself). The real adapters are imported by their own paths, so nothing that runs on the fake loads a network client.
 - `src/voice/`: Ollie's voice. The catalogue of every line that is the same for every Learner, the enumeration of the engine's own Problems behind it, the audio key each line is addressed by, the manifest of what is bundled, the fallback chain, and the Voice Design brief. All pure; the CLI scripts and the speech API route do the I/O.
 - `src/story/`: Stories. The six Theme vocabularies (a closed word list each, plus the core words they share), the validator (Nickname present, two sentences ending in a question, under 25 words, exactly the engine's numbers as digits, only the Theme's words), the template sentence per structure and the rich one the Story Solver Power opens, the Story prompt, the bounded writer (three attempts, then the template), and the Content Pool as plain data keyed by Theme, Skill, structure, and numbers, with `pool.generated.json` as the bundled Pool.
-- `src/coach/`: the engine's Coach step. It hands the Coach the Session's evidence (never a Problem or an answer), validates the returned Learner Notes against the Log and the Session Plan against the Plan Space, retries once with every reason, and falls back to the Baseline Plan so play never stops. `POST /api/coach` runs this step on the server (`src/coach/server.ts`), checking against the Problem IDs and the Plan Space it rebuilds from the body, and answers only a checked output or the Baseline Plan, with the reasons; `POST /api/summary` runs the Summary validator and template the same way, and the device checks both answers again and keeps its own fallbacks, so play works offline. Beside it is the record the device keeps: the Notes, the next Plan, where it came from, the Problems the Notes cite, what changed, the Session still waiting for a run with the Powers it earned, and the last seven Parent Summaries.
+- `src/coach/`: the engine's Coach step. It hands the Coach the Session's evidence (never a Problem or an answer), validates the returned Learner Notes against the Log and the Session Plan against the Plan Space, retries once with every reason, and falls back to the Baseline Plan so play never stops. `POST /api/coach` runs this step on the server as a LangGraph graph (`src/coach/graph.ts`, server only), checking against the Problem IDs and the Plan Space it rebuilds from the body, and answers only a checked output or the Baseline Plan, with the reasons; `POST /api/summary` runs the Summary validator and template the same way, and the device checks both answers again and keeps its own fallbacks, so play works offline. Beside it is the record the device keeps: the Notes, the next Plan, where it came from, the Problems the Notes cite, what changed, the Session still waiting for a run with the Powers it earned, and the last seven Parent Summaries.
 - `src/summary/`: the Parent Summary. The engine's tally of a Session Log by Skill and Assistance State with what was Mastered and the Powers earned, the prompt, the validator (every number is one the engine gave; nothing is claimed about how the Learner was thinking), the hand-written template and its bedtime activity per Skill, and the bounded writer.
 - `src/app/`: the screens. `/` is the home screen (Ollie, the Avatar, the Path, Play), or onboarding until the Profile has a Nickname, Avatar colour, and Theme; `/play` the Session screen and its celebration; `/shop` the Shop, where Coins become Avatar Items and the Theme changes; `/parent` the Parent Gate and, behind it, the Parent Area; `/design-review` the illustration review harness, every asset beside what the character sheet asks of it, which answers 404 unless `DESIGN_REVIEW=1` is set, so it is not reachable in production (`pnpm design:review` starts its own server with it on and snapshots the page to `docs/design/`). All are thin client components that render state and forward taps.
 - `src/play/`: a Session as the Learner plays it: the Play reducer over the Loop's step functions (asking, Hint, correct, Reveal, celebration), the ten-frame and number-line models per Skill and stage (each with the Power it is drawn with), the Path and its Powers, and Ollie's fixed lines.
