@@ -1,0 +1,113 @@
+{
+  "ranAt": "2026-09-29T02:51:02.227Z",
+  "sides": {
+    "a": {
+      "modelId": "eleven_v3",
+      "voiceId": "kUYZBW913unNWjulBbOg"
+    },
+    "b": {
+      "modelId": "eleven_v4",
+      "voiceId": "RxxDqtqDp9ZV3RZpYuL0"
+    }
+  },
+  "wins": {
+    "a": 0,
+    "b": 15
+  },
+  "byKind": {
+    "hint": {
+      "a": 0,
+      "b": 4
+    },
+    "cheer": {
+      "a": 0,
+      "b": 4
+    },
+    "problem": {
+      "a": 0,
+      "b": 5
+    },
+    "story": {
+      "a": 0,
+      "b": 2
+    }
+  },
+  "winner": "b",
+  "lines": [
+    {
+      "kind": "hint",
+      "text": "Fill the ten-frame first. Take just enough from the other number to make ten, then add on what is left.",
+      "winner": "b"
+    },
+    {
+      "kind": "cheer",
+      "text": "You got it! 12!",
+      "winner": "b"
+    },
+    {
+      "kind": "problem",
+      "text": "What is 1 and 5 more?",
+      "winner": "b"
+    },
+    {
+      "kind": "problem",
+      "text": "11 is 10 and how many more?",
+      "winner": "b"
+    },
+    {
+      "kind": "problem",
+      "text": "What is 4 and 7 more?",
+      "winner": "b"
+    },
+    {
+      "kind": "problem",
+      "text": "There are 10 in the frame. Take away 1. How many are left?",
+      "winner": "b"
+    },
+    {
+      "kind": "hint",
+      "text": "Start at the bigger number on the number line. Hop forward one at a time and count each hop.",
+      "winner": "b"
+    },
+    {
+      "kind": "hint",
+      "text": "Look at the ten-frame. Count the empty spaces. That is how many more make ten.",
+      "winner": "b"
+    },
+    {
+      "kind": "cheer",
+      "text": "Yes! 7!",
+      "winner": "b"
+    },
+    {
+      "kind": "hint",
+      "text": "Start at the number you know on the number line. Count up until you reach the bigger number. Your hops are the answer.",
+      "winner": "b"
+    },
+    {
+      "kind": "cheer",
+      "text": "Nice one! 5!",
+      "winner": "b"
+    },
+    {
+      "kind": "story",
+      "text": "Mia had 5 puppies at home, and more puppies came so now there are 8. How many puppies came?",
+      "winner": "b"
+    },
+    {
+      "kind": "problem",
+      "text": "10 and how many more make 11?",
+      "winner": "b"
+    },
+    {
+      "kind": "story",
+      "text": "Mia had 3 rockets in the sky. Then 4 more rockets came, so how many rockets are there now?",
+      "winner": "b"
+    },
+    {
+      "kind": "cheer",
+      "text": "That's it! 10!",
+      "winner": "b"
+    }
+  ]
+}
