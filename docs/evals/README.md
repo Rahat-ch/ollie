@@ -35,6 +35,8 @@ The first report, `2026-09-11T00-16-16Z.json`, is from ticket 05 and has the Bas
 
 The claim-to-test map, which says for every claim about the loop where it is enforced, the test that proves it, and the command that shows it, is [evidence.md](./evidence.md).
 
+The comparison of Sonnet 5.5 with these Opus 5 runs is pre-registered in [preregistration-1.md](./preregistration-1.md): its metrics, thresholds, command and budget, fixed before any Sonnet run. The three Opus reports re-scored with the current scorer, which changed no value, are in [rescore-opus-2026-09-28.txt](./rescore-opus-2026-09-28.txt).
+
 ## What the three live runs say
 
 The three runs share their seeds, their Learners, their Baseline, and every threshold, so the only thing that moves between them is what the Coach wrote. **Every headline below is therefore a range, the lowest of the three runs to the highest**, and the range is the result; one run's figure is one draw. Where a single run's line is quoted it carries the 95% Wilson interval the report prints beside it, because these samples are small and a bare number would claim a precision they cannot support. The charts are drawn from run 3: [convergence](./convergence.svg), [evidence integrity](./evidence-integrity.svg), [detection](./detection.svg), [false positives](./false-positives.svg), [plan sources](./plan-sources.svg), [Story validity](./story-validity.svg), and [Summary validity](./summary-validity.svg).
