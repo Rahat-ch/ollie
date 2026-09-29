@@ -1,7 +1,7 @@
 # Every push and pull request: typecheck, lint, the unit tests, the fake
-# eval, the production build, and a check that the browser's bundle
-# carries no LangGraph code; and the Docker image Coolify deploys. No secret is read here, so the fake eval
-# runs with no key and makes no network call.
+# eval, and the production build; and the Docker image Coolify deploys. No
+# secret is read here, so the fake eval runs with no key and makes no
+# network call.
 name: CI
 
 on:
@@ -32,7 +32,6 @@ jobs:
       - run: pnpm test
       - run: pnpm eval --fake
       - run: pnpm build
-      - run: pnpm bundle:check # no LangGraph code in the browser's bundle
 
   # The image Coolify deploys, built from the same Dockerfile and build
   # context (.dockerignore), so a file the build needs but the context

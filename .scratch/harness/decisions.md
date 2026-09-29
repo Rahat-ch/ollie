@@ -134,3 +134,38 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - It won the blind A/B 15 to 0 against the old voice on `eleven_v3` (2026-09-28).
     - All bundled lines are re-rendered.
 
+38. **Sonnet 5.5 stays (2026-09-29, after Pre-registration 1).**
+    - Sonnet 5.5 remains the Coach and every other model call, despite failing rows 4b, 4c, 5, 6 and 9c.
+    - Its Coach failures are over-eager claims, which Phase 3's Minimum-Evidence Rule targets, and latency. Opus 5 was no faster: about 71 s mean.
+    - Pre-registration 2 re-tests it.
+39. **The Coach call is streamed, abandoned on silence, and hedged (ticket 22).**
+    - This comes before Phase 3 and blocks ticket 10, the Phase 1 evidence.
+    - Why: the latency probe (PR #70) showed the tail is occasional slow generation on the API side (about 70 s stalls), not SDK retries, rate limits or concurrency.
+    - The Coach call streams. An attempt is abandoned after 30 s with no token (no content delta; a `ping` does not count), not on total time. The silence clock starts when the request is sent, so a stall before the first token counts.
+    - After 10 s of silence a second request (the hedge) is sent and the first is kept running. Whichever finishes first with a valid output wins, and the other is aborted. At most one hedge per call.
+    - The thresholds are constants, re-tuned after the probe re-run.
+    - It lives in the adapter's `runCoach`, behind the `Generation` seam. So the route, the eval, the CLI and the probe all make the same call, and Pre-registration 2 measures what production does.
+    - Telemetry records every hedged and abandoned attempt and its cost. The daily spend cap counts them.
+    - The route's 75 s deadline stays, and the engine's rules stay in the engine.
+    - Streaming, structured output and the refusal fallback are verified against the installed SDK with the `claude-api` skill.
+    - After merge, `scripts/latency-probe.ts` is re-run once (about $1, approved) to measure the effect.
+40. **The Story Judge is told `{{nickname}}` is intended (ticket 23).**
+    - Why: the Sonnet 5.5 Judge failed Stories for the placeholder.
+    - The Story Judge's prompt says that `{{nickname}}` stands for the child's Nickname, which the app fills in at play time, and that it is never a defect.
+    - The prompt is written once and not tuned further.
+    - The stored Stories are re-judged with the new prompt (cents, approved). That covers the three Sonnet 5.5 reports and, to separate the writer from the Judge, the three Opus-Arm reports, whose Stories Sonnet 5 wrote.
+    - The re-judge's gate reads the open half of the Story Calibration Set only (tuning access, no new `finalRun` caller), so the sealed half stays for Pre-registration 2.
+    - The result is published in `docs/evals/preregistration-1.md`'s exploratory section, clearly labelled. The pre-registered 9c FAIL stands and is not changed.
+41. **LangChain is removed (2026-09-29).** This supersedes decisions 3 and 21 and the LangSmith half of 27.
+    - The LangGraph Coach graph (ticket 11) and the LangSmith experiments and tracing (ticket 12) come out of the code, the dependencies, CI, the bundle check and the docs.
+    - The Coach route goes back to the plain server Coach step (`serverCoachStep` over `coachStep`, as ticket 04 left it). It keeps the 75 s deadline, the cancellation, the engine's one retry with every reason, and the Baseline. The SDK's own retries replace the graph's transport retry policy.
+    - ADR 0004 is marked superseded. ADR 0002's rule that tracing is eval-only stays true, because nothing traces now.
+    - Everything else in Phase 1 stays: Sonnet 5.5, server-side validation, the abuse guard and spend cap, the new voice, CI, and the evals and their committed JSON reports.
+    - Ticket 15 (the Phase 2 evidence) is dropped. The labelling page (ticket 13) and the second labeller (ticket 14) stay; they never needed LangSmith.
+    - Why: the owner wants a simpler project and a demo video that talks through the evals.
+    - The demo's scope, chosen by the owner the same day: tickets 24, 23, 22 and 25 (the README, decision 42), then 10 (Phase 1 only, no LangChain), then a script for the video. Phase 3 (tickets 16 to 21) is parked for a sequel, and tickets 16 and 18 lose their block on 15.
+42. **The README is rewritten (ticket 25, 2026-09-29).**
+    - The owner called it "trash": about 5,300 words, stale in places, and mostly implementation detail.
+    - The new one is about 120 lines: the pitch, how it works, the evals, the results (the failures as prominent as the passes), how to run it, the docs, and the licence.
+    - The detail moves to `docs/develop.md`, `docs/voice.md` and `docs/powers.md`.
+    - Ticket 25 follows 24, which also edits the README. Ticket 10 then fills in the results rows that 22 and 23 produce.

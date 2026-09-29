@@ -1,6 +1,8 @@
 # Spec: Ollie as a harness that holds up under scrutiny
 
 Status: ready-for-agent
+
+> **2026-09-29:** decision 41 removes LangChain. Everything below about LangGraph, LangSmith and tracing is void (ticket 24); the rest stands.
 Created: 2026-09-28
 Inputs: `.scratch/harness/decisions.md` (33 decisions), `docs/research/langchain-harness.md`, `CONTEXT.md`, `docs/adr/0001` to `0005`, `docs/evals/README.md`, the three live reports of 2026-09-18 in `docs/evals/`
 

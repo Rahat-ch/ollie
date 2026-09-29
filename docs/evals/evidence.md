@@ -28,10 +28,9 @@ Run it yourself with `pnpm coach --real --sessions 3` (*live*, about $1) or `pnp
 | The Coach and the Summary never receive the Nickname, Avatar, or Theme | The route bodies are strict schemas | "refuses a body carrying the Nickname, the Avatar colour, or the Theme, so nothing personal reaches the Coach"; "hands the Coach exactly what the engine built, and nothing else" | `pnpm vitest run src/app/api/coach src/app/api/summary` |
 | The Parent Summary quotes no number the Session Log did not carry and makes no claim about the child's thinking | The Summary validator, two attempts then the hand-written template | "rejects a number the Session Log does not support"; "rejects a number taken from the Learner Notes rather than the Session: a confidence or a Problem ID"; "rejects a claim about how the Learner was thinking" | `pnpm vitest run src/summary` |
 | A Story never alters or omits the engine's numbers and stays in its Theme's words | The Story validator, three attempts then the template | eight good and eleven bad hand-written Stories; every Story in the bundled Pool is validated under its key | `pnpm vitest run src/story` |
-| No route sends anything to LangSmith; tracing and experiments run in `pnpm eval` only (ADR 0002) | The eval loads `langsmith` only when `LANGSMITH_TRACING` and `LANGSMITH_API_KEY` are both set; no app module imports it | "imports no langsmith module anywhere the app can reach" (a walk of every import, dynamic ones included, from every file under `src/app` and the proxy); "scores exactly what an untraced one scores"; the build's bundles are searched for the eval's LangSmith code | `pnpm vitest run src/evals/langsmith`, then `pnpm build && pnpm bundle:check` |
 | The whole loop is deterministic and fast | The Loop is a pure function | "produces an identical Log and Profile for the same seed and policy"; "runs hundreds of Sessions in well under a second" | `pnpm vitest run src/loop/loop.test.ts` |
 
-`pnpm test` runs all of it: 623 tests. `pnpm test:e2e` runs the browser suites against the built app in Chromium and in WebKit at nine iPad sizes.
+`pnpm test` runs all of it. `pnpm test:e2e` runs the browser suites against the built app in Chromium and in WebKit at nine iPad sizes.
 
 ## The eval
 
@@ -49,7 +48,7 @@ Every rate carries its 95 percent Wilson interval beside it, in the JSON, on the
 
 ## What a sceptic can do in five minutes
 
-1. `pnpm test`: 623 tests, including every validator above.
+1. `pnpm test`: every unit test, including every validator above.
 2. `pnpm coach --sessions 3`: the fake, which plans like a Baseline. Then `pnpm coach --real --sessions 3` (*live*): the Coach. Compare the Notes.
 3. Open the deployed app, play one Session, hold "Grown-ups", and open Ollie's Notebook: every Hypothesis shows its evidence as the actual Problems, tappable, and the next Session's Plan is the one the Coach wrote.
 4. Read [`docs/adr/0001-engine-owns-math-model-owns-words.md`](../adr/0001-engine-owns-math-model-owns-words.md) and [`0003-coach-plans-within-bounded-space-engine-executes.md`](../adr/0003-coach-plans-within-bounded-space-engine-executes.md) for why it is built this way.

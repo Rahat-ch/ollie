@@ -17,8 +17,7 @@ import { profileWithMastered } from "@/loop/testing";
 import { fakeGeneration } from "@/generation/fake";
 import type { CoachInput, CoachOutput } from "@/generation/types";
 import { boundsFromInput, coachInput } from "./coach";
-import { serverCoachStep } from "./graph";
-import { acceptServerStep } from "./server";
+import { acceptServerStep, serverCoachStep } from "./server";
 
 const practise = (skill: SkillId, length = 10): SessionPlan => ({ length, skills: [{ skill, weight: 1 }], reviewShare: 0, hypothesisUnderTest: null });
 

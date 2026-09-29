@@ -16,23 +16,16 @@
  *
  * The real adapters read ANTHROPIC_API_KEY from the environment, or from
  * .env.local at the repo root when that file exists.
- *
- * With LANGSMITH_TRACING=true and LANGSMITH_API_KEY set (in the shell or
- * .env.local), the run's model calls are traced to LangSmith and the report
- * it writes becomes an experiment there (docs/evals/README.md, "LangSmith").
- * Without both, LangSmith is never loaded. Never set in production (ADR 0002).
  */
-import path from "node:path";
 import { parseArgs } from "node:util";
 import { EVAL_RUN_ACCESS, runEvals } from "@/evals/evals";
-import { readReport, writeCharts, writeReport } from "@/evals/files";
-import { tracingDecision } from "@/evals/langsmith/tracing-config";
+import { writeCharts, writeReport } from "@/evals/files";
 import { readLabelFiles } from "@/evals/label-files";
 import { formatEvalResults } from "@/evals/format";
 import { describeGeneration, evalReport } from "@/evals/report";
 import { createRecorder } from "@/generation/telemetry";
 import { formatSessionLine } from "@/loop/format";
-import { chooseGeneration, chooseJudge, cliEnv } from "./generation";
+import { chooseGeneration, chooseJudge } from "./generation";
 
 const { values } = parseArgs({
   options: {
@@ -49,19 +42,11 @@ if (!Number.isInteger(sessions) || sessions < 1) {
 
 async function main(): Promise<void> {
   const mode = values.fake ? "fake" : "real";
-  // LangSmith is loaded only when both LANGSMITH_TRACING and LANGSMITH_API_KEY
-  // are set; otherwise the run is exactly what it was before tracing existed.
-  const tracing = tracingDecision(cliEnv());
-  if (!tracing.on && tracing.reason) console.log(tracing.reason);
-  const tracer = tracing.on ? (await import("@/evals/langsmith/tracing")).langsmithTracer(tracing.project) : undefined;
   // One recorder for the run: the Coach, the Story writer, the Summary
   // writer and the Judge all report to it, and the report reads it at the end.
   const recorder = createRecorder();
-  const telemetry = tracer ? tracer.telemetry(recorder) : recorder;
-  const chosen = await chooseGeneration(mode, telemetry);
-  const chosenJudge = await chooseJudge(mode, telemetry);
-  const coach = tracer ? { ...chosen, generation: tracer.generation(chosen.generation) } : chosen;
-  const judge = tracer ? { ...chosenJudge, judge: tracer.judge(chosenJudge.judge) } : chosenJudge;
+  const coach = await chooseGeneration(mode, recorder);
+  const judge = await chooseJudge(mode, recorder);
   console.log(`Coach: ${describeGeneration(coach.name)}${values.fake ? " (no network)" : ""}`);
   console.log(`Stories: ${describeGeneration(coach.storyName)}; Parent Summaries: ${describeGeneration(coach.name)}; Judge: ${describeGeneration(judge.name)}`);
   if (values.fake) {
@@ -80,7 +65,6 @@ async function main(): Promise<void> {
     onSession: values.fake
       ? undefined
       : (learner, { result, step }) => console.log(`${learner}: ${formatSessionLine(result)}; Plan from ${step.source}`),
-    span: tracer?.span,
   });
   const elapsed = Math.round(performance.now() - started);
   const report = evalReport(results, new Date());
@@ -93,19 +77,6 @@ async function main(): Promise<void> {
   console.log(`Ran ${results.convergence.coach.learners.length} Simulated Learners for ${sessions} Sessions under both planners in ${elapsed} ms.`);
   console.log(`Report: ${reportFile}`);
   console.log(`Charts: ${chartFiles.join(", ")}`);
-
-  if (tracer) {
-    // The report is written first and is the record; the experiment is made from that file, as a replay would be.
-    try {
-      const { publishReport } = await import("@/evals/langsmith/publish");
-      const experiment = await publishReport(tracer.client, readReport(reportFile), { file: path.basename(reportFile), source: "live" });
-      await tracer.flush();
-      console.log(`LangSmith: the calls traced in project ${tracer.project}, and experiment ${experiment.experimentName} made from the report.`);
-    } catch (error: unknown) {
-      console.error(`LangSmith: the report is written, but the experiment was not made: ${error instanceof Error ? error.message : String(error)}`);
-      process.exitCode = 1;
-    }
-  }
 }
 
 main().catch((error: unknown) => {
