@@ -43,3 +43,5 @@ The orchestrator re-runs the probe once after merge (about $1, approved) and rec
 
 Finding from the investigation, to start from when this is picked up: Sonnet 5.5's default hidden thinking streams nothing while it reasons. A silence clock that counts content deltas would therefore see silence during ordinary reasoning and hedge or abandon healthy calls. The call needs `display: "summarized"` so that thinking streams, and the silence thresholds must be measured with it on before they are set.
 
+
+**2026-09-30.** Decision 43 found that the ~70 s tail was a local network fault on the eval machine (dead IPv6 connections, detected by TCP keep-alive at 70 s, then retried), not slow generation on the API side, so the hedge's premise no longer holds.

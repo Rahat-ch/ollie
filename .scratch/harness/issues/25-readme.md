@@ -57,3 +57,10 @@ Update any links and tests that point at README sections (e.g. `grep -rn "README
 - **Ticket 10 folded in:** "The hardening, measured" lists cost per Session on both Arms, the abuse guard's live 403 and 429 (from ticket 05's live capture, with the commands in `docs/deploy.md`), the voice A/B's 15 to 0 (`docs/voice/ab-tally.json`), and the CI badge. Every number links to its file.
 - **Plan files:** decision 44 added; ticket 22 is needs-triage with the hidden-thinking finding in its Comments; ticket 10 is wontfix.
 - **README:** 129 lines.
+
+**2026-09-30, latency correction (decision 43).**
+- **Merged main** (9e8b61e, PR #77). Main's decision 43 comes first, and this ticket's decision is 44. Decision 44's latency bullet now points at 43 instead of repeating the API-side claim.
+- **README:** the latency paragraph leads with the comparison (mean Coach call about 71 s on Opus 5 to about 30 s on Sonnet 5.5, cost down about 75%). It then says the eval's p95 of 92.2 to 94.0 s was inflated by a network fault on the eval machine (dead IPv6 connections, detected by TCP keep-alive at 70 s, then retried). The fault was found by probing every attempt, failed ones included, and reading the kernel log. After the fix, 40 calls ran with 0 stalls and a p95 of 34.9 s, so row 6 still fails as pre-registered. The paragraph links the correction and `latency-probe-v2-2026-09-30T03-41-22-564Z.json`. The "diagnosed but not fixed" bullet and every pointer to ticket 22 as the fix are gone.
+- **`docs/evals/README.md`:** the same correction replaces "slow generation on the API side".
+- **Ticket 22:** one Comment line says its premise no longer holds.
+- **README:** 127 lines.

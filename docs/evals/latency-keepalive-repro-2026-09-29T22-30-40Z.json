@@ -1,0 +1,404 @@
+{
+  "environment": {
+    "node": "24.21.0",
+    "undici": "7.29.1",
+    "platform": "linux arm64"
+  },
+  "results": [
+    {
+      "scenario": "keepalive-silent-drop",
+      "says": "one call against ANTHROPIC_BASE_URL",
+      "outcome": "ok",
+      "call": {
+        "learner": "keepalive-silent-drop",
+        "index": 1,
+        "startedAt": "2026-09-29T22:29:26.493Z",
+        "totalMs": 73435,
+        "prefetchGapMs": 19,
+        "outcome": "ok",
+        "error": null,
+        "outputTokens": null,
+        "attempts": [
+          {
+            "attempt": 1,
+            "startMs": 19,
+            "endMs": 72901,
+            "outcome": "threw",
+            "status": null,
+            "requestId": null,
+            "headersMs": null,
+            "bodyMs": null,
+            "threwAfterMs": 72882,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ETIMEDOUT",
+              "causeMessage": "read ETIMEDOUT"
+            },
+            "socket": {
+              "socket": 1,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 6
+            },
+            "connect": {
+              "dnsMs": 4,
+              "tcpMs": 0,
+              "tlsMs": null,
+              "totalMs": 5
+            },
+            "waitMs": 72869,
+            "afterPreviousMs": null
+          },
+          {
+            "attempt": 2,
+            "startMs": 73402,
+            "endMs": 73431,
+            "outcome": "response",
+            "status": 200,
+            "requestId": "req_local_1",
+            "headersMs": 27,
+            "bodyMs": 2,
+            "threwAfterMs": null,
+            "error": null,
+            "socket": {
+              "socket": 2,
+              "reused": false,
+              "earlierRequests": 0,
+              "idleMs": null,
+              "ageMs": 3
+            },
+            "connect": {
+              "dnsMs": 2,
+              "tcpMs": 1,
+              "tlsMs": null,
+              "totalMs": 3
+            },
+            "waitMs": 20,
+            "afterPreviousMs": 501
+          }
+        ],
+        "retries": [
+          {
+            "ms": 72902,
+            "message": "[log_66739f] connection timed out - retrying, 2 attempts remaining"
+          }
+        ],
+        "events": [
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_66739f] sending request",
+            "details": {
+              "url": "http://api:8080/v1/messages?beta=true"
+            },
+            "t": 62.996042,
+            "ms": 19
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 1,
+            "url": "http://api:8080/v1/messages?beta=true",
+            "t": 63.048375,
+            "ms": 19
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 1,
+            "method": "POST",
+            "path": "http://api:8080/v1/messages?beta=true",
+            "t": 65.898083,
+            "ms": 22
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "api:8080",
+            "t": 66.12825,
+            "ms": 22
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 1,
+            "t": 66.316583,
+            "ms": 22
+          },
+          {
+            "source": "socket",
+            "kind": "lookup",
+            "socket": 1,
+            "detail": "172.31.207.10 (IPv4)",
+            "t": 70.4935,
+            "ms": 26
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 1,
+            "detail": "172.31.207.10:8080 from :36340",
+            "t": 70.820958,
+            "ms": 27
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 1,
+            "host": "api:8080",
+            "remote": "172.31.207.10:8080",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 72.145125,
+            "ms": 28
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 1,
+            "socket": 1,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 6,
+            "t": 72.618375,
+            "ms": 28
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 1,
+            "t": 73.736792,
+            "ms": 30
+          },
+          {
+            "source": "socket",
+            "kind": "error",
+            "socket": 1,
+            "detail": "ETIMEDOUT: read ETIMEDOUT",
+            "t": 72938.140825,
+            "ms": 72894
+          },
+          {
+            "source": "socket",
+            "kind": "close",
+            "socket": 1,
+            "detail": "with an error",
+            "t": 72939.055783,
+            "ms": 72895
+          },
+          {
+            "source": "wire",
+            "kind": "request-error",
+            "request": 1,
+            "error": {
+              "name": "Error",
+              "message": "read ETIMEDOUT",
+              "causeName": null,
+              "causeCode": null,
+              "causeMessage": null
+            },
+            "t": 72941.1987,
+            "ms": 72897
+          },
+          {
+            "source": "fetch",
+            "kind": "error",
+            "attempt": 1,
+            "error": {
+              "name": "TypeError",
+              "message": "fetch failed",
+              "causeName": "Error",
+              "causeCode": "ETIMEDOUT",
+              "causeMessage": "read ETIMEDOUT"
+            },
+            "t": 72944.758575,
+            "ms": 72901
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_66739f] connection timed out - retrying, 2 attempts remaining",
+            "t": 72945.844741,
+            "ms": 72902
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_66739f] connection timed out (retrying, 2 attempts remaining)",
+            "details": {
+              "url": "http://api:8080/v1/messages?beta=true",
+              "durationMs": 72883,
+              "message": "fetch failed"
+            },
+            "t": 72945.977616,
+            "ms": 72902
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_0cf776] sending request",
+            "details": {
+              "url": "http://api:8080/v1/messages?beta=true",
+              "retryOf": "log_66739f"
+            },
+            "t": 73446.1337,
+            "ms": 73402
+          },
+          {
+            "source": "fetch",
+            "kind": "start",
+            "attempt": 2,
+            "url": "http://api:8080/v1/messages?beta=true",
+            "t": 73446.206283,
+            "ms": 73402
+          },
+          {
+            "source": "wire",
+            "kind": "request",
+            "request": 2,
+            "method": "POST",
+            "path": "http://api:8080/v1/messages?beta=true",
+            "t": 73448.591117,
+            "ms": 73404
+          },
+          {
+            "source": "wire",
+            "kind": "connect-start",
+            "host": "api:8080",
+            "t": 73449.025575,
+            "ms": 73405
+          },
+          {
+            "source": "socket",
+            "kind": "created",
+            "socket": 2,
+            "t": 73449.388867,
+            "ms": 73405
+          },
+          {
+            "source": "socket",
+            "kind": "lookup",
+            "socket": 2,
+            "detail": "172.31.207.20 (IPv4)",
+            "t": 73451.54595,
+            "ms": 73407
+          },
+          {
+            "source": "socket",
+            "kind": "tcp",
+            "socket": 2,
+            "detail": "172.31.207.20:8080 from :45292",
+            "t": 73452.07495,
+            "ms": 73408
+          },
+          {
+            "source": "wire",
+            "kind": "connected",
+            "socket": 2,
+            "host": "api:8080",
+            "remote": "172.31.207.20:8080",
+            "alpn": null,
+            "tlsResumed": null,
+            "t": 73452.31895,
+            "ms": 73408
+          },
+          {
+            "source": "wire",
+            "kind": "send",
+            "request": 2,
+            "socket": 2,
+            "reused": false,
+            "earlierRequests": 0,
+            "idleMs": null,
+            "ageMs": 3,
+            "t": 73452.458533,
+            "ms": 73408
+          },
+          {
+            "source": "wire",
+            "kind": "body-sent",
+            "request": 2,
+            "t": 73453.001742,
+            "ms": 73409
+          },
+          {
+            "source": "wire",
+            "kind": "headers",
+            "request": 2,
+            "status": 200,
+            "t": 73472.020325,
+            "ms": 73428
+          },
+          {
+            "source": "wire",
+            "kind": "done",
+            "request": 2,
+            "t": 73472.524408,
+            "ms": 73428
+          },
+          {
+            "source": "fetch",
+            "kind": "headers",
+            "attempt": 2,
+            "status": 200,
+            "requestId": "req_local_1",
+            "t": 73473.484408,
+            "ms": 73429
+          },
+          {
+            "source": "sdk",
+            "level": "info",
+            "message": "[log_0cf776, retryOf: log_66739f, request-id: \"req_local_1\"] post http://api:8080/v1/messages?beta=true succeeded with status 200 in 28ms",
+            "t": 73474.295992,
+            "ms": 73430
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_0cf776] response start",
+            "details": {
+              "url": "http://api:8080/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 28,
+              "retryOf": "log_66739f",
+              "requestId": "req_local_1"
+            },
+            "t": 73474.419825,
+            "ms": 73430
+          },
+          {
+            "source": "fetch",
+            "kind": "body",
+            "attempt": 2,
+            "bytes": 1100,
+            "t": 73475.08645,
+            "ms": 73431
+          },
+          {
+            "source": "sdk",
+            "level": "debug",
+            "message": "[log_0cf776] response parsed",
+            "details": {
+              "url": "http://api:8080/v1/messages?beta=true",
+              "status": 200,
+              "durationMs": 29,
+              "retryOf": "log_66739f"
+            },
+            "t": 73475.191533,
+            "ms": 73431
+          }
+        ]
+      },
+      "explanation": "72.9s attempt 1 until it threw on new socket #1: TypeError: fetch failed (cause ETIMEDOUT read ETIMEDOUT); 0.5s SDK backoff before attempt 2",
+      "firstProbe": {
+        "loggedAttempts": 1,
+        "gapMs": 73402,
+        "matchesSignature": true
+      }
+    }
+  ]
+}
