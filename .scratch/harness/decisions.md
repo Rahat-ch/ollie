@@ -176,4 +176,9 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - Pre-registration 1 carries a dated correction, and row 6 stays a FAIL.
     - Ticket 22's premise (API-side slow generation) no longer holds. It stays parked, and hedging is not needed for this tail.
     - Every future latency run records failed attempts (probe v2).
-
+44. **Fast path to the demo (2026-09-29).**
+    - Ticket 22 (the streamed, hedged Coach call) is parked for after the demo. Why: the Coach runs after a Session and is not on screen.
+    - The latency story is told as found and diagnosed (decision 43): the eval's p95 of 92.2 to 94.0 s was inflated by a network fault on the eval machine, and after the fix the v2 probe's p95 is 34.9 s, still over the 30 s line.
+    - The investigation's finding is kept in ticket 22's Comments: Sonnet 5.5's default hidden thinking streams nothing while it reasons, so a silence clock needs `display: "summarized"`, measured first.
+    - Ticket 10 (the Phase 1 evidence) is folded into ticket 25. The README's Results section is the Phase 1 evidence.
+    - The demo is the app's basics and the evals, filmed once ticket 25 merges.

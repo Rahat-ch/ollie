@@ -28,7 +28,7 @@ The orchestrator re-runs the probe once after merge (about $1, approved) and rec
 
 **Blocked by:** 24 (the route's step changes there)
 
-**Status:** ready-for-agent (the owner put it in the demo's scope on 2026-09-29, decision 41)
+**Status:** needs-triage (parked for after the demo, decision 44)
 
 - [ ] The request shape is tested off the wire through a stubbed `fetch` that serves an SSE stream, as `src/generation/anthropic.test.ts` does today: streamed, structured output, the fallback, effort `high`
 - [ ] On fake timers: 10 s of silence sends exactly one hedge; the hedge wins and the first is aborted; the first resumes, wins, and the hedge is aborted; a `ping` does not reset the clock; a stall before the first token hedges; both silent for 30 s ends as a Coach not reached; the caller's abort aborts both
@@ -36,3 +36,12 @@ The orchestrator re-runs the probe once after merge (about $1, approved) and rec
 - [ ] Telemetry records and prices every attempt; the spend cap counts them; stored reports read unchanged
 - [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm eval --fake`, `pnpm build` and the Coach browser tests pass
 - [ ] After merge: the probe re-run is recorded (the orchestrator)
+
+## Comments
+
+**2026-09-29, parked (decision 44).** The Coach runs after a Session and is not on screen, so this waits until after the demo. The README tells the latency story as found and diagnosed, with this fix designed and not built.
+
+Finding from the investigation, to start from when this is picked up: Sonnet 5.5's default hidden thinking streams nothing while it reasons. A silence clock that counts content deltas would therefore see silence during ordinary reasoning and hedge or abandon healthy calls. The call needs `display: "summarized"` so that thinking streams, and the silence thresholds must be measured with it on before they are set.
+
+
+**2026-09-30.** Decision 43 found that the ~70 s tail was a local network fault on the eval machine (dead IPv6 connections, detected by TCP keep-alive at 70 s, then retried), not slow generation on the API side, so the hedge's premise no longer holds.
