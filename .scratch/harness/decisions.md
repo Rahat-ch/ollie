@@ -169,3 +169,11 @@ Grilling session of 2026-09-28, run against `docs/research/langchain-harness.md`
     - The new one is about 120 lines: the pitch, how it works, the evals, the results (the failures as prominent as the passes), how to run it, the docs, and the licence.
     - The detail moves to `docs/develop.md`, `docs/voice.md` and `docs/powers.md`.
     - Ticket 25 follows 24, which also edits the README. Ticket 10 then fills in the results rows that 22 and 23 produce.
+43. **The Coach's latency tail was a local network fault (2026-09-30).** This amends 38 and 39.
+    - The ~70 s stalls were dead IPv6 connections on the eval machine, which was on the network over both Ethernet and Wi-Fi. Node's TCP keep-alive declares such a connection dead at 70 s, and the SDK then retries it.
+    - The first latency probe could not see the failed attempts, so it wrongly ruled retries out.
+    - The fix was Wi-Fi off. The v2 probe then showed 0 stalls in 40 calls, with p95 34.9 s.
+    - Pre-registration 1 carries a dated correction, and row 6 stays a FAIL.
+    - Ticket 22's premise (API-side slow generation) no longer holds. It stays parked, and hedging is not needed for this tail.
+    - Every future latency run records failed attempts (probe v2).
+

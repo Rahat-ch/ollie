@@ -14,7 +14,7 @@
  * false safety decline is answered by the fallback model, not the Baseline.
  */
 import { decodeEscapes, decodeStrings } from "./decode-escapes";
-import Anthropic from "@anthropic-ai/sdk";
+import Anthropic, { type ClientOptions } from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
 import { STORY_SYSTEM_PROMPT, storyUserMessage } from "@/story/prompt";
@@ -38,10 +38,13 @@ export type AnthropicGenerationOptions = {
   readonly telemetry?: Telemetry;
   /** The HTTP client the SDK sends with; only tests pass one, to read the request the adapter builds. */
   readonly fetch?: typeof fetch;
+  /** Where the SDK writes its own log, and how much of it: only the latency probe passes these, to time the SDK's retries (`scripts/latency-probe-v2.ts`). Left out, the SDK logs as it always did. */
+  readonly logger?: ClientOptions["logger"];
+  readonly logLevel?: ClientOptions["logLevel"];
 };
 
 export function anthropicGeneration(options: AnthropicGenerationOptions): Generation {
-  const client = new Anthropic({ apiKey: options.apiKey, fetch: options.fetch });
+  const client = new Anthropic({ apiKey: options.apiKey, fetch: options.fetch, logger: options.logger, logLevel: options.logLevel });
   const { telemetry } = options;
 
   async function runCoach(input: CoachInput, options: CallOptions = {}): Promise<CoachOutput> {
