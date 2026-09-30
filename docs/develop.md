@@ -99,7 +99,9 @@ The committed Pool has 2,790 keys and 5,520 Stories, two variants for 2,730 keys
 ### Scripts outside `package.json`
 
 - `node scripts/preregistration-1-results.mjs` re-derives Pre-registration 1's Results table from the six reports. No model call, nothing written.
-- `pnpm exec tsx scripts/latency-probe.ts [learner-id]` runs one Learner for 20 Sessions on the real Coach, one call at a time, and logs every HTTP attempt. About $1.
+- `pnpm exec tsx scripts/latency-probe-v2.ts [--learners a,b] [--sessions 20]` runs Learners serially on the real Coach and records every attempt, thrown ones and SDK retries included. `--dry-run` calls no model. See [Latency instruments](evals/README.md).
+- `scripts/latency-repro.ts` and `scripts/latency-keepalive-repro.sh` reproduce a misbehaving or dead connection locally.
+- `pnpm exec tsx scripts/latency-probe.ts [learner-id]` is the first probe. It logs only attempts that answered, so it cannot see a failed attempt or a retry.
 - `scripts/deploy-wizard.sh` walks through a first deploy. See [docs/deploy.md](deploy.md).
 
 ## Playing locally
