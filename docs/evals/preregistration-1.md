@@ -122,6 +122,7 @@ A stopped series is reported as it stands, with the runs it has, and it is not a
 | 2026-09-29 | Sonnet 5.5 run 3, `2026-09-29T19-37-11Z.json` | $6.9060 | $20.06 |
 | 2026-09-29 | Latency probe, one Learner serially (`latency-probe-2026-09-29T19-50-09-896Z.json`), recorded here after the fact | $0.93 | $20.99 |
 | 2026-09-29 | Exploratory Story re-judge, harness ticket 23 (`rejudge-2026-09-29T21-50-24Z.json`), 238 Judge calls | $0.5607 | $21.55 |
+| 2026-09-30 | Latency probe v2, two Learners serially after the network fix (`latency-probe-v2-2026-09-30T03-41-22-564Z.json`) | $2.0553 | $23.61 |
 
 The three Opus runs of 2026-09-18 ($79.86) predate this budget and are not counted against it. The owner should correct this line if that is wrong. Any live CI smoke run that has been started by hand since ticket 02 has to be added here from its log. None is recorded at the time of writing.
 
@@ -252,4 +253,28 @@ What it shows:
   - Each Story was judged once, and some identical or near-identical Stories got different verdicts across runs.
   - The Sonnet 5.5 Judge disagrees with the owner's labels on 1 or 2 of the 10 open Stories. On the Theme rubric it is harsher than both the owner and the Opus 5 Judge.
   - Whether that harshness is right is a rubric question for Pre-registration 2. It is not settled here.
+
+**Correction, 2026-09-30: the latency tail was this machine's network, not the API.** This changes no verdict. Row 6 stays a FAIL, and the reason is given below. It corrects two things written above:
+- finding 1's "SDK-internal retries" candidate and its "cause is not established";
+- the follow-up probe's "retries, rate limits and concurrency are ruled out" and "the tail is occasional slow generation on the API side".
+
+Both conclusions were wrong.
+
+- **Why the first probe misled.** `scripts/latency-probe.ts` logged an HTTP attempt only after `fetch` resolved. An attempt that threw, and the SDK's retry after it, left no trace. Its call 14 shows the gap: the call's timer started at 19:45:23.7Z. The only fetch it logged started 70.5 s later and answered in a normal 35.8 s.
+- **What happened (verified).** The macOS kernel log records the probe's Node process losing its connection to the API at that moment, `tcp_drop` with `so_error: 60` (ETIMEDOUT). That was 70.0 s into the call, on a connection it had reused for 319 s.
+  - Node's fetch sockets use TCP keep-alive with 60 s idle and then ten 1 s probes, read off a live socket. A non-streamed request is silent while the model writes, so a connection that dies in that window is declared dead at 70 s.
+  - The SDK then retries on a new connection after about 0.5 s, and the retry succeeds in normal time.
+  - The same kernel log shows one such drop for each of the 30 slow calls: 6 and 5, 6 and 5, and 6 and 1 in the three eval runs, and 1 in the probe. Each round of slow calls was one drop hitting every call in flight.
+- **The cause (verified in part).**
+  - Between 18:55Z and 19:50Z the machine lost 104 IPv6 connections this way, against 1 on IPv4. It hit other programs too (a browser, a calendar app, a coding assistant), every 6 to 11 minutes.
+  - `api.anthropic.com` resolves to IPv6 first, so Node used IPv6.
+  - The machine was on the same network twice, over Ethernet and Wi-Fi. That the dual connection caused the drops is inferred from the fix, below. It was not traced further.
+- **The fix, and the measurement after it.**
+  - Wi-Fi was turned off, leaving Ethernet only.
+  - `scripts/latency-probe-v2.ts` records every fetch attempt, including thrown ones, plus the SDK's own retry log and whether each request reused a socket. It ran two Learners serially for 20 Sessions each: [latency-probe-v2-2026-09-30T03-41-22-564Z.json](./latency-probe-v2-2026-09-30T03-41-22-564Z.json), $2.06.
+  - Result: 40 Coach calls; 0 thrown attempts, 0 SDK retries, 0 non-200 answers; p50 26.5 s, p95 34.9 s, slowest 35.7 s.
+  - The kernel log shows no dropped connection on the machine from 03:27Z to 03:58Z, which covers the whole run.
+- **What this means for row 6.** The pre-registered p95s of 92.2 to 94.0 s were inflated by the eval machine's network, not by Sonnet 5.5 or the API. Row 6 still fails as pre-registered. Measured serially with the network fixed, p95 is 34.9 s against a 30 s line, because Coach calls grow with the Learner Notes: about 12 s early on, 30 to 36 s by Session 17. For comparison, Opus 5's mean was 69.9 to 73.3 s. It is unknown whether the Opus runs of 2026-09-18, made on the same machine, were affected; the kernel log does not reach back that far.
+- **Cost.** Telemetry recorded only the attempt that answered. The 30 dead first attempts may have been generated and billed on the server. At about $0.05 a Coach call, that is up to about $1.50 not in the budget log. The invoice is the check.
+- **Production.** Not verified. The deployed server is a different machine and network. If one of its connections died the same way, the 70 s detection plus a retry would pass the route's 75 s deadline, and that Session would get the Baseline Plan.
 
