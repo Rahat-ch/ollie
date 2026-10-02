@@ -264,7 +264,7 @@ Both conclusions were wrong.
 - **What happened (verified).** The macOS kernel log records the probe's Node process losing its connection to the API at that moment, `tcp_drop` with `so_error: 60` (ETIMEDOUT). That was 70.0 s into the call, on a connection it had reused for 319 s.
   - Node's fetch sockets use TCP keep-alive with 60 s idle and then ten 1 s probes, read off a live socket. A non-streamed request is silent while the model writes, so a connection that dies in that window is declared dead at 70 s.
   - The SDK then retries on a new connection after about 0.5 s, and the retry succeeds in normal time.
-  - The same kernel log shows one such drop for each of the 30 slow calls: 6 and 5, 6 and 5, and 6 and 1 in the three eval runs, and 1 in the probe. Each round of slow calls was one drop hitting every call in flight.
+  - The kernel-log extract for that call is saved as [latency-kernel-log-2026-09-29.txt](./latency-kernel-log-2026-09-29.txt), because macOS has since rolled the live log over. The same kernel log shows one such drop for each of the 30 slow calls: 6 and 5, 6 and 5, and 6 and 1 in the three eval runs, and 1 in the probe. Each round of slow calls was one drop hitting every call in flight.
 - **The cause (verified in part).**
   - Between 18:55Z and 19:50Z the machine lost 104 IPv6 connections this way, against 1 on IPv4. It hit other programs too (a browser, a calendar app, a coding assistant), every 6 to 11 minutes.
   - `api.anthropic.com` resolves to IPv6 first, so Node used IPv6.

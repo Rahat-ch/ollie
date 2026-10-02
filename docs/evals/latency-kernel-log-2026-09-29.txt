@@ -1,0 +1,19 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-29 14:41:14.258 Df kernel[0:2aca57] tcp connect outgoing: [<IPv6-redacted>:51722<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4635773 t_state: SYN_SENT process: node:80745 SYN in/out: 0/1 bytes in/out: 0/0 pkts in/out: 0/0 rtt: 0.0 ms rttvar: 250.0 ms base_rtt: 3 ms error: 0 so_error: 0 svc/tc: 0 flow: 0x8fc84f15
+2026-09-29 14:41:14.262 Df kernel[0:bc8] tcp connected: [<IPv6-redacted>:51722<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4635773 t_state: ESTABLISHED process: node:80745 SYN in/out: 1/1 bytes in/out: 0/0 pkts in/out: 0/0 rtt: 0.0 ms rttvar: 250.0 ms base_rtt: 3 ms error: 0 so_error: 0 svc/tc: 0 flow: 0x8fc84f15
+2026-09-29 14:46:33.727 Df kernel[0:284f93] tcp_connection_summary (tcp_drop:1453)[<IPv6-redacted>:51722<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4635773 t_state: CLOSED process: node:80745 Duration: 319.468 sec Conn_Time: 0.004 sec bytes in/out: 94982/188645 pkts in/out: 111/149 pkt rxmit: 1 ooo pkts: 0 dup bytes in: 0 ACKs delayed: 57 delayed ACKs sent: 0
+rtt: 3.968 ms rttvar: 0.562 ms base rtt: 0 ms so_error: 60 svc/tc: 0 flow: 0x8fc84f15
+2026-09-29 14:46:33.727 Df kernel[0:284f93] tcp_connection_summary [<IPv6-redacted>:51722<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4635773 t_state: CLOSED process: node:80745 flowctl: 0us (0x) SYN in/out: 1/1 FIN in/out: 0/0 RST in/out: 0/1 AccECN (client/server): Disabled/Disabled
+2026-09-29 14:46:34.233 Df kernel[0:2aca57] tcp connect outgoing: [<IPv6-redacted>:51934<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4656698 t_state: SYN_SENT process: node:80745 SYN in/out: 0/1 bytes in/out: 0/0 pkts in/out: 0/0 rtt: 0.0 ms rttvar: 250.0 ms base_rtt: 3 ms error: 0 so_error: 0 svc/tc: 0 flow: 0x9117ddbc
+2026-09-29 14:46:34.239 Df kernel[0:bc8] tcp connected: [<IPv6-redacted>:51934<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4656698 t_state: ESTABLISHED process: node:80745 SYN in/out: 1/1 bytes in/out: 0/0 pkts in/out: 0/0 rtt: 0.0 ms rttvar: 250.0 ms base_rtt: 3 ms error: 0 so_error: 0 svc/tc: 0 flow: 0x9117ddbc
+2026-09-29 14:50:09.883 Df kernel[0:2aca57] tcp_connection_summary (tcp_usrclosed:3210)[<IPv6-redacted>:51934<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4656698 t_state: FIN_WAIT_1 process: node:80745 Duration: 215.650 sec Conn_Time: 0.006 sec bytes in/out: 66782/139061 pkts in/out: 81/107 pkt rxmit: 0 ooo pkts: 0 dup bytes in: 0 ACKs delayed: 38 delayed ACKs sent: 0
+rtt: 5.906 ms rttvar: 0.687 ms base rtt: 3 ms so_error: 0 svc/tc: 0 flow: 0x9117ddbc
+2026-09-29 14:50:09.883 Df kernel[0:2aca57] tcp_connection_summary [<IPv6-redacted>:51934<-><IPv6-redacted>:443] interface: en0 (skipped: 12177)
+so_gencnt: 4656698 t_state: FIN_WAIT_1 process: node:80745 flowctl: 0us (0x) SYN in/out: 1/1 FIN in/out: 0/0 RST in/out: 0/0 AccECN (client/server): Disabled/Disabled
