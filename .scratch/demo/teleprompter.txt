@@ -1,101 +1,93 @@
-[COLD OPEN: Ollie reads "What is 8 plus 5?" — tap 12 — hint and ten-frame — cut to the Notebook belief and its problems]
+[COLD OPEN: README results table, zoom on the red FAIL rows, then the kernel log line]
 
-And it figured out that Sam has trouble when a sum crosses ten.
+So I wrote down what a pass looks like before I ran my AI evals. And four of these came back red. And one of them? It turned out it wasn't the AI at all. It was my Wi-Fi.
 
-Hey y'all, this is Rahat, and I've been building a math game for first graders called Ollie.
+Hey y'all, this is Rahat, and I've been spending the last few weeks actually learning how to do evals properly.
 
-So, that was Ollie reading a problem out loud, cuz a lot of first graders can't really read yet. And that notebook at the end? That's the AI part. After every session, the AI actually looks at how the kid did, writes down what it thinks is going on, and then plans the next session.
+So, what's an eval? It's basically a test, but for how your AI behaves. And honestly, most of us, me included, test AI by vibes. You try it a few times, the answers look good, and you ship it. And that works right up until it doesn't.
 
-Today we're going to look at the app, and then at the part I actually care the most about, which is the evals. Basically, how do I know the AI is actually right?
+So I wanted to learn how to do this for real. And to do that, I needed something real to test. So I built a little math game for first graders called Ollie.
 
-And I'll give you a number up front. I switched the AI from Opus to Sonnet, and it got about four times cheaper per session. But before I ran anything, I wrote down what counts as a pass and what counts as a fail. And some of those failed. One of them sent me down a whole rabbit hole, and at the end I'll show you what it was. Honestly, the problem turned out to be me.
+[OLLIE: a few seconds of a session, then the Notebook]
 
-[HOME SCREEN]
+Here's the short version. A kid plays a few math problems. After every session, an AI looks at how they did, writes down what it thinks is going on, like Sam struggles when a sum crosses ten, and then plans the next session. So that's the thing I'm evaluating. Is the AI actually right about the kid? And how would I even know?
 
-So, AI is really great at a lot of things. But the one thing a math app actually can't mess up is the math, right? Like, is eight plus five thirteen? So in Ollie, the AI isn't even allowed to do the math. Every problem, every answer, and every hint is just plain code. The AI can personalise the learning path. It just can't make up the math.
+Today I'm going to walk you through what I learned about evals by building this, including the parts that failed. And at the end, I'll show you the rabbit hole that turned out to be me.
 
-[ONBOARDING — clean profile]
+[TITLE: 1. CHECK WHAT CODE CAN CHECK]
 
-So let's look at the app. Setup is super quick. You pick a nickname, a little avatar, and a theme. There's no account. And the only personal thing that ever leaves the device is the nickname, and that's only so Ollie can say it out loud.
+So the first thing I learned is that a lot of what you care about doesn't need another AI to check it. It just needs code.
 
-[SESSION — one right, one wrong, wrong again]
-
-Here's a session. Ollie reads every problem. If you get it right, cool, next one. If you get it wrong, you get a hint, with this ten-frame here. And if you miss it again, Ollie just shows you the answer and how to get there. There's no punishment. It just counts as a miss.
-
-[CELEBRATION]
-
-At the end you get coins, and those are for effort, so you get them even on a rough day. And when you master a strategy, Ollie actually learns a power and starts using it on the screen.
-
-[HOLD GROWN-UPS — PARENT AREA]
-
-Now, this is the parent side. You have to hold this button for a few seconds, so a kid can't just wander in. You get a summary of the session, what's been mastered, and this, which is Ollie's notebook.
-
-So what is the notebook? It's what the AI, which I call the Coach, currently believes about Sam. And the key thing is that every belief shows the actual problems it's based on.
-
-[TAP A BELIEF]
-
-So it can't just say Sam struggles with crossing ten without showing you the proof.
-
-[ARCHITECTURE DIAGRAM]
-
-So how does this actually work? After a session, the Coach gets the evidence. That's every problem, and whether Sam got it on the first try, needed a hint, or got shown the answer. It never gets a problem to write or an answer to give. What it gives back is its notes and a plan for the next session.
-
-Now, before any of that reaches the kid, my code checks it. Did the Coach cite a problem it was never shown? That gets rejected. Is the plan outside of what the curriculum allows? That gets rejected too. It gets one retry, with every reason it was rejected. And if it fails again, the app just uses a plain fallback plan, so the kid can always keep playing. The key thing is that the AI only suggests, and the code actually decides.
+In Ollie, every belief the AI writes has to point at the actual problems it's based on. So I can check, with plain code, did it cite a problem it was never shown? If it did, it made that up, and it gets rejected. Same with the plan. Is it asking for something the curriculum doesn't allow? Rejected.
 
 [TERMINAL — run the test]
 
-And that rule is actually a test, so let's just run it.
+And that rule is actually just a test, so let's run it.
 
 [RUN IT]
 
-Yep, that passes.
+Yep, that passes. The key thing is that the AI only suggests, and the code actually decides. And anything code can check, you should check with code, cuz code doesn't have off days.
+
+[TITLE: 2. TEST DATA WITH KNOWN ANSWERS]
+
+The second thing I learned is that you need test data where you already know the answer. Otherwise, how do you know if the AI got it right?
+
+I can't exactly test this on a hundred first graders. So I made six fake kids, and I hid a weakness in some of them, like they struggle when a sum crosses ten. Now I know the right answer. So does the AI find the weakness I hid? And does it make up weaknesses that aren't there?
 
 [TERMINAL — pnpm eval --fake]
 
-So how do I know any of this actually works? I can't exactly test it on a hundred first graders. So I made six fake kids. Each one has a weakness hidden in it, like they struggle when a sum crosses ten. Each one plays twenty sessions with the AI, and twenty sessions with a plain, boring plan, using the same random seeds.
+Each fake kid plays twenty sessions with the AI, and twenty with a plain, boring plan that doesn't use AI at all, on the same random seeds. That boring plan is the baseline. Cuz you need something to compare against, right? A number on its own doesn't mean much. And two of the six kids, I never look at while I'm tweaking the prompt. Those are held out, so I can't accidentally tune the AI to my own test.
 
-Then I check a few things. Does the AI make up evidence? Does it find the hidden weakness? Does it invent weaknesses that aren't there? Where did each plan come from? And how much does it cost, and how slow is it?
+[TITLE: 3. GRADE THE GRADER]
 
-For the stories and the parent summaries, another AI grades them. But that grader has to agree with my own hand labels first, or its score doesn't count. So the grader actually gets graded too.
+The third thing I learned is about using AI to grade AI. Some stuff code just can't check, like is this story actually readable for a six-year-old? So another AI grades it.
 
-And here's the part I think matters most. Before I ran anything, I wrote down the pass and fail line for every one of these, and I committed it to git. So if you look at the commit history, you can see the lines were there first. I couldn't move the goalposts after.
+But how do you know the grader is any good? So I hand-labelled twenty stories and ten parent summaries myself. And the grader has to agree with me at least 80% of the time, and by more than you'd get by chance, before its score counts at all. If it doesn't, the score is just withheld. So the grader actually gets graded too.
+
+And this actually caught something. When I switched models, the story scores dropped, and it looked like the new model writes worse stories. But when I read why the grader failed them, it was marking the kid's name placeholder as a mistake. That's a placeholder the app fills in on purpose. So I told the grader about it and re-graded everything. And under the same grader, the new model's stories actually scored higher. So it wasn't a worse writer. It was a stricter grader.
+
+[TITLE: 4. WRITE DOWN PASS BEFORE YOU RUN]
+
+The fourth thing, and I think this is the big one, is to write down what pass and fail mean before you run anything.
+
+[PRE-REGISTRATION FILE, THEN THE COMMIT IN GIT HISTORY]
+
+So before I compared Opus against Sonnet, I wrote down the line for every metric, and I committed it to git. If you look at the commit history, the lines were there first. So I couldn't move the goalposts after I saw the results. Researchers call this pre-registration.
 
 [README — RESULTS TABLE]
 
-So I ran it three times on Opus, and three times on Sonnet. Let's start with what went well. Sonnet made up zero evidence. That's zero invented problems out of about 35,000 citations. It found the hidden weakness six out of six times, and Opus only got four. And it's about a quarter of the cost per session.
+And here's how it went. Sonnet made up zero evidence. That's zero invented problems out of about 35,000 citations. It found the hidden weakness six out of six times, and Opus got four. And it's about a quarter of the cost.
 
-And then you've got these red rows here. There are four of them. It claims weaknesses that aren't there more often than Opus did. One run reached mastery a little slower. The stories scored lower. And latency. And honestly, I published all of those too, cuz that's kind of the whole point, right?
+And then you've got these red rows here. There are four of them. It claims weaknesses that aren't there more often than Opus did. One run reached mastery a little slower. The stories, which we just talked about. And latency. And I published all of those too, cuz an eval that's never allowed to fail isn't really telling you anything.
+
+[TITLE: 5. WHEN AN EVAL FAILS, INVESTIGATE IT]
+
+Which brings me to the last thing I learned. When an eval fails, don't just believe it. Investigate it. And this is the rabbit hole.
 
 [LATENCY ROW]
 
-So let's talk about latency, cuz this is the rabbit hole. Sonnet is actually way faster than Opus. The average call went from about 71 seconds down to about 30. But I'd set a line of 30 seconds for the slow end, and the slow end came in at about 92.
+So Sonnet is actually way faster than Opus. The average call went from about 71 seconds down to about 30. But I'd set a line of 30 seconds for the slow end, and the slow end came in at about 92.
 
-So my first thought was, okay, the model's just slow sometimes, right? And my first probe actually agreed with me. It said there were no retries and nothing weird, it was just slow on the API side. And I wrote that down.
+So my first thought was, okay, the model's just slow sometimes, right? And my first probe actually agreed with me. It said no retries, nothing weird, just slow on the API side. And I wrote that down.
 
 But something was off. About one call in twelve was taking about 70 seconds longer. Not 60, not 80. It was always about 70.
 
 [SLOW CALL TIMELINE]
 
-So I built a second probe that logs every single attempt, even the ones that fail. And look at this call. The call starts, and the request that actually worked doesn't even go out until 70 seconds later. And then the API answers it in a totally normal 35 seconds. So the model wasn't slow at all. The time was going somewhere before the request even left my computer.
+So I built a second probe that logs every single attempt, even the ones that fail. And look at this one. The call starts, and the request that actually worked doesn't even go out until 70 seconds later. Then the API answers it in a totally normal 35 seconds. So the model wasn't slow at all. The time was going somewhere before the request even left my computer.
 
 [KERNEL LOG]
 
-So I checked my Mac's kernel log, and every slow call lined up with a dropped connection. Thirty slow calls, and thirty dropped connections. It turns out my Mac was on the same network twice, through Ethernet and through Wi-Fi. And my connections were just silently dying every few minutes. Node gives up on a dead connection after exactly 70 seconds, then it retries, and the retry is fast. So the slow AI was actually my Wi-Fi.
+So I checked my Mac's kernel log, and every slow call lined up with a dropped connection. Thirty slow calls, and thirty dropped connections. It turns out my Mac was on the same network twice, through Ethernet and through Wi-Fi, and my connections were just silently dying every few minutes. Node gives up on a dead connection after exactly 70 seconds, then it retries, and the retry is fast. So the slow AI was actually my Wi-Fi.
 
 [V2 PROBE SUMMARY]
 
-So I turned off the Wi-Fi and ran it again. Forty calls, and zero stalls. The slow end went from 92 seconds down to about 35. Which still fails my 30 second line, cuz the AI's notes get longer every session. So it stays a fail. I fixed what was actually broken, and I didn't touch the line. And no, I didn't just re-run it until it passed. The original fail and the correction are both published.
+So I turned off the Wi-Fi and ran it again. Forty calls, and zero stalls. The slow end went from 92 seconds down to about 35. Which still fails my 30 second line, cuz the AI's notes get longer every session. So it stays a fail. I fixed what was actually broken, and I didn't touch the line. And since my first probe was wrong, I published a correction instead of just quietly deleting it.
 
-And honestly, that's the whole reason I run evals. They don't just test the model. Sometimes they catch the person running them.
+[CLOSE: the five titles on screen]
 
-[RE-JUDGE — optional, cut if long]
+So, that's it. Check what code can check. Use test data where you already know the answer, and hold some of it back. If an AI is doing the grading, grade the grader. Write down pass and fail before you run anything. And when something fails, investigate it before you believe it.
 
-There was one more like that. The story scores dropped, and it looked like the new model just writes worse stories. But the grader was actually marking the kid's name placeholder as a mistake. So I told it about the placeholder and re-graded everything. And under the same grader, the new model's stories actually score higher. That one's labelled as after the fact, and the original fail still stands.
+And none of this is just tied to a math game. Whatever you're building with AI, ask yourself, what would a fail actually look like? Would I catch it? And would I publish it?
 
-[HOME SCREEN]
-
-So, that's it. The engine does the math. The AI reads the evidence and plans the next session. And the evals check both of them, and they're allowed to say no.
-
-And none of this is just tied to a math game. If you're shipping anything with AI in it, write down what a pass means before you run it, and then publish what fails.
-
-Next, I'm making the AI prove it has enough evidence before it's allowed to call something a weakness, and then I'm going to run the whole thing again. The code is open source, and the link is below. Thanks for watching, and stay tuned for more.
+Next, I'm making the AI prove it has enough evidence before it's allowed to call something a weakness, and then I'm going to run the whole thing again. Ollie and all the evals are open source, and the link is below. Thanks for watching, and stay tuned for more.

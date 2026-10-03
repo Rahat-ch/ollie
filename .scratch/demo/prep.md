@@ -7,7 +7,9 @@ The script to read is `teleprompter.txt`. Everything you need ready before filmi
 - [ ] **Network.** Wi-Fi off, Ethernet only (`networksetup -getairportpower en1` should say Off).
 - [ ] **Coolify.** `ELEVENLABS_MODEL_ID=eleven_v4` is set, so live Stories sound like the rest of Ollie. `LANGSMITH_TRACING` is not set.
 - [ ] **Prepped profile.** On ollie.rahatcodes.com, in one browser profile, play 3–4 Sessions a few minutes apart. Nickname "Sam". Miss a couple of crossing-ten Problems on purpose (8 + 5, 9 + 4), so the Notebook has a crossing-ten belief with its Problems. Note what the Notebook actually says before you film.
-- [ ] **Clean profile.** A second, clean browser profile for onboarding.
+- [ ] **Git history shot.** `git log --oneline -- docs/evals/preregistration-1.md` shows `eac6b9b Pre-registration 1: approved` *before* `f2a6a17`, the three live Sonnet runs. Or show both commits on GitHub with their timestamps (sign-off 18:56:43Z; first run 19:10:40Z).
+- [ ] **Hand labels shot.** `docs/evals/labels/stories.owner.json`, briefly, for "I hand-labelled twenty stories".
+- [ ] **Title cards.** Five cards: 1. Check what code can check; 2. Test data with known answers; 3. Grade the grader; 4. Write down pass before you run; 5. When an eval fails, investigate it.
 - [ ] **Terminal.** In the repo, with a big font.
 - [ ] **Tabs open:** the README Results table; `docs/evals/preregistration-1.md`, scrolled to "Correction, 2026-09-30"; and `docs/evals/latency-probe-v2-2026-09-30T03-41-22-564Z.json`.
 - [ ] **Kernel-log screenshot.** Open `docs/evals/latency-kernel-log-2026-09-29.txt` (see the bottom of this file).
@@ -20,6 +22,9 @@ The script to read is `teleprompter.txt`. Everything you need ready before filmi
 | Zero invented problems in about 35,000 citations (35,189) | `preregistration-1.md` Results, row 1 |
 | Found it 6 out of 6; Opus 4 | Row 4a |
 | Four failed rows (false positives, mastery on one run, latency, story readability) | Rows 4b/4c, 5, 6, 9c |
+| Six fake kids, twenty sessions each, a baseline, two held out | `docs/evals/README.md`; `src/evals/learners.ts` |
+| Twenty stories and ten summaries hand-labelled; grader must agree at least 80% and beat chance (kappa at least 0.6) | `src/evals/calibration.ts`, `docs/evals/labels/`; `JUDGE_AGREEMENT_THRESHOLD`, `JUDGE_KAPPA_FLOOR` |
+| Lines committed before the runs | commit eac6b9b (18:56:43Z) before the first Sonnet report (19:10:40Z) |
 | Average call about 71 s to about 30 s | Six reports, `telemetry.byOperation.coach` (69.9–73.3 s to 29.0–31.4 s) |
 | Slow end about 92 s against a 30 s line | Row 6 (p95 92.2–94.0 s) |
 | About 1 call in 12, about 70 s longer | Correction; 29 of 365 eval calls plus 1 probe call |
