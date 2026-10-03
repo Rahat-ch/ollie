@@ -10,14 +10,12 @@ Built on 2026-10-02 from 37 transcripts:
 
 The rules below are the patterns most of these share. The numbers in brackets are how many of a set did it.
 
-## 1. The script is a beat sheet, not a teleprompter
+## 1. The script is word for word, for a teleprompter
 
-You talk best off script. So a script gives you:
-- **beats:** what happens, and what's on screen;
-- **the facts you must say exactly:** numbers, claims;
-- **2–3 lines per beat, written the way you'd say them,** to riff from.
-
-It never gives you paragraphs to read. If a line reads like an essay, cut it.
+The owner films from a teleprompter, and a beat sheet takes too long to film from. So a script is:
+- **the full spoken text**, written exactly the way he'd say it (section 7), in paragraphs of 2–5 sentences;
+- **screen cues in short [BRACKETED CAPS]** on their own lines, so they're easy to skip while reading;
+- **nothing else in the prompter file.** The prep checklist and the source of every number go in a separate file.
 
 ## 2. Structure: the beat order the best ones share
 
